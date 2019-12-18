@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -O2 -std=c++17 -Wall -MMD -Werror=vla $(shell gsl-config --cflags)
 EXEC = calc
 
-OBJECTS = calc.o
+OBJECTS = Parser/Scanner/scanner.o Parser/Parser/parsetree.o Parser/Parser/parser.o calc.o
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
