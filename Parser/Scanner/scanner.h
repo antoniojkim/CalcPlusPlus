@@ -5,13 +5,13 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include <sstream>
-#include <map>
 
 enum Type {
 	ID,
 	STR,
 	NUM,
+	X,
+	Y,
 	LPAREN,
 	RPAREN,
 	LSQUARE,
@@ -65,7 +65,7 @@ enum Type {
 // extern std::map<Type, std::string> typeLexeme;
 // extern std::map<char, Type> charType;
 
-Type getType(char c);
+// Type getType(char c);
 std::string getTypeString(const Type& type);
 
 struct Token {
@@ -73,8 +73,8 @@ struct Token {
     Type type;
 };
 
-void scan(const std::string& str, std::list<Token>& tokens);
-void scan(std::istream& in, std::list<Token>& tokens);
+bool scan(const std::string& str, std::list<Token>& tokens);
+// void scan(std::istream& in, std::list<Token>& tokens);
 
 std::ostream& print(std::ostream& out, std::list<Token> tokens, const std::string& delimiter="", const bool& printType=false);
 

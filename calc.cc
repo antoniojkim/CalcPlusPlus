@@ -13,5 +13,19 @@ using namespace std;
 #include "Parser/Parser/parser.h"
 
 int main(int argc, char** argv){
-    Parser parser;
+    // Parser parser;
+    // string s;
+    // while (getline(cin, s)){
+    //     // cout << s << endl;
+    //     list<Token> tokens;
+    //     scan(s, tokens);
+    //     print(cout, tokens, " ") << endl;
+    // }
+
+    string s = "cossinh3+5i-arcsin(x,4)+6integrate(sinx, 4, 5)^|4";
+
+    list<Token> tokens;
+    if (scan(s, tokens)){
+        print(cout, tokens, " ") << endl;
+    }
 }

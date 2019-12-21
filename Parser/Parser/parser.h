@@ -4,16 +4,24 @@
 
 #include <iostream>
 #include <list>
-#include <memory>
+#include <map>
 #include <string>
+#include <utility>
+#include <vector>
 #include "parsetree.h"
 
 class Parser {
-    
-   public:
-    Parser();
+    std::map<std::string, bool> terminals;
+    std::map<std::string, bool> nonterminals;
+    std::string startSymbol;
+    std::vector<std::list<std::string>> rules;
+    int numStates;
+    std::map<int, std::map<std::string, std::pair<bool, int>>> transitions;
 
-    std::unique_ptr<ParseTree> parse(const std::string& input, const bool& verbose=false);
+   public:
+    Parser(const std::string& lr1Path);
+
+    std::unique_ptr<ParseTree> parse(const std::string& input, const bool& showTokens=false);
     std::unique_ptr<ParseTree> parse(std::list<Token>& tokens);
 
     friend std::ostream& operator<<(std::ostream& out, Parser& parser);

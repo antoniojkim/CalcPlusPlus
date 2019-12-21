@@ -1,22 +1,24 @@
 
 #include "scanner.h"
 #include <sstream>
+#include <regex>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
-map<string, Type> keywordType = {
-	{"true", TRUE_},
-	{"false", FALSE_},
-	{"none", NONE_},
-	{"NULL", NULL_}
-};
-map<Type, string> keywordLexeme = {
+// unordered_map<string, Type> keywordType = {
+// 	{keywordTypes}
+// };
+unordered_map<Type, string> keywordLexeme = {
 	{TRUE_, "TRUE"},
 	{FALSE_, "FALSE"},
 	{NONE_, "NONE"},
 	{NULL_, "NULL"}
 };
-map<string, Type> tokenType = {
+unordered_map<string, Type> tokenType = {
+	{"x", X},
+	{"y", Y},
 	{"(", LPAREN},
 	{")", RPAREN},
 	{"[", LSQUARE},
@@ -57,7 +59,9 @@ map<string, Type> tokenType = {
 	{"BOF", BOF_},
 	{"EOF", EOF_}
 };
-map<Type, string> typeLexeme = {
+unordered_map<Type, string> typeLexeme = {
+	{X, "X"},
+	{Y, "Y"},
 	{LPAREN, "LPAREN"},
 	{RPAREN, "RPAREN"},
 	{LSQUARE, "LSQUARE"},
@@ -98,56 +102,34 @@ map<Type, string> typeLexeme = {
 	{BOF_, "BOF_"},
 	{EOF_, "EOF_"}
 };
-map<char, Type> charType = {
-	{'(', LPAREN},
-	{')', RPAREN},
-	{'[', LSQUARE},
-	{']', RSQUARE},
-	{'{', LBRACE},
-	{'}', RBRACE},
-	{'=', EQUALS},
-	{'+', PLUS},
-	{'-', MINUS},
-	{'*', STAR},
-	{'/', SLASH},
-	{'%', PCT},
-	{'^', CARET},
-	{'&', AMP},
-	{'|', PIPE},
-	{'~', TILDE},
-	{'!', EXCL},
-	{'.', DOT},
-	{',', COMMA},
-	{':', COLON},
-	{';', SEMICOLON},
-	{'?', QUESTION},
-	{'#', POUND},
-	{'$', DOLLAR},
-	{'\"', QUOTE},
-	{'\'', APOSTROPHE},
-	{'`', BACKTICK},
-	{'_', UNDERSCORE}
-};
+// unordered_map<char, Type> charType = {
+// 	{charTypes}
+// };
 
-Type getType(char c) {
-    if ('0' <= c && c <= '9')  return NUM;
-    if ('a' <= c && c <= 'z')  return ID;
-    if ('A' <= c && c <= 'Z')  return ID;
-    if (charType.count(c) > 0) return charType[c];
+std::regex whitespace_regex("^\\s+");
+std::regex num_regex("^(\\d*\\.?\\d+(i(?![a-zA-Z]))?)");
+std::regex id_regex("^((a(rc)?)?(sin|cos|tan|csc|sec|cot)h?|(fr|to)(bin|two|hex)|rand(int|q)?|log(2|ab)?|norm(inv)?|(sm)?fib|integral|floor2?|riemann|stndv_?|l(n|p)|spread|floor|prime|gamma|elasd|exprv|heron|var_?|ceil|mean|cosl|kurt|skew|corr|dist|prod|abs|deg|det|erf|exp|neg|rad|Var|avg|gcd|geo|hyp|lcm|max|min|mdn|IQR|sum)");
+std::regex token_regex("^BOF|EOF|\\^\\||\\*\\*|//|<<|>>|<-|->|:=|\\\"|\\\\|x|y|\\(|\\)|\\[|\\]|\\{|\\}|=|\\+|-|\\*|/|%|\\^|&|\\||~|!|\\.|,|:|;|\\?|#|\\$|'|`|_");
 
-    switch(c){
-        case ' ':
-            return WHITESPACE;
-        case '\t':
-            return WHITESPACE;
-        case '\n':
-            return WHITESPACE;
-        case '\r':
-            return WHITESPACE;
-        default:
-            return NONE;
-    }
-}
+// Type getType(char c) {
+//     if ('0' <= c && c <= '9')  return NUM;
+//     if ('a' <= c && c <= 'z')  return ID;
+//     if ('A' <= c && c <= 'Z')  return ID;
+//     if (charType.count(c) > 0) return charType[c];
+
+//     switch(c){
+//         case ' ':
+//             return WHITESPACE;
+//         case '\t':
+//             return WHITESPACE;
+//         case '\n':
+//             return WHITESPACE;
+//         case '\r':
+//             return WHITESPACE;
+//         default:
+//             return NONE;
+//     }
+// }
 
 std::string getTypeString(const Type& type) {
     if (keywordLexeme.count(type) > 0) return keywordLexeme[type];
@@ -160,66 +142,44 @@ std::string getTypeString(const Type& type) {
     return "NONE";
 }
 
-void scan(const std::string& str, std::list<Token>& tokens) {
-    istringstream iss{str};
-    scan(iss, tokens);
-}
+bool scan(const std::string& str, std::list<Token>& tokens) {
+    if (str.empty()) return true;
 
-void scan(std::istream& in, std::list<Token>& tokens) {
-    char c;
-    ostringstream token;
-    bool openQuote = false;
-    Type current = NONE;
-    while (in.get(c)) {
-        Type type = getType(c);
-        // cout << token.str() << " " << getTypeString(current) << "    " << c << " " << getTypeString(type) << endl;
-        if (current == NONE || current == type) {
-            current = type;
-        } else if ((current == ID && (type == NUM || type == UNDERSCORE)) ||
-                   (current == UNDERSCORE && (type == ID || type == NUM))) {
-            current = ID;
-        } else if ((current == NUM && type == DOT) ||
-                   (current == NUM && type == ID && (c == 'e' || c == 'E'))) {
-            current = NUM;
-        } else if (openQuote &&
-                    ((current == STR && type == ID) ||
-                     (current == NUM && type == ID) ||
-                     (current == ID && type == WHITESPACE) ||
-                     (current == STR && type == WHITESPACE))) {
-            current = STR;
-
-        
-        } else if (current == CARET && type == PIPE) { /*  ^|  */
-            current = CARET_PIPE;
-        } else if (current == STAR && type == STAR) { /*  **  */
-            current = STAR_STAR;
-        } else if (current == SLASH && type == SLASH) { /*  //  */
-            current = SLASH_SLASH;
-        } else if (current == COLON && type == EQUALS) { /*  :=  */
-            current = COLON_EQUALS;
-
-        } else {
-            if (!token.str().empty() && current != WHITESPACE) {
-                auto str = token.str();
-                if (current == ID && keywordType.count(str) > 0){
-                    tokens.emplace_back(Token{str, keywordType[str]});
-                } else {
-                    tokens.emplace_back(Token{str, current});
-                }
-                if (current == QUOTE){
-                    openQuote = !openQuote;
-                }
-                token = ostringstream();
+    std::smatch match;
+    if (std::regex_search(str, match, whitespace_regex)){
+        return scan(match.suffix(), tokens);
+    }
+    if (std::regex_search(str, match, num_regex)){
+        int longest_at = 0;
+        for(unsigned int i = 1; i < match.size(); ++i){
+            if (match[i].length() > match[longest_at].length()){
+                longest_at = i;
             }
-            current = type;
         }
-        if (current != WHITESPACE){
-            token << c;
+        tokens.emplace_back(Token{match[longest_at], NUM});
+        return scan(match.suffix(), tokens);
+    }
+    if (std::regex_search(str, match, id_regex)){
+        int longest_at = 0;
+        for(unsigned int i = 1; i < match.size(); ++i){
+            if (match[i].length() > match[longest_at].length()){
+                longest_at = i;
+            }
         }
+        tokens.emplace_back(Token{match[longest_at], ID});
+        return scan(match.suffix(), tokens);
     }
-    if (!token.str().empty()) {
-        tokens.emplace_back(Token{token.str(), current});
+    if (std::regex_search(str, match, token_regex)){
+        int longest_at = 0;
+        for(unsigned int i = 1; i < match.size(); ++i){
+            if (match[i].length() > match[longest_at].length()){
+                longest_at = i;
+            }
+        }
+        tokens.emplace_back(Token{match[longest_at], tokenType[match[longest_at]]});
+        return scan(match.suffix(), tokens);
     }
+    return false;
 }
 
 
