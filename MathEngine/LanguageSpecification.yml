@@ -1,0 +1,273 @@
+tokens:
+ - ID:
+    description: "a string consisting of any combination of letters (in the range a-z, A-Z), digits (in the range 0-9) as well as underscores ( _ ) with the exception that it may not start with a digit."
+ - STR:
+    description: "a string consisting of any combination of letters, digits, and symbols (e.g. $, √)"
+ - NUM:
+    description: "a string consisting of only digits separated by at most one dot ( . ) at most one case insensitive \"e\" which must come after the dot."
+ - HEX:
+    description: "a string matching the pattern 0x[0-9a-fA-F]+"
+ - X:
+    lexeme: "x"
+ - Y:
+    lexeme: "y"
+ - LPAREN:
+    lexeme: "("
+ - RPAREN:
+    lexeme: ")"
+ - LSQUARE:
+    lexeme: "["
+ - RSQUARE:
+    lexeme: "]"
+ - LBRACE:
+    lexeme: "{"
+ - RBRACE:
+    lexeme: "}"
+ - EQUALS:
+    lexeme: "="
+ - PLUS:
+    lexeme: "+"
+ - MINUS:
+    lexeme: "-"
+ - STAR:
+    lexeme: "*"
+ - SLASH:
+    lexeme: "/"
+ - PCT:
+    lexeme: "%"
+ - CARET:
+    lexeme: "^"
+ - AMP:
+    lexeme: "&"
+ - PIPE:
+    lexeme: "|"
+ - TILDE:
+    lexeme: "~"
+ - EXCL:
+    lexeme: "!"
+ - CARET_PIPE:
+    lexeme: "^|"
+ - STAR_STAR:
+    lexeme: "**"
+ - SLASH_SLASH:
+    lexeme: "//"
+ - LT_LT:
+    lexeme: "<<"
+ - GT_GT:
+    lexeme: ">>"
+ - L_ARROW:
+    lexeme: "<-"
+ - R_ARROW:
+    lexeme: "->"
+ - COLON_EQUALS:
+    lexeme: ":="
+ - DOT:
+    lexeme: "."
+ - COMMA:
+    lexeme: ","
+ - COLON:
+    lexeme: ":"
+ - SEMICOLON:
+    lexeme: ";"
+ - QUESTION:
+    lexeme: "?"
+ - POUND:
+    lexeme: "#"
+ - DOLLAR:
+    lexeme: "$"
+ - QUOTE:
+    lexeme: "\""
+ - APOSTROPHE:
+    lexeme: "'"
+ - BACKSLASH:
+    lexeme: "\\\\"
+ - BACKTICK:
+    lexeme: "`"
+ - UNDERSCORE:
+    lexeme: "_"
+ - BOF_:
+    lexeme: "BOF"
+ - EOF_:
+    lexeme: "EOF"
+keywords:
+ - TRUE_:
+    lexeme: "true"
+ - FALSE_:
+    lexeme: "false"
+ - NONE_:
+    lexeme: "none"
+ - NULL_:
+    lexeme: "NULL"
+num_regex: "(\\d*\\.?\\d+(i(?![a-zA-Z]))?)"
+id_regex:
+ - abs
+ - (a(rc)?)?(sin|cos|tan|csc|sec|cot)h?  # sin, sinh, arcsin, arcsinh, asin, asinh
+                                         # cos, cosh, arccos, arccosh, acos, acosh
+                                         # tan, tanh, arctan, arctanh, atan, atanh
+                                         # csc, csch, arccsc, arccsch, acsc, acsch
+                                         # sec, sech, arcsec, arcsech, asec, asech
+                                         # cot, coth, arccot, arccoth, acot, acoth
+ - ceil
+ - deg
+ - det
+ - erf
+ - exp
+#  - Ex                # Ex(X) = expectation of X (a random variable)
+#  - Exp               # Exp(
+ - (sm)?fib          # fib, smfib
+ - floor2?           # floor, floor2
+ - l(n|p)            # ln, lp
+ - log(2|ab)?        # log, log2, logab
+                     # log(a) calculates log_1₀(a). log(a, b) calculates logₐ(b)
+ - neg
+ - norm(inv)?        # norm, norminv
+ - prime
+ - rad
+#  - RCEF
+#  - RREF
+#  - Var
+ - gamma
+#  - Bin             # Binomial Distirbution
+#  - NB              # Negative Binomial Distribution
+#  - ND              # Normal Disribution
+ - mean
+ - avg
+ - cosl              # cosl(b, c, θ) calculates the cosine law:  √(b²+c²-2×b×c×cos(θ)) 
+#  - cdf               # cdf(X, x) calculates P(X≤x) for a random variable X
+ - (fr|to)(bin|two|hex)
+                     # frbin(x) transforms a binary string into a decimal value
+                     # tobin(x) produces the binary form of x
+                     # frtwo(x) transforms a two's complement string into a decimal values
+                     # totwo(x) produces the two's complement form of x 
+                     # frhex(x) transforms a hex string into a decimal value
+                     # tohex(x) produces the hex form of x
+ - elasd             # elasd(q_1, q_2, p_1, p_2) calculates the elasticity of demand:  ((q_2-q_1)/(q_2+q_1))/((p_2-p_1)/(p_2+p_1))
+ - exprv             # exprv(θ); X ~ Exponential Distribution
+ - gcd               # gcd(a_!,...,a_1) calculates the greatest common denominator of a_1,...,a_n
+ - geo               # geo(p); X ~ Geometric Distribution
+ - heron             # heron(A, B, C) calculates the area of a triangle of side lengths A, B, C.
+                     # heron(x_1, y_1, x_2, y_2, x₃, y₃) calculates the area of a triangle with points (x_1, y_1), (x_2, y_2), (x₃, y₃)
+#  - hyp               # hyp(N, r, n); X ~ Hypergeometric Distribution
+ - lcm               # lcm(a_1,...,a_n) calculates the lowest common multiple of a_1,...,a_n
+ - max               # max(a_1,...,a_n) calculates the highest of a_1,...,a_n
+ - min               # min(a_1,...,a_n) calculates the lowest of a_1,...,a_n
+ - mdn               # mdn(a_1,...,a_n) calculates the median of a_1,...,a_n
+ - IQR               # IQR(a_1,...,a_n) calculates the Inter Quartile Range of a_1,...,a_n
+ - spread            # spead(a_1,...,a_n) calculates the spread of a_1,...,a_n
+ - kurt              # kurt(a_1,...,a_n) calculates the sample kurtosis of a_1,...,a_n
+ - skew              # skew(a_1,...,a_n) calculates the skew of a_1,...,a_n
+ - corr              # corr(x_1,y_1,x_2,y_2,…,x_n,y_n) gives sample skewness of x_1,y_1,x_2,y_2,…,x_n,y_n
+#  - mnd               # mnd(n,p_1,…,p_n,x_1,…,x_n); n trials, probabilities p; calculates P(x_1,…,x_n) for (x_1,…,x_n) ~ Multinomial Distribution
+#  - newton            # newton(ƒ, a) calculates the newton approximation of the root of ƒ starting from x=a
+#  - pdf               # pdf(X, x) calculates P(X=x) for a random variable X
+#  - poi               # poi(λ); X ~ Poisson Distribution
+ - rand(int|q)?      # randint(l, h) calculates a random integer ∈ [l, h]
+                     # rand(l, h) calculates a random real number ∈ [l, h]
+                     # randq(l, h) calculates a random rational of the form p/q where p,q ∈ [l, h]
+ - riemann           # riemann(ƒ, a, b, n, {l, r, m}) calculates the {l, r, m} riemann sum of fƒ from a to b with n intervals
+ - stndv_?           # stndv(a_1,...,a_n) calculates the standard deviation of a_1,...,a_n
+                     # stndv_(a_1,...,a_n) calculates the standard deviation of a_1,...,a_n
+#  - unif              # unif(a, b, x) calculates the uniform distribution from a to b at x
+ - var_?             # var(a_1,...,a_n) calculates the variance of a_1,...,a_n
+                     # var_(a_1,...,a_n) calculates the general variance of a_1,...,a_n
+ - dist              # dist(a_1,...,a_n) calculates the euclidean distance between a_1,...,a_n
+ - prod              # prod(ƒ, i, n) calculates the product ƒ(i)×⋯×ƒ(n)"
+ - sum               # sum(ƒ, i, n) calculates the sum ƒ(i)+⋯+ƒ(n)
+ - integral          # integral(ƒ, a, b) calculates the definite integral of ƒ from a to b
+
+whitespace:
+ - SPACE:
+    description: "ascii 32"
+ - TAB:
+    description: "ascii 9"
+ - NEWLINE:
+    description: "ascii 10"
+nonterminalSymbols:
+ - "statement"
+ - "expr"
+ - "lvalue"
+ - "expr1"
+ - "expr3"
+ - "expr4"
+ - "expr5"
+ - "expr6"
+ - "expr7"
+ - "expr11"
+ - "expr12"
+ - "expr13"
+ - "exprn"
+ - "exprl"
+ - "factor"
+ - "arglist"
+startSymbol: "statement"
+productionRules:
+ - "statement expr"
+ - "expr lvalue EQUALS expr1"
+ - "expr lvalue COLON_EQUALS expr1"
+ - "expr lvalue L_ARROW expr1"
+ - "expr expr1"
+
+ # Operator Predence Rules (Based off https://en.cppreference.com/w/cpp/language/operator_precedence)
+
+ - "expr1 expr3"
+
+ - "expr3 TILDE expr3"
+ - "expr3 expr4"
+
+ - "expr4 expr4 CARET expr5"
+ - "expr4 expr4 EXCL"
+ - "expr4 expr5"
+
+ - "expr5 expr5 STAR expr6"
+ - "expr5 expr5 SLASH expr6"
+ - "expr5 expr5 SLASH_SLASH expr6"
+ - "expr5 expr5 PCT expr6"
+ - "expr5 expr6"
+
+ - "expr6 expr6 PLUS expr7"
+ - "expr6 expr6 MINUS expr7"
+ - "expr6 expr7"
+
+ - "expr7 expr7 LT_LT expr11"
+ - "expr7 expr7 GT_GT expr11"
+ - "expr7 expr11"
+
+ - "expr11 expr11 AMP expr12"
+ - "expr11 expr12"
+
+ - "expr12 expr12 CARET_PIPE expr13"
+ - "expr12 expr13"
+
+ - "expr13 expr13 PIPE exprn"
+ - "expr13 exprn"
+
+ # Most basic expression forms
+
+ - "exprn PIPE expr PIPE"
+ - "exprn LPAREN expr RPAREN"
+ - "exprn ID LPAREN RPAREN"
+ - "exprn ID LPAREN arglist RPAREN"
+ - "exprn ID factor"
+ - "exprn exprl"
+
+ - "exprl factor"
+ - "exprl lvalue"
+
+ # factors
+
+ - "factor NUM"
+ - "factor X"
+ - "factor Y"
+ - "factor NONE_"
+ - "factor TRUE_"
+ - "factor FALSE_"
+
+ # lvalues
+
+ - "lvalue ID"
+ - "lvalue LPAREN lvalue RPAREN"
+
+ # Other
+
+ - "arglist expr"
+ - "arglist expr COMMA arglist"

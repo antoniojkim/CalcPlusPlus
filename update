@@ -1,5 +1,0 @@
-#!/bin/bash
-
-cd Parser
-python -u ../LR1G/LR1G $@
-cd ../

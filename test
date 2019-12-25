@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo "Building Math Engine"
+cd MathEngine
+
+make
+if [ $? -ne 0 ]; then
+    echo "Math Engine build failed"
+    exit 1
+fi
+
+echo "Running Tests"
+cd ../Tests
+
+make
+if [ $? -ne 0 ]; then
+    echo "Test Suite build failed"
+    exit 1
+fi
+
+./run

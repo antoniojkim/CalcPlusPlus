@@ -22,10 +22,9 @@ int main(int argc, char** argv){
     //     print(cout, tokens, " ") << endl;
     // }
 
-    string s = "cossinh3+5i-arcsin(x,4)+6integrate(sinx, 4, 5)^|4";
+    string s = "cossinh3+5i-arcsin(x, 4)+6integrate(sinx, 4, 5)^|4+0x3aF";
 
     list<Token> tokens;
-    if (scan(s, tokens)){
-        print(cout, tokens, " ") << endl;
-    }
+    cout << scan(s, tokens) << endl;
+    print(cout, tokens, " ") << endl;
 }
