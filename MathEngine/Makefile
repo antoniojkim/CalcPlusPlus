@@ -3,8 +3,9 @@ CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla $(shell gsl-config 
 TARGET_LIB = libMathEngine.a  # target lib
 
 PARSER = $(wildcard Parser/*.cc)
+EXPRESSIONS = $(wildcard Expressions/*/*.cc)
 
-SOURCES = Scanner/scanner.cc ${PARSER} MathEngine/MathEngine.cc
+SOURCES = Scanner/scanner.cc ${PARSER} ${EXPRESSIONS} MathEngine/MathEngine.cc
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = ${OBJECTS:.o=.d}
 

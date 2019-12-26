@@ -4,8 +4,9 @@ EXEC = run
 
 SCANNER_TESTS = $(wildcard ScannerTests/*.cc)
 PARSER_TESTS = $(wildcard ParserTests/*.cc)
+BASIC_TESTS = $(wildcard BasicTests/*.cc)
 
-SOURCES = ${SCANNER_TESTS} ${PARSER_TESTS} EngineTest.cc test.cc 
+SOURCES = ${SCANNER_TESTS} ${PARSER_TESTS} ${BASIC_TESTS} EngineTest.cc test.cc 
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = ${OBJECTS:.o=.d}
 

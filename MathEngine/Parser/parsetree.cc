@@ -53,6 +53,9 @@ void NonTerminal::addChild(unique_ptr<ParseTree>& child) { children.emplace_back
 
 vector<unique_ptr<ParseTree>>& NonTerminal::getChildren() { return children; }
 std::unique_ptr<ParseTree>& NonTerminal::getChild(const int& i) { return children[i]; }
+ParseTree* NonTerminal::operator[](const int& i){
+    return children.at(i).get();
+}
 
 string& NonTerminal::getRoot() { return root; }
 string& NonTerminal::getFirst() { return first; }

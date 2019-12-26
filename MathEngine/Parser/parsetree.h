@@ -52,6 +52,7 @@ class NonTerminal : public ParseTree {
     void addChild(std::unique_ptr<ParseTree>& child);
     std::vector<std::unique_ptr<ParseTree>>& getChildren();
     std::unique_ptr<ParseTree>& getChild(const int& i);
+    ParseTree* operator[](const int& i);
 
     std::string& getRoot() override;
     std::string& getFirst() override;

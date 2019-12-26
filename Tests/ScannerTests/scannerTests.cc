@@ -53,8 +53,6 @@ TEST_CASE("Basic Scanner Tests", "[scanner]" ) {
     scannerTest("logx", "log x");
     scannerTest("log2", "log2");
 
-
-
 }
 
 TEST_CASE("Complex Scanner Tests", "[scanner]" ) {

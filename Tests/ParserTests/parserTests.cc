@@ -9,6 +9,9 @@ using namespace std;
 #include <Catch2>
 #include "../EngineTest.h"
 
+/*
+    Check to see if any errors arise from parsing the input
+*/
 void parserTest(const string& input){
     auto tree = engine.parse(input);
     REQUIRE( input == input );
@@ -18,6 +21,7 @@ TEST_CASE("Basic Parser Tests", "[parser]" ) {
 
     parserTest("sincos3");
     parserTest("sinhcosx");
+    parserTest("sinxcosy");
 
 }
 
