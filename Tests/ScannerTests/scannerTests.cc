@@ -7,7 +7,6 @@ using namespace std;
 
 #include <Catch2>
 #include "../EngineTest.h"
-#include "scannerTests.h"
 
 void scannerTest(const string& input, const string& expected){
     auto tokens = engine.scan(input);

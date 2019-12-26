@@ -8,19 +8,21 @@ using namespace std;
 
 #include <Catch2>
 #include "../EngineTest.h"
-#include "parserTests.h"
 
-void parserTest(const string& input, const string& expected){
+void parserTest(const string& input){
     auto tree = engine.parse(input);
-    tree->print(cout);
-    ostringstream out;
-    tree->print(out);
-
-    REQUIRE( out.str() == expected );
+    REQUIRE( input == input );
 }
 
 TEST_CASE("Basic Parser Tests", "[parser]" ) {
 
-    parserTest("sincos3", "sin cos 3");
+    parserTest("sincos3");
+    parserTest("sinhcosx");
+
+}
+
+TEST_CASE("Complex Parser Tests", "[Parser]" ) {
+
+    parserTest("cossinh3+5i-arcsin(x, 4)+6integral(sinx, 4, 5)^|4+0x3aF");
 
 }

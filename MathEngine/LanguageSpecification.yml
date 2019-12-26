@@ -196,7 +196,7 @@ nonterminalSymbols:
  - "expr12"
  - "expr13"
  - "exprn"
- - "exprl"
+ - "multiid"
  - "factor"
  - "arglist"
 startSymbol: "statement"
@@ -209,50 +209,50 @@ productionRules:
 
  # Operator Predence Rules (Based off https://en.cppreference.com/w/cpp/language/operator_precedence)
 
- - "expr1 expr3"
+ - "expr1 expr13"
 
- - "expr3 TILDE expr3"
- - "expr3 expr4"
+ - "expr13 expr13 PIPE expr12"
+ - "expr13 expr12"
 
- - "expr4 expr4 CARET expr5"
+ - "expr12 expr12 CARET_PIPE expr11"
+ - "expr12 expr11"
+
+ - "expr11 expr11 AMP expr7"
+ - "expr11 expr7"
+
+ - "expr7 expr7 LT_LT expr6"
+ - "expr7 expr7 GT_GT expr6"
+ - "expr7 expr6"
+
+ - "expr6 expr6 PLUS expr5"
+ - "expr6 expr6 MINUS expr5"
+ - "expr6 expr5"
+
+ - "expr5 expr5 STAR expr4"
+ - "expr5 expr5 SLASH expr4"
+ - "expr5 expr5 SLASH_SLASH expr4"
+ - "expr5 expr5 PCT expr4"
+ - "expr5 exprn exprn"
+ - "expr5 expr4"
+
+ - "expr4 expr4 CARET expr3"
  - "expr4 expr4 EXCL"
- - "expr4 expr5"
+ - "expr4 expr3"
 
- - "expr5 expr5 STAR expr6"
- - "expr5 expr5 SLASH expr6"
- - "expr5 expr5 SLASH_SLASH expr6"
- - "expr5 expr5 PCT expr6"
- - "expr5 expr6"
-
- - "expr6 expr6 PLUS expr7"
- - "expr6 expr6 MINUS expr7"
- - "expr6 expr7"
-
- - "expr7 expr7 LT_LT expr11"
- - "expr7 expr7 GT_GT expr11"
- - "expr7 expr11"
-
- - "expr11 expr11 AMP expr12"
- - "expr11 expr12"
-
- - "expr12 expr12 CARET_PIPE expr13"
- - "expr12 expr13"
-
- - "expr13 expr13 PIPE exprn"
- - "expr13 exprn"
+ - "expr3 TILDE exprn"
+ - "expr3 exprn"
 
  # Most basic expression forms
 
  - "exprn PIPE expr PIPE"
  - "exprn LPAREN expr RPAREN"
- - "exprn ID LPAREN RPAREN"
- - "exprn ID LPAREN arglist RPAREN"
- - "exprn ID exprn"
- - "exprn ID factor"
- - "exprn exprl"
+ - "exprn multiid LPAREN RPAREN"
+ - "exprn multiid LPAREN arglist RPAREN"
+ - "exprn multiid factor"
+ - "exprn lvalue"
 
- - "exprl factor"
- - "exprl lvalue"
+ - "multiid multiid ID"
+ - "multiid"
 
  # factors
 
@@ -265,7 +265,7 @@ productionRules:
 
  # lvalues
 
- - "lvalue ID"
+#  - "lvalue ID"
  - "lvalue LPAREN lvalue RPAREN"
 
  # Other

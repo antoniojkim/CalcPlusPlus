@@ -11,6 +11,7 @@ fi
 
 echo "Running Tests"
 cd ../Tests
+rm EngineTest.o
 
 make
 if [ $? -ne 0 ]; then

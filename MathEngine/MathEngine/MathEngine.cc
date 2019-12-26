@@ -15,8 +15,7 @@ std::list<Token> MathEngine::scan(const std::string& input){
 }
 
 std::unique_ptr<ParseTree> MathEngine::parse(const std::string& input){
-    list<Token> tokens = this->scan(input);
-    return this->parse(tokens);
+    return parser.parse(input);
 }
 std::unique_ptr<ParseTree> MathEngine::parse(std::list<Scanner::Token>& tokens){
     return parser.parse(tokens);
