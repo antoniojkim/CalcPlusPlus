@@ -110,7 +110,7 @@ unordered_map<Type, string> typeLexeme = {
 std::regex whitespace_regex("^\\s+");
 std::regex hex_regex("^(0x[0-9a-fA-f]+)");
 std::regex num_regex("^((\\d*\\.?\\d+(i(?![a-zA-Z]))?))");
-std::regex id_regex("^((a(rc)?)?(sin|cos|tan|csc|sec|cot)h?|(fr|to)(bin|two|hex)|rand(int|q)?|log(2|ab)?|norm(inv)?|(sm)?fib|integral|floor2?|riemann|stndv_?|l(n|p)|spread|prime|gamma|elasd|exprv|heron|var_?|ceil|mean|cosl|kurt|skew|corr|dist|prod|abs|deg|det|erf|exp|neg|rad|avg|gcd|geo|lcm|max|min|mdn|IQR|sum)");
+std::regex id_regex("^((a(rc)?)?(sin|cos|tan|csc|sec|cot)h?|(fr|to)(bin|two|hex)|rand(int|q)?|log(2|ab)?|norm(inv)?|(sm)?fib|l(n2?|p)|integral|floor2?|riemann|stndv_?|spread|prime|gamma|elasd|exprv|heron|var_?|ceil|mean|cosl|kurt|skew|corr|dist|prod|abs|deg|det|erf|exp|neg|rad|avg|gcd|geo|lcm|max|min|mdn|IQR|sum)");
 std::regex token_regex("^BOF|EOF|\\^\\||\\*\\*|//|<<|>>|<-|->|:=|\\\"|\\\\|x|y|\\(|\\)|\\[|\\]|\\{|\\}|=|\\+|-|\\*|/|%|\\^|&|\\||~|!|\\.|,|:|;|\\?|#|\\$|'|`|_");
 
 // Type getType(char c) {

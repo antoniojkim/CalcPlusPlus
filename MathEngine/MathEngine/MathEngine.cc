@@ -6,10 +6,18 @@
 using namespace std;
 using namespace Scanner;
 
-std::list<Token> MathEngine::scan(const std::string& str){
+std::list<Token> MathEngine::scan(const std::string& input){
     list<Token> tokens;
-    if (Scanner::scan(str, tokens)){
+    if (Scanner::scan(input, tokens)){
         return tokens;
     }
-    throw Exception("Invalid string: ", str);
+    throw Exception("Invalid string: ", input);
+}
+
+std::unique_ptr<ParseTree> MathEngine::parse(const std::string& input){
+    list<Token> tokens = this->scan(input);
+    return this->parse(tokens);
+}
+std::unique_ptr<ParseTree> MathEngine::parse(std::list<Scanner::Token>& tokens){
+    return parser.parse(tokens);
 }

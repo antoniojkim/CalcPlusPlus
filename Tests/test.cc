@@ -2,6 +2,7 @@
 #include <Catch2>
 
 #include "ScannerTests/scannerTests.h"
+#include "ParserTests/parserTests.h"
 
 
 

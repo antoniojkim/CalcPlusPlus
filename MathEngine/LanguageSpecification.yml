@@ -116,7 +116,7 @@ id_regex:
 #  - Exp               # Exp(
  - (sm)?fib          # fib, smfib
  - floor2?           # floor, floor2
- - l(n|p)            # ln, lp
+ - l(n2?|p)            # ln, lp
  - log(2|ab)?        # log, log2, logab
                      # log(a) calculates log_1₀(a). log(a, b) calculates logₐ(b)
  - neg
@@ -247,6 +247,7 @@ productionRules:
  - "exprn LPAREN expr RPAREN"
  - "exprn ID LPAREN RPAREN"
  - "exprn ID LPAREN arglist RPAREN"
+ - "exprn ID exprn"
  - "exprn ID factor"
  - "exprn exprl"
 
