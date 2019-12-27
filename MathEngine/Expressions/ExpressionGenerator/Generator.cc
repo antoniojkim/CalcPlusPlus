@@ -1,8 +1,14 @@
 
 #include "../Expression.h"
-#include "../Utils/exceptions.h"
+#include "../../Utils/exceptions.h"
+
+#include "../BinaryExpression.h"
+#include "../FunctionExpression.h"
+#include "../NumericalExpression.h"
 
 #include <iostream>
+#include <list>
+#include <sstream>
 #include <unordered_map>
 
 using namespace std;
@@ -12,142 +18,154 @@ expression generate_first_expression(NonTerminal* nonterminal){
 }
 
 expression generate_expr_lvalue_EQUALS_expr1_expression(NonTerminal* nonterminal){
-    throw Exception("expr_lvalue_EQUALS_expr1 not implemented");
+    throw Exception("expr_lvalue_EQUALS_expr1 Unimplemented error");
 }
 
 expression generate_expr_lvalue_COLON_EQUALS_expr1_expression(NonTerminal* nonterminal){
-    throw Exception("expr_lvalue_COLON_EQUALS_expr1 not implemented");
+    throw Exception("expr_lvalue_COLON_EQUALS_expr1 Unimplemented error");
 }
 
 expression generate_expr_lvalue_L_ARROW_expr1_expression(NonTerminal* nonterminal){
-    throw Exception("expr_lvalue_L_ARROW_expr1 not implemented");
+    throw Exception("expr_lvalue_L_ARROW_expr1 Unimplemented error");
 }
 
 expression generate_expr13_expr13_PIPE_expr12_expression(NonTerminal* nonterminal){
-    throw Exception("expr13_expr13_PIPE_expr12 not implemented");
+    throw Exception("expr13_expr13_PIPE_expr12 Unimplemented error");
 }
 
 expression generate_expr13_expr12_expression(NonTerminal* nonterminal){
-    throw Exception("expr13_expr12 not implemented");
+    throw Exception("expr13_expr12 Unimplemented error");
 }
 
 expression generate_expr12_expr12_CARET_PIPE_expr11_expression(NonTerminal* nonterminal){
-    throw Exception("expr12_expr12_CARET_PIPE_expr11 not implemented");
+    throw Exception("expr12_expr12_CARET_PIPE_expr11 Unimplemented error");
 }
 
 expression generate_expr11_expr11_AMP_expr7_expression(NonTerminal* nonterminal){
-    throw Exception("expr11_expr11_AMP_expr7 not implemented");
+    throw Exception("expr11_expr11_AMP_expr7 Unimplemented error");
 }
 
 expression generate_expr7_expr7_LT_LT_expr6_expression(NonTerminal* nonterminal){
-    throw Exception("expr7_expr7_LT_LT_expr6 not implemented");
+    throw Exception("expr7_expr7_LT_LT_expr6 Unimplemented error");
 }
 
 expression generate_expr7_expr7_GT_GT_expr6_expression(NonTerminal* nonterminal){
-    throw Exception("expr7_expr7_GT_GT_expr6 not implemented");
+    throw Exception("expr7_expr7_GT_GT_expr6 Unimplemented error");
 }
 
 expression generate_expr6_expr6_PLUS_expr5_expression(NonTerminal* nonterminal){
-    throw Exception("expr6_expr6_PLUS_expr5 not implemented");
+    return make_unique<AdditionExpression>(
+        generate_expression((*nonterminal)[0]),
+        generate_expression((*nonterminal)[2]) 
+    );
 }
 
 expression generate_expr6_expr6_MINUS_expr5_expression(NonTerminal* nonterminal){
-    throw Exception("expr6_expr6_MINUS_expr5 not implemented");
+    throw Exception("expr6_expr6_MINUS_expr5 Unimplemented error");
 }
 
 expression generate_expr5_expr5_STAR_expr4_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_expr5_STAR_expr4 not implemented");
+    throw Exception("expr5_expr5_STAR_expr4 Unimplemented error");
 }
 
 expression generate_expr5_expr5_SLASH_expr4_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_expr5_SLASH_expr4 not implemented");
+    throw Exception("expr5_expr5_SLASH_expr4 Unimplemented error");
 }
 
 expression generate_expr5_expr5_SLASH_SLASH_expr4_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_expr5_SLASH_SLASH_expr4 not implemented");
+    throw Exception("expr5_expr5_SLASH_SLASH_expr4 Unimplemented error");
 }
 
 expression generate_expr5_expr5_PCT_expr4_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_expr5_PCT_expr4 not implemented");
+    throw Exception("expr5_expr5_PCT_expr4 Unimplemented error");
 }
 
 expression generate_expr5_exprn_exprn_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_exprn_exprn not implemented");
+    throw Exception("expr5_exprn_exprn Unimplemented error");
 }
 
 expression generate_expr4_expr4_CARET_expr3_expression(NonTerminal* nonterminal){
-    throw Exception("expr4_expr4_CARET_expr3 not implemented");
+    throw Exception("expr4_expr4_CARET_expr3 Unimplemented error");
 }
 
 expression generate_expr4_expr4_EXCL_expression(NonTerminal* nonterminal){
-    throw Exception("expr4_expr4_EXCL not implemented");
+    throw Exception("expr4_expr4_EXCL Unimplemented error");
 }
 
 expression generate_expr3_TILDE_exprn_expression(NonTerminal* nonterminal){
-    throw Exception("expr3_TILDE_exprn not implemented");
+    throw Exception("expr3_TILDE_exprn Unimplemented error");
 }
 
 expression generate_exprn_PIPE_expr_PIPE_expression(NonTerminal* nonterminal){
-    throw Exception("exprn_PIPE_expr_PIPE not implemented");
+    throw Exception("exprn_PIPE_expr_PIPE Unimplemented error");
 }
 
 expression generate_exprn_LPAREN_expr_RPAREN_expression(NonTerminal* nonterminal){
-    throw Exception("exprn_LPAREN_expr_RPAREN not implemented");
+    throw Exception("exprn_LPAREN_expr_RPAREN Unimplemented error");
+}
+
+void extract_ids(NonTerminal* multiid, list<string> ids){
+    while (!multiid->isEmpty()){
+        ids.emplace_front((*multiid)[1]->getRoot());
+        multiid = (*multiid)[0]->getNonTerminal();
+    }
 }
 
 expression generate_exprn_multiid_LPAREN_RPAREN_expression(NonTerminal* nonterminal){
-    throw Exception("exprn_multiid_LPAREN_RPAREN not implemented");
+    throw Exception("exprn_multiid_LPAREN_RPAREN Unimplemented error");
 }
 
 expression generate_exprn_multiid_LPAREN_arglist_RPAREN_expression(NonTerminal* nonterminal){
-    throw Exception("exprn_multiid_LPAREN_arglist_RPAREN not implemented");
+    throw Exception("exprn_multiid_LPAREN_arglist_RPAREN Unimplemented error");
 }
 
 expression generate_exprn_multiid_factor_expression(NonTerminal* nonterminal){
-    throw Exception("exprn_multiid_factor not implemented");
+    list<string> ids;
+    extract_ids((*nonterminal)[0]->getNonTerminal(), ids);
+
+    auto exprn = generate_expression((*nonterminal)[1]);
+    for (auto& id : ids){
+        exprn = make_unique<UnaryFunctionExpression>(id, std::move(exprn));
+    }
+    return exprn;
 }
 
 expression generate_exprn_lvalue_expression(NonTerminal* nonterminal){
-    throw Exception("exprn_lvalue not implemented");
+    throw Exception("exprn_lvalue Unimplemented error");
 }
 
-expression generate_multiid_multiid_ID_expression(NonTerminal* nonterminal){
-    throw Exception("multiid_multiid_ID not implemented");
-}
-
-expression generate_multiid_expression(NonTerminal* nonterminal){
-    throw Exception("multiid not implemented");
-}
-
-expression generate_factor_NUM_expression(NonTerminal* nonterminal){
-    throw Exception("factor_NUM not implemented");
+expression generate_factor_NUM_expression(NonTerminal* factor){
+    istringstream in {(*factor)[0]->getRoot()};
+    double num;
+    in >> num;
+    return make_unique<NumericalExpression>(num);
 }
 
 expression generate_factor_X_expression(NonTerminal* nonterminal){
-    throw Exception("factor_X not implemented");
+    throw Exception("factor_X Unimplemented error");
 }
 
 expression generate_factor_Y_expression(NonTerminal* nonterminal){
-    throw Exception("factor_Y not implemented");
+    throw Exception("factor_Y Unimplemented error");
 }
 
 expression generate_factor_NONE__expression(NonTerminal* nonterminal){
-    throw Exception("factor_NONE_ not implemented");
+    throw Exception("factor_NONE_ Unimplemented error");
 }
 
 expression generate_factor_TRUE__expression(NonTerminal* nonterminal){
-    throw Exception("factor_TRUE_ not implemented");
+    throw Exception("factor_TRUE_ Unimplemented error");
 }
 
 expression generate_factor_FALSE__expression(NonTerminal* nonterminal){
-    throw Exception("factor_FALSE_ not implemented");
+    throw Exception("factor_FALSE_ Unimplemented error");
 }
 
 expression generate_lvalue_LPAREN_lvalue_RPAREN_expression(NonTerminal* nonterminal){
-    throw Exception("lvalue_LPAREN_lvalue_RPAREN not implemented");
+    throw Exception("lvalue_LPAREN_lvalue_RPAREN Unimplemented error");
 }
 expression generate_arglist_expr_COMMA_arglist_expression(NonTerminal* nonterminal){
-    throw Exception("arglist_expr_COMMA_arglist not implemented");
+    throw Exception("arglist_expr_COMMA_arglist Unimplemented error");
 }
 
 typedef expression (*GenerateFunction)(NonTerminal*);
@@ -188,8 +206,6 @@ unordered_map<string, GenerateFunction> rules_map {
     {"exprn multiid LPAREN arglist RPAREN", generate_exprn_multiid_LPAREN_arglist_RPAREN_expression},
     {"exprn multiid factor", generate_exprn_multiid_factor_expression},
     {"exprn lvalue", generate_first_expression},
-    {"multiid multiid ID", generate_multiid_multiid_ID_expression},
-    {"multiid", generate_multiid_expression},
     {"factor NUM", generate_factor_NUM_expression},
     {"factor X", generate_factor_X_expression},
     {"factor Y", generate_factor_Y_expression},
