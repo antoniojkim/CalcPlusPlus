@@ -52,6 +52,8 @@ enum Type {
 	BACKSLASH,
 	BACKTICK,
 	UNDERSCORE,
+	C,
+	P,
 	BOF_,
 	EOF_,
 	TRUE_,

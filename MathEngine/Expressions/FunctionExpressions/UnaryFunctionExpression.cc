@@ -41,3 +41,8 @@ expression UnaryFunctionExpression::copy() {
     return make_unique<UnaryFunctionExpression>(name, arg->copy());
 }
 
+std::ostream& UnaryFunctionExpression::print(std::ostream& out) {
+    out << name << "(";
+    return arg->print(out) << ")";
+}
+

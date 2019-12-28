@@ -5,6 +5,7 @@
 #include "../BinaryExpression.h"
 #include "../FunctionExpression.h"
 #include "../NumericalExpression.h"
+#include "../VariableExpression.h"
 
 #include <iostream>
 #include <list>
@@ -61,31 +62,64 @@ expression generate_expr6_expr6_PLUS_expr5_expression(NonTerminal* nonterminal){
 }
 
 expression generate_expr6_expr6_MINUS_expr5_expression(NonTerminal* nonterminal){
-    throw Exception("expr6_expr6_MINUS_expr5 Unimplemented error");
+    return make_unique<SubtractionExpression>(
+        generate_expression((*nonterminal)[0]),
+        generate_expression((*nonterminal)[2]) 
+    );
 }
 
 expression generate_expr5_expr5_STAR_expr4_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_expr5_STAR_expr4 Unimplemented error");
+    return make_unique<MultiplicationExpression>(
+        generate_expression((*nonterminal)[0]),
+        generate_expression((*nonterminal)[2]) 
+    );
 }
 
 expression generate_expr5_expr5_SLASH_expr4_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_expr5_SLASH_expr4 Unimplemented error");
+    return make_unique<DivisionExpression>(
+        generate_expression((*nonterminal)[0]),
+        generate_expression((*nonterminal)[2])
+    );
 }
 
 expression generate_expr5_expr5_SLASH_SLASH_expr4_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_expr5_SLASH_SLASH_expr4 Unimplemented error");
+    return make_unique<IntegerDivisionExpression>(
+        generate_expression((*nonterminal)[0]),
+        generate_expression((*nonterminal)[2])
+    );
 }
 
 expression generate_expr5_expr5_PCT_expr4_expression(NonTerminal* nonterminal){
     throw Exception("expr5_expr5_PCT_expr4 Unimplemented error");
 }
 
+expression generate_expr5_expr5_P_expr4_expression(NonTerminal* nonterminal){
+    throw Exception("expr5_expr5_PCT_expr4 Unimplemented error");
+}
+
+expression generate_expr5_expr5_C_expr4_expression(NonTerminal* nonterminal){
+    throw Exception("expr5_expr5_PCT_expr4 Unimplemented error");
+}
+
 expression generate_expr5_exprn_exprn_expression(NonTerminal* nonterminal){
-    throw Exception("expr5_exprn_exprn Unimplemented error");
+    return make_unique<MultiplicationExpression>(
+        generate_expression((*nonterminal)[0]),
+        generate_expression((*nonterminal)[2])
+    );
 }
 
 expression generate_expr4_expr4_CARET_expr3_expression(NonTerminal* nonterminal){
-    throw Exception("expr4_expr4_CARET_expr3 Unimplemented error");
+    return make_unique<ExponentExpression>(
+        generate_expression((*nonterminal)[0]),
+        generate_expression((*nonterminal)[2])
+    );
+}
+
+expression generate_expr4_expr4_STAR_STAR_expr3_expression(NonTerminal* nonterminal){
+    return make_unique<ExponentExpression>(
+        generate_expression((*nonterminal)[0]),
+        generate_expression((*nonterminal)[2])
+    );
 }
 
 expression generate_expr4_expr4_EXCL_expression(NonTerminal* nonterminal){
@@ -135,18 +169,20 @@ expression generate_exprn_lvalue_expression(NonTerminal* nonterminal){
 }
 
 expression generate_factor_NUM_expression(NonTerminal* factor){
-    istringstream in {(*factor)[0]->getRoot()};
+    auto NUM = (*factor)[0]->getTerminal()->getToken().lexeme;
+    istringstream in {NUM};
     double num;
     in >> num;
+    // cout << NUM << " >> " << num << endl;
     return make_unique<NumericalExpression>(num);
 }
 
 expression generate_factor_X_expression(NonTerminal* nonterminal){
-    throw Exception("factor_X Unimplemented error");
+    return make_unique<VariableXExpression>();
 }
 
 expression generate_factor_Y_expression(NonTerminal* nonterminal){
-    throw Exception("factor_Y Unimplemented error");
+    return make_unique<VariableYExpression>();
 }
 
 expression generate_factor_NONE__expression(NonTerminal* nonterminal){
@@ -162,7 +198,7 @@ expression generate_factor_FALSE__expression(NonTerminal* nonterminal){
 }
 
 expression generate_lvalue_LPAREN_lvalue_RPAREN_expression(NonTerminal* nonterminal){
-    throw Exception("lvalue_LPAREN_lvalue_RPAREN Unimplemented error");
+    return generate_expression((*nonterminal)[1]);
 }
 expression generate_arglist_expr_COMMA_arglist_expression(NonTerminal* nonterminal){
     throw Exception("arglist_expr_COMMA_arglist Unimplemented error");
@@ -193,9 +229,12 @@ unordered_map<string, GenerateFunction> rules_map {
     {"expr5 expr5 SLASH expr4", generate_expr5_expr5_SLASH_expr4_expression},
     {"expr5 expr5 SLASH_SLASH expr4", generate_expr5_expr5_SLASH_SLASH_expr4_expression},
     {"expr5 expr5 PCT expr4", generate_expr5_expr5_PCT_expr4_expression},
+    {"expr5 expr5 P expr4", generate_expr5_expr5_P_expr4_expression},
+    {"expr5 expr5 C expr4", generate_expr5_expr5_C_expr4_expression},
     {"expr5 exprn exprn", generate_expr5_exprn_exprn_expression},
     {"expr5 expr4", generate_first_expression},
     {"expr4 expr4 CARET expr3", generate_expr4_expr4_CARET_expr3_expression},
+    {"expr4 expr4 STAR_STAR expr3", generate_expr4_expr4_STAR_STAR_expr3_expression},
     {"expr4 expr4 EXCL", generate_expr4_expr4_EXCL_expression},
     {"expr4 expr3", generate_first_expression},
     {"expr3 TILDE exprn", generate_expr3_TILDE_exprn_expression},

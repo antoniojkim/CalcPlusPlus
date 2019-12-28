@@ -85,6 +85,10 @@ tokens:
     lexeme: "`"
  - UNDERSCORE:
     lexeme: "_"
+ - C:
+    lexeme: "C"
+ - P:
+    lexeme: "P"
  - BOF_:
     lexeme: "BOF"
  - EOF_:
@@ -232,10 +236,13 @@ productionRules:
  - "expr5 expr5 SLASH expr4"
  - "expr5 expr5 SLASH_SLASH expr4"
  - "expr5 expr5 PCT expr4"
+ - "expr5 expr5 C expr4"
+ - "expr5 expr5 P expr4"
  - "expr5 exprn exprn"
  - "expr5 expr4"
 
  - "expr4 expr4 CARET expr3"
+ - "expr4 expr4 STAR_STAR expr3"
  - "expr4 expr4 EXCL"
  - "expr4 expr3"
 

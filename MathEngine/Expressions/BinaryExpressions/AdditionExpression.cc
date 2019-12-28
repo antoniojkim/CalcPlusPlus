@@ -44,3 +44,9 @@ expression AdditionExpression::copy() {
     );
 }
 
+std::ostream& AdditionExpression::print(std::ostream& out) {
+    lhs->print(out);
+    out << "+";
+    return rhs->print(out);
+}
+

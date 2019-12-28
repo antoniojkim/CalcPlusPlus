@@ -30,3 +30,7 @@ bool NumericalExpression::complex(){ return false; }
 expression NumericalExpression::copy() {
     return make_unique<NumericalExpression>(num);
 }
+
+std::ostream& NumericalExpression::print(std::ostream& out) {
+    return out << num;
+}
