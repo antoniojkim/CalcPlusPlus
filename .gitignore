@@ -3,5 +3,6 @@
 *.a
 *pycache*
 *ipynb_checkpoint*
+MathEngine/libMathEngine.a
 local_update
 script.py
