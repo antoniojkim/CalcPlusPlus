@@ -34,8 +34,7 @@ expression DivisionExpression::integrate(const std::string& var) {
 bool DivisionExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
 
 double DivisionExpression::value() { return lhs->value() / rhs->value(); }
-double DivisionExpression::value(const double& x) { return lhs->value(x) / rhs->value(x); }
-double DivisionExpression::value(const double& x, const double& y) { return lhs->value(x, y) / rhs->value(x, y); }
+double DivisionExpression::value(const Variables& vars) { return lhs->value(vars) / rhs->value(vars); }
 
 bool DivisionExpression::complex(){ return lhs->complex() || rhs->complex(); }
 

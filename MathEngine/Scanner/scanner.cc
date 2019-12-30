@@ -3,150 +3,62 @@
 #include <sstream>
 #include <regex>
 #include <unordered_map>
-#include <unordered_set>
 
 using namespace std;
 using namespace Scanner;
 
-// unordered_map<string, Type> keywordType = {
-// 	{keywordTypes}
-// };
-unordered_map<Type, string> keywordLexeme = {
-	{TRUE_, "TRUE"},
-	{FALSE_, "FALSE"},
-	{NONE_, "NONE"},
-	{NULL_, "NULL"}
+const unordered_map<string, Type> tokenType = {
+    {"x", X},
+    {"y", Y},
+    {"(", LPAREN},
+    {")", RPAREN},
+    {"[", LSQUARE},
+    {"]", RSQUARE},
+    {"{", LBRACE},
+    {"}", RBRACE},
+    {"=", EQUALS},
+    {"+", PLUS},
+    {"-", MINUS},
+    {"*", STAR},
+    {"/", SLASH},
+    {"%", PCT},
+    {"^", CARET},
+    {"&", AMP},
+    {"|", PIPE},
+    {"~", TILDE},
+    {"!", EXCL},
+    {"^|", CARET_PIPE},
+    {"**", STAR_STAR},
+    {"//", SLASH_SLASH},
+    {"<<", LT_LT},
+    {">>", GT_GT},
+    {"<-", L_ARROW},
+    {"->", R_ARROW},
+    {":=", COLON_EQUALS},
+    {".", DOT},
+    {",", COMMA},
+    {":", COLON},
+    {";", SEMICOLON},
+    {"?", QUESTION},
+    {"#", POUND},
+    {"$", DOLLAR},
+    {"\"", QUOTE},
+    {"'", APOSTROPHE},
+    {"\\", BACKSLASH},
+    {"`", BACKTICK},
+    {"_", UNDERSCORE},
+    {"C", C},
+    {"P", P},
+    {"BOF", BOF_},
+    {"EOF", EOF_}
 };
-unordered_map<string, Type> tokenType = {
-	{"x", X},
-	{"y", Y},
-	{"(", LPAREN},
-	{")", RPAREN},
-	{"[", LSQUARE},
-	{"]", RSQUARE},
-	{"{", LBRACE},
-	{"}", RBRACE},
-	{"=", EQUALS},
-	{"+", PLUS},
-	{"-", MINUS},
-	{"*", STAR},
-	{"/", SLASH},
-	{"%", PCT},
-	{"^", CARET},
-	{"&", AMP},
-	{"|", PIPE},
-	{"~", TILDE},
-	{"!", EXCL},
-	{"^|", CARET_PIPE},
-	{"**", STAR_STAR},
-	{"//", SLASH_SLASH},
-	{"<<", LT_LT},
-	{">>", GT_GT},
-	{"<-", L_ARROW},
-	{"->", R_ARROW},
-	{":=", COLON_EQUALS},
-	{".", DOT},
-	{",", COMMA},
-	{":", COLON},
-	{";", SEMICOLON},
-	{"?", QUESTION},
-	{"#", POUND},
-	{"$", DOLLAR},
-	{"\"", QUOTE},
-	{"'", APOSTROPHE},
-	{"\\", BACKSLASH},
-	{"`", BACKTICK},
-	{"_", UNDERSCORE},
-	{"C", C},
-	{"P", P},
-	{"BOF", BOF_},
-	{"EOF", EOF_}
-};
-unordered_map<Type, string> typeLexeme = {
-	{X, "X"},
-	{Y, "Y"},
-	{LPAREN, "LPAREN"},
-	{RPAREN, "RPAREN"},
-	{LSQUARE, "LSQUARE"},
-	{RSQUARE, "RSQUARE"},
-	{LBRACE, "LBRACE"},
-	{RBRACE, "RBRACE"},
-	{EQUALS, "EQUALS"},
-	{PLUS, "PLUS"},
-	{MINUS, "MINUS"},
-	{STAR, "STAR"},
-	{SLASH, "SLASH"},
-	{PCT, "PCT"},
-	{CARET, "CARET"},
-	{AMP, "AMP"},
-	{PIPE, "PIPE"},
-	{TILDE, "TILDE"},
-	{EXCL, "EXCL"},
-	{CARET_PIPE, "CARET_PIPE"},
-	{STAR_STAR, "STAR_STAR"},
-	{SLASH_SLASH, "SLASH_SLASH"},
-	{LT_LT, "LT_LT"},
-	{GT_GT, "GT_GT"},
-	{L_ARROW, "L_ARROW"},
-	{R_ARROW, "R_ARROW"},
-	{COLON_EQUALS, "COLON_EQUALS"},
-	{DOT, "DOT"},
-	{COMMA, "COMMA"},
-	{COLON, "COLON"},
-	{SEMICOLON, "SEMICOLON"},
-	{QUESTION, "QUESTION"},
-	{POUND, "POUND"},
-	{DOLLAR, "DOLLAR"},
-	{QUOTE, "QUOTE"},
-	{APOSTROPHE, "APOSTROPHE"},
-	{BACKSLASH, "BACKSLASH"},
-	{BACKTICK, "BACKTICK"},
-	{UNDERSCORE, "UNDERSCORE"},
-	{C, "C"},
-	{P, "P"},
-	{BOF_, "BOF_"},
-	{EOF_, "EOF_"}
-};
-// unordered_map<char, Type> charType = {
-// 	{charTypes}
-// };
 
-std::regex whitespace_regex("^\\s+");
-std::regex hex_regex("^(0x[0-9a-fA-f]+)");
-std::regex num_regex("^((\\d*\\.?\\d+(i(?![a-zA-Z]))?))");
-std::regex id_regex("^((a(rc)?)?(sin|cos|tan|csc|sec|cot)h?|(fr|to)(bin|two|hex)|rand(int|q)?|log(2|ab)?|norm(inv)?|(sm)?fib|l(n2?|p)|integral|floor2?|riemann|stndv_?|spread|prime|gamma|elasd|exprv|heron|var_?|ceil|mean|cosl|kurt|skew|corr|dist|prod|abs|deg|det|erf|exp|neg|rad|avg|gcd|geo|lcm|max|min|mdn|IQR|sum)");
-std::regex token_regex("^BOF|EOF|\\^\\||\\*\\*|//|<<|>>|<-|->|:=|\\\"|\\\\|x|y|\\(|\\)|\\[|\\]|\\{|\\}|=|\\+|-|\\*|/|%|\\^|&|\\||~|!|\\.|,|:|;|\\?|#|\\$|'|`|_|C|P");
-
-// Type getType(char c) {
-//     if ('0' <= c && c <= '9')  return NUM;
-//     if ('a' <= c && c <= 'z')  return ID;
-//     if ('A' <= c && c <= 'Z')  return ID;
-//     if (charType.count(c) > 0) return charType[c];
-
-//     switch(c){
-//         case ' ':
-//             return WHITESPACE;
-//         case '\t':
-//             return WHITESPACE;
-//         case '\n':
-//             return WHITESPACE;
-//         case '\r':
-//             return WHITESPACE;
-//         default:
-//             return NONE;
-//     }
-// }
-
-std::string Scanner::getTypeString(const Type& type) {
-    if (keywordLexeme.count(type) > 0) return keywordLexeme[type];
-    if (typeLexeme.count(type) > 0)    return typeLexeme[type];
-    if (type == ID)                    return "ID";
-    if (type == STR)                   return "STR";
-    if (type == NUM)                   return "NUM";
-    if (type == WHITESPACE)            return "WHITESPACE";
-
-    return "NONE";
-}
+const std::regex whitespace_regex("^\\s+");
+const std::regex hex_regex("^(0x[0-9a-fA-f]+)");
+const std::regex bin_regex("^(0b[01]+)");
+const std::regex num_regex("^((\\d*\\.?\\d+(i(?![a-zA-Z]))?))");
+const std::regex id_regex("^((a(rc)?)?(sin|cos|tan|csc|sec|cot)h?|(fr|to)(bin|two|hex)|rand(int|q)?|log(2|ab)?|norm(inv)?|(sm)?fib|l(n2?|p)|integral|floor2?|riemann|stndv_?|spread|prime|gamma|elasd|exprv|heron|var_?|ceil|mean|cosl|kurt|skew|corr|dist|prod|abs|deg|det|erf|exp|neg|rad|avg|gcd|geo|lcm|max|min|mdn|IQR|sum)");
+const std::regex token_regex("^BOF|EOF|\\^\\||\\*\\*|//|<<|>>|<-|->|:=|\\\"|\\\\|x|y|\\(|\\)|\\[|\\]|\\{|\\}|=|\\+|-|\\*|/|%|\\^|&|\\||~|!|\\.|,|:|;|\\?|#|\\$|'|`|_|C|P");
 
 bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
     if (str.empty()) return true;
@@ -159,6 +71,10 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
         tokens.emplace_back(Token{match[0], NUM});
         return Scanner::scan(match.suffix(), tokens);
     }
+    if (std::regex_search(str, match, bin_regex)){
+        tokens.emplace_back(Token{match[0], NUM});
+        return Scanner::scan(match.suffix(), tokens);
+    }
     if (std::regex_search(str, match, num_regex)){
         tokens.emplace_back(Token{match[0], NUM});
         return Scanner::scan(match.suffix(), tokens);
@@ -168,10 +84,70 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
         return Scanner::scan(match.suffix(), tokens);
     }
     if (std::regex_search(str, match, token_regex)){
-        tokens.emplace_back(Token{match[0], tokenType[match[0]]});
+        tokens.emplace_back(Token{match[0], tokenType.at(match[0])});
         return Scanner::scan(match.suffix(), tokens);
     }
     return false;
+}
+
+
+std::string Scanner::getTypeString(const Type& type) {
+    switch(type){
+        case ID: return "ID";
+        case STR: return "STR";
+        case NUM: return "NUM";
+        case HEX: return "HEX";
+        case X: return "X";
+        case Y: return "Y";
+        case LPAREN: return "LPAREN";
+        case RPAREN: return "RPAREN";
+        case LSQUARE: return "LSQUARE";
+        case RSQUARE: return "RSQUARE";
+        case LBRACE: return "LBRACE";
+        case RBRACE: return "RBRACE";
+        case EQUALS: return "EQUALS";
+        case PLUS: return "PLUS";
+        case MINUS: return "MINUS";
+        case STAR: return "STAR";
+        case SLASH: return "SLASH";
+        case PCT: return "PCT";
+        case CARET: return "CARET";
+        case AMP: return "AMP";
+        case PIPE: return "PIPE";
+        case TILDE: return "TILDE";
+        case EXCL: return "EXCL";
+        case CARET_PIPE: return "CARET_PIPE";
+        case STAR_STAR: return "STAR_STAR";
+        case SLASH_SLASH: return "SLASH_SLASH";
+        case LT_LT: return "LT_LT";
+        case GT_GT: return "GT_GT";
+        case L_ARROW: return "L_ARROW";
+        case R_ARROW: return "R_ARROW";
+        case COLON_EQUALS: return "COLON_EQUALS";
+        case DOT: return "DOT";
+        case COMMA: return "COMMA";
+        case COLON: return "COLON";
+        case SEMICOLON: return "SEMICOLON";
+        case QUESTION: return "QUESTION";
+        case POUND: return "POUND";
+        case DOLLAR: return "DOLLAR";
+        case QUOTE: return "QUOTE";
+        case APOSTROPHE: return "APOSTROPHE";
+        case BACKSLASH: return "BACKSLASH";
+        case BACKTICK: return "BACKTICK";
+        case UNDERSCORE: return "UNDERSCORE";
+        case C: return "C";
+        case P: return "P";
+        case BOF_: return "BOF_";
+        case EOF_: return "EOF_";
+        case TRUE_: return "TRUE_";
+        case FALSE_: return "FALSE_";
+        case NONE_: return "NONE_";
+        case NULL_: return "NULL_";
+        case WHITESPACE: return "WHITESPACE";
+        case NONE: return "NONE";
+        default: return "NONE";
+    }
 }
 
 

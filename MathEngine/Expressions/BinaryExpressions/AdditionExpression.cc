@@ -32,8 +32,7 @@ expression AdditionExpression::integrate(const std::string& var) {
 bool AdditionExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
 
 double AdditionExpression::value() { return lhs->value() + rhs->value(); }
-double AdditionExpression::value(const double& x) { return lhs->value(x) + rhs->value(x); }
-double AdditionExpression::value(const double& x, const double& y) { return lhs->value(x, y) + rhs->value(x, y); }
+double AdditionExpression::value(const Variables& vars) { return lhs->value(vars) + rhs->value(vars); }
 
 bool AdditionExpression::complex(){ return lhs->complex() || rhs->complex(); }
 

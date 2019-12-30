@@ -57,6 +57,8 @@ TEST_CASE("Basic Scanner Tests", "[scanner]" ) {
 
 TEST_CASE("Complex Scanner Tests", "[scanner]" ) {
 
+    scannerTest("sin(cos(3))", "sin ( cos ( 3 ) )");
+
     scannerTest("cossinh3+5i-arcsin(x, 4)+6integral(sinx, 4, 5)^|4+0x3aF",
                 "cos sinh 3 + 5i - arcsin ( x , 4 ) + 6 integral ( sin x , 4 , 5 ) ^| 4 + 0x3aF");
 

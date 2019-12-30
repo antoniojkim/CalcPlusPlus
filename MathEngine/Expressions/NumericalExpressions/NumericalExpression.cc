@@ -22,8 +22,7 @@ bool NumericalExpression::evaluable(){ return true; }
 
 double NumericalExpression::value() { return num; }
 
-double NumericalExpression::value(const double& x) { return num; }
-double NumericalExpression::value(const double& x, const double& y) { return num; }
+double NumericalExpression::value(const Variables& vars) { return num; }
 
 bool NumericalExpression::complex(){ return false; }
 

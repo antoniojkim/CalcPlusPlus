@@ -34,8 +34,7 @@ expression MultiplicationExpression::integrate(const std::string& var) {
 bool MultiplicationExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
 
 double MultiplicationExpression::value() { return lhs->value() * rhs->value(); }
-double MultiplicationExpression::value(const double& x) { return lhs->value(x) * rhs->value(x); }
-double MultiplicationExpression::value(const double& x, const double& y) { return lhs->value(x, y) * rhs->value(x, y); }
+double MultiplicationExpression::value(const Variables& vars) { return lhs->value(vars) * rhs->value(vars); }
 
 bool MultiplicationExpression::complex(){ return lhs->complex() || rhs->complex(); }
 

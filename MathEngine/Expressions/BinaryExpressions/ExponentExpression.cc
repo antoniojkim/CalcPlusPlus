@@ -35,8 +35,7 @@ expression ExponentExpression::integrate(const std::string& var) {
 bool ExponentExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
 
 double ExponentExpression::value() { return pow(lhs->value(), rhs->value()); }
-double ExponentExpression::value(const double& x) { return pow(lhs->value(x), rhs->value(x)); }
-double ExponentExpression::value(const double& x, const double& y) { return pow(lhs->value(x, y), rhs->value(x, y)); }
+double ExponentExpression::value(const Variables& vars) { return pow(lhs->value(vars), rhs->value(vars)); }
 
 bool ExponentExpression::complex(){ return lhs->complex() || rhs->complex(); }
 

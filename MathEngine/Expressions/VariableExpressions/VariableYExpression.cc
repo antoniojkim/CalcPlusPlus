@@ -26,8 +26,13 @@ bool VariableYExpression::evaluable(){ return false; }
 
 double VariableYExpression::value() { return GSL_NAN; }
 
-double VariableYExpression::value(const double& x) { return GSL_NAN; }
-double VariableYExpression::value(const double& x, const double& y) { return y; }
+
+double VariableYExpression::value(const Variables& vars) {
+    if (vars.count("y") > 0){
+        return vars.at("y");
+    }
+    return GSL_NAN;
+}
 
 bool VariableYExpression::complex(){ return false; }
 

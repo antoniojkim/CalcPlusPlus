@@ -32,8 +32,7 @@ expression UnaryFunctionExpression::integrate(const std::string& var) {
 bool UnaryFunctionExpression::evaluable(){ return arg->evaluable(); }
 
 double UnaryFunctionExpression::value() { return f(arg->value()); }
-double UnaryFunctionExpression::value(const double& x) { return f(arg->value(x)); }
-double UnaryFunctionExpression::value(const double& x, const double& y) { return f(arg->value(x, y)); }
+double UnaryFunctionExpression::value(const Variables& vars) { return f(arg->value(vars)); }
 
 bool UnaryFunctionExpression::complex(){ return arg->complex(); }
 

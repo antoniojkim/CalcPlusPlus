@@ -32,8 +32,7 @@ expression SubtractionExpression::integrate(const std::string& var) {
 bool SubtractionExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
 
 double SubtractionExpression::value() { return lhs->value() - rhs->value(); }
-double SubtractionExpression::value(const double& x) { return lhs->value(x) - rhs->value(x); }
-double SubtractionExpression::value(const double& x, const double& y) { return lhs->value(x, y) - rhs->value(x, y); }
+double SubtractionExpression::value(const Variables& vars) { return lhs->value(vars) - rhs->value(vars); }
 
 bool SubtractionExpression::complex(){ return lhs->complex() || rhs->complex(); }
 

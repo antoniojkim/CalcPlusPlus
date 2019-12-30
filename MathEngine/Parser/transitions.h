@@ -8,12 +8,12 @@
 #include <utility>
 #include <vector>
 
-extern std::unordered_set<std::string> terminals;
+extern const std::unordered_set<std::string> terminals;
 
-extern std::unordered_set<std::string> nonterminals;
+extern const std::unordered_set<std::string> nonterminals;
 
-extern std::vector<std::list<std::string>> rules;
+extern const std::vector<std::list<std::string>> rules;
 
-extern std::unordered_map<int, std::unordered_map<std::string, std::pair<bool, int>>> transitions;
+extern const std::vector<std::unordered_map<std::string, std::pair<bool, int>>> transitions;
 
 #endif // __TRANSITIONS_H__

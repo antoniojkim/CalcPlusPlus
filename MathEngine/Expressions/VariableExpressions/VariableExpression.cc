@@ -25,10 +25,14 @@ expression VariableExpression::integrate(const std::string& var) {
 
 bool VariableExpression::evaluable(){ return !gsl_isnan(num); }
 
-double VariableExpression::value() { return num; }
+double VariableExpression::value() { return GSL_NAN; }
 
-double VariableExpression::value(const double& x) { return num; }
-double VariableExpression::value(const double& x, const double& y) { return num; }
+double VariableExpression::value(const Variables& vars) {
+    if (vars.count(name) > 0){
+        return vars.at(name);
+    }
+    return GSL_NAN;
+}
 
 bool VariableExpression::complex(){ return false; }
 

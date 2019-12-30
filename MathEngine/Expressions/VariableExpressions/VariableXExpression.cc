@@ -26,8 +26,12 @@ bool VariableXExpression::evaluable(){ return false; }
 
 double VariableXExpression::value() { return GSL_NAN; }
 
-double VariableXExpression::value(const double& x) { return x; }
-double VariableXExpression::value(const double& x, const double& y) { return x; }
+double VariableXExpression::value(const Variables& vars) {
+    if (vars.count("x") > 0){
+        return vars.at("x");
+    }
+    return GSL_NAN;
+}
 
 bool VariableXExpression::complex(){ return false; }
 

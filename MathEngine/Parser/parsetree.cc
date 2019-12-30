@@ -63,6 +63,7 @@ std::string& NonTerminal::getRule() { return rule; }
 bool NonTerminal::isTerminal() { return false; }
 NonTerminal* NonTerminal::getNonTerminal() { return this; }
 bool NonTerminal::isEmpty() { return children.empty(); }
+unsigned int NonTerminal::size() { return children.size(); }
 
 std::ostream& NonTerminal::print(std::ostream& out, const std::string& indent) {
     out << indent << rule << endl;

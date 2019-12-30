@@ -200,7 +200,6 @@ nonterminalSymbols:
  - "expr12"
  - "expr13"
  - "exprn"
- - "multiid"
  - "factor"
  - "arglist"
 startSymbol: "statement"
@@ -214,6 +213,10 @@ productionRules:
  # Operator Predence Rules (Based off https://en.cppreference.com/w/cpp/language/operator_precedence)
 
  - "expr1 expr13"
+#  - "expr1 expr6"
+#  - "expr1 exprn"
+
+ ## Bitwise Operators
 
  - "expr13 expr13 PIPE expr12"
  - "expr13 expr12"
@@ -228,6 +231,8 @@ productionRules:
  - "expr7 expr7 GT_GT expr6"
  - "expr7 expr6"
 
+ ## Mathematical Operators
+
  - "expr6 expr6 PLUS expr5"
  - "expr6 expr6 MINUS expr5"
  - "expr6 expr5"
@@ -238,7 +243,7 @@ productionRules:
  - "expr5 expr5 PCT expr4"
  - "expr5 expr5 C expr4"
  - "expr5 expr5 P expr4"
- - "expr5 exprn exprn"
+#  - "expr5 exprn exprn"
  - "expr5 expr4"
 
  - "expr4 expr4 CARET expr3"
@@ -251,24 +256,22 @@ productionRules:
 
  # Most basic expression forms
 
- - "exprn PIPE expr PIPE"
- - "exprn LPAREN expr RPAREN"
- - "exprn multiid LPAREN RPAREN"
- - "exprn multiid LPAREN arglist RPAREN"
- - "exprn multiid factor"
+ - "exprn ID exprn"
+ - "exprn ID LPAREN arglist RPAREN"
+ - "exprn factor"
  - "exprn lvalue"
-
- - "multiid multiid ID"
- - "multiid"
 
  # factors
 
+#  - "factor ID"
  - "factor NUM"
  - "factor X"
  - "factor Y"
  - "factor NONE_"
  - "factor TRUE_"
  - "factor FALSE_"
+ - "factor PIPE expr PIPE"
+ - "factor LPAREN expr RPAREN"
 
  # lvalues
 
@@ -277,5 +280,6 @@ productionRules:
 
  # Other
 
+ - "arglist"
  - "arglist expr"
  - "arglist expr COMMA arglist"

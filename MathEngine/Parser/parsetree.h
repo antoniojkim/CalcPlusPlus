@@ -60,6 +60,7 @@ class NonTerminal : public ParseTree {
     bool isTerminal() override;
     NonTerminal* getNonTerminal() override;
     bool isEmpty() override;
+    unsigned int size();
 
     virtual std::ostream& print(std::ostream& out,
                                 const std::string& indent) override;
