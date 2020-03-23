@@ -17,7 +17,15 @@ namespace Scanner {
         NONE_, NULL_, WHITESPACE, NONE
     };
 
-    std::string getTypeString(const Type& type);
+    const std::string typeStrings[53] = {
+        "ID", "STR", "NUM", "HEX", "X", "Y", "LPAREN", "RPAREN", "LSQUARE", "RSQUARE",
+        "LBRACE", "RBRACE", "EQUALS", "PLUS", "MINUS", "STAR", "SLASH", "PCT", "CARET",
+        "AMP", "PIPE", "TILDE", "EXCL", "CARET_PIPE", "STAR_STAR", "SLASH_SLASH",
+        "LT_LT", "GT_GT", "L_ARROW", "R_ARROW", "COLON_EQUALS", "DOT", "COMMA", "COLON",
+        "SEMICOLON", "QUESTION", "POUND", "DOLLAR", "QUOTE", "APOSTROPHE", "BACKSLASH",
+        "BACKTICK", "UNDERSCORE", "C", "P", "BOF_", "EOF_", "TRUE_", "FALSE_", "NONE_",
+        "NULL_", "WHITESPACE", "NONE"
+    };
 
     struct Token {
         std::string lexeme;

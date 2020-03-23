@@ -7,68 +7,51 @@
 using namespace std;
 using namespace Scanner;
 
-Terminal* ParseTree::getTerminal() { throw "Trying to get terminal from nonterminal"; }
-NonTerminal* ParseTree::getNonTerminal() { throw "Trying to get nonterminal from terminal"; }
-bool ParseTree::isEmpty() { throw "Trying to see if terminal is empty"; }
+TerminalTree* ParseTree::getTerminalTree() { throw "Trying to get TerminalTree from nonTerminalTree"; }
+NonTerminalTree* ParseTree::getNonTerminalTree() { throw "Trying to get nonTerminalTree from TerminalTree"; }
+bool ParseTree::isEmpty() { throw "Trying to see if TerminalTree is empty"; }
 
-Terminal::Terminal(const Token& token) : token{token}, typeString{getTypeString(token.type)} {}
-bool Terminal::isTerminal() { return true; }
-Terminal* Terminal::getTerminal() { return this; }
-std::string& Terminal::getRoot() { return typeString; }
-std::string& Terminal::getFirst() { return typeString; }
+TerminalTree::TerminalTree(const Token& token) : token{token}, typeString{typeStrings[token.type]} {}
+bool TerminalTree::isTerminalTree() { return true; }
+TerminalTree* TerminalTree::getTerminalTree() { return this; }
+int TerminalTree::getRoot() { return token.type; }
+int TerminalTree::getFirst() { return token.type; }
 
-Token& Terminal::getToken() { return token; }
+Token& TerminalTree::getToken() { return token; }
 
-std::ostream& Terminal::print(std::ostream& out, const std::string& indent) {
-    out << indent << getTypeString(token.type) << " " << token.lexeme << endl;
+std::ostream& TerminalTree::print(std::ostream& out, const std::string& indent) {
+    out << indent << typeStrings[token.type] << " " << token.lexeme << endl;
     return out;
 }
 
-NonTerminal::NonTerminal(const list<string>& rule) {
-    bool rootSet = false;
-    bool first = true;
-    ostringstream oss;
-    for (auto& s : rule) {
-        if (!rootSet) {
-            root = s;
-            rootSet = true;
-            oss << s;
-        } else {
-            if (first) {
-                first = false;
-                this->first = s;
-            }
-            oss << " " << s;
-        }
-    }
-    this->rule = oss.str();
-}
-
-void NonTerminal::reserve(const int& num) {
+NonTerminalTree::NonTerminalTree(const int rule, const int* ruleArray, const int ruleSize):
+    rule{rule}, ruleArray{ruleArray}, ruleSize{ruleSize} {
     children.clear();
-    children.reserve(num);
+    children.reserve(ruleSize - 1);
 }
 
-void NonTerminal::addChild(unique_ptr<ParseTree>& child) { children.emplace_back(std::move(child)); }
+void NonTerminalTree::addChild(unique_ptr<ParseTree>& child) { children.emplace_back(std::move(child)); }
 
-vector<unique_ptr<ParseTree>>& NonTerminal::getChildren() { return children; }
-std::unique_ptr<ParseTree>& NonTerminal::getChild(const int& i) { return children[i]; }
-ParseTree* NonTerminal::operator[](const int& i){
-    return children.at(i).get();
+vector<unique_ptr<ParseTree>>& NonTerminalTree::getChildren() { return children; }
+std::unique_ptr<ParseTree>& NonTerminalTree::getChild(int i) { return children[i]; }
+NonTerminalTree* NonTerminalTree::operator[](int i) {
+    if (!children[i]->isTerminalTree()){
+        return (NonTerminalTree*) children[i].get();
+    }
+    throw "Not a NonTerminal Tree";
 }
 
-string& NonTerminal::getRoot() { return root; }
-string& NonTerminal::getFirst() { return first; }
-std::string& NonTerminal::getRule() { return rule; }
-bool NonTerminal::isTerminal() { return false; }
-NonTerminal* NonTerminal::getNonTerminal() { return this; }
-bool NonTerminal::isEmpty() { return children.empty(); }
-unsigned int NonTerminal::size() { return children.size(); }
+int NonTerminalTree::getRoot() { return ruleArray[0]; }
+int NonTerminalTree::getFirst() { return ruleArray[1]; }
+int NonTerminalTree::getRule() { return rule; }
+bool NonTerminalTree::isTerminalTree() { return false; }
+NonTerminalTree* NonTerminalTree::getNonTerminalTree() { return this; }
+bool NonTerminalTree::isEmpty() { return children.empty(); }
 
-std::ostream& NonTerminal::print(std::ostream& out, const std::string& indent) {
+std::ostream& NonTerminalTree::print(std::ostream& out, const std::string& indent) {
     out << indent << rule << endl;
     for (auto& child : children) {
-        // if (!child->isTerminal()){
+        // if (!child->isTerminalTree()){
         child->print(out, indent + "    ");
         // }
     }

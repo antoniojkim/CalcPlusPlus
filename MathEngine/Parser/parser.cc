@@ -28,7 +28,14 @@ T getNext(const string& str) {
 template <class T>
 T getNext(istringstream& iss) {
     T i;
-Parser::Parser() {}
+    if (!(iss >> i)) throw "Failed to get next from istringstream";
+    return i;
+}
+
+Parser::Parser(const std::string& lr1Path) {
+    ifstream f{lr1Path};
+    string s;
+
     if (!getline(f, s)) throw "Expected Line with number of terminals";
     int numTerminals = getNext<int>(s);
     for (int i = 0; i < numTerminals; ++i) {
@@ -110,15 +117,15 @@ std::unique_ptr<ParseTree> Parser::parse(list<Token>& tokens) {
     stateStack.emplace_back(0);
 
     for (auto& token : tokens) {
-        string typeString = getTypeString(token.type);
-        while (transitions.at(stateStack.back()).count(typeString) > 0 &&
-               transitions.at(stateStack.back()).at(typeString).first == true) {
-            int rule = transitions.at(stateStack.back()).at(typeString).second;
+        Type type = token.type;
+        while (transitions.at(stateStack.back()).count(type) > 0 &&
+               transitions.at(stateStack.back()).at(type) >= 0) { // If transition exists and is a reduction
+            int rule = transitions.at(stateStack.back()).at(type);
 
-            NonTerminal* nt = new NonTerminal(rules.at(rule));
-            nt->reserve(rules.at(rule).size() - 1);
-
-            for (size_t j = 1; j < rules.at(rule).size(); ++j) {
+            int ruleSize = rules.at(rule)[0];
+            NonTerminalTree* nt = new NonTerminalTree(rule, rules.at(rule).data()+1, ruleSize);
+            
+            for (int j = 1; j < ruleSize; ++j) {
                 nt->addChild(symbolStack.back());
                 symbolStack.pop_back();
                 stateStack.pop_back();
@@ -126,25 +133,24 @@ std::unique_ptr<ParseTree> Parser::parse(list<Token>& tokens) {
             reverse(nt->getChildren().begin(), nt->getChildren().end());
             std::unique_ptr<ParseTree> tree{nt};
             symbolStack.emplace_back(std::move(tree));
-            stateStack.emplace_back(transitions.at(stateStack.back()).at(rules.at(rule).front()).second);
+            int nextState = -transitions.at(stateStack.back()).at(rules.at(rule)[1])-1;
+            stateStack.emplace_back(nextState);
         }
 
-        symbolStack.emplace_back(make_unique<Terminal>(token));
+        symbolStack.emplace_back(make_unique<TerminalTree>(token));
 
-        if (transitions.at(stateStack.back()).count(symbolStack.back()->getRoot()) == 0) {
+        int nextState = -transitions.at(stateStack.back()).at(symbolStack.back()->getRoot())-1;
+        if (nextState == 0) {
             ostringstream oss;
-            oss << "ERROR at \"" << token.lexeme << "\" of type " << typeString << endl
+            oss << "ERROR at \"" << token.lexeme << "\" of type " << typeStrings[type] << endl
                 << "State Stack: " << endl;
             for (auto& state : stateStack) {
                 oss << "    " << state << endl;
             }
-            for (auto& s : symbolStack){
-                s->print(oss) << endl;     
-            }
             throw oss.str();
         }
 
-        stateStack.emplace_back(transitions.at(stateStack.back()).at(symbolStack.back()->getRoot()).second);
+        stateStack.emplace_back(nextState);
     }
 
     // cout << symbolStack.size() << endl;
@@ -164,22 +170,34 @@ string actions[2] = {"SHIFT", "REDUCE"};
 
 ostream& operator<<(ostream& out, Parser& parser) {
     out << "Terminals:" << endl;
-    for (auto& terminal : terminals) {
-        out << "    " << terminal << endl;
+    for (int i = 0; i < numTerminals; ++i) {
+        out << "    " << getTerminalString((Terminal) i) << endl;
     }
     out << "Non Terminals:" << endl;
-    for (auto& nonterminal : nonterminals) {
-        out << "    " << nonterminal << endl;
+    for (int i = 0; i < numNonTerminals; ++i) {
+        out << "    " << getNonTerminalString((NonTerminal) i) << endl;
     }
     out << "Rules:" << endl;
-    for (auto& rule : rules) {
-        out << "    " << join(rule, ' ') << endl;
+    for (int i = 0; i < numRules; ++i){
+        out << "   ";
+        int ruleSize = rules[i][0]+1;
+        for (int j = 1; j < ruleSize; ++j){
+            int r = rules[i][j];
+            if (r >= 0){
+                out << ' ' << getTerminalString((Terminal) r);
+            }
+            else{
+                out << ' ' << getNonTerminalString((NonTerminal) r);
+            }
+        }
     }
     out << "Transitions:" << endl;
-    for (unsigned int state = 0; state < transitions.size(); ++state){
+    for (int state = 0; state < numTransitions; ++state){
         for (auto& symbol : transitions.at(state)) {
+            bool reduce = symbol.second >= 0;
+            int nextState = reduce ? symbol.second : -symbol.second-1;
             out << "    " << state << " " << symbol.first << " "
-                << actions[symbol.second.first] << " " << symbol.second.second
+                << actions[reduce] << " " << nextState
                 << endl;
         }
     }

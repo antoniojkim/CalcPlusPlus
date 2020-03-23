@@ -91,66 +91,6 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
 }
 
 
-std::string Scanner::getTypeString(const Type& type) {
-    switch(type){
-        case ID: return "ID";
-        case STR: return "STR";
-        case NUM: return "NUM";
-        case HEX: return "HEX";
-        case X: return "X";
-        case Y: return "Y";
-        case LPAREN: return "LPAREN";
-        case RPAREN: return "RPAREN";
-        case LSQUARE: return "LSQUARE";
-        case RSQUARE: return "RSQUARE";
-        case LBRACE: return "LBRACE";
-        case RBRACE: return "RBRACE";
-        case EQUALS: return "EQUALS";
-        case PLUS: return "PLUS";
-        case MINUS: return "MINUS";
-        case STAR: return "STAR";
-        case SLASH: return "SLASH";
-        case PCT: return "PCT";
-        case CARET: return "CARET";
-        case AMP: return "AMP";
-        case PIPE: return "PIPE";
-        case TILDE: return "TILDE";
-        case EXCL: return "EXCL";
-        case CARET_PIPE: return "CARET_PIPE";
-        case STAR_STAR: return "STAR_STAR";
-        case SLASH_SLASH: return "SLASH_SLASH";
-        case LT_LT: return "LT_LT";
-        case GT_GT: return "GT_GT";
-        case L_ARROW: return "L_ARROW";
-        case R_ARROW: return "R_ARROW";
-        case COLON_EQUALS: return "COLON_EQUALS";
-        case DOT: return "DOT";
-        case COMMA: return "COMMA";
-        case COLON: return "COLON";
-        case SEMICOLON: return "SEMICOLON";
-        case QUESTION: return "QUESTION";
-        case POUND: return "POUND";
-        case DOLLAR: return "DOLLAR";
-        case QUOTE: return "QUOTE";
-        case APOSTROPHE: return "APOSTROPHE";
-        case BACKSLASH: return "BACKSLASH";
-        case BACKTICK: return "BACKTICK";
-        case UNDERSCORE: return "UNDERSCORE";
-        case C: return "C";
-        case P: return "P";
-        case BOF_: return "BOF_";
-        case EOF_: return "EOF_";
-        case TRUE_: return "TRUE_";
-        case FALSE_: return "FALSE_";
-        case NONE_: return "NONE_";
-        case NULL_: return "NULL_";
-        case WHITESPACE: return "WHITESPACE";
-        case NONE: return "NONE";
-        default: return "NONE";
-    }
-}
-
-
 ostream& Scanner::print(ostream& out, list<Token> tokens, const string& delimiter, const bool& printType) {
     bool first = true;
     for (auto& token : tokens) {
@@ -161,7 +101,7 @@ ostream& Scanner::print(ostream& out, list<Token> tokens, const string& delimite
         }
         out << token.lexeme;
         if (printType){
-            out << "  " << getTypeString(token.type);
+            out << "  " << typeStrings[token.type];
         }
     }
     return out;
@@ -177,7 +117,7 @@ string Scanner::join(list<Token> tokens, const string& delimiter, const bool& pr
             out << delimiter;
         }
         if (printType){
-            out << "  " << getTypeString(token.type);
+            out << "  " << typeStrings[token.type];
         }
         out << token.lexeme;
     }
