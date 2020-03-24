@@ -1,0 +1,3 @@
+[submodule "Sandboxer"]
+	path = Sandboxer
+	url = https://github.com/antoniojkim/Sandboxer

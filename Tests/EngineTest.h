@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../MathEngine/MathEngine.h"
+#include <MathEngine.h>
 
 extern MathEngine engine;
 
