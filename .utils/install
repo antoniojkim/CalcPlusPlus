@@ -1,0 +1,17 @@
+#!/bin/bash
+
+rm -rf .includes/
+mkdir -p .includes/
+cd .includes/
+
+# Install GNU Scientific Library
+wget ftp://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz
+tar -xzf gsl-latest.tar.gz
+rm -f gsl-latest.tar.gz
+curr_dir=$(pwd)
+gsl_dir=$curr_dir/$(ls | grep "gsl")
+cd $gsl_dir
+./configure && make
+ln -s $gsl_dir/gsl $curr_dir/gsl
+ln -s $gsl_dir/.libs $curr_dir/.gsl_libs
+ln -s $gsl_dir/cblas/.libs $curr_dir/.cblas_libs

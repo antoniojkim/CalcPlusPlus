@@ -1,12 +1,13 @@
 CXX = g++
-CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla $(shell gsl-config --cflags)
+CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla -I../.includes/gsl
 TARGET_LIB = libMathEngine.a  # target lib
 
 MATHENGINE = $(wildcard MathEngine/*.cc)
-PARSER = $(wildcard Parser/*.cc)
-EXPRESSIONS = $(wildcard Expressions/*/*.cc)
+SCANNER = $(wildcard Scanner/*.cc)
+# PARSER = $(wildcard Parser/*.cc)
+# EXPRESSIONS = $(wildcard Expressions/*/*.cc)
 
-SOURCES = Scanner/scanner.cc ${PARSER} ${EXPRESSIONS} ${MATHENGINE}
+SOURCES = ${SCANNER} ${PARSER} ${EXPRESSIONS} ${MATHENGINE}
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = ${OBJECTS:.o=.d}
 

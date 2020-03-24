@@ -4,11 +4,11 @@ Advanced Scientific Calculator written in C++. This calculator is meant to repla
 
 ## Math Engine
 
-The custom built math engine that is used in the CalcPlusPlus project utilizes many of the scientic functions found in the [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/). As such, the GSL has to be installed before the project can be built.
+The custom built math engine that is used in the CalcPlusPlus project utilizes many of the scientic functions found in the [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/). As such, the GSL has to be installed before the project can be built. To do this, run
 
-#### Note
-
-Make sure to follow the [instructions](https://www.gnu.org/software/gsl/doc/html/usage.html#shared-libraries) for setting up the system dynamic linker configuration in order to avoid runtime errors involving loading shared libraries.
+```
+make install
+```
 
 ## Tests
 

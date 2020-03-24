@@ -1,9 +1,10 @@
 *.d
 *.o
 *.a
+*.log
+*.cerr
 *pycache*
 *ipynb_checkpoint*
 MathEngine/libMathEngine.a
-Tests/run       
-local_update
-script.py
+Tests/run
+.includes/

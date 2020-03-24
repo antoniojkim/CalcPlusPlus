@@ -1,22 +1,14 @@
 #!/bin/bash
 
-echo "Building Math Engine"
-cd MathEngine
-
-make
-if [ $? -ne 0 ]; then
-    echo "Math Engine build failed"
-    exit 1
-fi
-
-echo "Running Tests"
-cd ../Tests
+cd Tests/
 rm EngineTest.o
 
-make
+make 2> test.cerr
 if [ $? -ne 0 ]; then
-    echo "Test Suite build failed"
+    vi -R test.cerr
     exit 1
+else
+    rm -f test.cerr
 fi
 
 ./run

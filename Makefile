@@ -1,5 +1,8 @@
 
-test:
+build:
+	.utils/build
+
+test: build
 	.utils/test
 
 sandbox:
@@ -7,3 +10,11 @@ sandbox:
 
 experiment:
 	python3 -u Sandboxer/sandboxer.py --build --name $(name) --lang $(lang)
+
+
+install:
+	.utils/install
+
+clean:
+	rm -f MathEngine/libMathEngine.a Tests/run
+.PHONY: clean
