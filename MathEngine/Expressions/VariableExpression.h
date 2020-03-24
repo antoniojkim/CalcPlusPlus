@@ -1,5 +1,4 @@
-#ifndef __VARIABLE_EXPRESSION_H__
-#define __VARIABLE_EXPRESSION_H__
+#pragma once
 
 #include "Expression.h"
 
@@ -29,4 +28,3 @@ VARIABLE_EXPRESSION(X)
 VARIABLE_EXPRESSION(Y)
 // VARIABLE_EXPRESSION(Z)
 
-#endif // __VARIABLE_EXPRESSION_H__

@@ -1,5 +1,4 @@
-#ifndef __FUNCTION_DIRECTORY_H__
-#define __FUNCTION_DIRECTORY_H__
+#pragma once
 
 #include <string>
 

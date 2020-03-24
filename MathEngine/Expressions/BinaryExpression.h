@@ -1,5 +1,4 @@
-#ifndef __BINARY_EXPRESSIONS_H__
-#define __BINARY_EXPRESSIONS_H__
+#pragma once
 
 #include "Expression.h"
 
@@ -22,4 +21,3 @@ BINARY_EXPRESSION(IntegerDivision)
 BINARY_EXPRESSION(ModulusDivision)
 BINARY_EXPRESSION(Exponent)
 
-#endif // __BINARY_EXPRESSIONS_H__

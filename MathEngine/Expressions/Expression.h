@@ -1,5 +1,4 @@
-#ifndef __EXPRESSION_H__
-#define __EXPRESSION_H__
+#pragma once
 
 #include <iostream>
 #include <memory>
@@ -59,4 +58,3 @@ std::ostream& operator<<(std::ostream&, Expression*);
     expression copy() override;                                    \
     std::ostream& print(std::ostream&) override;
 
-#endif // __EXPRESSION_H__

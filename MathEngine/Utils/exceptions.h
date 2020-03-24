@@ -1,5 +1,4 @@
-#ifndef __UTILS_EXCEPTIONS_H__
-#define __UTILS_EXCEPTIONS_H__
+#pragma once
 
 #include <sstream>
 #include <string>
@@ -26,4 +25,3 @@ struct Exception {
 
 };
 
-#endif // __UTILS_EXCEPTIONS_H__

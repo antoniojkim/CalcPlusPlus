@@ -1,5 +1,4 @@
-#ifndef __PREPROCESSOR_H__
-#define __PREPROCESSOR_H__
+#pragma once
 
 #include <list>
 
@@ -7,4 +6,3 @@
 
 void preprocess(std::list<Scanner::Token>&);
 
-#endif // __PREPROCESSOR_H__

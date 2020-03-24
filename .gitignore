@@ -8,3 +8,4 @@
 MathEngine/libMathEngine.a
 Tests/run
 .includes/
+.sandbox/*/sandbox

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-python -u ../LR1G/LR1G $@

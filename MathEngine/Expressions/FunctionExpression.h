@@ -1,5 +1,4 @@
-#ifndef __FUNCTION_EXPRESSIONS_H__
-#define __FUNCTION_EXPRESSIONS_H__
+#pragma once
 
 #include "Expression.h"
 #include "FunctionExpressions/FunctionDirectory.h"
@@ -30,4 +29,3 @@ class UnaryFunctionExpression: public Expression {
 
 // };
 
-#endif // __FUNCTION_EXPRESSIONS_H__

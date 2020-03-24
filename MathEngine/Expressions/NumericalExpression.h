@@ -1,5 +1,4 @@
-#ifndef __NUMERICAL_EXPRESSIONS_H__
-#define __NUMERICAL_EXPRESSIONS_H__
+#pragma once
 
 #include "Expression.h"
 
@@ -14,4 +13,3 @@ class NumericalExpression: public Expression {
 
 };
 
-#endif // __NUMERICAL_EXPRESSIONS_H__

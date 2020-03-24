@@ -1,6 +1,5 @@
 
-#ifndef SCANNER_H
-#define SCANNER_H
+#pragma once
 
 #include <iostream>
 #include <list>
@@ -40,4 +39,3 @@ namespace Scanner {
 
 }
 
-#endif
