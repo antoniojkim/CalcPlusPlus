@@ -11,4 +11,4 @@ else
     rm -f test.cerr
 fi
 
-./run
+gdb -q -ex="run" ./run

@@ -56,22 +56,20 @@ with open(os.path.join(file_dir, "..", "Scanner", "scanner.h"), "w") as file:
 with open(os.path.join(template_dir, "scanner.cc")) as file:
     template = "".join(file)
 
-template = template.replace("{tokenTypes}", ",\n\t".join(
-    f'{{"{lexeme}", {name}}}'
-    for name, lexeme in lexemes
-))
+lexemes.sort(key=lambda l: len(l[1]), reverse=True)
+template = template.replace("{numLexemes}", str(len(lexemes)))
+template = template.replace("{lexemes}", wrap(map('"{}"'.format, (
+    lexeme for name, lexeme in lexemes
+))))
+template = template.replace("{lexemeTypes}", wrap((
+    name for name, lexeme in lexemes
+)))
 template = template.replace("{regexes}", os.linesep.join(
     f'static const std::regex {name}_regex ("{regex}");'
     for name, regex in regexes 
 ))
 
-regex_special_chars = {c: r"\\"+c for c in list(r".^$*+-?()[]{}|")}
-regex_special_chars["\\"] = r"\\"
-regex_special_chars['"'] = r'\"'
-replace_special = lambda c: regex_special_chars.get(c, c)
 
-template = template.replace("{token_regex}", "|".join("".join(map(replace_special, list(lexeme))) for name, lexeme in lexemes))
-# \\^\\||\\*\\*|//|<<|>>|<-|->|:=|\\\"|\\\\|\\(|\\)|\\[|\\]|\\{|\\}|=|\\+|-|\\*|/|%|\\^|&|\\||~|!|\\.|,|:|;|\\?|#|\\$|'|`|_|C| 
 
 template = template.replace("{regex_searches}", "".join(f"""
     if (std::regex_search(str, match, {name}_regex)){{

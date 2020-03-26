@@ -1,68 +1,48 @@
 
-#include "scanner.h"
+#include <cstring>
 #include <sstream>
 #include <regex>
 #include <unordered_map>
 
+#include "scanner.h"
+
 using namespace std;
 using namespace Scanner;
 
-static const unordered_map<string, Type> tokenType = {
-	{",", COMMA},
-	{"=", EQUALS},
-	{":=", COLON_EQUALS},
-	{"<-", L_ARROW},
-	{"||", PIPE_PIPE},
-	{"&&", AMP_AMP},
-	{"|", PIPE},
-	{"^|", CARET_PIPE},
-	{"&", AMP},
-	{"==", EQUALS_EQUALS},
-	{"!=", NOT_EQUALS},
-	{"<", LT},
-	{">", GT},
-	{"<=", LT_EQ},
-	{">=", GT_EQ},
-	{"~", TILDE},
-	{"<<", LT_LT},
-	{">>", GT_GT},
-	{"+", PLUS},
-	{"-", MINUS},
-	{"*", STAR},
-	{"/", SLASH},
-	{"%", PCT},
-	{"//", SLASH_SLASH},
-	{"!", EXCL},
-	{"^", CARET},
-	{"**", STAR_STAR},
-	{"->", R_ARROW},
-	{":", COLON},
-	{"(", LPAREN},
-	{")", RPAREN},
-	{"[", LSQUARE},
-	{"]", RSQUARE},
-	{"{", LBRACE},
-	{"}", RBRACE},
-	{".", DOT},
-	{";", SEMICOLON},
-	{"?", QUESTION},
-	{"#", POUND},
-	{"$", DOLLAR},
-	{"\"", QUOTE},
-	{"\'", APOSTROPHE},
-	{"\\", BACKSLASH},
-	{"`", BACKTICK},
-	{"_", UNDERSCORE},
-	{"C", C},
-	{"P", P}
+constexpr int numLexemes = 47;
+static const std::string lexemes[numLexemes] = {
+	":=", "<-", "||", "&&", "^|", "==", "!=", "<=", ">=", "<<", ">>", "//", "**",
+	"->", "\"", "\'", "\\", ",", "=", "|", "&", "<", ">", "~", "+", "-", "*", "/",
+	"%", "!", "^", ":", "(", ")", "[", "]", "{", "}", ".", ";", "?", "#", "$", "`",
+	"_", "C", "P"
 };
+static const Type lexemeTypes[numLexemes] = {
+	COLON_EQUALS, L_ARROW, PIPE_PIPE, AMP_AMP, CARET_PIPE, EQUALS_EQUALS,
+	NOT_EQUALS, LT_EQ, GT_EQ, LT_LT, GT_GT, SLASH_SLASH, STAR_STAR, R_ARROW, QUOTE,
+	APOSTROPHE, BACKSLASH, COMMA, EQUALS, PIPE, AMP, LT, GT, TILDE, PLUS, MINUS,
+	STAR, SLASH, PCT, EXCL, CARET, COLON, LPAREN, RPAREN, LSQUARE, RSQUARE, LBRACE,
+	RBRACE, DOT, SEMICOLON, QUESTION, POUND, DOLLAR, BACKTICK, UNDERSCORE, C, P
+};
+
+static bool startsWithLexeme(const std::string& str, int& lexemeIndex){
+    if (!str.empty()){
+        for (int i = 0; i < numLexemes; ++i){
+            if (str.size() >= lexemes[i].size()){
+                if (strncmp(str.c_str(), lexemes[i].c_str(), lexemes[i].size()) == 0){
+                    lexemeIndex = i;
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
 
 static const std::regex whitespace_regex("^\\s+");
 static const std::regex HEX_regex ("^(0x[0-9a-fA-F]+)");
 static const std::regex BIN_regex ("^(0b[01]+)");
 static const std::regex NUM_regex ("^(([0-9]*\\.?[0-9]+(i(?![a-zA-Z]))?))");
 static const std::regex ID_regex ("^[a-zA-Z_][0-9a-zA-Z_]+");
-static const std::regex token_regex("^(,|=|:=|<\\-|\\|\\||&&|\\||\\^\\||&|==|!=|<|>|<=|>=|~|<<|>>|\\+|\\-|\\*|/|%|//|!|\\^|\\*\\*|\\->|:|\\(|\\)|\\[|\\]|\\{|\\}|\\.|;|\\?|#|\\$|\\\"|\\'|\\\\|`|_|C|P)");
 
 bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
     if (str.empty()) return true;
@@ -71,9 +51,10 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
     if (std::regex_search(str, match, whitespace_regex)){
         return Scanner::scan(match.suffix(), tokens);
     }
-    if (std::regex_search(str, match, token_regex)){
-        tokens.emplace_back(Token{match[0], tokenType.at(match[0])});
-        return Scanner::scan(match.suffix(), tokens);
+    int index;
+    if (startsWithLexeme(str, index)){
+        tokens.emplace_back(Token{lexemes[index], lexemeTypes[index]});
+        return Scanner::scan(str.substr(lexemes[index].size()), tokens);
     }
     
     if (std::regex_search(str, match, HEX_regex)){

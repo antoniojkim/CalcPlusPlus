@@ -1,19 +1,38 @@
 
-#include "scanner.h"
+#include <cstring>
 #include <sstream>
 #include <regex>
 #include <unordered_map>
 
+#include "scanner.h"
+
 using namespace std;
 using namespace Scanner;
 
-static const unordered_map<string, Type> tokenType = {
-	{tokenTypes}
+constexpr int numLexemes = {numLexemes};
+static const std::string lexemes[numLexemes] = {
+	{lexemes}
 };
+static const Type lexemeTypes[numLexemes] = {
+	{lexemeTypes}
+};
+
+static bool startsWithLexeme(const std::string& str, int& lexemeIndex){
+    if (!str.empty()){
+        for (int i = 0; i < numLexemes; ++i){
+            if (str.size() >= lexemes[i].size()){
+                if (strncmp(str.c_str(), lexemes[i].c_str(), lexemes[i].size()) == 0){
+                    lexemeIndex = i;
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
 
 static const std::regex whitespace_regex("^\\s+");
 {regexes}
-static const std::regex token_regex("^({token_regex})");
 
 bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
     if (str.empty()) return true;
@@ -22,9 +41,10 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
     if (std::regex_search(str, match, whitespace_regex)){
         return Scanner::scan(match.suffix(), tokens);
     }
-    if (std::regex_search(str, match, token_regex)){
-        tokens.emplace_back(Token{match[0], tokenType.at(match[0])});
-        return Scanner::scan(match.suffix(), tokens);
+    int index;
+    if (startsWithLexeme(str, index)){
+        tokens.emplace_back(Token{lexemes[index], lexemeTypes[index]});
+        return Scanner::scan(str.substr(lexemes[index].size()), tokens);
     }
     {regex_searches}
     return false;
