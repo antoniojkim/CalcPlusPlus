@@ -7,10 +7,10 @@ using namespace std;
 using namespace Scanner;
 
 const unordered_set<Type> preImplicit ({
-    NUM, RPAREN, RSQUARE, RBRACE, X, Y
+    NUM, RPAREN, RSQUARE, RBRACE // , SPECIALID
 });
 const unordered_set<Type> postImplicit ({
-    NUM, LPAREN, LSQUARE, LBRACE, ID, X, Y
+    NUM, LPAREN, LSQUARE, LBRACE, ID // , SPECIALID
 });
 
 void implicitMultiplication(list<Token>& tokens){

@@ -1,5 +1,5 @@
 
-#include "../BinaryExpression.h"
+#include "../BinaryOperators.h"
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 
@@ -7,14 +7,15 @@
 
 using namespace std;
 
-DivisionExpression::DivisionExpression(expression&& lhs, expression&&rhs):
-    lhs{std::move(lhs)}, rhs{std:move(rhs)} {}
+DivisionExpression::DivisionExpression(expression lhs, expression rhs):
+    lhs{std::move(lhs)}, rhs{std::move(rhs)} {}
 
 expression DivisionExpression::simplify() {
-    return make_unique<DivisionExpression>(
-        lhs->simplify(),
-        rhs->simplify()
-    );
+    throw Exception("Unimplemented Error: DivisionExpression::simplify");
+    // return make_unique<DivisionExpression>(
+    //     lhs->simplify(),
+    //     rhs->simplify()
+    // );
 }
 expression DivisionExpression::derivative(const std::string& var) {
     throw Exception("Unimplemented Error: DivisionExpression::derivative");
@@ -31,22 +32,19 @@ expression DivisionExpression::integrate(const std::string& var) {
     // );
 }
 
-bool DivisionExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
-
 double DivisionExpression::value() { return lhs->value() / rhs->value(); }
 double DivisionExpression::value(const Variables& vars) { return lhs->value(vars) / rhs->value(vars); }
 
-bool DivisionExpression::complex(){ return lhs->complex() || rhs->complex(); }
-
 expression DivisionExpression::copy() {
-    return make_unique<DivisionExpression>(
-        lhs->copy(),
-        rhs->copy()
-    );
+    return lhs->copy() / rhs->copy();
 }
 
 std::ostream& DivisionExpression::print(std::ostream& out) {
     lhs->print(out);
     out << "/";
     return rhs->print(out);
+}
+
+expression operator/(expression&& expr1, expression&&expr2){
+    return make_unique<DivisionExpression>(std::move(expr1), std::move(expr2));
 }

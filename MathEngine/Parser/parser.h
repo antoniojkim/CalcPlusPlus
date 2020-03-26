@@ -3,6 +3,7 @@
 #include <list>
 
 #include "../Scanner/scanner.h"
+#include "../Expressions/Expression.h"
 
 class Parser {
 

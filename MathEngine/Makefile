@@ -4,8 +4,8 @@ TARGET_LIB = libMathEngine.a  # target lib
 
 MATHENGINE = $(wildcard MathEngine/*.cc)
 SCANNER = $(wildcard Scanner/*.cc)
-# PARSER = $(wildcard Parser/*.cc)
-# EXPRESSIONS = $(wildcard Expressions/*/*.cc)
+PARSER = $(wildcard Parser/*.cc)
+EXPRESSIONS = $(wildcard Expressions/*/*.cc)
 
 SOURCES = ${SCANNER} ${PARSER} ${EXPRESSIONS} ${MATHENGINE}
 OBJECTS = $(SOURCES:.cc=.o)

@@ -6,8 +6,6 @@
 #include <unordered_map>
 #include <gsl/gsl_math.h>
 
-#include "../Parser/parsetree.h"
-
 struct Expression;
 
 typedef std::unique_ptr<Expression> expression;
@@ -41,8 +39,6 @@ struct Expression {
     virtual std::ostream& print(std::ostream&) = 0;
 
 };
-
-expression generate_expression(ParseTree*);
 
 std::ostream& operator<<(std::ostream&, expression&);
 std::ostream& operator<<(std::ostream&, Expression*);

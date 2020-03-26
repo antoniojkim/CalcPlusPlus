@@ -23,7 +23,7 @@ class UnaryFunctionExpression: public Expression {
 //     expression arg;
   
 //   public:
-//     FunctionExpression(expression&& lhs, expression&&rhs);
+//     FunctionExpression(expression lhs, expression rhs);
 
 //     EXPRESSION_OVERRIDES
 

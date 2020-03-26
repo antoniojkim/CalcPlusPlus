@@ -22,7 +22,8 @@ std::list<Token> MathEngine::scan(const std::string& input){
 expression MathEngine::eval(const std::string& input){
     list<Token> tokens;
     Scanner::scan(input, tokens);
-    return parser.parse(tokens);
+    preprocess(tokens);
+    return parser->parse(tokens);
 }
 expression MathEngine::eval(const std::string& input, const double& x, const double& y){
     auto expression = eval(input);

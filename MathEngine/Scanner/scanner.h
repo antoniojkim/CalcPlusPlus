@@ -7,35 +7,35 @@
 
 namespace Scanner {
 
-    enum Type {
-        ID, STR, NUM, HEX, X, Y, LPAREN, RPAREN, LSQUARE, RSQUARE, LBRACE, RBRACE,
-        EQUALS, PLUS, MINUS, STAR, SLASH, PCT, CARET, AMP, PIPE, TILDE, EXCL,
-        CARET_PIPE, STAR_STAR, SLASH_SLASH, LT_LT, GT_GT, L_ARROW, R_ARROW,
-        COLON_EQUALS, DOT, COMMA, COLON, SEMICOLON, QUESTION, POUND, DOLLAR, QUOTE,
-        APOSTROPHE, BACKSLASH, BACKTICK, UNDERSCORE, C, P, BOF_, EOF_, TRUE_, FALSE_,
-        NONE_, NULL_, WHITESPACE, NONE
-    };
+	enum Type {
+		HEX, BIN, NUM, ID, SPECIALID, COMMA, EQUALS, COLON_EQUALS, L_ARROW, PIPE_PIPE,
+		AMP_AMP, PIPE, CARET_PIPE, AMP, EQUALS_EQUALS, NOT_EQUALS, LT, GT, LT_EQ, GT_EQ,
+		TILDE, LT_LT, GT_GT, PLUS, MINUS, STAR, SLASH, PCT, SLASH_SLASH, EXCL, CARET,
+		STAR_STAR, R_ARROW, COLON, LPAREN, RPAREN, LSQUARE, RSQUARE, LBRACE, RBRACE,
+		DOT, SEMICOLON, QUESTION, POUND, DOLLAR, QUOTE, APOSTROPHE, BACKSLASH, BACKTICK,
+		UNDERSCORE, C, P
+	};
 
-    const std::string typeStrings[53] = {
-        "ID", "STR", "NUM", "HEX", "X", "Y", "LPAREN", "RPAREN", "LSQUARE", "RSQUARE",
-        "LBRACE", "RBRACE", "EQUALS", "PLUS", "MINUS", "STAR", "SLASH", "PCT", "CARET",
-        "AMP", "PIPE", "TILDE", "EXCL", "CARET_PIPE", "STAR_STAR", "SLASH_SLASH",
-        "LT_LT", "GT_GT", "L_ARROW", "R_ARROW", "COLON_EQUALS", "DOT", "COMMA", "COLON",
-        "SEMICOLON", "QUESTION", "POUND", "DOLLAR", "QUOTE", "APOSTROPHE", "BACKSLASH",
-        "BACKTICK", "UNDERSCORE", "C", "P", "BOF_", "EOF_", "TRUE_", "FALSE_", "NONE_",
-        "NULL_", "WHITESPACE", "NONE"
-    };
+	constexpr int numTokens = 52;
+	static const std::string typeStrings[numTokens] = {
+		"HEX", "BIN", "NUM", "ID", "SPECIALID", "COMMA", "EQUALS", "COLON_EQUALS",
+		"L_ARROW", "PIPE_PIPE", "AMP_AMP", "PIPE", "CARET_PIPE", "AMP", "EQUALS_EQUALS",
+		"NOT_EQUALS", "LT", "GT", "LT_EQ", "GT_EQ", "TILDE", "LT_LT", "GT_GT", "PLUS",
+		"MINUS", "STAR", "SLASH", "PCT", "SLASH_SLASH", "EXCL", "CARET", "STAR_STAR",
+		"R_ARROW", "COLON", "LPAREN", "RPAREN", "LSQUARE", "RSQUARE", "LBRACE",
+		"RBRACE", "DOT", "SEMICOLON", "QUESTION", "POUND", "DOLLAR", "QUOTE",
+		"APOSTROPHE", "BACKSLASH", "BACKTICK", "UNDERSCORE", "C", "P"
+	};
 
-    struct Token {
-        std::string lexeme;
-        Type type;
-    };
+	struct Token {
+		std::string lexeme;
+		Type type;
+	};
 
-    bool scan(const std::string& str, std::list<Token>& tokens);
-    // void scan(std::istream& in, std::list<Token>& tokens);
+	bool scan(const std::string& str, std::list<Token>& tokens);
 
-    std::ostream& print(std::ostream& out, std::list<Token> tokens, const std::string& delimiter="", const bool& printType=false);
-    std::string join(std::list<Token> tokens, const std::string& delimiter="", const bool& printType=false);
+	std::ostream& print(std::ostream& out, std::list<Token> tokens, const std::string& delimiter="", const bool& printType=false);
+	std::string join(std::list<Token> tokens, const std::string& delimiter="", const bool& printType=false);
 
 }
 

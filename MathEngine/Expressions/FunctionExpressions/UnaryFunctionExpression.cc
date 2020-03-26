@@ -1,6 +1,6 @@
 
 #include "../FunctionExpression.h"
-#include "../BinaryExpression.h"
+#include "../BinaryOperators.h"
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 
@@ -9,7 +9,7 @@
 using namespace std;
 
 UnaryFunctionExpression::UnaryFunctionExpression(const std::string& name, expression&& arg):
-    name{name}, f{get_unary_function(name)}, arg{std:move(arg)} {}
+    name{name}, f{get_unary_function(name)}, arg{std::move(arg)} {}
 
 expression UnaryFunctionExpression::simplify() {
     return make_unique<UnaryFunctionExpression>(name, arg->simplify());

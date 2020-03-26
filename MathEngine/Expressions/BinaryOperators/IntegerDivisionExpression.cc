@@ -1,5 +1,5 @@
 
-#include "../BinaryExpression.h"
+#include "../BinaryOperators.h"
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 
@@ -7,8 +7,8 @@
 
 using namespace std;
 
-IntegerDivisionExpression::IntegerDivisionExpression(expression&& lhs, expression&&rhs):
-    lhs{std::move(lhs)}, rhs{std:move(rhs)} {}
+IntegerDivisionExpression::IntegerDivisionExpression(expression lhs, expression rhs):
+    lhs{std::move(lhs)}, rhs{std::move(rhs)} {}
 
 expression IntegerDivisionExpression::simplify() {
     return make_unique<IntegerDivisionExpression>(
@@ -31,12 +31,8 @@ expression IntegerDivisionExpression::integrate(const std::string& var) {
     // );
 }
 
-bool IntegerDivisionExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
-
 double IntegerDivisionExpression::value() { return int(lhs->value() / rhs->value()); }
 double IntegerDivisionExpression::value(const Variables& vars) { return int(lhs->value(vars) / rhs->value(vars)); }
-
-bool IntegerDivisionExpression::complex(){ return lhs->complex() || rhs->complex(); }
 
 expression IntegerDivisionExpression::copy() {
     return make_unique<IntegerDivisionExpression>(

@@ -1,5 +1,5 @@
 
-#include "../BinaryExpression.h"
+#include "../BinaryOperators.h"
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 
@@ -8,14 +8,15 @@
 
 using namespace std;
 
-ExponentExpression::ExponentExpression(expression&& lhs, expression&&rhs):
-    lhs{std::move(lhs)}, rhs{std:move(rhs)} {}
+ExponentExpression::ExponentExpression(expression lhs, expression rhs):
+    lhs{std::move(lhs)}, rhs{std::move(rhs)} {}
 
 expression ExponentExpression::simplify() {
-    return make_unique<ExponentExpression>(
-        lhs->simplify(),
-        rhs->simplify()
-    );
+    throw Exception("Unimplemented Error: ExponentExpression::simplify");
+    // return make_unique<ExponentExpression>(
+    //     lhs->simplify(),
+    //     rhs->simplify()
+    // );
 }
 expression ExponentExpression::derivative(const std::string& var) {
     throw Exception("Unimplemented Error: ExponentExpression::derivative");
@@ -32,23 +33,20 @@ expression ExponentExpression::integrate(const std::string& var) {
     // );
 }
 
-bool ExponentExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
-
 double ExponentExpression::value() { return pow(lhs->value(), rhs->value()); }
 double ExponentExpression::value(const Variables& vars) { return pow(lhs->value(vars), rhs->value(vars)); }
 
-bool ExponentExpression::complex(){ return lhs->complex() || rhs->complex(); }
-
 expression ExponentExpression::copy() {
-    return make_unique<ExponentExpression>(
-        lhs->copy(),
-        rhs->copy()
-    );
+    return lhs->copy() ^ rhs->copy();
 }
 
 std::ostream& ExponentExpression::print(std::ostream& out) {
     lhs->print(out);
     out << "^";
     return rhs->print(out);
+}
+
+expression operator^(expression&& expr1, expression&&expr2){
+    return make_unique<ExponentExpression>(std::move(expr1), std::move(expr2));
 }
 

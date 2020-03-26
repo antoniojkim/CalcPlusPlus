@@ -15,6 +15,9 @@ experiment:
 install:
 	.utils/install
 
+tokens:
+	python3 -u MathEngine/.utils/generate_tokens.py
+
 clean:
 	rm -f MathEngine/libMathEngine.a Tests/run
 .PHONY: clean
