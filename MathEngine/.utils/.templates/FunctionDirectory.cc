@@ -8,15 +8,10 @@
 using namespace std;
 
 const std::string functionNames[numFunctions] = {
-    "integrate", "integral", "arctanh", "arcsinh", "arcsech", "arccsch", "arccoth",
-	"arccosh", "arctan", "arcsin", "arcsec", "arccsc", "arccot", "arccos", "log10",
-	"deriv", "atanh", "asinh", "asech", "acsch", "acoth", "acosh", "tanh", "sinh",
-	"sech", "log2", "csch", "coth", "cosh", "atan", "asin", "asec", "acsc", "acot",
-	"acos", "tan", "sin", "sec", "log", "csc", "cot", "cos", "ln", "dx"
+    {functionNames}
 };
 static const int functionNumArgs[numFunctions] = {
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    {functionNumArgs}
 };
 
 int getFunctionIndex(const std::string& name){

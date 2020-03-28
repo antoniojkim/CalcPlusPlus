@@ -5,6 +5,7 @@
 
 #include "scanner.h"
 #include "../Utils/exceptions.h"
+#include "../Expressions/FunctionExpressions/FunctionDirectory.h"
 
 using namespace std;
 using namespace Scanner;
@@ -30,11 +31,6 @@ static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
     }
     return false;
 }
-
-constexpr int numFunctions = {numFunctions};
-static const std::string functionNames[numFunctions] = {
-	{functionNames}
-};
 
 static bool startsWithFunction(const char* str, size_t size, int& index){
     if (size > 0){

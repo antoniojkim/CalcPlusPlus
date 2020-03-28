@@ -42,8 +42,9 @@ with open(os.path.join(file_dir, "tokens.yml")) as file:
         for key in keys
     ]
 
-    functionNames = tokens["functions"]
-    functionNames.sort(key=len, reverse=True)
+    functions = [(name, 1 if nargs is None else nargs)
+                 for name, nargs in tokens["functions"].items()]
+    functions.sort(key=lambda f: (len(f[0]), f[0]), reverse=True)
 
 with open(os.path.join(template_dir, "scanner.h")) as file:
     template = "".join(file)
@@ -69,12 +70,8 @@ template = template.replace("{lexemeTypes}", wrap((
     name for name, lexeme in lexemes
 )))
 
-template = template.replace("{numFunctions}", str(len(functionNames)))
-template = template.replace("{functionNames}", wrap(map('"{}"'.format, functionNames)))
-
 with open(os.path.join(file_dir, "..", "Scanner", "scanner.cc"), "w") as file:
     file.write(template)
-
 
 
 with open(os.path.join(template_dir, "Operators.h")) as file:
@@ -85,5 +82,28 @@ template = template.replace("{precedences}", wrap((
     for name, precedence, rightAssociative in precedences
 )))
 
-with open(os.path.join(file_dir, "..", "Expressions", "Operators.h"), "w") as file:
+with open(os.path.join(file_dir, "..", "MathEngine", "Operators.h"), "w") as file:
+    file.write(template)
+
+
+with open(os.path.join(template_dir, "FunctionDirectory.h")) as file:
+    template = "".join(file)
+
+template = template.replace("{numFunctions}", str(len(functions)))
+
+with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.h"), "w") as file:
+    file.write(template)
+
+
+with open(os.path.join(template_dir, "FunctionDirectory.cc")) as file:
+    template = "".join(file)
+
+template = template.replace("{functionNames}", wrap(map('"{}"'.format, (
+    name for name, nargs in functions
+))))
+template = template.replace("{functionNumArgs}", wrap(map(str, (
+    nargs for name, nargs in functions
+))))
+
+with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.cc"), "w") as file:
     file.write(template)

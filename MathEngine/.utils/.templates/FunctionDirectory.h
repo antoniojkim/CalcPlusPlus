@@ -4,7 +4,7 @@
 
 typedef double (*UnaryFunction)(double x);
 
-constexpr int numFunctions = 44;
+constexpr int numFunctions = {numFunctions};
 extern const std::string functionNames[numFunctions];
 
 /*

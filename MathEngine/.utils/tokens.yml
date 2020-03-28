@@ -120,44 +120,49 @@ tokens:
     P: "P"
 functions:
     # Trigonometry
-    - sin
-    - cos
-    - tan
-    - csc
-    - sec
-    - cot
-    - asin
-    - acos
-    - atan
-    - acsc
-    - asec
-    - acot
-    - arcsin
-    - arccos
-    - arctan
-    - arccsc
-    - arcsec
-    - arccot
-    - sinh
-    - cosh
-    - tanh
-    - csch
-    - sech
-    - coth
-    - asinh
-    - acosh
-    - atanh
-    - acsch
-    - asech
-    - acoth
-    - arcsinh
-    - arccosh
-    - arctanh
-    - arccsch
-    - arcsech
-    - arccoth
+    sin:
+    cos:
+    tan:
+    csc:
+    sec:
+    cot:
+    asin:
+    acos:
+    atan:
+    acsc:
+    asec:
+    acot:
+    arcsin:
+    arccos:
+    arctan:
+    arccsc:
+    arcsec:
+    arccot:
+    sinh:
+    cosh:
+    tanh:
+    csch:
+    sech:
+    coth:
+    asinh:
+    acosh:
+    atanh:
+    acsch:
+    asech:
+    acoth:
+    arcsinh:
+    arccosh:
+    arctanh:
+    arccsch:
+    arcsech:
+    arccoth: 
     # Exponentials
-    - log
-    - log2
-    - log10
-    - ln
+    log:
+    log2:
+    log10:
+    ln: 
+    # Calculus
+    dx:
+    deriv:
+    integral:
+    integrate: 

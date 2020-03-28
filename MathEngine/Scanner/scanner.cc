@@ -5,6 +5,7 @@
 
 #include "scanner.h"
 #include "../Utils/exceptions.h"
+#include "../Expressions/FunctionExpressions/FunctionDirectory.h"
 
 using namespace std;
 using namespace Scanner;
@@ -37,15 +38,6 @@ static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
     }
     return false;
 }
-
-constexpr int numFunctions = 40;
-static const std::string functionNames[numFunctions] = {
-	"arcsinh", "arccosh", "arctanh", "arccsch", "arcsech", "arccoth", "arcsin",
-	"arccos", "arctan", "arccsc", "arcsec", "arccot", "asinh", "acosh", "atanh",
-	"acsch", "asech", "acoth", "log10", "asin", "acos", "atan", "acsc", "asec",
-	"acot", "sinh", "cosh", "tanh", "csch", "sech", "coth", "log2", "sin", "cos",
-	"tan", "csc", "sec", "cot", "log", "ln"
-};
 
 static bool startsWithFunction(const char* str, size_t size, int& index){
     if (size > 0){

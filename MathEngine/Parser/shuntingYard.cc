@@ -3,7 +3,7 @@
 
 #include "shuntingYard.h"
 #include "../Scanner/scanner.h"
-#include "../Expressions/Operators.h"
+#include "../MathEngine/Operators.h"
 #include "../Utils/exceptions.h"
 
 using namespace std;
