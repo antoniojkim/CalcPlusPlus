@@ -3,10 +3,11 @@
 *.a
 *.log
 *.cerr
+*.gdbinit
 *pycache*
 *ipynb_checkpoint*
 MathEngine/libMathEngine.a
 Tests/run
 .includes/
 .sandbox/*/sandbox
-*.gdbinit
+.vscode/

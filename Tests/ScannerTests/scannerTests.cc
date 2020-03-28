@@ -52,6 +52,8 @@ TEST_CASE("Basic Scanner Tests", "[scanner]" ) {
 
     scannerTest("logx", "log x");
     scannerTest("log2", "log2");
+    scannerTest("log 2", "log 2");
+    scannerTest("log(2)", "log ( 2 )");
 
 }
 

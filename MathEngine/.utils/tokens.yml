@@ -1,142 +1,163 @@
-- HEX:
-    regex: "^(0x[0-9a-fA-F]+)"
-- BIN:
-    regex: "^(0b[01]+)"
-- NUM:
-    regex: "^(([0-9]*\\\\.?[0-9]+(i(?![a-zA-Z]))?))"
-- ID:
-    regex: "^[a-zA-Z_][0-9a-zA-Z_]+"
-- SPECIALID:
-    regex:
-# Operators
-- COMMA:
-    lexeme: ","
-    precedence: 1
-- EQUALS:
-    lexeme: "="
-    precedence: 2
-    rightAssociative: True
-- COLON_EQUALS:
-    lexeme: ":="
-    precedence: 2
-    rightAssociative: True
-- L_ARROW:
-    lexeme: "<-"
-    precedence: 2
-    rightAssociative: True
-- PIPE_PIPE:
-    lexeme: "||"
-    precedence: 3
-- AMP_AMP:
-    lexeme: "&&"
-    precedence: 4
-- PIPE:
-    lexeme: "|"
-    precedence: 5
-- CARET_PIPE:
-    lexeme: "^|"
-    precedence: 6
-- AMP:
-    lexeme: "&"
-    precedence: 7
-- EQUALS_EQUALS:
-    lexeme: "=="
-    precedence: 8
-- NOT_EQUALS:
-    lexeme: "!="
-    precedence: 8
-- LT:
-    lexeme: "<"
-    precedence: 9
-- GT:
-    lexeme: ">"
-    precedence: 9
-- LT_EQ:
-    lexeme: "<="
-    precedence: 9
-- GT_EQ:
-    lexeme: ">="
-    precedence: 9
-- TILDE:
-    lexeme: "~"
-    precedence: 9
-- LT_LT:
-    lexeme: "<<"
-    precedence: 10
-- GT_GT:
-    lexeme: ">>"
-    precedence: 10
-- PLUS:
-    lexeme: "+"
-    precedence: 11
-- MINUS:
-    lexeme: "-"
-    precedence: 11
-- STAR:
-    lexeme: "*"
-    precedence: 12
-- SLASH:
-    lexeme: "/"
-    precedence: 12
-- PCT:
-    lexeme: "%"
-    precedence: 12
-- SLASH_SLASH:
-    lexeme: "//"
-    precedence: 12
-- EXCL:
-    lexeme: "!"
-    precedence: 12
-- CARET:
-    lexeme: "^"
-    precedence: 13
-    rightAssociative: True
-- STAR_STAR:
-    lexeme: "**"
-    precedence: 13
-    rightAssociative: True
-- R_ARROW:
-    lexeme: "->"
-    precedence: 14
-    rightAssociative: True
-- COLON:
-    lexeme: ":"
-    precedence: 14
-    rightAssociative: True
-# Misc:
-- LPAREN:
-    lexeme: "("
-- RPAREN:
-    lexeme: ")"
-- LSQUARE:
-    lexeme: "["
-- RSQUARE:
-    lexeme: "]"
-- LBRACE:
-    lexeme: "{"
-- RBRACE:
-    lexeme: "}"
-- DOT:
-    lexeme: "."
-- SEMICOLON:
-    lexeme: ";"
-- QUESTION:
-    lexeme: "?"
-- POUND:
-    lexeme: "#"
-- DOLLAR:
-    lexeme: "$"
-- QUOTE:
-    lexeme: "\\\""
-- APOSTROPHE:
-    lexeme: "\\'"
-- BACKSLASH:
-    lexeme: "\\\\"
-- BACKTICK:
-    lexeme: "`"
-- UNDERSCORE:
-    lexeme: "_"
-- C:
-    lexeme: "C"
-- P:
-    lexeme: "P"
+specialTokens:
+    - HEX
+    - BIN
+    - NUM
+    - ID
+    - SPECIALID
+operators:
+    COMMA:
+        lexeme: ","
+        precedence: 1
+    EQUALS:
+        lexeme: "="
+        precedence: 2
+        rightAssociative: True
+    COLON_EQUALS:
+        lexeme: ":="
+        precedence: 2
+        rightAssociative: True
+    L_ARROW:
+        lexeme: "<-"
+        precedence: 2
+        rightAssociative: True
+    PIPE_PIPE:
+        lexeme: "||"
+        precedence: 3
+    AMP_AMP:
+        lexeme: "&&"
+        precedence: 4
+    PIPE:
+        lexeme: "|"
+        precedence: 5
+    CARET_PIPE:
+        lexeme: "^|"
+        precedence: 6
+    AMP:
+        lexeme: "&"
+        precedence: 7
+    EQUALS_EQUALS:
+        lexeme: "=="
+        precedence: 8
+    NOT_EQUALS:
+        lexeme: "!="
+        precedence: 8
+    LT:
+        lexeme: "<"
+        precedence: 9
+    GT:
+        lexeme: ">"
+        precedence: 9
+    LT_EQ:
+        lexeme: "<="
+        precedence: 9
+    GT_EQ:
+        lexeme: ">="
+        precedence: 9
+    TILDE:
+        lexeme: "~"
+        precedence: 9
+    LT_LT:
+        lexeme: "<<"
+        precedence: 10
+    GT_GT:
+        lexeme: ">>"
+        precedence: 10
+    PLUS:
+        lexeme: "+"
+        precedence: 11
+    MINUS:
+        lexeme: "-"
+        precedence: 11
+    STAR:
+        lexeme: "*"
+        precedence: 12
+    SLASH:
+        lexeme: "/"
+        precedence: 12
+    PCT:
+        lexeme: "%"
+        precedence: 12
+    SLASH_SLASH:
+        lexeme: "//"
+        precedence: 12
+    EXCL:
+        lexeme: "!"
+        precedence: 12
+    CARET:
+        lexeme: "^"
+        precedence: 13
+        rightAssociative: True
+    STAR_STAR:
+        lexeme: "**"
+        precedence: 13
+        rightAssociative: True
+    R_ARROW:
+        lexeme: "->"
+        precedence: 14
+        rightAssociative: True
+    COLON:
+        lexeme: ":"
+        precedence: 14
+        rightAssociative: True
+tokens:
+    LPAREN: "("
+    RPAREN: ")"
+    LSQUARE: "["
+    RSQUARE: "]"
+    LBRACE: "{"
+    RBRACE: "}"
+    DOT: "."
+    SEMICOLON: ";"
+    QUESTION: "?"
+    POUND: "#"
+    DOLLAR: "$"
+    QUOTE: "\\\""
+    APOSTROPHE: "\\'"
+    BACKSLASH: "\\\\"
+    BACKTICK: "`"
+    UNDERSCORE: "_"
+    C: "C"
+    P: "P"
+functions:
+    # Trigonometry
+    - sin
+    - cos
+    - tan
+    - csc
+    - sec
+    - cot
+    - asin
+    - acos
+    - atan
+    - acsc
+    - asec
+    - acot
+    - arcsin
+    - arccos
+    - arctan
+    - arccsc
+    - arcsec
+    - arccot
+    - sinh
+    - cosh
+    - tanh
+    - csch
+    - sech
+    - coth
+    - asinh
+    - acosh
+    - atanh
+    - acsch
+    - asech
+    - acoth
+    - arcsinh
+    - arccosh
+    - arctanh
+    - arccsch
+    - arcsech
+    - arccoth
+    # Exponentials
+    - log
+    - log2
+    - log10
+    - ln

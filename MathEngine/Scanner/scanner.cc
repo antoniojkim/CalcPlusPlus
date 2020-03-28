@@ -1,10 +1,10 @@
 
 #include <cstring>
+#include <cctype>
 #include <sstream>
-#include <regex>
-#include <unordered_map>
 
 #include "scanner.h"
+#include "../Utils/exceptions.h"
 
 using namespace std;
 using namespace Scanner;
@@ -24,11 +24,11 @@ static const Type lexemeTypes[numLexemes] = {
 	RBRACE, DOT, SEMICOLON, QUESTION, POUND, DOLLAR, BACKTICK, UNDERSCORE, C, P
 };
 
-static bool startsWithLexeme(const std::string& str, int& lexemeIndex){
-    if (!str.empty()){
+static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
+    if (size > 0){
         for (int i = 0; i < numLexemes; ++i){
-            if (str.size() >= lexemes[i].size()){
-                if (strncmp(str.c_str(), lexemes[i].c_str(), lexemes[i].size()) == 0){
+            if (size >= lexemes[i].size()){
+                if (strncmp(str, lexemes[i].c_str(), lexemes[i].size()) == 0){
                     lexemeIndex = i;
                     return true;
                 }
@@ -38,42 +38,156 @@ static bool startsWithLexeme(const std::string& str, int& lexemeIndex){
     return false;
 }
 
-static const std::regex whitespace_regex("^\\s+");
-static const std::regex HEX_regex ("^(0x[0-9a-fA-F]+)");
-static const std::regex BIN_regex ("^(0b[01]+)");
-static const std::regex NUM_regex ("^(([0-9]*\\.?[0-9]+(i(?![a-zA-Z]))?))");
-static const std::regex ID_regex ("^[a-zA-Z_][0-9a-zA-Z_]+");
+constexpr int numFunctions = 40;
+static const std::string functionNames[numFunctions] = {
+	"arcsinh", "arccosh", "arctanh", "arccsch", "arcsech", "arccoth", "arcsin",
+	"arccos", "arctan", "arccsc", "arcsec", "arccot", "asinh", "acosh", "atanh",
+	"acsch", "asech", "acoth", "log10", "asin", "acos", "atan", "acsc", "asec",
+	"acot", "sinh", "cosh", "tanh", "csch", "sech", "coth", "log2", "sin", "cos",
+	"tan", "csc", "sec", "cot", "log", "ln"
+};
 
-bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
-    if (str.empty()) return true;
-
-    std::smatch match;
-    if (std::regex_search(str, match, whitespace_regex)){
-        return Scanner::scan(match.suffix(), tokens);
-    }
-    int index;
-    if (startsWithLexeme(str, index)){
-        tokens.emplace_back(Token{lexemes[index], lexemeTypes[index]});
-        return Scanner::scan(str.substr(lexemes[index].size()), tokens);
-    }
-    
-    if (std::regex_search(str, match, HEX_regex)){
-        tokens.emplace_back(Token{match[0], HEX});
-        return Scanner::scan(match.suffix(), tokens);
-    }
-    if (std::regex_search(str, match, BIN_regex)){
-        tokens.emplace_back(Token{match[0], BIN});
-        return Scanner::scan(match.suffix(), tokens);
-    }
-    if (std::regex_search(str, match, NUM_regex)){
-        tokens.emplace_back(Token{match[0], NUM});
-        return Scanner::scan(match.suffix(), tokens);
-    }
-    if (std::regex_search(str, match, ID_regex)){
-        tokens.emplace_back(Token{match[0], ID});
-        return Scanner::scan(match.suffix(), tokens);
+static bool startsWithFunction(const char* str, size_t size, int& index){
+    if (size > 0){
+        for (int i = 0; i < numFunctions; ++i){
+            if (size >= functionNames[i].size()){
+                if (strncmp(str, functionNames[i].c_str(), functionNames[i].size()) == 0){
+                    index = i;
+                    return true;
+                }
+            }
+        }
     }
     return false;
+}
+
+static bool startsWithHex(const char* str, size_t size, int& index){
+    if (size > 2 && str[0] == '0' && str[1] == 'x'){
+        for (size_t i = 2; i < size; ++i){
+            if (!isxdigit(str[i])){
+                if (i == 2) return false;
+                index = i;
+                return true;
+            }
+        }
+        index = size;
+        return true;
+    }
+    return false;
+}
+
+static bool startsWithBin(const char* str, size_t size, int& index){
+    if (size > 2 && str[0] == '0' && str[1] == 'b'){
+        for (unsigned int i = 2; i < size; ++i){
+            if (str[i] != '0' && str[i] != '1'){
+                if (i == 2) return false;
+                index = i;
+                return true;
+            }
+        }
+        index = size;
+        return true;
+    }
+    return false;
+}
+
+static bool startsWithNum(const char* str, size_t size, int& index){
+    if (size > 0){
+        bool isDecimal = false;
+        for (unsigned int i = 0; i < size; ++i){
+            if (!isdigit(str[i])){
+                if (i == 0) return false;
+                switch(str[i]){
+                    case '.':
+                        if (!isDecimal){
+                            isDecimal = true;
+                            break;
+                        }
+                        return false;
+                    case 'i':
+                        index = (i+1 < size && !isalpha(str[i+1])) ? i+1 : i;
+                        return true;
+                    default:
+                        index = i;
+                        return true;
+                }   
+            }
+        }
+        index = size;
+        return true;
+    }
+    return false;
+}
+
+static bool startsWithID(const char* str, size_t size, int& index){
+    if (size > 0 && isalpha(str[0])){
+        for (unsigned int i = 1; i < size; ++i){
+            if (!(isalnum(str[i]) || str[i] == '_')){
+                index = i;
+                return true;
+            }
+        }
+        index = size;
+        return true;
+    }
+    return false;
+}
+
+static bool startsWithWhitespace(const char* str, size_t size, int& index){
+    if (size > 0){
+        for (unsigned int i = 0; i < size; ++i){
+            if (!isspace(str[i])){
+                if (i == 0) return false;
+                index = i;
+                return true;
+            }
+        }
+        index = size;
+        return true;
+    }
+    return false;
+}
+
+bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
+    unsigned int i = 0;
+    const char* c_str;
+    size_t size;
+    int index;
+    while (i < str.size()){
+        c_str = str.c_str() + i;
+        size = str.size() - i;
+        if (startsWithWhitespace(c_str, size, index)){
+            i += index;
+        }
+        else if (startsWithHex(c_str, size, index)){
+            tokens.emplace_back(Token{str.substr(i, index), HEX});
+            i += index;
+        }
+        else if (startsWithBin(c_str, size, index)){
+            tokens.emplace_back(Token{str.substr(i, index), BIN});
+            i += index;
+        }
+        else if (startsWithNum(c_str, size, index)){
+            tokens.emplace_back(Token{str.substr(i, index), NUM});
+            i += index;
+        }
+        else if (startsWithLexeme(c_str, size, index)){
+            tokens.emplace_back(Token{lexemes[index], lexemeTypes[index]});
+            i += lexemes[index].size();
+        }
+        else if (startsWithFunction(c_str, size, index)){
+            tokens.emplace_back(Token{functionNames[index], ID});
+            i += functionNames[index].size();
+        }
+        else if (startsWithID(c_str, size, index)){
+            tokens.emplace_back(Token{str.substr(i, index), ID});
+            i += index;
+        }
+        else{
+            return false;
+        }
+    }
+    return true;
 }
 
 

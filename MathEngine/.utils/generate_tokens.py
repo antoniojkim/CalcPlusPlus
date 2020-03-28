@@ -21,26 +21,29 @@ template_dir = os.path.join(file_dir, ".templates")
 with open(os.path.join(file_dir, "tokens.yml")) as file:
     tokens = yaml.load(file, Loader=Loader)
     # pprint(tokens)
-    
-    keys = [next(iter(t.keys())) for t in tokens]
+
+    keys = tuple(
+        list(tokens["specialTokens"]) +
+        list(tokens["operators"].keys()) +
+        list(tokens["tokens"].keys())
+    )
+
     lexemes = [
-        (name, vals["lexeme"])
-        for token in tokens
-        for name, vals in token.items()
-        if "lexeme" in vals
-    ]
-    regexes = [
-        (name, vals["regex"])
-        for token in tokens
-        for name, vals in token.items()
-        if vals.get("regex", None) is not None
-    ]
+        (operator, vals["lexeme"])
+        for operator, vals in tokens["operators"].items()
+    ] + list(tokens["tokens"].items())
+
     precedences = [
-        (name, vals.get("precedence", 0), vals.get("rightAssociative", False))
-        for token in tokens
-        for name, vals in token.items()
-        if "lexeme" in vals
+        (
+            key,
+            tokens["operators"].get(key, {}).get("precedence", 0),
+            tokens["operators"].get(key, {}).get("rightAssociative", False)
+        )
+        for key in keys
     ]
+
+    functionNames = tokens["functions"]
+    functionNames.sort(key=len, reverse=True)
 
 with open(os.path.join(template_dir, "scanner.h")) as file:
     template = "".join(file)
@@ -57,6 +60,7 @@ with open(os.path.join(template_dir, "scanner.cc")) as file:
     template = "".join(file)
 
 lexemes.sort(key=lambda l: len(l[1]), reverse=True)
+
 template = template.replace("{numLexemes}", str(len(lexemes)))
 template = template.replace("{lexemes}", wrap(map('"{}"'.format, (
     lexeme for name, lexeme in lexemes
@@ -64,20 +68,9 @@ template = template.replace("{lexemes}", wrap(map('"{}"'.format, (
 template = template.replace("{lexemeTypes}", wrap((
     name for name, lexeme in lexemes
 )))
-template = template.replace("{regexes}", os.linesep.join(
-    f'static const std::regex {name}_regex ("{regex}");'
-    for name, regex in regexes 
-))
 
-
-
-template = template.replace("{regex_searches}", "".join(f"""
-    if (std::regex_search(str, match, {name}_regex)){{
-        tokens.emplace_back(Token{{match[0], {name}}});
-        return Scanner::scan(match.suffix(), tokens);
-    }}"""
-   for name, regex in regexes
-))
+template = template.replace("{numFunctions}", str(len(functionNames)))
+template = template.replace("{functionNames}", wrap(map('"{}"'.format, functionNames)))
 
 with open(os.path.join(file_dir, "..", "Scanner", "scanner.cc"), "w") as file:
     file.write(template)
