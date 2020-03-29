@@ -8,6 +8,7 @@
 *ipynb_checkpoint*
 MathEngine/libMathEngine.a
 Tests/run
+build-CalcUI-Desktop_Qt_5_14_1_GCC_64bit-Debug/
 .includes/
 .sandbox/*/sandbox
 .vscode/
