@@ -9,7 +9,7 @@ class VariableExpression: public Expression {
   
   public:
     VariableExpression(const std::string& name);
-    VariableExpression(const std::string& name, const double& num);
+    VariableExpression(const std::string& name, double num);
 
     EXPRESSION_OVERRIDES
 

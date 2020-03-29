@@ -19,21 +19,12 @@ std::list<Token> MathEngine::scan(const std::string& input){
     throw Exception("Invalid string: ", input);
 }
 
-expression MathEngine::eval(const std::string& input){
+expression MathEngine::parse(const std::string& input){
     list<Token> tokens;
     Scanner::scan(input, tokens);
     preprocess(tokens);
     return parser->parse(tokens);
 }
-expression MathEngine::eval(const std::string& input, const double& x, const double& y){
-    auto expression = eval(input);
-    // expression->setX(x);
-    // expression->setY(y);
-    return expression;
-}
 expression MathEngine::operator()(const std::string& input){
-    return eval(input);
-}
-expression MathEngine::operator()(const std::string& input, const double& x, const double& y){
-    return eval(input, x, y);
+    return parse(input);
 }

@@ -1,4 +1,5 @@
 
+#include <bitset>
 #include <cstdlib>
 #include <sstream>
 
@@ -36,6 +37,9 @@ expression BinExpression::copy() {
 }
 
 std::ostream& BinExpression::print(std::ostream& out) {
-    out << num;
+    out << std::bitset<sizeof(unsigned long long)>(num);
     return out;
+}
+std::ostream& BinExpression::postfix(std::ostream& out) {
+    return print(out);
 }

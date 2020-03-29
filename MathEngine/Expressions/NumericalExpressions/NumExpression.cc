@@ -53,3 +53,14 @@ std::ostream& NumExpression::print(std::ostream& out) {
     }
     return out;
 }
+
+std::ostream& NumExpression::postfix(std::ostream& out) {
+    out << real;
+    if (imag > 0){
+        out << imag << "i" << " +";
+    }
+    else if (imag < 0){
+        out << -imag << "i" << " -";
+    }
+    return out;
+}

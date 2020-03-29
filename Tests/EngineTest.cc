@@ -20,7 +20,7 @@ bool printDifference(const std::string& input, expression& expression, const dou
 }
 
 void requireIsEqual(const string& input, const double& expected){
-    auto expression = engine.eval(input);
+    auto expression = engine.parse(input);
     double output = expression->value();
     REQUIRE( (gsl_fcmp(output, expected, 1e-6) != 0 ? printDifference(input, expression, output, expected) : true) ); 
 }
@@ -34,7 +34,7 @@ bool printDifference(const std::string& input, expression& expression, const std
 }
 
 void requireIsEqual(const string& input, const std::string& expected){
-    auto expression = engine.eval(input);
+    auto expression = engine.parse(input);
     ostringstream out;
     out << expression;
     string output = out.str();

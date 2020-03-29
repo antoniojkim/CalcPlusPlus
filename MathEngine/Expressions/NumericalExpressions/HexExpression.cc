@@ -1,6 +1,7 @@
 
 #include <cstdlib>
 #include <sstream>
+#include <ios>
 
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
@@ -36,6 +37,9 @@ expression HexExpression::copy() {
 }
 
 std::ostream& HexExpression::print(std::ostream& out) {
-    out << num;
+    out << std::hex << num;
     return out;
+}
+std::ostream& HexExpression::postfix(std::ostream& out) {
+    return print(out);
 }

@@ -19,9 +19,7 @@ class MathEngine {
 
         std::list<Scanner::Token> scan(const std::string& input);
 
-        expression eval(const std::string& input);
-        expression eval(const std::string& input, const double& x, const double& y = GSL_NAN);
+        expression parse(const std::string& input);
         expression operator()(const std::string& input);
-        expression operator()(const std::string& input, const double& x, const double& y = GSL_NAN);
 };
 

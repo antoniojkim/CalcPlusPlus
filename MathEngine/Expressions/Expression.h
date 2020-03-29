@@ -37,6 +37,7 @@ struct Expression {
     virtual expression copy() = 0;
 
     virtual std::ostream& print(std::ostream&) = 0;
+    virtual std::ostream& postfix(std::ostream&) = 0;
 
 };
 
@@ -52,5 +53,6 @@ std::ostream& operator<<(std::ostream&, Expression*);
     double value(const Variables& vars) override;                  \
     bool complex() override;                                       \
     expression copy() override;                                    \
-    std::ostream& print(std::ostream&) override;
+    std::ostream& print(std::ostream&) override;                   \
+    std::ostream& postfix(std::ostream&) override;
 

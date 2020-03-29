@@ -42,13 +42,17 @@ expression BinaryOperatorExpression::copy() {
     return make_unique<BinaryOperatorExpression>(operatorIndex, lhs->copy(), rhs->copy());
 }
 
+bool BinaryOperatorExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
+bool BinaryOperatorExpression::complex(){ return lhs->complex() || rhs->complex(); }
+
 std::ostream& BinaryOperatorExpression::print(std::ostream& out) {
     lhs->print(out) << operators[operatorIndex];
     return rhs->print(out);
 }
-
-bool BinaryOperatorExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
-bool BinaryOperatorExpression::complex(){ return lhs->complex() || rhs->complex(); }
+std::ostream& BinaryOperatorExpression::postfix(std::ostream& out) {
+    rhs->postfix(out) << ' ';
+    return  lhs->postfix(out) << ' ' << operators[operatorIndex];
+}
 
 
 expression operator+(expression&& expr1, expression&&expr2) {

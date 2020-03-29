@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cmath>
-#include <gsl_math.h>
+#include <gsl/gsl_math.h>
 
 #include "../BinaryOperatorDirectory.h"
 
