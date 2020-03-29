@@ -4,6 +4,7 @@ specialTokens:
     - NUM
     - ID
     - SPECIALID
+    - FUNCTION
 operators:
     COMMA:
         lexeme: ","
@@ -11,15 +12,15 @@ operators:
     EQUALS:
         lexeme: "="
         precedence: 2
-        rightAssociative: True
+        rightAssociative:
     COLON_EQUALS:
         lexeme: ":="
         precedence: 2
-        rightAssociative: True
+        rightAssociative:
     L_ARROW:
         lexeme: "<-"
         precedence: 2
-        rightAssociative: True
+        rightAssociative:
     PIPE_PIPE:
         lexeme: "||"
         precedence: 3
@@ -56,6 +57,7 @@ operators:
     TILDE:
         lexeme: "~"
         precedence: 9
+        singleOperator:
     LT_LT:
         lexeme: "<<"
         precedence: 10
@@ -83,6 +85,7 @@ operators:
     EXCL:
         lexeme: "!"
         precedence: 12
+        singleOperator:
     CARET:
         lexeme: "^"
         precedence: 13
@@ -149,20 +152,31 @@ functions:
     atanh:
     acsch:
     asech:
-    acoth:
+    acoth: 
+    arsinh:
+    arcosh:
+    artanh:
+    arcsch:
+    arsech:
+    arcoth: 
     arcsinh:
     arccosh:
     arctanh:
     arccsch:
     arcsech:
-    arccoth: 
+    arccoth:
     # Exponentials
+    exp:
+    exp2:
+    expm1:
     log:
     log2:
-    log10:
-    ln: 
+    log1p:
+    ln:
+    ln2:
+    ln1p:
     # Calculus
-    dx:
-    deriv:
-    integral:
-    integrate: 
+    dx: 0
+    deriv: 0
+    integral: 0
+    integrate: 0

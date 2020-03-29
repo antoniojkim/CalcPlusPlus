@@ -10,7 +10,7 @@ const unordered_set<Type> preImplicit ({
     NUM, RPAREN, RSQUARE, RBRACE // , SPECIALID
 });
 const unordered_set<Type> postImplicit ({
-    NUM, LPAREN, LSQUARE, LBRACE, ID // , SPECIALID
+    NUM, LPAREN, LSQUARE, LBRACE, ID, FUNCTION // , SPECIALID
 });
 
 void implicitMultiplication(list<Token>& tokens){

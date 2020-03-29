@@ -8,6 +8,6 @@
 class Parser {
 
     public:
-        virtual expression parse(const std::list<Scanner::Token>& tokens) = 0;
+        virtual expression parse(std::list<Scanner::Token>& tokens) = 0;
 
 };

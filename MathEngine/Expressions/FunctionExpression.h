@@ -1,18 +1,19 @@
 #pragma once
 
 #include "Expression.h"
-#include "FunctionExpressions/FunctionDirectory.h"
+#include "FunctionExpressions/UnaryFunctionDirectory.h"
 
 class UnaryFunctionExpression: public Expression {
 
-    const std::string& name;
+    int functionIndex;
     UnaryFunction f;
     // UnaryFunction fprime;
     // UnaryFunction fint;
     expression arg;
-  
+
   public:
     UnaryFunctionExpression(const std::string& name, expression&& arg);
+    UnaryFunctionExpression(int functionIndex, expression&& arg);
 
     EXPRESSION_OVERRIDES
 

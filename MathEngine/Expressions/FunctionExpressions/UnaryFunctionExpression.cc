@@ -1,18 +1,27 @@
 
-#include "../FunctionExpression.h"
-#include "../BinaryOperators.h"
-#include "../NumericalExpression.h"
-#include "../../Utils/exceptions.h"
-
 #include <utility>
+
+#include "../../Utils/exceptions.h"
+#include "../FunctionExpression.h"
+#include "../NumericalExpression.h"
+#include "FunctionDirectory.h"
+#include "UnaryFunctionDirectory.h"
 
 using namespace std;
 
 UnaryFunctionExpression::UnaryFunctionExpression(const std::string& name, expression&& arg):
-    name{name}, f{get_unary_function(name)}, arg{std::move(arg)} {}
+    UnaryFunctionExpression{getFunctionIndex(name), std::move(arg)} {
+    if (functionIndex == -1){
+        throw Exception("Invalid Unary Function: ", name);
+    }
+}
+UnaryFunctionExpression::UnaryFunctionExpression(int functionIndex, expression&& arg):
+    functionIndex{functionIndex},
+    f{functionIndex != -1 ? get_unary_function(functionIndex) : nullptr},
+    arg{std::move(arg)} {}
 
 expression UnaryFunctionExpression::simplify() {
-    return make_unique<UnaryFunctionExpression>(name, arg->simplify());
+    return make_unique<UnaryFunctionExpression>(functionIndex, arg->simplify());
 }
 expression UnaryFunctionExpression::derivative(const std::string& var) {
     throw Exception("Unimplemented Error: UnaryFunctionExpression::derivative");
@@ -37,11 +46,12 @@ double UnaryFunctionExpression::value(const Variables& vars) { return f(arg->val
 bool UnaryFunctionExpression::complex(){ return arg->complex(); }
 
 expression UnaryFunctionExpression::copy() {
-    return make_unique<UnaryFunctionExpression>(name, arg->copy());
+    return make_unique<UnaryFunctionExpression>(functionIndex, arg->copy());
 }
 
 std::ostream& UnaryFunctionExpression::print(std::ostream& out) {
-    out << name << "(";
+    out << functionNames[functionIndex] << "(";
     return arg->print(out) << ")";
 }
+
 

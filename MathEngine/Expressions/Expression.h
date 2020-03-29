@@ -14,7 +14,7 @@ typedef std::unordered_map<std::string, double> Variables;
 double gsl_expression_function(double x, void* params);
 
 struct Expression {
-  
+    
     virtual expression simplify() = 0;
     virtual expression derivative(const std::string& var) = 0;
     virtual expression integrate(const std::string& var) = 0;

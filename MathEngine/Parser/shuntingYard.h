@@ -9,5 +9,5 @@ class ShuntingYard: public Parser {
     public:
         ShuntingYard();
 
-        expression parse(const std::list<Scanner::Token>& tokens) override;
+        expression parse(std::list<Scanner::Token>& tokens) override;
 };

@@ -1,25 +1,26 @@
 #pragma once
 
+#include <exception>
 #include <sstream>
 #include <string>
 
-struct Exception {
+struct Exception: std::exception {
     
-    std::ostringstream err;
     std::string msg;
 
-    template <class T>
-    Exception(T arg) {
-        err << arg;
-        msg = err.str();
-    }
-    template <class T, class... T2>
-    Exception(T arg, T2... args) {
-        err << arg;
-        Exception(args...);
+    template <typename...Args>
+    Exception(Args&&... args) {
+        std::ostringstream oss;
+        (oss << ... << args);
+        msg = oss.str();
     }
 
-    const char * what () const throw () {
+    Exception& operator=(const Exception& other) noexcept {
+        this->msg = other.msg;
+        return *this;
+    }
+
+    virtual const char * what () const noexcept override {
         return msg.c_str();
     }
 

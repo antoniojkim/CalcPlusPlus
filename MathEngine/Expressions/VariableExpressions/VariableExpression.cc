@@ -15,9 +15,9 @@ expression VariableExpression::simplify() {
 }
 expression VariableExpression::derivative(const std::string& var) {
     if (var == name){
-        return make_unique<NumericalExpression>(1);
+        return make_unique<NumExpression>(1);
     }
-    return make_unique<NumericalExpression>(0);
+    return make_unique<NumExpression>(0);
 }
 expression VariableExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: VariableExpression::integrate");

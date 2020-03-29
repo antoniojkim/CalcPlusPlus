@@ -15,8 +15,8 @@ experiment:
 install:
 	.utils/install
 
-tokens:
-	python3 -u MathEngine/.utils/generate_tokens.py
+generate:
+	python3 -u MathEngine/.utils/auto_generate.py
 
 bp:  # breakpoints
 	edit Tests/.gdbinit

@@ -1,4 +1,8 @@
 
+/***************************************************
+ *************** Auto-Generated File ***************
+ ***************************************************/
+
 #include <cstring>
 #include <cctype>
 #include <sstream>
@@ -42,8 +46,8 @@ static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
 static bool startsWithFunction(const char* str, size_t size, int& index){
     if (size > 0){
         for (int i = 0; i < numFunctions; ++i){
-            if (size >= functionNames[i].size()){
-                if (strncmp(str, functionNames[i].c_str(), functionNames[i].size()) == 0){
+            if (size >= functionNameLengths[i]){
+                if (strncmp(str, functionNames[i], functionNameLengths[i]) == 0){
                     index = i;
                     return true;
                 }
@@ -168,8 +172,8 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             i += lexemes[index].size();
         }
         else if (startsWithFunction(c_str, size, index)){
-            tokens.emplace_back(Token{functionNames[index], ID});
-            i += functionNames[index].size();
+            tokens.emplace_back(Token{functionNames[index], FUNCTION});
+            i += functionNameLengths[index];
         }
         else if (startsWithID(c_str, size, index)){
             tokens.emplace_back(Token{str.substr(i, index), ID});
