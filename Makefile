@@ -5,6 +5,12 @@ build:
 test: build
 	.utils/test
 
+ui:
+	.utils/build_ui
+
+run: ui
+	./CalcUI/CalcUI
+
 sandbox:
 	python3 -u Sandboxer/sandboxer.py --create --name $(name) --lang $(lang)
 
