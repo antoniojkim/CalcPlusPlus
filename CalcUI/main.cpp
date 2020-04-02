@@ -1,5 +1,9 @@
+#include <iostream>
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +19,13 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+
+
+    QObject *rootObject = engine.rootObjects().first();
+    QObject *qmlObject = rootObject->findChild<QObject*>("input1");
+
+    cout << qmlObject << endl;
+
 
     return app.exec();
 }

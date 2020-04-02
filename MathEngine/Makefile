@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla -I../.includes/gsl
+CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla -I../.includes/gsl 
 TARGET_LIB = libMathEngine.a  # target lib
 
 MATHENGINE = $(wildcard MathEngine/*.cc)
