@@ -1,4 +1,5 @@
 
+#include "../Expressions/InvalidExpression.h"
 #include "../MathEngine.h"
 #include "../Parser/shuntingYard.h"
 #include "../Utils/exceptions.h"
@@ -21,10 +22,20 @@ std::list<Token> MathEngine::scan(const std::string& input){
 
 expression MathEngine::parse(const std::string& input){
     list<Token> tokens;
-    Scanner::scan(input, tokens);
-    preprocess(tokens);
-    return parser->parse(tokens);
+    if (Scanner::scan(input, tokens)) {
+        preprocess(tokens);
+        return parser->parse(tokens);
+    }
+    return make_unique<InvalidExpression>(Exception());
 }
 expression MathEngine::operator()(const std::string& input){
     return parse(input);
+}
+
+expression MathEngine::evaluate(const std::string& input){
+    auto expr = parse(input);
+    if (dynamic_cast<InvalidExpression*>(expr.get())){
+        return expr;
+    }
+    return expr->evaluate(variables);
 }

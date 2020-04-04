@@ -1,12 +1,11 @@
 
+#include <iomanip>
 #include <sstream>
 
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 
 using namespace std;
-
-expression Expression::evaluate(){ return std::make_unique<NumExpression>(this->value()); }
 
 NumExpression::NumExpression(double real, double imag): real{real}, imag{imag} {}
 NumExpression::NumExpression(const std::string& num): real{0}, imag{0} {
@@ -44,23 +43,23 @@ expression NumExpression::copy() {
 }
 
 std::ostream& NumExpression::print(std::ostream& out) {
-    out << real;
+    out << std::setprecision(16) << real;
     if (imag > 0){
-        out << '+' << imag << "i";
+        out << '+' << std::setprecision(16) << imag << "i";
     }
     else if (imag < 0){
-        out << imag << "i";
+        out << std::setprecision(16) << imag << "i";
     }
     return out;
 }
 
 std::ostream& NumExpression::postfix(std::ostream& out) {
-    out << real;
+    out << std::setprecision(16) << real;
     if (imag > 0){
-        out << imag << "i" << " +";
+        out << std::setprecision(16) << imag << "i" << " +";
     }
     else if (imag < 0){
-        out << -imag << "i" << " -";
+        out << std::setprecision(16) << -imag << "i" << " -";
     }
     return out;
 }

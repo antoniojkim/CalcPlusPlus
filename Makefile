@@ -8,8 +8,11 @@ test: build
 ui:
 	.utils/build_ui
 
-run: ui
+run: build ui
 	./CalcUI/CalcUI
+
+debug: build ui
+	gdb -q -ex="run" ./CalcUI/CalcUI
 
 sandbox:
 	python3 -u Sandboxer/sandboxer.py --create --name $(name) --lang $(lang)
@@ -28,5 +31,5 @@ bp:  # breakpoints
 	edit Tests/.gdbinit
 
 clean:
-	rm -f MathEngine/libMathEngine.a Tests/run
+	rm -f MathEngine/libMathEngine.a Tests/run CalcUI/CalcUI
 .PHONY: clean

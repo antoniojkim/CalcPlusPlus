@@ -11,5 +11,6 @@ MathEngine/libMathEngine.a
 Tests/run
 CalcUI/CalcUI
 .includes/
+.libs/
 .sandbox/*/sandbox
 .vscode/

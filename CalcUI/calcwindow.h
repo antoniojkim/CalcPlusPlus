@@ -2,6 +2,7 @@
 #define CALCWINDOW_H
 
 #include <QMainWindow>
+#include <MathEngine.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class CalcWindow; }
@@ -15,7 +16,11 @@ public:
     CalcWindow(QWidget *parent = nullptr);
     ~CalcWindow();
 
+private slots:
+    void on_textChanged();
+
 private:
     Ui::CalcWindow *ui;
+    MathEngine engine;
 };
 #endif // CALCWINDOW_H

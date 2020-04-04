@@ -44,6 +44,12 @@
       </item>
       <item>
        <widget class="QTextEdit" name="output1">
+        <property name="font">
+         <font>
+          <family>DejaVu Math TeX Gyre</family>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>

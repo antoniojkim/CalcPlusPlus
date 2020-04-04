@@ -1,20 +1,24 @@
 #!/bin/bash
 
+root_dir=$(pwd)
+
+rm -rf .libs/
+mkdir -p .libs/
 rm -rf .includes/
 mkdir -p .includes/
 cd .includes/
-curr_dir=$(pwd)
+curr_dir="$root_dir/.includes"
 
 # Install GNU Scientific Library
 wget ftp://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz
 tar -xzf gsl-latest.tar.gz
 rm -f gsl-latest.tar.gz
-gsl_dir=$curr_dir/$(ls | grep "gsl")
+gsl_dir=$curr_dir/$(ls | grep "gsl-")
 cd $gsl_dir
 ./configure && make
 ln -s $gsl_dir/gsl $curr_dir/gsl
-ln -s $gsl_dir/.libs $curr_dir/.gsl_libs
-ln -s $gsl_dir/cblas/.libs $curr_dir/.cblas_libs
+ln -s $gsl_dir/.libs/libgsl.a $root_dir/.libs/libgsl.a
+ln -s $gsl_dir/cblas/.libs/libgslcblas.a $root_dir/.libs/libgslcblas.a
 
 # Install QT5
 cd $curr_dir

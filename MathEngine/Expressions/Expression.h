@@ -9,7 +9,7 @@
 struct Expression;
 
 typedef std::unique_ptr<Expression> expression;
-typedef std::unordered_map<std::string, double> Variables;
+typedef std::unordered_map<std::string, expression> Variables;
 
 double gsl_expression_function(double x, void* params);
 
@@ -21,6 +21,7 @@ struct Expression {
     
     virtual bool evaluable() = 0;
     virtual expression evaluate();
+    virtual expression evaluate(const Variables& vars);
 
     virtual gsl_function function() {
         gsl_function F;

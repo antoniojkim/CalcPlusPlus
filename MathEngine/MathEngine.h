@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <map>
 #include <memory>
 #include <string>
 #include <gsl/gsl_math.h>
@@ -13,6 +14,7 @@
 class MathEngine {
 
     std::unique_ptr<Parser> parser;
+    Variables variables;
 
     public:
         MathEngine();
@@ -21,5 +23,7 @@ class MathEngine {
 
         expression parse(const std::string& input);
         expression operator()(const std::string& input);
+
+        expression evaluate(const std::string& input);
 };
 

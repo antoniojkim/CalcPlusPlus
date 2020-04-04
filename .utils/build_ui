@@ -1,5 +1,15 @@
 #!/bin/bash
 
 cd CalcUI/
-qmake CalcUI.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
-make
+
+if [ ! -f Makefile ]; then
+    qmake CalcUI.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
+fi
+
+make 2> calcui.cerr
+if [ $? -ne 0 ]; then
+    vi -R calcui.cerr
+    exit 1
+else
+    rm -f calcui.cerr
+fi

@@ -29,7 +29,7 @@ double VariableExpression::value() { return num; }
 
 double VariableExpression::value(const Variables& vars) {
     if (vars.count(name) > 0){
-        return vars.at(name);
+        return vars.at(name)->value();
     }
     return num;
 }

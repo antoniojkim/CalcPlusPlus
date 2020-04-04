@@ -3,6 +3,7 @@
 
 #include "../Expressions/FunctionExpression.h"
 #include "../Expressions/FunctionExpressions/FunctionDirectory.h"
+#include "../Expressions/InvalidExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/OperatorExpression.h"
 #include "../Expressions/OperatorExpressions/Operators.h"
@@ -44,12 +45,18 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
         }
 
         if (isOperator(token->type)){
+            if (expressionStack.empty()){
+                return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Unary Operator"));
+            }
             expression expr1 = std::move(expressionStack.back());
             expressionStack.pop_back();
             if (isSingleOperator(token->type)){
-                throw Exception("Unary Operator not yet supported: ", typeStrings[token->type]);
+                return make_unique<InvalidExpression>(Exception("Unary Operator not yet supported: ", typeStrings[token->type]));
             }
             else{
+                if (expressionStack.empty()){
+                    return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Binary Operator"));
+                }
                 expression expr2 = std::move(expressionStack.back());
                 expressionStack.pop_back();
                 expressionStack.push_back(
@@ -62,9 +69,12 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
         if (token->type == FUNCTION){
             int functionIndex = getFunctionIndex(token->lexeme);
             if (functionIndex == -1){
-                throw Exception("Invalid Function: ", token->lexeme);
+                return make_unique<InvalidExpression>(Exception("Invalid Function: ", token->lexeme));
             }
             if (getFunctionNumArgs(functionIndex) == 1){
+                if (expressionStack.empty()){
+                    return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Unary Function"));
+                }
                 expression expr = std::move(expressionStack.back());
                 expressionStack.pop_back();
                 expressionStack.push_back(
@@ -72,10 +82,10 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 );
                 continue;
             }
-            throw Exception("Unsupported Function: ", token->lexeme);
+            return make_unique<InvalidExpression>(Exception("Unsupported Function: ", token->lexeme));
         }
 
-        throw Exception("Unsupported Token type found: ", typeStrings[token->type]);
+        return make_unique<InvalidExpression>(Exception("Unsupported Token type found: ", typeStrings[token->type]));
     }
 
     if (expressionStack.size() == 1){
@@ -85,7 +95,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
     }
 
     cout << outputStack << endl;
-    throw Exception("Expression Stack left with more than one expression");
+    return make_unique<InvalidExpression>(Exception("Expression Stack left with more than one expression"));
 }
 
 expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
@@ -139,7 +149,7 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             continue;
         }
 
-        throw Exception("Unsupported Token: '", token.lexeme, "'");
+        return make_unique<InvalidExpression>(Exception("Unsupported Token: '", token.lexeme, "'"));
     }
     while(!operatorStack.empty()){
         outputStack.push_back(operatorStack.back());
