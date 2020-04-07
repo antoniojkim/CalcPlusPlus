@@ -3,10 +3,12 @@
 cd CalcUI/
 
 if [ ! -f Makefile ]; then
-    qmake CalcUI.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
+    qmake -makefile CalcUI.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug \
+            INCPATH+=../MathEngine \
+            INCPATH+=../.includes
 fi
 
-make 2> calcui.cerr
+make SUBLIBS="-L../MathEngine -lMathEngine -L../.libs/ -lgsl -lgslcblas -lm" 2> calcui.cerr
 if [ $? -ne 0 ]; then
     vi -R calcui.cerr
     exit 1

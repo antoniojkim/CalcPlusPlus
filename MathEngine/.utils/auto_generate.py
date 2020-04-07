@@ -132,6 +132,17 @@ with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "Un
     file.write(template)
 
 
+with open(os.path.join(template_dir, "MultiFunctionDirectory.cc")) as file:
+    template = "".join(file)
+
+template = template.replace("{multiFunctions}", wrap((
+    f'f_{name}' if nargs < 0 or nargs > 1 else "nullptr" for name, nargs in functions
+)))
+
+with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "MultiFunctionDirectory.cc"), "w") as file:
+    file.write(template)
+
+
 with open(os.path.join(template_dir, "BinaryOperatorDirectory.cc")) as file:
     template = "".join(file)
 

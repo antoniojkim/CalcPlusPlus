@@ -26,6 +26,7 @@ ostream& operator<<(ostream& out, list<Scanner::Token*> l){
 
 expression postfix_to_expression(list<Scanner::Token*>& outputStack){
     list<expression> expressionStack;
+    list<expression> argumentQueue;
     for (auto token : outputStack){
         switch(token->type){
             case NUM:
@@ -42,6 +43,50 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 continue;
             default:
                 break;
+        }
+        
+        if (token->type == FUNCTION){
+            int functionIndex = getFunctionIndex(token->lexeme);
+            if (functionIndex == -1){
+                return make_unique<InvalidExpression>(Exception("Invalid Function: ", token->lexeme));
+            }
+            if (expressionStack.empty()){
+                return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
+            }
+            int numArgs = getFunctionNumArgs(functionIndex);
+            if (numArgs != -1 && numArgs != (int) argumentQueue.size() + 1){
+                return make_unique<InvalidExpression>(Exception(
+                    "Invalid Number of Arguments for Function. Expected: ", numArgs,
+                    "  Got: ", argumentQueue.size()
+                ));
+            }
+            if (numArgs == 1){
+                auto expr = std::move(expressionStack.back());
+                expressionStack.pop_back();
+                expressionStack.push_back(
+                    make_unique<UnaryFunctionExpression>(functionIndex, std::move(expr))
+                );
+                continue;
+            }
+            else {
+                argumentQueue.emplace_front(std::move(expressionStack.back()));
+                expressionStack.pop_back();
+                expressionStack.push_back(
+                    make_unique<MultiFunctionExpression>(functionIndex, std::move(argumentQueue))
+                );
+                argumentQueue.clear();
+                continue;
+            }
+            return make_unique<InvalidExpression>(Exception("Unsupported Function: ", token->lexeme));
+        }
+
+        if (token->type == COMMA){
+            if (expressionStack.empty()){
+                return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
+            }
+            argumentQueue.emplace_back(std::move(expressionStack.back()));
+            expressionStack.pop_back();
+            continue;
         }
 
         if (isOperator(token->type)){
@@ -64,25 +109,6 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 );
             }
             continue;
-        }
-        
-        if (token->type == FUNCTION){
-            int functionIndex = getFunctionIndex(token->lexeme);
-            if (functionIndex == -1){
-                return make_unique<InvalidExpression>(Exception("Invalid Function: ", token->lexeme));
-            }
-            if (getFunctionNumArgs(functionIndex) == 1){
-                if (expressionStack.empty()){
-                    return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Unary Function"));
-                }
-                expression expr = std::move(expressionStack.back());
-                expressionStack.pop_back();
-                expressionStack.push_back(
-                    make_unique<UnaryFunctionExpression>(functionIndex, std::move(expr))
-                );
-                continue;
-            }
-            return make_unique<InvalidExpression>(Exception("Unsupported Function: ", token->lexeme));
         }
 
         return make_unique<InvalidExpression>(Exception("Unsupported Token type found: ", typeStrings[token->type]));
@@ -113,6 +139,7 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                 continue;
             case FUNCTION:
             case LPAREN:
+            case COMMA:
                 operatorStack.push_back(&token);
                 continue;
             default:
@@ -126,6 +153,8 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                        || (isOperator(type) && getPrecedence(type) > getPrecedence(token.type))
                        || (isOperator(type) && getPrecedence(type) == getPrecedence(token.type) && !isRightAssociative(token.type)))
                       && type != LPAREN) {
+                    cout << token.lexeme << "  " << operatorStack.back()->lexeme << endl;
+                    cout << getPrecedence(type) << "  " << getPrecedence(token.type) << endl;
                     outputStack.push_back(operatorStack.back());
                     operatorStack.pop_back();
                     if (operatorStack.empty()) break;

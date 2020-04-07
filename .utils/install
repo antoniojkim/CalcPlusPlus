@@ -1,34 +1,31 @@
 #!/bin/bash
 
 root_dir=$(pwd)
+include_dir="$root_dir/.includes"
+libs_dir="$root_dir/.libs"
 
-rm -rf .libs/
-mkdir -p .libs/
-rm -rf .includes/
-mkdir -p .includes/
-cd .includes/
-curr_dir="$root_dir/.includes"
+rm -rf $include_dir
+mkdir -p $include_dir
+rm -rf $libs_dir
+mkdir -p $libs_dir
 
 # Install GNU Scientific Library
+cd $include_dir
 wget ftp://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz
 tar -xzf gsl-latest.tar.gz
 rm -f gsl-latest.tar.gz
-gsl_dir=$curr_dir/$(ls | grep "gsl-")
+gsl_dir=$include_dir/$(ls | grep "gsl-")
 cd $gsl_dir
 ./configure && make
-ln -s $gsl_dir/gsl $curr_dir/gsl
-ln -s $gsl_dir/.libs/libgsl.a $root_dir/.libs/libgsl.a
-ln -s $gsl_dir/cblas/.libs/libgslcblas.a $root_dir/.libs/libgslcblas.a
+ln -s $gsl_dir/gsl $include_dir/gsl
+ln -s $gsl_dir/.libs/libgsl.a $libs_dir/libgsl.a
+ln -s $gsl_dir/cblas/.libs/libgslcblas.a $libs_dir/libgslcblas.a
 
 # Install QT5
-cd $curr_dir
-OS=$(uname)
-if [ "$OS" == "Linux" ]; then
-    wget http://download.qt.io/official_releases/online_installers/qt-unified-linux-x64-online.run
-    chmod +x ./qt-unified-linux-x64-online.run
-    ./qt-unified-linux-x64-online.run
-elif [ "$OS" == "Darwin" ]; then
-    wget http://download.qt.io/official_releases/online_installers/qt-unified-mac-x64-online.dmg
-elif [ "$OS" == "WindowsNT" ]; then
-    wget http://download.qt.io/official_releases/online_installers/qt-unified-windows-x86-online.exe
-fi
+# cd $include_dir
+# git clone https://code.qt.io/qt/qt5.git
+# qt_dir=$include_dir/qt5
+# cd $qt_dir
+# perl init-repository
+# ./configure -developer-build -opensource -nomake examples -nomake tests -static -static-runtime -confirm-license
+# make -j10

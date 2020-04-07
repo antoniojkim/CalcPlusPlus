@@ -26,7 +26,7 @@ expression MathEngine::parse(const std::string& input){
         preprocess(tokens);
         return parser->parse(tokens);
     }
-    return make_unique<InvalidExpression>(Exception());
+    return make_unique<InvalidExpression>(Exception(""));
 }
 expression MathEngine::operator()(const std::string& input){
     return parse(input);

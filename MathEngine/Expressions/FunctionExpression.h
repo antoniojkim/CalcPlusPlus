@@ -1,7 +1,10 @@
 #pragma once
 
+#include <list>
+
 #include "Expression.h"
 #include "FunctionExpressions/UnaryFunctionDirectory.h"
+#include "FunctionExpressions/MultiFunctionDirectory.h"
 
 class UnaryFunctionExpression: public Expression {
 
@@ -19,14 +22,17 @@ class UnaryFunctionExpression: public Expression {
 
 };
 
-// class NargFunctionExpression: public Expression {
+class MultiFunctionExpression: public Expression {
 
-//     expression arg;
+    int functionIndex;
+    MultiFunction f;
+    std::list<expression> args;
   
-//   public:
-//     FunctionExpression(expression lhs, expression rhs);
+  public:
+    MultiFunctionExpression(const std::string& name, std::list<expression>&& args);
+    MultiFunctionExpression(int functionIndex, std::list<expression>&& args);
 
-//     EXPRESSION_OVERRIDES
+    EXPRESSION_OVERRIDES
 
-// };
+};
 

@@ -14,6 +14,7 @@ MathEngine engine;
 bool printDifference(const std::string& input, expression& expression, const double& output, const double& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expression << endl;
+    cout << "Postfix:    "; expression->postfix(cout) << endl;
     cout << output << " != " << expected << endl;
     cout << gsl_fcmp(output, expected, 1e-6) << endl;
     return false;

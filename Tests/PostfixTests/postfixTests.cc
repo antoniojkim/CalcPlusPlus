@@ -28,6 +28,12 @@ TEST_CASE("Basic Postfix Tests", "[postfix]" ) {
 
 }
 
+TEST_CASE("Multi Arg Function Postfix Tests", "[postfix]") {
+
+    postfixTest("logn(10, 4)", "10 4 , logn");
+
+}
+
 TEST_CASE("Complex Postfix Tests", "[postfix]" ) {
 
     // postfixTest("cossinh3+5i-arcsin(x, 4)+6integral(sinx, 4, 5)^|4+0x3aF",

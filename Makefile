@@ -12,7 +12,10 @@ run: build ui
 	./CalcUI/CalcUI
 
 debug: build ui
-	gdb -q -ex="run" ./CalcUI/CalcUI
+	gdb -q -ex="run" ./CalcUI/Calculator
+
+package:
+	.utils/package
 
 sandbox:
 	python3 -u Sandboxer/sandboxer.py --create --name $(name) --lang $(lang)
@@ -32,4 +35,5 @@ bp:  # breakpoints
 
 clean:
 	rm -f MathEngine/libMathEngine.a Tests/run CalcUI/CalcUI
+
 .PHONY: clean

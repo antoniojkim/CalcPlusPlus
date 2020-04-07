@@ -3,7 +3,7 @@
 cd Tests/
 rm EngineTest.o
 
-make 2> test.cerr
+make -j10 2> test.cerr
 if [ $? -ne 0 ]; then
     vi -R test.cerr
     exit 1

@@ -175,6 +175,7 @@ functions:
     ln:
     ln2:
     ln1p:
+    logn: 2
     # Calculus
     dx: 0
     deriv: 0

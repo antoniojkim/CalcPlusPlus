@@ -1,0 +1,33 @@
+#!/bin/bash
+
+curr_dir=$(pwd)
+package_dir=$curr_dir/.package
+
+rm -rf $package_dir
+mkdir -p $package_dir
+cd $package_dir
+
+cp ../CalcUI/CalcUI Calculator
+
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+lib_dir=$package_dir/.libs
+mkdir $lib_dir
+
+for dependency in $(ldd ../CalcUI/CalcUI | awk 'NF == 4 {print $3}; NF == 2 {print $1}');
+do
+    # if echo $dependency | grep -q -e Qt; then
+    cp $dependency $lib_dir/
+    # fi
+done
+
+QT_DIR=/home/antonio/Qt/5.14.1/gcc_64
+cp -r $QT_DIR/plugins/platforms .
+
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+tar -czvf $curr_dir/calcplusplus.tar.gz Calculator .libs/*.so* platforms/

@@ -5,6 +5,7 @@
 *.cerr
 *.gdbinit
 *.qmake.stash
+*.tar*
 *pycache*
 *ipynb_checkpoint*
 MathEngine/libMathEngine.a
@@ -12,5 +13,6 @@ Tests/run
 CalcUI/CalcUI
 .includes/
 .libs/
+.package
 .sandbox/*/sandbox
 .vscode/

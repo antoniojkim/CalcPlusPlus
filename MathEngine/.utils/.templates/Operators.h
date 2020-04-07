@@ -33,6 +33,6 @@ inline int getOperatorIndex(const std::string& lexeme){
     return getOperatorIndex(lexeme.c_str());
 }
 constexpr bool isOperator(Scanner::Type type){ return precedences[int(type)] != 0; }
-constexpr bool getPrecedence(Scanner::Type type){ return std::abs(precedences[int(type)]); }
+constexpr int getPrecedence(Scanner::Type type){ return std::abs(precedences[int(type)]); }
 constexpr bool isRightAssociative(Scanner::Type type){ return precedences[int(type)] > 0; }
 constexpr bool isSingleOperator(Scanner::Type type){ return singleOperators[int(type)]; }
