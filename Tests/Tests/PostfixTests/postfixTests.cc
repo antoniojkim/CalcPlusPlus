@@ -12,7 +12,15 @@ void postfixTest(const string& input, const string& expected){
     auto expr = engine(input);
     ostringstream oss;
     expr->postfix(oss);
-    REQUIRE( oss.str() == expected );
+    auto output = oss.str();
+    if (output != expected){
+        cout << "Input:   " << input << endl;
+        cout << "Postfix: " << output << endl;
+#ifdef DEBUG
+        cout << "Postfix Tokens: "; print(cout, engine.tokens, " ") << endl;
+#endif
+    }
+    REQUIRE( output == expected );
 }
 
 TEST_CASE("Basic Postfix Tests", "[postfix]" ) {
@@ -23,7 +31,8 @@ TEST_CASE("Basic Postfix Tests", "[postfix]" ) {
     postfixTest("csc(x)", "x csc");
     postfixTest("sec(cot(5))", "5 cot sec");
     postfixTest("sinhcosh5", "5 cosh sinh");
-    postfixTest("log25", "5 log2");
+    postfixTest("log25", "25 log");
+    postfixTest("log_25", "5 log_2");
     postfixTest("ln45", "45 ln");
 
 }
@@ -31,6 +40,7 @@ TEST_CASE("Basic Postfix Tests", "[postfix]" ) {
 TEST_CASE("Multi Arg Function Postfix Tests", "[postfix]") {
 
     postfixTest("logn(10, 4)", "10 4 , logn");
+    postfixTest("deriv(sinx, 3)", "x sin 3 , deriv");
 
 }
 

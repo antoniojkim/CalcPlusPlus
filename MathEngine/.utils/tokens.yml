@@ -167,17 +167,17 @@ functions:
     arccoth:
     # Exponentials
     exp:
-    exp2:
+    exp_2:
     expm1:
     log:
-    log2:
+    log_2:
     log1p:
     ln:
-    ln2:
+    ln_2:
     ln1p:
     logn: 2
     # Calculus
     dx: 0
-    deriv: 0
+    deriv: 2
     integral: 0
     integrate: 0

@@ -21,7 +21,11 @@ std::list<Token> MathEngine::scan(const std::string& input){
 }
 
 expression MathEngine::parse(const std::string& input){
+#ifndef DEBUG
     list<Token> tokens;
+#else
+    tokens.clear();
+#endif
     if (Scanner::scan(input, tokens)) {
         preprocess(tokens);
         return parser->parse(tokens);

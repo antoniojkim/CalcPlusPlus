@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "../UnaryFunctionDirectory.h"
+#include "../FunctionDirectory.h"
 
 
 UnaryFunction f_sin = std::sin;

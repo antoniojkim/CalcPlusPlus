@@ -4,7 +4,7 @@
 #include "../../Utils/exceptions.h"
 #include "../FunctionExpression.h"
 #include "../NumericalExpression.h"
-#include "FunctionDirectory.h"
+#include "Functions.h"
 #include "MultiFunctionDirectory.h"
 
 using namespace std;
@@ -86,7 +86,7 @@ std::ostream& MultiFunctionExpression::print(std::ostream& out) {
 }
 std::ostream& MultiFunctionExpression::postfix(std::ostream& out) {
     for (auto& arg: args){
-        arg->print(out) << " ";
+        arg->postfix(out) << " ";
     }
     for (unsigned int i = 1; i < args.size(); ++i){
         out << ", ";

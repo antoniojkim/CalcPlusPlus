@@ -4,7 +4,7 @@
 #include "../../Utils/exceptions.h"
 #include "../FunctionExpression.h"
 #include "../NumericalExpression.h"
-#include "FunctionDirectory.h"
+#include "Functions.h"
 #include "UnaryFunctionDirectory.h"
 
 using namespace std;

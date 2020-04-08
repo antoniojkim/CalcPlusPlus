@@ -102,7 +102,7 @@ with open(os.path.join(file_dir, "..", "Expressions", "OperatorExpressions", "Op
     file.write(template)
 
 
-with open(os.path.join(template_dir, "FunctionDirectory.h")) as file:
+with open(os.path.join(template_dir, "Functions.h")) as file:
     template = "".join(file)
 
 template = template.replace("{numFunctions}", str(len(functions)))
@@ -116,30 +116,23 @@ template = template.replace("{functionNumArgs}", wrap(map(str, (
     nargs for name, nargs in functions
 ))))
 
-with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.h"), "w") as file:
+with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "Functions.h"), "w") as file:
     file.write(template)
 
 
 
-with open(os.path.join(template_dir, "UnaryFunctionDirectory.cc")) as file:
+with open(os.path.join(template_dir, "FunctionDirectory.cc")) as file:
     template = "".join(file)
 
 template = template.replace("{unaryFunctions}", wrap((
     f'f_{name}' if nargs == 1 else "nullptr" for name, nargs in functions
 )))
 
-with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "UnaryFunctionDirectory.cc"), "w") as file:
-    file.write(template)
-
-
-with open(os.path.join(template_dir, "MultiFunctionDirectory.cc")) as file:
-    template = "".join(file)
-
 template = template.replace("{multiFunctions}", wrap((
     f'f_{name}' if nargs < 0 or nargs > 1 else "nullptr" for name, nargs in functions
 )))
 
-with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "MultiFunctionDirectory.cc"), "w") as file:
+with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.cc"), "w") as file:
     file.write(template)
 
 

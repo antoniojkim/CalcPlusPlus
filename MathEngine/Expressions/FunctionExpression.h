@@ -3,8 +3,7 @@
 #include <list>
 
 #include "Expression.h"
-#include "FunctionExpressions/UnaryFunctionDirectory.h"
-#include "FunctionExpressions/MultiFunctionDirectory.h"
+#include "FunctionExpressions/FunctionDirectory.h"
 
 class UnaryFunctionExpression: public Expression {
 

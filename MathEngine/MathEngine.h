@@ -25,5 +25,10 @@ class MathEngine {
         expression operator()(const std::string& input);
 
         expression evaluate(const std::string& input);
+
+
+#ifdef DEBUG
+        std::list<Scanner::Token> tokens;
+#endif
 };
 

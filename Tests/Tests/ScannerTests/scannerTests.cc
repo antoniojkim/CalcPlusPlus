@@ -21,12 +21,15 @@ TEST_CASE("Basic Scanner Tests", "[scanner]" ) {
     scannerTest("csc(x)", "csc ( x )");
     scannerTest("sec(cot(5))", "sec ( cot ( 5 ) )");
     scannerTest("sinhcosh5", "sinh cosh 5");
-    scannerTest("log25", "log2 5");
+    scannerTest("log_25", "log_2 5");
     scannerTest("ln45", "ln 45");
 
 }
 
 TEST_CASE("Complex Scanner Tests", "[scanner]" ) {
+
+    scannerTest("deriv(sinx, 3)",
+                "deriv ( sin x , 3 )");
 
     scannerTest("cossinh3+5i-arcsin(x, 4)+6integral(sinx, 4, 5)^|4+0x3aF",
                 "cos sinh 3 + 5i - arcsin ( x , 4 ) + 6 integral ( sin x , 4 , 5 ) ^| 4 + 0x3aF");

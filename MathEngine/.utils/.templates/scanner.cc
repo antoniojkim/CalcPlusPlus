@@ -9,7 +9,7 @@
 
 #include "scanner.h"
 #include "../Utils/exceptions.h"
-#include "../Expressions/FunctionExpressions/FunctionDirectory.h"
+#include "../Expressions/FunctionExpressions/Functions.h"
 
 using namespace std;
 using namespace Scanner;

@@ -4,7 +4,7 @@
 #include <cmath>
 
 #include "../../Expression.h"
-#include "../MultiFunctionDirectory.h"
+#include "../FunctionDirectory.h"
 
 using namespace std;
 

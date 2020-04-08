@@ -2,7 +2,7 @@
 #include <list>
 
 #include "../Expressions/FunctionExpression.h"
-#include "../Expressions/FunctionExpressions/FunctionDirectory.h"
+#include "../Expressions/FunctionExpressions/Functions.h"
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/OperatorExpression.h"
@@ -57,16 +57,13 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             if (numArgs != -1 && numArgs != (int) argumentQueue.size() + 1){
                 return make_unique<InvalidExpression>(Exception(
                     "Invalid Number of Arguments for Function. Expected: ", numArgs,
-                    "  Got: ", argumentQueue.size()
+                    "  Got: ", argumentQueue.size() + 1
                 ));
             }
             if (numArgs == 1){
-                auto expr = std::move(expressionStack.back());
+                auto expr = make_unique<UnaryFunctionExpression>(functionIndex, std::move(expressionStack.back()));
                 expressionStack.pop_back();
-                expressionStack.push_back(
-                    make_unique<UnaryFunctionExpression>(functionIndex, std::move(expr))
-                );
-                continue;
+                expressionStack.push_back(std::move(expr));
             }
             else {
                 argumentQueue.emplace_front(std::move(expressionStack.back()));
@@ -75,9 +72,8 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                     make_unique<MultiFunctionExpression>(functionIndex, std::move(argumentQueue))
                 );
                 argumentQueue.clear();
-                continue;
             }
-            return make_unique<InvalidExpression>(Exception("Unsupported Function: ", token->lexeme));
+            continue;
         }
 
         if (token->type == COMMA){
@@ -137,9 +133,15 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             case ID:
                 outputStack.push_back(&token);
                 continue;
+            case COMMA:
+                while(!operatorStack.empty()
+                    && operatorStack.back()->type != LPAREN
+                    && operatorStack.back()->type != COMMA){
+                    outputStack.push_back(operatorStack.back());
+                    operatorStack.pop_back();
+                }
             case FUNCTION:
             case LPAREN:
-            case COMMA:
                 operatorStack.push_back(&token);
                 continue;
             default:
@@ -186,8 +188,15 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
     }
 
 #ifdef DEBUG
-    cout << outputStack << endl;
-#endif // DEBUG
-
+    auto expr = postfix_to_expression(outputStack);
+    list<Token> other_tokens;
+    for (auto t : outputStack){
+        other_tokens.emplace_back(std::move(*t));
+    }
+    tokens.clear();
+    tokens = std::move(other_tokens);
+    return expr;
+#else
     return postfix_to_expression(outputStack);
+#endif
 }
