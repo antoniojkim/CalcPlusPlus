@@ -155,8 +155,6 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                        || (isOperator(type) && getPrecedence(type) > getPrecedence(token.type))
                        || (isOperator(type) && getPrecedence(type) == getPrecedence(token.type) && !isRightAssociative(token.type)))
                       && type != LPAREN) {
-                    cout << token.lexeme << "  " << operatorStack.back()->lexeme << endl;
-                    cout << getPrecedence(type) << "  " << getPrecedence(token.type) << endl;
                     outputStack.push_back(operatorStack.back());
                     operatorStack.pop_back();
                     if (operatorStack.empty()) break;

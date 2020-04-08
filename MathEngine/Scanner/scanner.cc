@@ -88,11 +88,12 @@ static bool startsWithBin(const char* str, size_t size, int& index){
 }
 
 static bool startsWithNum(const char* str, size_t size, int& index){
-    if (size > 0){
+    if (size > 0 && (str[0] != '-' || size > 1)){
         bool isDecimal = false;
-        for (unsigned int i = 0; i < size; ++i){
+        unsigned int isNeg = str[0] == '-' ? 1 : 0;
+        for (unsigned int i = isNeg; i < size; ++i){
             if (!isdigit(str[i])){
-                if (i == 0) return false;
+                if (i == isNeg) return false;
                 switch(str[i]){
                     case '.':
                         if (!isDecimal){

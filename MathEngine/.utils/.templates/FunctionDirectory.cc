@@ -8,6 +8,7 @@
 #include "Functions.h"
 #include "MultiFunctions/Calculus.h"
 #include "MultiFunctions/ExpLogFunctions.h"
+#include "MultiFunctions/Statistics.h"
 #include "UnaryFunctions/ExpLogFunctions.h"
 #include "UnaryFunctions/TrigFunctions.h"
 

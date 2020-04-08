@@ -181,3 +181,10 @@ functions:
     deriv: 2
     integral: 0
     integrate: 0
+    # Statistics
+    mean: -1
+    var: -1
+    variance: -1
+    sd: -1
+    std: -1
+    stdev: -1

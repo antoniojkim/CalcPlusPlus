@@ -10,7 +10,7 @@
 
 using namespace std;
 
-double f_deriv(list<expression>& args){
+double f_deriv(list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         gsl_function F = (*(arg++))->function();

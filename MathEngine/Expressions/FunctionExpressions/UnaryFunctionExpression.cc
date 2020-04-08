@@ -5,7 +5,7 @@
 #include "../FunctionExpression.h"
 #include "../NumericalExpression.h"
 #include "Functions.h"
-#include "UnaryFunctionDirectory.h"
+#include "FunctionDirectory.h"
 
 using namespace std;
 

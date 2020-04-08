@@ -9,6 +9,6 @@ typedef double (*UnaryFunction)(double x);
 UnaryFunction get_unary_function(const std::string& name);
 UnaryFunction get_unary_function(int functionIndex);
 
-typedef double (*MultiFunction)(std::list<expression>& args);
+typedef double (*MultiFunction)(std::list<expression>& args, const Variables& vars);
 MultiFunction get_multi_function(const std::string& name);
 MultiFunction get_multi_function(int functionIndex);

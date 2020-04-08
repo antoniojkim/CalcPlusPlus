@@ -5,7 +5,7 @@
 #include "../FunctionExpression.h"
 #include "../NumericalExpression.h"
 #include "Functions.h"
-#include "MultiFunctionDirectory.h"
+#include "FunctionDirectory.h"
 
 using namespace std;
 
@@ -47,14 +47,9 @@ bool MultiFunctionExpression::evaluable(){
     return true;
 }
 
-double MultiFunctionExpression::value() { return f(args); }
-double MultiFunctionExpression::value(const Variables& vars) {
-    list<expression> evaluated_args;
-    for (auto& arg: args){
-        evaluated_args.emplace_back(arg->evaluate(vars));
-    }
-    return f(evaluated_args);
-}
+const Variables emptyVars;
+double MultiFunctionExpression::value() { return f(args, emptyVars); }
+double MultiFunctionExpression::value(const Variables& vars) { return f(args, vars); }
 
 bool MultiFunctionExpression::complex(){    
     for(auto& arg: args){
