@@ -13,7 +13,7 @@ MathEngine engine;
 
 bool compare(double output, double expected){
     if (gsl_isnan(output) || gsl_isnan(expected)){
-        return -1;
+        return bool(gsl_isnan(output) && gsl_isnan(expected)) ? 0 : -1;
     }
     return gsl_fcmp(output, expected, 1e-8);
 }

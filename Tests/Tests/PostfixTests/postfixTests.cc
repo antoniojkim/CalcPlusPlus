@@ -41,6 +41,7 @@ TEST_CASE("Multi Arg Function Postfix Tests", "[postfix]") {
 
     postfixTest("logn(10, 4)", "10 4 , logn");
     postfixTest("deriv(sinx, 3)", "x sin 3 , deriv");
+    postfixTest("mean(1, -1, 7, -4, 5)", "1 -1 7 -4 5 , , , , mean");
 
 }
 

@@ -80,7 +80,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             if (expressionStack.empty()){
                 return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
             }
-            argumentQueue.emplace_back(std::move(expressionStack.back()));
+            argumentQueue.emplace_front(std::move(expressionStack.back()));
             expressionStack.pop_back();
             continue;
         }

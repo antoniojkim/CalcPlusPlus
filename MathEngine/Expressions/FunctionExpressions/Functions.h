@@ -10,25 +10,27 @@
 #include <cstring>
 #include <string>
 
-constexpr const int numFunctions = 62;
+constexpr const int numFunctions = 74;
 constexpr const char* functionNames[numFunctions] = {
-    "integrate", "variance", "integral", "arctanh", "arcsinh", "arcsech", "arccsch",
-	"arccoth", "arccosh", "artanh", "arsinh", "arsech", "arctan", "arcsin",
-	"arcsec", "arcsch", "arcoth", "arcosh", "arccsc", "arccot", "arccos", "stdev",
-	"log_2", "log1p", "expm1", "exp_2", "deriv", "atanh", "asinh", "asech", "acsch",
-	"acoth", "acosh", "tanh", "sinh", "sech", "mean", "logn", "ln_2", "ln1p",
-	"csch", "coth", "cosh", "atan", "asin", "asec", "acsc", "acot", "acos", "var",
-	"tan", "std", "sin", "sec", "log", "exp", "csc", "cot", "cos", "sd", "ln", "dx"
+    "integrate", "variance", "kurtosis", "integral", "autocorr", "arctanh",
+	"arcsinh", "arcsech", "arccsch", "arccoth", "arccosh", "median", "artanh",
+	"arsinh", "arsech", "argmin", "argmax", "arctan", "arcsin", "arcsec", "arcsch",
+	"arcoth", "arcosh", "arccsc", "arccot", "arccos", "absdev", "stdev", "log_2",
+	"log1p", "expm1", "exp_2", "deriv", "atanh", "asinh", "asech", "acsch", "acoth",
+	"acosh", "tanh", "skew", "sinh", "sech", "mean", "logn", "ln_2", "ln1p", "lag1",
+	"kurt", "csch", "coth", "cosh", "atan", "asin", "asec", "acsc", "acot", "acos",
+	"var", "tss", "tan", "std", "sin", "sec", "min", "max", "log", "exp", "csc",
+	"cot", "cos", "sd", "ln", "dx"
 };
 constexpr const size_t functionNameLengths[numFunctions] = {
-    9, 8, 8, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 2, 2, 2
+    9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+	5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2
 };
 constexpr const int functionNumArgs[numFunctions] = {
-    0, -1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, 1,
-	2, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, -1,
-	1, 1, 1, 1, 1, 1, 1, -1, 1, 0
+    0, -1, -1, 0, -1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1,
+	1, -1, -1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, -1, 2, 1, 1, -1, -1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, 0
 };
 
 /*

@@ -188,3 +188,15 @@ functions:
     sd: -1
     std: -1
     stdev: -1
+    tss: -1
+    absdev: -1
+    skew: -1
+    kurt: -1
+    kurtosis: -1
+    lag1: -1
+    autocorr: -1
+    max: -1
+    min: -1
+    argmax: -1
+    argmin: -1
+    median: -1
