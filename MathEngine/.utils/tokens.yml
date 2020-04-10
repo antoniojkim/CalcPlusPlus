@@ -200,3 +200,12 @@ functions:
     argmax: -1
     argmin: -1
     median: -1
+    # Polynomials
+    quad: 3
+    cubic: 4
+    # Data Structure Constructors
+    tuple: -1
+functionExprs:
+    - tuple
+    - quad
+    - cubic

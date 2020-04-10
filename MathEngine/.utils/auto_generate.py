@@ -48,101 +48,126 @@ with open(os.path.join(file_dir, "tokens.yml")) as file:
                  for name, nargs in tokens["functions"].items()]
     functions.sort(key=lambda f: (len(f[0]), f[0]), reverse=True)
 
-with open(os.path.join(template_dir, "scanner.h")) as file:
-    template = "".join(file)
-
-template = template.replace("{types}", wrap(keys, indent="\t\t"))
-template = template.replace("{numTokens}", str(len(keys)))
-template = template.replace("{typeStrings}", wrap(map('"{}"'.format, keys), indent="\t\t"))
-
-with open(os.path.join(file_dir, "..", "Scanner", "scanner.h"), "w") as file:
-    file.write(template)
+    functionExprs = set(tokens["functionExprs"])
 
 
-with open(os.path.join(template_dir, "scanner.cc")) as file:
-    template = "".join(file)
+def generate_scanner():
 
-lexemes.sort(key=lambda l: len(l[1]), reverse=True)
+    with open(os.path.join(template_dir, "scanner.h")) as file:
+        template = "".join(file)
 
-template = template.replace("{numLexemes}", str(len(lexemes)))
-template = template.replace("{lexemes}", wrap(map('"{}"'.format, (
-    lexeme for name, lexeme in lexemes
-))))
-template = template.replace("{lexemeTypes}", wrap((
-    name for name, lexeme in lexemes
-)))
+    template = template.replace("{types}", wrap(keys, indent="\t\t"))
+    template = template.replace("{numTokens}", str(len(keys)))
+    template = template.replace("{typeStrings}", wrap(map('"{}"'.format, keys), indent="\t\t"))
 
-with open(os.path.join(file_dir, "..", "Scanner", "scanner.cc"), "w") as file:
-    file.write(template)
+    with open(os.path.join(file_dir, "..", "Scanner", "scanner.h"), "w") as file:
+        file.write(template)
 
 
-with open(os.path.join(template_dir, "Operators.h")) as file:
-    template = "".join(file)
+    with open(os.path.join(template_dir, "scanner.cc")) as file:
+        template = "".join(file)
 
-template = template.replace("{operators}", wrap((
-    f'"{lexeme}"'
-    for name, lexeme, precedence, rightAssociative, singleOperator in operators
-)))
-template = template.replace("{precedences}", wrap((
-    str(precedence * (1 if rightAssociative else -1))
-    for name, lexeme, precedence, rightAssociative, singleOperator in operators
-)))
-template = template.replace("{singleOperators}", wrap((
-    str(int(singleOperator))
-    for name, lexeme, precedence, rightAssociative, singleOperator in operators
-)))
-template = template.replace("{operatorStart}", str(next((
-    i for i, operator in enumerate(operators) if len(operator[1]) > 0)
-)))
-template = template.replace("{operatorEnd}", str(next((
-    i for i, operator in reversed(list(enumerate(operators))) if len(operator[1]) > 0)
-)))
+    lexemes.sort(key=lambda l: len(l[1]), reverse=True)
 
-with open(os.path.join(file_dir, "..", "Expressions", "OperatorExpressions", "Operators.h"), "w") as file:
-    file.write(template)
+    template = template.replace("{numLexemes}", str(len(lexemes)))
+    template = template.replace("{lexemes}", wrap(map('"{}"'.format, (
+        lexeme for name, lexeme in lexemes
+    ))))
+    template = template.replace("{lexemeTypes}", wrap((
+        name for name, lexeme in lexemes
+    )))
 
-
-with open(os.path.join(template_dir, "Functions.h")) as file:
-    template = "".join(file)
-
-template = template.replace("{numFunctions}", str(len(functions)))
-template = template.replace("{functionNames}", wrap(map('"{}"'.format, (
-    name for name, nargs in functions
-))))
-template = template.replace("{functionNameLengths}", wrap(map(str, (
-    len(name) for name, nargs in functions
-))))
-template = template.replace("{functionNumArgs}", wrap(map(str, (
-    nargs for name, nargs in functions
-))))
-
-with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "Functions.h"), "w") as file:
-    file.write(template)
+    with open(os.path.join(file_dir, "..", "Scanner", "scanner.cc"), "w") as file:
+        file.write(template)
 
 
 
-with open(os.path.join(template_dir, "FunctionDirectory.cc")) as file:
-    template = "".join(file)
+def generate_operators():
 
-template = template.replace("{unaryFunctions}", wrap((
-    f'f_{name}' if nargs == 1 else "nullptr" for name, nargs in functions
-)))
+    with open(os.path.join(template_dir, "Operators.h")) as file:
+        template = "".join(file)
 
-template = template.replace("{multiFunctions}", wrap((
-    f'f_{name}' if nargs < 0 or nargs > 1 else "nullptr" for name, nargs in functions
-)))
+    template = template.replace("{operators}", wrap((
+        f'"{lexeme}"'
+        for name, lexeme, precedence, rightAssociative, singleOperator in operators
+    )))
+    template = template.replace("{precedences}", wrap((
+        str(precedence * (1 if rightAssociative else -1))
+        for name, lexeme, precedence, rightAssociative, singleOperator in operators
+    )))
+    template = template.replace("{singleOperators}", wrap((
+        str(int(singleOperator))
+        for name, lexeme, precedence, rightAssociative, singleOperator in operators
+    )))
+    template = template.replace("{operatorStart}", str(next((
+        i for i, operator in enumerate(operators) if len(operator[1]) > 0)
+    )))
+    template = template.replace("{operatorEnd}", str(next((
+        i for i, operator in reversed(list(enumerate(operators))) if len(operator[1]) > 0)
+    )))
 
-with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.cc"), "w") as file:
-    file.write(template)
+    with open(os.path.join(file_dir, "..", "Expressions", "OperatorExpressions", "Operators.h"), "w") as file:
+        file.write(template)
 
 
-with open(os.path.join(template_dir, "BinaryOperatorDirectory.cc")) as file:
-    template = "".join(file)
 
-template = template.replace("{binaryOperators}", wrap((
-    f'f_{name}' if lexeme != "" and not singleOperator else "nullptr"
-    for name, lexeme, precedence, rightAssociative, singleOperator in operators
-)))
+def generate_binary_operators():
 
-with open(os.path.join(file_dir, "..", "Expressions", "OperatorExpressions", "BinaryOperatorDirectory.cc"), "w") as file:
-    file.write(template)
+    with open(os.path.join(template_dir, "BinaryOperatorDirectory.cc")) as file:
+        template = "".join(file)
+
+    template = template.replace("{binaryOperators}", wrap((
+        f'f_{name}' if lexeme != "" and not singleOperator else "nullptr"
+        for name, lexeme, precedence, rightAssociative, singleOperator in operators
+    )))
+
+    with open(os.path.join(file_dir, "..", "Expressions", "OperatorExpressions", "BinaryOperatorDirectory.cc"), "w") as file:
+        file.write(template)
+
+
+
+def geenrate_functions():
+
+    with open(os.path.join(template_dir, "Functions.h")) as file:
+        template = "".join(file)
+
+    template = template.replace("{numFunctions}", str(len(functions)))
+    template = template.replace("{functionNames}", wrap(map('"{}"'.format, (
+        name for name, nargs in functions
+    ))))
+    template = template.replace("{functionNameLengths}", wrap(map(str, (
+        len(name) for name, nargs in functions
+    ))))
+    template = template.replace("{functionNumArgs}", wrap(map(str, (
+        nargs for name, nargs in functions
+    ))))
+
+    with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "Functions.h"), "w") as file:
+        file.write(template)
+
+
+    with open(os.path.join(template_dir, "FunctionDirectory.cc")) as file:
+        template = "".join(file)
+
+    template = template.replace("{unaryFunctions}", wrap((
+        f'f_{name}' if nargs == 1 else "nullptr" for name, nargs in functions
+    )))
+
+    template = template.replace("{multiFunctions}", wrap((
+        f'f_{name}' if name not in functionExprs and (nargs < 0 or nargs > 1) else "nullptr" for name, nargs in functions
+    )))
+
+    template = template.replace("{multiFunctionExprs}", wrap((
+        f'fe_{name}' if name in functionExprs else "nullptr" for name, nargs in functions
+    )))
+
+    with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.cc"), "w") as file:
+        file.write(template)
+
+
+
+if __name__ == "__main__":
+    generate_scanner()
+    generate_operators()
+    generate_binary_operators()
+    geenrate_functions()

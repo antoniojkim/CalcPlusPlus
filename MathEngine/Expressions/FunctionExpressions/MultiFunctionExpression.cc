@@ -1,6 +1,8 @@
 
 #include <utility>
 
+#include <gsl/gsl_math.h>
+
 #include "../../Utils/exceptions.h"
 #include "../FunctionExpression.h"
 #include "../NumericalExpression.h"
@@ -8,6 +10,8 @@
 #include "FunctionDirectory.h"
 
 using namespace std;
+
+const Variables emptyVars;
 
 MultiFunctionExpression::MultiFunctionExpression(const std::string& name, std::list<expression>&& args):
     MultiFunctionExpression{getFunctionIndex(name), std::move(args)} {
@@ -18,6 +22,7 @@ MultiFunctionExpression::MultiFunctionExpression(const std::string& name, std::l
 MultiFunctionExpression::MultiFunctionExpression(int functionIndex, std::list<expression>&& args):
     functionIndex{functionIndex},
     f{functionIndex != -1 ? get_multi_function(functionIndex) : nullptr},
+    fe{functionIndex != -1 ? get_multi_function_expr(functionIndex) : nullptr},
     args{std::move(args)} {}
 
 expression MultiFunctionExpression::simplify() {
@@ -47,9 +52,32 @@ bool MultiFunctionExpression::evaluable(){
     return true;
 }
 
-const Variables emptyVars;
-double MultiFunctionExpression::value() { return f(args, emptyVars); }
-double MultiFunctionExpression::value(const Variables& vars) { return f(args, vars); }
+
+expression MultiFunctionExpression::evaluate() {
+    if (fe){
+        return fe(args, emptyVars);
+    }
+    return make_unique<NumExpression>(value());
+}
+expression MultiFunctionExpression::evaluate(const Variables& vars) {
+    if (fe){
+        return fe(args, vars);
+    }
+    return make_unique<NumExpression>(value(vars));
+}
+
+double MultiFunctionExpression::value() {
+    if (f){
+        return f(args, emptyVars);
+    }
+    return GSL_NAN;
+}
+double MultiFunctionExpression::value(const Variables& vars) {
+    if (f){
+        return f(args, vars);
+    }
+    return GSL_NAN;
+}
 
 bool MultiFunctionExpression::complex(){    
     for(auto& arg: args){
