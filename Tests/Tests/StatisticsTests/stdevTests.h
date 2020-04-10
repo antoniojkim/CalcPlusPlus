@@ -10,32 +10,44 @@ TEST_CASE("Standard Deviation (ddof=1) Function Evaluation Tests", "[stdev]") {
         requireIsEqual("sd()", "Insufficient Number of Arguments for Function: sd");
     }
 
-    SECTION("`stdev` Test (all equal)"){
-        requireIsEqual("stdev(1, 1, 1, 1)", 0);
+    SECTION("`std` Test 1"){
+        requireIsEqual("std(-2.59, 3.95)", 4.624478349);
     }
 
-    SECTION("`stdev` Test (some equal)"){
-        requireIsEqual("std(0, 1, 0, 1)", sqrt(1.0/3.0));
+    SECTION("`sd` Test 2"){
+        requireIsEqual("sd(-9.67, 7.38, -4.87)", 8.7920892473);
     }
 
-    SECTION("`stdev` Test (some negatives)"){
-        requireIsEqual("sd(1, -1, 7, -4, 5)", sqrt(19.8));
+    SECTION("`stdev` Test 3"){
+        requireIsEqual("stdev(0.06, -8.43, -7.82, -8.21, -0.78, -0.75)", 4.2127208152);
     }
 
-    SECTION("`stdev` Test (some negatives and zero)"){
-        requireIsEqual("stdev(1, -3, 2, -5, 0)", sqrt(8.5));
+    SECTION("`std` Test 4"){
+        requireIsEqual("std(1.02, -7.32)", 5.8972705551);
     }
 
-    SECTION("`stdev` Test (positive, negative floats)"){
-        requireIsEqual("std(1.0, -1.0, 2.0, -4.0, 5.0)", sqrt(11.3));
+    SECTION("`std` Test 5"){
+        requireIsEqual("std(1.74, 2.63)", 0.6293250353);
     }
 
-    SECTION("`stdev` Test (floats with zero)"){
-        requireIsEqual("sd(1.0, -1.0, 2.0, -4.0, 0.0)", sqrt(5.3));
+    SECTION("`stdev` Test 6"){
+        requireIsEqual("stdev(-2.18, 4.35)", 4.6174072811);
     }
 
-    SECTION("`stdev` Test (floats with zero) 2"){
-        requireIsEqual("sd(1.1, -1.2, 2.3, -4.4, 0)", 2.565735761920935);
+    SECTION("`std` Test 7"){
+        requireIsEqual("std(1.25, -8.93)", 7.1983470325);
+    }
+
+    SECTION("`sd` Test 8"){
+        requireIsEqual("sd(-3.76, 7.57, -4.01, -2.7, 8.58, 9.67, -8.7)", 7.4309084236);
+    }
+
+    SECTION("`sd` Test 9"){
+        requireIsEqual("sd(-1.81, 0.47, -2.18, -7.88, 2.67, -0.29, -2.96, -5.74, -0.13)", 3.2380626924);
+    }
+
+    SECTION("`sd` Test 10"){
+        requireIsEqual("sd(-8.89, 0.76, -5.74, -0.48, -4.62, 4.52, 6.05)", 5.4937085228);
     }
     
 }
