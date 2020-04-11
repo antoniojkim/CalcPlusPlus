@@ -122,6 +122,10 @@ tokens:
     C: "C"
     P: "P"
 functions:
+    # Basic
+    neg:
+    abs:
+    sqrt:
     # Trigonometry
     sin:
     cos:
@@ -179,7 +183,7 @@ functions:
     # Calculus
     dx: 0
     deriv: 2
-    integral: 0
+    integral: 3
     integrate: 0
     # Statistics
     mean: -1

@@ -11,6 +11,7 @@
 #include "MultiFunctions/Statistics.h"
 #include "MultiFunctionExprs/polynomial.h"
 #include "MultiFunctionExprs/tuple.h"
+#include "UnaryFunctions/BasicFunctions.h"
 #include "UnaryFunctions/ExpLogFunctions.h"
 #include "UnaryFunctions/TrigFunctions.h"
 
@@ -26,10 +27,11 @@ const UnaryFunction unaryFunctions[numFunctions] = {
 	nullptr, nullptr, f_arctan, f_arcsin, f_arcsec, f_arcsch, f_arcoth, f_arcosh,
 	f_arccsc, f_arccot, f_arccos, nullptr, nullptr, nullptr, nullptr, f_log_2,
 	f_log1p, f_expm1, f_exp_2, nullptr, nullptr, f_atanh, f_asinh, f_asech, f_acsch,
-	f_acoth, f_acosh, f_tanh, nullptr, f_sinh, f_sech, nullptr, nullptr, nullptr,
-	f_ln_2, f_ln1p, nullptr, nullptr, f_csch, f_coth, f_cosh, f_atan, f_asin,
-	f_asec, f_acsc, f_acot, f_acos, nullptr, nullptr, f_tan, nullptr, f_sin, f_sec,
-	nullptr, nullptr, f_log, f_exp, f_csc, f_cot, f_cos, nullptr, f_ln, nullptr
+	f_acoth, f_acosh, f_tanh, f_sqrt, nullptr, f_sinh, f_sech, nullptr, nullptr,
+	nullptr, f_ln_2, f_ln1p, nullptr, nullptr, f_csch, f_coth, f_cosh, f_atan,
+	f_asin, f_asec, f_acsc, f_acot, f_acos, nullptr, nullptr, f_tan, nullptr, f_sin,
+	f_sec, f_neg, nullptr, nullptr, f_log, f_exp, f_csc, f_cot, f_cos, f_abs,
+	nullptr, f_ln, nullptr
 };
 
 UnaryFunction get_unary_function(const string& name){
@@ -55,16 +57,16 @@ UnaryFunction get_unary_function(int functionIndex){
  ***************************************************/
 
 const MultiFunction multiFunctions[numFunctions] = {
-    nullptr, f_variance, f_kurtosis, nullptr, f_autocorr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, f_median, nullptr, nullptr, nullptr, nullptr,
-	f_argmin, f_argmax, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, f_absdev, nullptr, f_stdev, nullptr, nullptr,
-	nullptr, nullptr, nullptr, f_deriv, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, f_skew, nullptr, nullptr, nullptr, f_mean, f_logn,
-	nullptr, nullptr, f_lag1, f_kurt, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, f_var, f_tss, nullptr, f_std, nullptr,
-	nullptr, f_min, f_max, nullptr, nullptr, nullptr, nullptr, nullptr, f_sd,
-	nullptr, nullptr
+    nullptr, f_variance, f_kurtosis, f_integral, f_autocorr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, f_median, nullptr, nullptr, nullptr,
+	nullptr, f_argmin, f_argmax, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, f_absdev, nullptr, f_stdev, nullptr,
+	nullptr, nullptr, nullptr, nullptr, f_deriv, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, f_skew, nullptr, nullptr, nullptr,
+	f_mean, f_logn, nullptr, nullptr, f_lag1, f_kurt, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_var, f_tss, nullptr,
+	f_std, nullptr, nullptr, nullptr, f_min, f_max, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, f_sd, nullptr, nullptr
 };
 
 MultiFunction get_multi_function(const string& name){
@@ -95,11 +97,11 @@ const MultiFunctionExpr multiFunctionExprs[numFunctions] = {
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, fe_tuple, nullptr, fe_quadc, nullptr, nullptr, nullptr,
 	nullptr, nullptr, fe_cubic, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, fe_quad, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_quad, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr
+	nullptr, nullptr, nullptr, nullptr
 };
 
 MultiFunctionExpr get_multi_function_expr(const string& name){

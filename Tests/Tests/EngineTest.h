@@ -11,7 +11,7 @@ bool printDifference(const std::string& input, expression& expression, const dou
 void requireIsEqual(const std::string& input, const double& expected);
 
 bool printDifference(const std::string& input, expression& expression, const std::string& output, const std::string& expected);
-void requireIsEqual(const std::string& input, const std::string& expected);
+void requireIsEqual(const std::string& input, const std::string& expected, bool evaluate = false);
 
 bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<double>& expected);
 void requireIsEqual(const std::string& input, const std::vector<double>& expected);

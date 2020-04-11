@@ -73,11 +73,13 @@ expression TupleExpression::copy() {
 
 std::ostream& TupleExpression::print(std::ostream& out) {
     out << "(";
-    auto expr = tuple.begin();
-    auto end = tuple.end();
-    (*(expr++))->print(out);
-    while(expr != end){
-        (*(expr++))->print(out << ", ");
+    if (!tuple.empty()){
+        auto expr = tuple.begin();
+        auto end = tuple.end();
+        (*(expr++))->print(out);
+        while(expr != end){
+            (*(expr++))->print(out << ", ");
+        }
     }
     return out << ")";
 }

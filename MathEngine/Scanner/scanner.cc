@@ -29,6 +29,32 @@ static const Type lexemeTypes[numLexemes] = {
 	RBRACE, DOT, SEMICOLON, QUESTION, POUND, DOLLAR, BACKTICK, UNDERSCORE, C, P
 };
 
+bool Scanner::isPreImplicit(Type type){
+    switch(type){
+        case NUM:
+        case RPAREN:
+        case RSQUARE:
+        case RBRACE:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool Scanner::isPostImplicit(Type type){
+    switch(type){
+        case NUM:
+        case LPAREN:
+        case LSQUARE:
+        case LBRACE:
+        case ID:
+        case FUNCTION:
+            return true;
+        default:
+            return false;
+    }
+}
+
 static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
     if (size > 0){
         for (int i = 0; i < numLexemes; ++i){

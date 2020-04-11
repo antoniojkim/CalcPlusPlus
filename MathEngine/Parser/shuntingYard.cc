@@ -1,4 +1,4 @@
-
+#include <iterator>
 #include <list>
 
 #include "../Expressions/FunctionExpression.h"
@@ -84,6 +84,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             continue;
         }
 
+#include <iterator>
         if (token->type == COMMA){
             if (expressionStack.empty()){
                 return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
@@ -134,7 +135,10 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
     list<Scanner::Token*> operatorStack;
     list<Scanner::Token> newTokens;
 
-    for (auto& token: tokens){
+    auto current = tokens.begin();
+    auto end = tokens.end();
+    for (; current != end; ++current){
+        auto& token = *current;
         switch(token.type){
             case NUM:
             case HEX:
@@ -152,12 +156,6 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                 operatorStack.push_back(&token);
                 continue;
             case LPAREN:
-                if (operatorStack.empty()
-                    || (operatorStack.back()->type != FUNCTION
-                        && !isOperator(operatorStack.back()->type))){
-                    newTokens.emplace_back(Token{"tuple", FUNCTION});
-                    operatorStack.push_back(&newTokens.back());
-                }
             case FUNCTION:
                 operatorStack.push_back(&token);
                 continue;
@@ -166,6 +164,11 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
         }
 
         if (isOperator(token.type)){
+            if (token.type == MINUS && (current == tokens.begin() || !isPreImplicit(std::prev(current)->type))){
+                newTokens.emplace_back(Token{"neg", FUNCTION});
+                operatorStack.push_back(&newTokens.back());
+                continue;
+            }
             if (!operatorStack.empty()){
                 auto type = operatorStack.back()->type;
                 while((type == FUNCTION
@@ -183,15 +186,29 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
         }
         
         if (token.type == RPAREN){
+            bool comma = false;
             while(true){
                 if (operatorStack.size() == 0){
                     throw Exception("Mismatched Parentheses: ')'");
                 }
                 Scanner::Token* topOperator = operatorStack.back();
                 operatorStack.pop_back();
-                if (topOperator->type == LPAREN) break;
+                if (topOperator->type == LPAREN){
+                    if (comma
+                        && (operatorStack.empty()
+                            || (operatorStack.back()->type != FUNCTION
+                                && !isOperator(operatorStack.back()->type)))){
+                        newTokens.emplace_back(Token{"tuple", FUNCTION});
+                        operatorStack.push_back(&newTokens.back());
+                    }
+                    break;
+                }
+                if (topOperator->type == COMMA){
+                    comma = true;
+                }
                 outputStack.push_back(topOperator);
             }
+
             continue;
         }
 

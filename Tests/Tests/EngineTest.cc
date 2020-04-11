@@ -21,63 +21,12 @@ int compare(double output, double expected){
     return gsl_fcmp(output, expected, 1e-8);
 }
 
-
-bool printDifference(const std::string& input, expression& expression, const double& output, const double& expected){
-    cout << "Input:      " << input << endl;
-    cout << "Expression: " << expression << endl;
-    cout << "Postfix:    "; expression->postfix(cout) << endl;
-#ifdef DEBUG
-    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
-#endif
-    cout << output << " != " << expected << endl;
-    cout << compare(output, expected) << endl;
-    return false;
-}
-
-void requireIsEqual(const string& input, const double& expected){
-    auto expression = engine.parse(input);
-    double output = expression->value();
-    REQUIRE( (compare(output, expected) != 0 ? printDifference(input, expression, output, expected) : true) ); 
-}
-
-
-bool printDifference(const std::string& input, expression& expression, const std::string& output, const std::string& expected){
-    cout << "Input:      " << input << endl;
-    cout << "Expression: " << expression << endl;
-    cout << "Postfix:    "; expression->postfix(cout) << endl;
-#ifdef DEBUG
-    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
-#endif
-    cout << output << " != " << expected << endl;
-    return false;
-}
-
-void requireIsEqual(const string& input, const std::string& expected){
-    auto expression = engine.parse(input);
-    ostringstream out;
-    out << expression;
-    string output = out.str();
-    REQUIRE( ((output != expected) ? printDifference(input, expression, output, expected) : true) ); 
-}
-
-ostream& operator<<(ostream& out, const vector<double>& iterable){
-    out << "(";
-    for (auto& element : iterable){
-        out << element << " ";
+int compare(gsl_complex output, gsl_complex expected){
+    int cmp = compare(GSL_REAL(output), GSL_REAL(expected));
+    if (cmp == 0){
+        return compare(GSL_IMAG(output), GSL_IMAG(expected));
     }
-    return out << ")";
-}
-
-bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<double>& expected){
-    cout << "Input:      " << input << endl;
-    cout << "Expression: " << expr << endl;
-    cout << "Postfix:    "; expr->postfix(cout) << endl;
-#ifdef DEBUG
-    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
-#endif
-    cout << "Output:     "; output->print(cout) << endl;
-    cout << "Expected:   " << expected << endl;
-    return false;
+    return cmp;
 }
 
 bool compare(const list<expression>& l, const vector<double>& v) {
@@ -101,28 +50,6 @@ bool compare(const list<expression>& l, const vector<double>& v) {
     return true;
 }
 
-void requireIsEqual(const string& input, const std::vector<double>& expected){
-    auto expr = engine.parse(input);
-    auto output = expr->evaluate();
-    auto tuple = dynamic_cast<TupleExpression*>(output.get());
-    if (tuple){
-        REQUIRE( (!compare(tuple->tuple, expected) ? printDifference(input, expr, output, expected) : true) ); 
-    }
-    else{
-        printDifference(input, expr, output, expected);
-        REQUIRE( false );
-    }
-}
-
-
-int compare(gsl_complex output, gsl_complex expected){
-    int cmp = compare(GSL_REAL(output), GSL_REAL(expected));
-    if (cmp == 0){
-        return compare(GSL_IMAG(output), GSL_IMAG(expected));
-    }
-    return cmp;
-}
-
 bool compare(const list<expression>& l, const vector<gsl_complex>& v) {
     if (l.size() != v.size()){
         return false;
@@ -144,6 +71,14 @@ bool compare(const list<expression>& l, const vector<gsl_complex>& v) {
     return true;
 }
 
+ostream& operator<<(ostream& out, const vector<double>& iterable){
+    out << "(";
+    for (auto& element : iterable){
+        out << element << " ";
+    }
+    return out << ")";
+}
+
 ostream& operator<<(ostream& out, const vector<gsl_complex>& iterable){
     out << "(";
     for (auto& element : iterable){
@@ -158,6 +93,42 @@ ostream& operator<<(ostream& out, const vector<gsl_complex>& iterable){
     return out << ")";
 }
 
+
+bool printDifference(const std::string& input, expression& expression, const double& output, const double& expected){
+    cout << "Input:      " << input << endl;
+    cout << "Expression: " << expression << endl;
+    cout << "Postfix:    "; expression->postfix(cout) << endl;
+#ifdef DEBUG
+    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
+#endif
+    cout << output << " != " << expected << endl;
+    cout << compare(output, expected) << endl;
+    return false;
+}
+
+bool printDifference(const std::string& input, expression& expression, const std::string& output, const std::string& expected){
+    cout << "Input:      " << input << endl;
+    cout << "Expression: " << expression << endl;
+    cout << "Postfix:    "; expression->postfix(cout) << endl;
+#ifdef DEBUG
+    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
+#endif
+    cout << output << " != " << expected << endl;
+    return false;
+}
+
+bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<double>& expected){
+    cout << "Input:      " << input << endl;
+    cout << "Expression: " << expr << endl;
+    cout << "Postfix:    "; expr->postfix(cout) << endl;
+#ifdef DEBUG
+    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
+#endif
+    cout << "Output:     "; output->print(cout) << endl;
+    cout << "Expected:   " << expected << endl;
+    return false;
+}
+
 bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<gsl_complex>& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expr << endl;
@@ -168,6 +139,34 @@ bool printDifference(const std::string& input, expression& expr, expression& out
     cout << "Output:     "; output->print(cout) << endl;
     cout << "Expected:   " << expected << endl;
     return false;
+}
+
+
+void requireIsEqual(const string& input, const double& expected){
+    auto expression = engine.parse(input);
+    double output = expression->value();
+    REQUIRE( (compare(output, expected) != 0 ? printDifference(input, expression, output, expected) : true) ); 
+}
+
+void requireIsEqual(const string& input, const std::string& expected, bool evaluate){
+    auto expression = evaluate ? engine.evaluate(input) : engine.parse(input);
+    ostringstream out;
+    out << expression;
+    string output = out.str();
+    REQUIRE( ((output != expected) ? printDifference(input, expression, output, expected) : true) ); 
+}
+
+void requireIsEqual(const string& input, const std::vector<double>& expected){
+    auto expr = engine.parse(input);
+    auto output = expr->evaluate();
+    auto tuple = dynamic_cast<TupleExpression*>(output.get());
+    if (tuple){
+        REQUIRE( (!compare(tuple->tuple, expected) ? printDifference(input, expr, output, expected) : true) ); 
+    }
+    else{
+        printDifference(input, expr, output, expected);
+        REQUIRE( false );
+    }
 }
 
 void requireIsEqual(const string& input, const std::vector<gsl_complex>& expected){

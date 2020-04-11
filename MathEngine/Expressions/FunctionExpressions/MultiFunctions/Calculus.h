@@ -3,6 +3,7 @@
 #include <list>
 #include <cmath>
 #include <gsl/gsl_deriv.h>
+#include <gsl/gsl_integration.h>
 
 #include "../../../Utils/exceptions.h"
 #include "../../Expression.h"
@@ -22,4 +23,22 @@ double f_deriv(list<expression>& args, const Variables& vars){
         return result;
     }
     throw Exception("Invalid Number of Arguments for f_deriv");
+}
+
+double f_integral(list<expression>& args, const Variables& vars){
+    if (args.size() == 3){
+        auto arg = args.begin();
+        gsl_function F = (*(arg++))->function();
+        double a = (*(arg++))->value();
+        double b = (*arg)->value();
+
+        double result, abserr;
+
+        gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
+        gsl_integration_qags(&F, a, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
+        gsl_integration_workspace_free (w);
+        
+        return result;
+    }
+    throw Exception("Invalid Number of Arguments for f_integral");
 }

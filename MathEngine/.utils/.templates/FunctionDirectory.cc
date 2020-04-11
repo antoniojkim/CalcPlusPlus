@@ -11,6 +11,7 @@
 #include "MultiFunctions/Statistics.h"
 #include "MultiFunctionExprs/polynomial.h"
 #include "MultiFunctionExprs/tuple.h"
+#include "UnaryFunctions/BasicFunctions.h"
 #include "UnaryFunctions/ExpLogFunctions.h"
 #include "UnaryFunctions/TrigFunctions.h"
 

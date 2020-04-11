@@ -15,7 +15,7 @@ run: build ui
 	./CalcUI/CalcUI
 
 debug: build ui
-	gdb -q -ex="run" ./CalcUI/Calculator
+	gdb -q -ex="run" ./CalcUI/CalcUI
 
 package:
 	.utils/package

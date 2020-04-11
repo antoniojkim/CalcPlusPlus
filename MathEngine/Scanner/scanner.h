@@ -35,6 +35,9 @@ namespace Scanner {
 		Type type;
 	};
 
+	bool isPreImplicit(Type type);
+	bool isPostImplicit(Type type);
+
 	bool scan(const std::string& str, std::list<Token>& tokens);
 
 	std::ostream& print(std::ostream& out, std::list<Token> tokens, const std::string& delimiter="", const bool& printType=false);

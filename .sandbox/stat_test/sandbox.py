@@ -7,7 +7,7 @@ def function(array):
     roots = np.round(roots, 10)
     return f"std::vector<gsl_complex>{{{', '.join(f'gsl_complex{{{root.real}, {root.imag}}}' for root in sorted(roots))}}}"
 
-names = ["quadc"]
+names = ["integral"]
 
 def main():
     for i in range(10):
