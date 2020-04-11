@@ -11,9 +11,5 @@ expression Expression::evaluate(){ return std::make_unique<NumExpression>(this->
 expression Expression::evaluate(const Variables& vars){ return std::make_unique<NumExpression>(this->value(vars)); }
 
 std::ostream& operator<<(std::ostream& out, expression& e){
-    return out << e.get();
-}
-
-std::ostream& operator<<(std::ostream& out, Expression* e){
     return e->print(out);
 }

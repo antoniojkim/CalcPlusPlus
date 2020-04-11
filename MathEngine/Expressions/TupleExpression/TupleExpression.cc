@@ -68,8 +68,11 @@ expression TupleExpression::copy() {
 
 std::ostream& TupleExpression::print(std::ostream& out) {
     out << "(";
-    for(auto& expr : tuple){
-        expr->print(out) << ", ";
+    auto expr = tuple.begin();
+    auto end = tuple.end();
+    (*(expr++))->print(out);
+    while(expr != end){
+        (*(expr++))->print(out << ", ");
     }
     return out << ")";
 }

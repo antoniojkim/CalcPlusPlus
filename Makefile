@@ -5,6 +5,9 @@ build:
 test: build
 	.utils/test
 
+newtest:
+	python3 -u .utils/new_test.py --name $(name)
+
 ui:
 	.utils/build_ui
 
@@ -31,7 +34,7 @@ generate:
 	python3 -u MathEngine/.utils/auto_generate.py
 
 bp:  # breakpoints
-	edit Tests/.gdbinit
+	vim Tests/.gdbinit
 
 clean:
 	rm -f MathEngine/libMathEngine.a Tests/run CalcUI/CalcUI

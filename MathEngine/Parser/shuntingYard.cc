@@ -7,6 +7,7 @@
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/OperatorExpression.h"
 #include "../Expressions/OperatorExpressions/Operators.h"
+#include "../Expressions/TupleExpression.h"
 #include "../Expressions/VariableExpression.h"
 #include "../Scanner/scanner.h"
 #include "../Utils/exceptions.h"
@@ -68,9 +69,16 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             else {
                 argumentQueue.emplace_front(std::move(expressionStack.back()));
                 expressionStack.pop_back();
-                expressionStack.push_back(
-                    make_unique<MultiFunctionExpression>(functionIndex, std::move(argumentQueue))
-                );
+                if (token->lexeme == "tuple"){
+                    expressionStack.push_back(
+                        make_unique<TupleExpression>(std::move(argumentQueue))
+                    );
+                }
+                else{
+                    expressionStack.push_back(
+                        make_unique<MultiFunctionExpression>(functionIndex, std::move(argumentQueue))
+                    );
+                }
                 argumentQueue.clear();
             }
             continue;
@@ -124,6 +132,7 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
 
     list<Scanner::Token*> outputStack;
     list<Scanner::Token*> operatorStack;
+    list<Scanner::Token> newTokens;
 
     for (auto& token: tokens){
         switch(token.type){
@@ -140,8 +149,16 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                     outputStack.push_back(operatorStack.back());
                     operatorStack.pop_back();
                 }
-            case FUNCTION:
+                operatorStack.push_back(&token);
+                continue;
             case LPAREN:
+                if (operatorStack.empty()
+                    || (operatorStack.back()->type != FUNCTION
+                        && !isOperator(operatorStack.back()->type))){
+                    newTokens.emplace_back(Token{"tuple", FUNCTION});
+                    operatorStack.push_back(&newTokens.back());
+                }
+            case FUNCTION:
                 operatorStack.push_back(&token);
                 continue;
             default:

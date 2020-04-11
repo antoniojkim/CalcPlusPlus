@@ -43,7 +43,6 @@ struct Expression {
 };
 
 std::ostream& operator<<(std::ostream&, expression&);
-std::ostream& operator<<(std::ostream&, Expression*);
 
 #define EXPRESSION_OVERRIDES                                       \
     expression simplify() override;                                \

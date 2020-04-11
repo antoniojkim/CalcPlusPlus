@@ -25,6 +25,7 @@ MultiFunctionExpression::MultiFunctionExpression(int functionIndex, std::list<ex
     fe{functionIndex != -1 ? get_multi_function_expr(functionIndex) : nullptr},
     args{std::move(args)} {}
 
+
 expression MultiFunctionExpression::simplify() {
     throw Exception("Unimplemented Error: MultiFunctionExpression::simplify");
 }

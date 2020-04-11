@@ -209,3 +209,5 @@ functionExprs:
     - tuple
     - quad
     - cubic
+printFunctions:
+    - tuple
