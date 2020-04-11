@@ -43,7 +43,7 @@ bool UnaryFunctionExpression::evaluable(){ return arg->evaluable(); }
 double UnaryFunctionExpression::value() { return f(arg->value()); }
 double UnaryFunctionExpression::value(const Variables& vars) { return f(arg->value(vars)); }
 
-bool UnaryFunctionExpression::complex(){ return arg->complex(); }
+bool UnaryFunctionExpression::isComplex(){ return arg->isComplex(); }
 
 expression UnaryFunctionExpression::copy() {
     return make_unique<UnaryFunctionExpression>(functionIndex, arg->copy());

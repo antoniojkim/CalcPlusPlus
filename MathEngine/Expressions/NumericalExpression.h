@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <gsl/gsl_complex.h>
+
 #include "Expression.h"
 
 class NumExpression: public Expression {
@@ -10,7 +12,11 @@ class NumExpression: public Expression {
   
   public:
     NumExpression(double real, double imag = 0);
+    NumExpression(const gsl_complex& z);
     NumExpression(const std::string&);
+
+    gsl_complex complex() override;
+    gsl_complex complex(const Variables& vars) override;
 
     EXPRESSION_OVERRIDES
 

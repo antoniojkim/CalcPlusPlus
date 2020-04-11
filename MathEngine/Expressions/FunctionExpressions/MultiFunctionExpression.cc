@@ -80,9 +80,9 @@ double MultiFunctionExpression::value(const Variables& vars) {
     return GSL_NAN;
 }
 
-bool MultiFunctionExpression::complex(){    
+bool MultiFunctionExpression::isComplex(){    
     for(auto& arg: args){
-        if (arg->complex()){
+        if (arg->isComplex()){
             return true;
         }
     }

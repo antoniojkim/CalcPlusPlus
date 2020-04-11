@@ -43,7 +43,7 @@ expression BinaryOperatorExpression::copy() {
 }
 
 bool BinaryOperatorExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
-bool BinaryOperatorExpression::complex(){ return lhs->complex() || rhs->complex(); }
+bool BinaryOperatorExpression::isComplex(){ return lhs->isComplex() || rhs->isComplex(); }
 
 std::ostream& BinaryOperatorExpression::print(std::ostream& out) {
     lhs->print(out) << operators[operatorIndex];

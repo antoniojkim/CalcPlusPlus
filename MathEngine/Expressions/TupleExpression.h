@@ -4,6 +4,8 @@
 #include <list>
 #include <vector>
 
+#include <gsl/gsl_complex.h>
+
 #include "Expression.h"
 
 class TupleExpression: public Expression {
@@ -14,6 +16,7 @@ class TupleExpression: public Expression {
     TupleExpression();
     TupleExpression(std::list<expression>&& tuple);
     TupleExpression(std::initializer_list<double> tuple);
+    TupleExpression(std::initializer_list<gsl_complex> tuple);
 
     EXPRESSION_OVERRIDES
 

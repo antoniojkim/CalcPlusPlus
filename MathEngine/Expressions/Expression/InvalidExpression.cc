@@ -24,7 +24,7 @@ double InvalidExpression::value() { return GSL_NAN; }
 
 double InvalidExpression::value(const Variables& vars) { return GSL_NAN; }
 
-bool InvalidExpression::complex(){ return false; }
+bool InvalidExpression::isComplex(){ return false; }
 
 expression InvalidExpression::copy() {
     return make_unique<InvalidExpression>(message);

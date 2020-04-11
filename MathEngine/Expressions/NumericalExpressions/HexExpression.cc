@@ -30,7 +30,7 @@ double HexExpression::value() { return double(num); }
 
 double HexExpression::value(const Variables& vars) { return double(num); }
 
-bool HexExpression::complex(){ return false; }
+bool HexExpression::isComplex(){ return false; }
 
 expression HexExpression::copy() {
     return make_unique<HexExpression>(num);

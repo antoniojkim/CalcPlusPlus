@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+
+#include <gsl/gsl_complex.h>
 #include <gsl/gsl_math.h>
 
 struct Expression;
@@ -33,7 +35,10 @@ struct Expression {
     virtual double value() = 0;
     virtual double value(const Variables& vars) = 0;
 
-    virtual bool complex() = 0;
+    virtual gsl_complex complex();
+    virtual gsl_complex complex(const Variables& vars);
+
+    virtual bool isComplex() = 0;
 
     virtual expression copy() = 0;
 
@@ -51,7 +56,7 @@ std::ostream& operator<<(std::ostream&, expression&);
     bool evaluable() override;                                     \
     double value() override;                                       \
     double value(const Variables& vars) override;                  \
-    bool complex() override;                                       \
+    bool isComplex() override;                                     \
     expression copy() override;                                    \
     std::ostream& print(std::ostream&) override;                   \
     std::ostream& postfix(std::ostream&) override;

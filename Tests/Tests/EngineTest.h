@@ -16,3 +16,6 @@ void requireIsEqual(const std::string& input, const std::string& expected);
 bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<double>& expected);
 void requireIsEqual(const std::string& input, const std::vector<double>& expected);
 
+bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<gsl_complex>& expected);
+void requireIsEqual(const std::string& input, const std::vector<gsl_complex>& expected);
+

@@ -34,7 +34,7 @@ double VariableExpression::value(const Variables& vars) {
     return num;
 }
 
-bool VariableExpression::complex(){ return false; }
+bool VariableExpression::isComplex(){ return false; }
 
 expression VariableExpression::copy() {
     return make_unique<VariableExpression>(name, num);

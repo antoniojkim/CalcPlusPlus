@@ -202,12 +202,16 @@ functions:
     median: -1
     # Polynomials
     quad: 3
+    quadc: 3
     cubic: 4
+    cubicc: 4
     # Data Structure Constructors
     tuple: -1
 functionExprs:
     - tuple
     - quad
+    - quadc
     - cubic
+    - cubicc
 printFunctions:
     - tuple

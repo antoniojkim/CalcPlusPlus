@@ -8,6 +8,7 @@
 using namespace std;
 
 NumExpression::NumExpression(double real, double imag): real{real}, imag{imag} {}
+NumExpression::NumExpression(const gsl_complex& z): real{GSL_REAL(z)}, imag{GSL_IMAG(z)} {}
 NumExpression::NumExpression(const std::string& num): real{0}, imag{0} {
     istringstream iss{num};
     if (!(iss >> real)){
@@ -33,10 +34,12 @@ expression NumExpression::integrate(const std::string& var) {
 bool NumExpression::evaluable(){ return true; }
 
 double NumExpression::value() { return real; }
-
 double NumExpression::value(const Variables& vars) { return real; }
 
-bool NumExpression::complex(){ return imag != 0; }
+gsl_complex NumExpression::complex() { return gsl_complex{real, imag}; }
+gsl_complex NumExpression::complex(const Variables& vars) { return gsl_complex{real, imag}; }
+
+bool NumExpression::isComplex(){ return imag != 0; }
 
 expression NumExpression::copy() {
     return make_unique<NumExpression>(real, imag);

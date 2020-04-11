@@ -113,3 +113,72 @@ void requireIsEqual(const string& input, const std::vector<double>& expected){
         REQUIRE( false );
     }
 }
+
+
+int compare(gsl_complex output, gsl_complex expected){
+    int cmp = compare(GSL_REAL(output), GSL_REAL(expected));
+    if (cmp == 0){
+        return compare(GSL_IMAG(output), GSL_IMAG(expected));
+    }
+    return cmp;
+}
+
+bool compare(const list<expression>& l, const vector<gsl_complex>& v) {
+    if (l.size() != v.size()){
+        return false;
+    }
+    if (l.size() == 0){
+        return true;
+    }
+    auto b1 = l.begin();
+    auto e1 = l.end();
+    auto b2 = v.begin();
+    auto e2 = v.end();
+    while(b1 != e1 && b2 != e2){
+        if (compare((*b1)->complex(), *b2) != 0){
+            return false;
+        }
+        ++b1;
+        ++b2;
+    }
+    return true;
+}
+
+ostream& operator<<(ostream& out, const vector<gsl_complex>& iterable){
+    out << "(";
+    for (auto& element : iterable){
+        out << GSL_REAL(element);
+        if (GSL_IMAG(element) < 0){
+            out << GSL_IMAG(element) << "i" << " ";
+        }
+        else{
+            out << "+" << GSL_IMAG(element) << "i" << " ";
+        }
+    }
+    return out << ")";
+}
+
+bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<gsl_complex>& expected){
+    cout << "Input:      " << input << endl;
+    cout << "Expression: " << expr << endl;
+    cout << "Postfix:    "; expr->postfix(cout) << endl;
+#ifdef DEBUG
+    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
+#endif
+    cout << "Output:     "; output->print(cout) << endl;
+    cout << "Expected:   " << expected << endl;
+    return false;
+}
+
+void requireIsEqual(const string& input, const std::vector<gsl_complex>& expected){
+    auto expr = engine.parse(input);
+    auto output = expr->evaluate();
+    auto tuple = dynamic_cast<TupleExpression*>(output.get());
+    if (tuple){
+        REQUIRE( (!compare(tuple->tuple, expected) ? printDifference(input, expr, output, expected) : true) ); 
+    }
+    else{
+        printDifference(input, expr, output, expected);
+        REQUIRE( false );
+    }
+}

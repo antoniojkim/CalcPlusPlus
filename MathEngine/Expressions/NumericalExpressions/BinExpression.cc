@@ -30,7 +30,7 @@ double BinExpression::value() { return double(num); }
 
 double BinExpression::value(const Variables& vars) { return double(num); }
 
-bool BinExpression::complex(){ return false; }
+bool BinExpression::isComplex(){ return false; }
 
 expression BinExpression::copy() {
     return make_unique<BinExpression>(num);

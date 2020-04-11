@@ -17,6 +17,11 @@ TupleExpression::TupleExpression(std::initializer_list<double> tuple) {
         this->tuple.emplace_back(make_unique<NumExpression>(val));
     }
 }
+TupleExpression::TupleExpression(std::initializer_list<gsl_complex> tuple) {
+    for (auto val : tuple){
+        this->tuple.emplace_back(make_unique<NumExpression>(val));
+    }
+}
 
 expression TupleExpression::simplify() {
     return copy();
@@ -49,9 +54,9 @@ double TupleExpression::value() { return GSL_NAN; }
 
 double TupleExpression::value(const Variables& vars) { return GSL_NAN; }
 
-bool TupleExpression::complex(){
+bool TupleExpression::isComplex(){
     for(auto& expr: tuple){
-        if (expr->complex()){
+        if (expr->isComplex()){
             return true;
         }
     }
