@@ -4,6 +4,7 @@
 #include "../Expressions/FunctionExpression.h"
 #include "../Expressions/FunctionExpressions/Functions.h"
 #include "../Expressions/InvalidExpression.h"
+#include "../Expressions/MatrixExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/OperatorExpression.h"
 #include "../Expressions/OperatorExpressions/Operators.h"
@@ -69,22 +70,55 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             else {
                 argumentQueue.emplace_front(std::move(expressionStack.back()));
                 expressionStack.pop_back();
-                if (token->lexeme == "tuple"){
-                    expressionStack.push_back(
-                        make_unique<TupleExpression>(std::move(argumentQueue))
-                    );
-                }
-                else{
-                    expressionStack.push_back(
-                        make_unique<MultiFunctionExpression>(functionIndex, std::move(argumentQueue))
-                    );
-                }
+                expressionStack.push_back(
+                    make_unique<MultiFunctionExpression>(functionIndex, std::move(argumentQueue))
+                );
                 argumentQueue.clear();
             }
             continue;
         }
 
-#include <iterator>
+        if (token->type == TUPLE){
+            istringstream tupleLexeme {token->lexeme};
+            char c;
+            size_t size;
+            while ((tupleLexeme >> c) && c != '_');
+            tupleLexeme >> size;
+            if (size > expressionStack.size()){
+                return make_unique<InvalidExpression>(Exception("Tuple Expected ", size, " elements. Got: ", expressionStack.size()));
+            }
+            for (int i = 0; i < size; ++i){
+                argumentQueue.emplace_front(std::move(expressionStack.back()));
+                expressionStack.pop_back();
+            }
+            expressionStack.push_back(
+                make_unique<TupleExpression>(std::move(argumentQueue))
+            );
+            argumentQueue.clear();
+            continue;
+        }
+
+        if (token->type == MATRIX){
+            istringstream matrixLexeme {token->lexeme};
+            char c;
+            size_t numRows, numCols, size;
+            while ((matrixLexeme >> c) && c != '_');
+            matrixLexeme >> numRows >> c >> numCols;
+            size = numRows * numCols;
+            if (size > expressionStack.size()){
+                return make_unique<InvalidExpression>(Exception("Matrix Expected ", size, " elements. Got: ", expressionStack.size()));
+            }
+            for (size_t i = 0; i < size; ++i){
+                argumentQueue.emplace_front(std::move(expressionStack.back()));
+                expressionStack.pop_back();
+            }
+            expressionStack.push_back(
+                make_unique<MatrixExpression>(std::move(argumentQueue), numRows, numCols)
+            );
+            argumentQueue.clear();
+            continue;
+        }
+
         if (token->type == COMMA){
             if (expressionStack.empty()){
                 return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
@@ -135,6 +169,10 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
     list<Scanner::Token*> operatorStack;
     list<Scanner::Token> newTokens;
 
+    int lbraceCount = 0;
+    int matrixRowCount = 0;
+    int matrixColCount = 0;
+
     auto current = tokens.begin();
     auto end = tokens.end();
     for (; current != end; ++current){
@@ -149,12 +187,18 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             case COMMA:
                 while(!operatorStack.empty()
                     && operatorStack.back()->type != LPAREN
+                    && operatorStack.back()->type != LBRACE
                     && operatorStack.back()->type != COMMA){
                     outputStack.push_back(operatorStack.back());
                     operatorStack.pop_back();
                 }
                 operatorStack.push_back(&token);
                 continue;
+            case LBRACE:
+                ++lbraceCount;
+                if (lbraceCount > 2){
+                    throw Exception("Unsupported matrix of rank: ", lbraceCount);
+                }
             case LPAREN:
             case FUNCTION:
                 operatorStack.push_back(&token);
@@ -186,7 +230,7 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
         }
         
         if (token.type == RPAREN){
-            bool comma = false;
+            list<Scanner::Token*> commaList;
             while(true){
                 if (operatorStack.size() == 0){
                     throw Exception("Mismatched Parentheses: ')'");
@@ -194,21 +238,72 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                 Scanner::Token* topOperator = operatorStack.back();
                 operatorStack.pop_back();
                 if (topOperator->type == LPAREN){
-                    if (comma
+                    if (!commaList.empty()
                         && (operatorStack.empty()
                             || (operatorStack.back()->type != FUNCTION
                                 && !isOperator(operatorStack.back()->type)))){
-                        newTokens.emplace_back(Token{"tuple", FUNCTION});
-                        operatorStack.push_back(&newTokens.back());
+                        ostringstream tupleLexeme;
+                        tupleLexeme << "tuple_" << (commaList.size() + 1);
+                        newTokens.emplace_back(Token{tupleLexeme.str(), TUPLE});
+                        outputStack.push_back(&newTokens.back());
+                    }
+                    else{
+                        for(auto comma : commaList){
+                            outputStack.push_back(comma);
+                        }
                     }
                     break;
                 }
                 if (topOperator->type == COMMA){
-                    comma = true;
+                    commaList.push_back(topOperator);
                 }
-                outputStack.push_back(topOperator);
+                else{
+                    outputStack.push_back(topOperator);
+                }
             }
+            continue;
+        }
 
+        if (token.type == RBRACE){
+            --lbraceCount;
+            int numCols = 1;
+            while(true){
+                if (operatorStack.size() == 0){
+                    throw Exception("Mismatched Parentheses: '}'");
+                }
+                Scanner::Token* topOperator = operatorStack.back();
+                operatorStack.pop_back();
+                if (topOperator->type == COMMA){
+                    ++numCols;
+                }
+                else if (topOperator->type == LBRACE){
+                    break;
+                }
+                else{
+                    outputStack.push_back(topOperator);
+                }
+            }
+            if (lbraceCount == 0){
+                if (matrixColCount == 0){
+                    matrixColCount = numCols;
+                    matrixRowCount = 1;
+                }
+                else{
+                    matrixRowCount = numCols;
+                }
+                ostringstream matrixLexeme;
+                matrixLexeme << "matrix_" << matrixRowCount << "x" << matrixColCount;
+                newTokens.emplace_back(Token{matrixLexeme.str(), MATRIX});
+                outputStack.push_back(&newTokens.back());
+                matrixRowCount = 0;
+                matrixColCount = 0;
+            }
+            else if (matrixColCount == 0){
+                matrixColCount = numCols;
+            }
+            else if (matrixColCount != numCols){
+                return make_unique<InvalidExpression>(Exception("Row Expected ", matrixColCount, " columns. Got: ", numCols));
+            }
             continue;
         }
 

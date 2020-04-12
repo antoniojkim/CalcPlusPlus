@@ -24,6 +24,7 @@ TEST_CASE("Numerical Integration Evaluation Tests", "[integral]" ) {
         requireIsEqual("integral(lnx, 0.5, 3)", 1.1424104562843017);
         requireIsEqual("integral(-sinx, 3, 5)", 1.273654682063672);
         requireIsEqual("integral(sqrt((1+x^2)/(1+x^4)), 0, 1)", 1.05335429864400326);
+        requireIsEqual("integral(sqrt(2*x), 1, 30)", 153.976524806714612);
     }
 
 }

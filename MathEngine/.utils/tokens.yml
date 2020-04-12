@@ -5,6 +5,8 @@ specialTokens:
     - ID
     - SPECIALID
     - FUNCTION
+    - TUPLE
+    - MATRIX
 operators:
     COMMA:
         lexeme: ","
@@ -209,8 +211,6 @@ functions:
     quadc: 3
     cubic: 4
     cubicc: 4
-    # Data Structure Constructors
-    tuple: -1
 functionExprs:
     - tuple
     - quad

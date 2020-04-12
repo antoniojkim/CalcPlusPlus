@@ -9,6 +9,8 @@
 #include <gsl/gsl_math.h>
 
 struct Expression;
+struct MatrixExpression;
+struct TupleExpression;
 
 typedef std::unique_ptr<Expression> expression;
 typedef std::unordered_map<std::string, expression> Variables;
@@ -37,6 +39,9 @@ struct Expression {
 
     virtual gsl_complex complex();
     virtual gsl_complex complex(const Variables& vars);
+
+    virtual inline MatrixExpression* matrix(){ return nullptr; }
+    virtual inline TupleExpression* tuple(){ return nullptr; }
 
     virtual bool isComplex() = 0;
 

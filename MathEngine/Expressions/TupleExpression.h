@@ -11,12 +11,14 @@
 class TupleExpression: public Expression {
 
   public:
-    std::list<expression> tuple;
+    std::list<expression> data;
   
     TupleExpression();
     TupleExpression(std::list<expression>&& tuple);
     TupleExpression(std::initializer_list<double> tuple);
     TupleExpression(std::initializer_list<gsl_complex> tuple);
+
+    inline TupleExpression* tuple() override { return this; }
 
     EXPRESSION_OVERRIDES
 

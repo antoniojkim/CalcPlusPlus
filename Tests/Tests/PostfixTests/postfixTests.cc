@@ -45,6 +45,21 @@ TEST_CASE("Multi Arg Function Postfix Tests", "[postfix]") {
 
 }
 
+TEST_CASE("Tuple Postfix Tests", "[postfix]") {
+
+    postfixTest("(1, 2, 3, 4)", "1 2 3 4 tuple_4");
+
+}
+
+TEST_CASE("Matrix Postfix Tests", "[postfix]") {
+
+    postfixTest("{1, 2, 3, 4}", "1 2 3 4 matrix_1x4");
+    postfixTest("{{1, 2, 3}, {4, 5, 6}}", "1 2 3 4 5 6 matrix_2x3");
+    postfixTest("{{1, 2}, {3, 4}, {5, 6}}", "1 2 3 4 5 6 matrix_3x2");
+    postfixTest("{{1, 2, 3, 4}}", "1 2 3 4 matrix_1x4");
+
+}
+
 TEST_CASE("Complex Postfix Tests", "[postfix]" ) {
 
     // postfixTest("cossinh3+5i-arcsin(x, 4)+6integral(sinx, 4, 5)^|4+0x3aF",

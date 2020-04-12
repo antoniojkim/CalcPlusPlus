@@ -16,14 +16,14 @@ using namespace std;
 
 unique_ptr<double[]> to_array(list<expression>& args, size_t& size, const Variables& vars){
     if (args.size() == 1){
-        auto tuple = dynamic_cast<TupleExpression*>(args.back().get());
+        auto tuple = args.back()->tuple();
         if (tuple){
-            unique_ptr<double[]> data (new double[tuple->tuple.size()]);
+            unique_ptr<double[]> data (new double[tuple->data.size()]);
             double* d = data.get();
-            for (auto& expr : tuple->tuple){
+            for (auto& expr : tuple->data){
                 *(d++) = expr->value(vars);
             }
-            size = tuple->tuple.size();
+            size = tuple->data.size();
             return std::move(data);
         }
     }
