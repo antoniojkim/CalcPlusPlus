@@ -10,7 +10,7 @@
 #include <cstring>
 #include <string>
 
-constexpr const int numFunctions = 81;
+constexpr const int numFunctions = 82;
 constexpr const char* functionNames[numFunctions] = {
     "integrate", "variance", "kurtosis", "integral", "autocorr", "arctanh",
 	"arcsinh", "arcsech", "arccsch", "arccoth", "arccosh", "median", "cubicc",
@@ -20,19 +20,20 @@ constexpr const char* functionNames[numFunctions] = {
 	"asech", "acsch", "acoth", "acosh", "tanh", "sqrt", "skew", "sinh", "sech",
 	"quad", "mean", "logn", "ln_2", "ln1p", "lag1", "kurt", "csch", "coth", "cosh",
 	"atan", "asin", "asec", "acsc", "acot", "acos", "var", "tss", "tan", "std",
-	"sin", "sec", "neg", "min", "max", "log", "exp", "csc", "cot", "cos", "abs",
-	"sd", "ln", "dx"
+	"sin", "sec", "neg", "min", "max", "log", "exp", "det", "csc", "cot", "cos",
+	"abs", "sd", "ln", "dx"
 };
 constexpr const size_t functionNameLengths[numFunctions] = {
     9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
 	6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-	4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2
+	4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2,
+	2
 };
 constexpr const int functionNumArgs[numFunctions] = {
     0, -1, -1, 3, -1, 1, 1, 1, 1, 1, 1, -1, 4, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, -1, -1, 3, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 3, -1, 2,
 	1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, -1, 1, 1,
-	1, 1, 1, 1, -1, 1, 0
+	1, 1, 1, 1, 1, -1, 1, 0
 };
 
 /*

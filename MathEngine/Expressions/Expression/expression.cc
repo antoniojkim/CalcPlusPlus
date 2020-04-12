@@ -7,11 +7,15 @@ double gsl_expression_function(double x, void* params){
     return ((Expression *) params)->value(vars);
 }
 
-expression Expression::evaluate(){ return std::make_unique<NumExpression>(this->complex()); }
+const Variables emptyVars;
+
+expression Expression::evaluate(){ return evaluate(emptyVars); }
 expression Expression::evaluate(const Variables& vars){ return std::make_unique<NumExpression>(this->complex(vars)); }
 
-gsl_complex Expression::complex(){ return gsl_complex{this->value(), 0}; }
+gsl_complex Expression::complex(){ return complex(emptyVars); }
 gsl_complex Expression::complex(const Variables& vars){ return gsl_complex{this->value(vars), 0}; }
+
+double Expression::value(){ return value(emptyVars); }
 
 std::ostream& operator<<(std::ostream& out, expression& e){
     return e->print(out);

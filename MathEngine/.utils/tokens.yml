@@ -211,11 +211,14 @@ functions:
     quadc: 3
     cubic: 4
     cubicc: 4
+    # Linear Algebra
+    det: 1
 functionExprs:
     - tuple
     - quad
     - quadc
     - cubic
     - cubicc
+    - det
 printFunctions:
     - tuple

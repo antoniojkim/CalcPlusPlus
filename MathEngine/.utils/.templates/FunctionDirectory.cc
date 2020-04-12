@@ -14,6 +14,7 @@
 #include "UnaryFunctions/BasicFunctions.h"
 #include "UnaryFunctions/ExpLogFunctions.h"
 #include "UnaryFunctions/TrigFunctions.h"
+#include "UnaryFunctionExprs/linalg.h"
 
 using namespace std;
 
@@ -40,6 +41,32 @@ UnaryFunction get_unary_function(int functionIndex){
         throw Exception("Function is not Unary: ", functionNames[functionIndex]);
     }
     return unaryFunctions[functionIndex];
+}
+
+
+/***************************************************
+ ************** Unary Function Exprs ***************
+ ***************************************************/
+
+const UnaryFunctionExpr unaryFunctionExprs[numFunctions] = {
+    {unaryFunctionExprs}
+};
+
+UnaryFunctionExpr get_unary_function_expr(const string& name){
+    int index = getFunctionIndex(name);
+    if (index == -1){
+        throw Exception("Unknown Unary Function: ", name);
+    }
+    return get_unary_function_expr(index);
+}
+UnaryFunctionExpr get_unary_function_expr(int functionIndex){
+    if (functionIndex < 0 || functionIndex >= numFunctions){
+        throw Exception("Invalid Function Index: ", functionIndex);
+    }
+    if (functionNumArgs[functionIndex] != 1){
+        throw Exception("Function is not Unary: ", functionNames[functionIndex]);
+    }
+    return unaryFunctionExprs[functionIndex];
 }
 
 

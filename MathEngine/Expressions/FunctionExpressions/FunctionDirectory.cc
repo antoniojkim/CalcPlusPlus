@@ -14,6 +14,7 @@
 #include "UnaryFunctions/BasicFunctions.h"
 #include "UnaryFunctions/ExpLogFunctions.h"
 #include "UnaryFunctions/TrigFunctions.h"
+#include "UnaryFunctionExprs/linalg.h"
 
 using namespace std;
 
@@ -30,8 +31,8 @@ const UnaryFunction unaryFunctions[numFunctions] = {
 	f_acosh, f_tanh, f_sqrt, nullptr, f_sinh, f_sech, nullptr, nullptr, nullptr,
 	f_ln_2, f_ln1p, nullptr, nullptr, f_csch, f_coth, f_cosh, f_atan, f_asin,
 	f_asec, f_acsc, f_acot, f_acos, nullptr, nullptr, f_tan, nullptr, f_sin, f_sec,
-	f_neg, nullptr, nullptr, f_log, f_exp, f_csc, f_cot, f_cos, f_abs, nullptr,
-	f_ln, nullptr
+	f_neg, nullptr, nullptr, f_log, f_exp, nullptr, f_csc, f_cot, f_cos, f_abs,
+	nullptr, f_ln, nullptr
 };
 
 UnaryFunction get_unary_function(const string& name){
@@ -53,6 +54,41 @@ UnaryFunction get_unary_function(int functionIndex){
 
 
 /***************************************************
+ ************** Unary Function Exprs ***************
+ ***************************************************/
+
+const UnaryFunctionExpr unaryFunctionExprs[numFunctions] = {
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, fe_det, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr
+};
+
+UnaryFunctionExpr get_unary_function_expr(const string& name){
+    int index = getFunctionIndex(name);
+    if (index == -1){
+        throw Exception("Unknown Unary Function: ", name);
+    }
+    return get_unary_function_expr(index);
+}
+UnaryFunctionExpr get_unary_function_expr(int functionIndex){
+    if (functionIndex < 0 || functionIndex >= numFunctions){
+        throw Exception("Invalid Function Index: ", functionIndex);
+    }
+    if (functionNumArgs[functionIndex] != 1){
+        throw Exception("Function is not Unary: ", functionNames[functionIndex]);
+    }
+    return unaryFunctionExprs[functionIndex];
+}
+
+
+/***************************************************
  ***************** Multi Functions *****************
  ***************************************************/
 
@@ -66,7 +102,7 @@ const MultiFunction multiFunctions[numFunctions] = {
 	f_logn, nullptr, nullptr, f_lag1, f_kurt, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, f_var, f_tss, nullptr, f_std,
 	nullptr, nullptr, nullptr, f_min, f_max, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, f_sd, nullptr, nullptr
+	nullptr, nullptr, nullptr, f_sd, nullptr, nullptr
 };
 
 MultiFunction get_multi_function(const string& name){
@@ -101,7 +137,7 @@ const MultiFunctionExpr multiFunctionExprs[numFunctions] = {
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr
 };
 
 MultiFunctionExpr get_multi_function_expr(const string& name){

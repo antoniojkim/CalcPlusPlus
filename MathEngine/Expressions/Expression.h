@@ -34,7 +34,7 @@ struct Expression {
         return F;
     }
 
-    virtual double value() = 0;
+    virtual double value();
     virtual double value(const Variables& vars) = 0;
 
     virtual gsl_complex complex();
@@ -59,7 +59,6 @@ std::ostream& operator<<(std::ostream&, expression&);
     expression derivative(const std::string& var = "x") override;  \
     expression integrate(const std::string& var = "x") override;   \
     bool evaluable() override;                                     \
-    double value() override;                                       \
     double value(const Variables& vars) override;                  \
     bool isComplex() override;                                     \
     expression copy() override;                                    \

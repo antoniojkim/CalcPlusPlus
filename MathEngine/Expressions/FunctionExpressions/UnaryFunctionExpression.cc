@@ -17,7 +17,6 @@ UnaryFunctionExpression::UnaryFunctionExpression(const std::string& name, expres
 }
 UnaryFunctionExpression::UnaryFunctionExpression(int functionIndex, expression&& arg):
     functionIndex{functionIndex},
-    f{functionIndex != -1 ? get_unary_function(functionIndex) : nullptr},
     arg{std::move(arg)} {}
 
 expression UnaryFunctionExpression::simplify() {
@@ -40,8 +39,25 @@ expression UnaryFunctionExpression::integrate(const std::string& var) {
 
 bool UnaryFunctionExpression::evaluable(){ return arg->evaluable(); }
 
-double UnaryFunctionExpression::value() { return f(arg->value()); }
-double UnaryFunctionExpression::value(const Variables& vars) { return f(arg->value(vars)); }
+expression UnaryFunctionExpression::evaluate(const Variables& vars) {
+    auto fe = get_unary_function_expr(functionIndex);
+    if (fe){
+        return fe(arg, vars);
+    }
+    return make_unique<NumExpression>(value(vars));
+}
+
+double UnaryFunctionExpression::value(const Variables& vars) {
+    auto f = get_unary_function(functionIndex);
+    if (f){
+        return f(arg->value(vars));
+    }
+    auto fe = get_unary_function_expr(functionIndex);
+    if (fe){
+        return fe(arg, vars)->value();
+    }
+    return GSL_NAN;
+}
 
 bool UnaryFunctionExpression::isComplex(){ return arg->isComplex(); }
 

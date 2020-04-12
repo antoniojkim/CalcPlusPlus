@@ -20,6 +20,8 @@ class TupleExpression: public Expression {
 
     inline TupleExpression* tuple() override { return this; }
 
+    expression evaluate(const Variables& vars) override;
+
     EXPRESSION_OVERRIDES
 
 };

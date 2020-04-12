@@ -69,7 +69,13 @@ bool MatrixExpression::evaluable(){
     return true;
 }
 
-double MatrixExpression::value() { return GSL_NAN; }
+expression MatrixExpression::evaluate(const Variables& vars){
+    list<expression> evaluated;
+    for (auto& expr : mat){
+        evaluated.emplace_back(expr->evaluate(vars));
+    }
+    return make_unique<MatrixExpression>(std::move(evaluated), numRows, numCols);
+}
 
 double MatrixExpression::value(const Variables& vars) { return GSL_NAN; }
 
@@ -94,10 +100,10 @@ std::ostream& MatrixExpression::print(std::ostream& out) {
     out << "{";
     if (!mat.empty()){
         auto expr = mat.begin();
-        for (int r = 0; r < numRows; ++r){
+        for (size_t r = 0; r < numRows; ++r){
             if (r != 0){ out << ", "; }
             out << "{";
-            for (int c = 0; c < numCols; ++c){
+            for (size_t c = 0; c < numCols; ++c){
                 if (c != 0){ out << ", "; }
                 (*(expr++))->print(out);
             }

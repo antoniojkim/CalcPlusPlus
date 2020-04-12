@@ -150,7 +150,11 @@ def geenrate_functions():
         template = "".join(file)
 
     template = template.replace("{unaryFunctions}", wrap((
-        f'f_{name}' if nargs == 1 else "nullptr" for name, nargs in functions
+        f'f_{name}' if name not in functionExprs and nargs == 1 else "nullptr" for name, nargs in functions
+    )))
+
+    template = template.replace("{unaryFunctionExprs}", wrap((
+        f'fe_{name}' if name in functionExprs and nargs == 1 else "nullptr" for name, nargs in functions
     )))
 
     template = template.replace("{multiFunctions}", wrap((
@@ -158,7 +162,7 @@ def geenrate_functions():
     )))
 
     template = template.replace("{multiFunctionExprs}", wrap((
-        f'fe_{name}' if name in functionExprs else "nullptr" for name, nargs in functions
+        f'fe_{name}' if name in functionExprs and nargs != 1 else "nullptr" for name, nargs in functions
     )))
 
     with open(os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.cc"), "w") as file:

@@ -25,6 +25,8 @@ class MatrixExpression: public Expression {
 
     inline MatrixExpression* matrix() override { return this; }
 
+    expression evaluate(const Variables& vars) override;
+
     EXPRESSION_OVERRIDES
 
 };

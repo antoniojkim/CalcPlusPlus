@@ -26,7 +26,6 @@ expression HexExpression::integrate(const std::string& var) {
 
 bool HexExpression::evaluable(){ return true; }
 
-double HexExpression::value() { return double(num); }
 
 double HexExpression::value(const Variables& vars) { return double(num); }
 

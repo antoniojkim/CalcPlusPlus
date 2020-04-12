@@ -33,7 +33,6 @@ expression NumExpression::integrate(const std::string& var) {
 
 bool NumExpression::evaluable(){ return true; }
 
-double NumExpression::value() { return real; }
 double NumExpression::value(const Variables& vars) { return real; }
 
 gsl_complex NumExpression::complex() { return gsl_complex{real, imag}; }

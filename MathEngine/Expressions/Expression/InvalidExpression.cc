@@ -20,7 +20,6 @@ expression InvalidExpression::integrate(const std::string& var) {
 
 bool InvalidExpression::evaluable(){ return false; }
 
-double InvalidExpression::value() { return GSL_NAN; }
 
 double InvalidExpression::value(const Variables& vars) { return GSL_NAN; }
 

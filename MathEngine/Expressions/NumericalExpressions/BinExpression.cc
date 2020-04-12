@@ -26,7 +26,6 @@ expression BinExpression::integrate(const std::string& var) {
 
 bool BinExpression::evaluable(){ return true; }
 
-double BinExpression::value() { return double(num); }
 
 double BinExpression::value(const Variables& vars) { return double(num); }
 

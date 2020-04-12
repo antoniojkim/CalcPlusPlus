@@ -50,7 +50,13 @@ bool TupleExpression::evaluable(){
     return true;
 }
 
-double TupleExpression::value() { return GSL_NAN; }
+expression TupleExpression::evaluate(const Variables& vars){
+    list<expression> evaluated;
+    for (auto& expr : data){
+        evaluated.emplace_back(expr->evaluate(vars));
+    }
+    return make_unique<TupleExpression>(std::move(evaluated));
+}
 
 double TupleExpression::value(const Variables& vars) { return GSL_NAN; }
 

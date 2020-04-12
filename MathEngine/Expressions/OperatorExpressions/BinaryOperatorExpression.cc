@@ -35,7 +35,6 @@ expression BinaryOperatorExpression::integrate(const std::string& var) {
     throw Exception("Integrate not defined for: ", operators[operatorIndex]);
 }
 
-double BinaryOperatorExpression::value() { return f(lhs->value(), rhs->value()); }
 double BinaryOperatorExpression::value(const Variables& vars) { return f(lhs->value(vars), rhs->value(vars)); }
 
 expression BinaryOperatorExpression::copy() {

@@ -57,6 +57,8 @@ TEST_CASE("Matrix Postfix Tests", "[postfix]") {
     postfixTest("{{1, 2, 3}, {4, 5, 6}}", "1 2 3 4 5 6 matrix_2x3");
     postfixTest("{{1, 2}, {3, 4}, {5, 6}}", "1 2 3 4 5 6 matrix_3x2");
     postfixTest("{{1, 2, 3, 4}}", "1 2 3 4 matrix_1x4");
+    postfixTest("det({{1, 2, 3, 4}})", "1 2 3 4 matrix_1x4 det");
+    postfixTest("det{{1, 2, 3, 4}}", "1 2 3 4 matrix_1x4 det");
 
 }
 

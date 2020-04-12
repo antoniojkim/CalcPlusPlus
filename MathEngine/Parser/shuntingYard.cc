@@ -87,7 +87,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             if (size > expressionStack.size()){
                 return make_unique<InvalidExpression>(Exception("Tuple Expected ", size, " elements. Got: ", expressionStack.size()));
             }
-            for (int i = 0; i < size; ++i){
+            for (size_t i = 0; i < size; ++i){
                 argumentQueue.emplace_front(std::move(expressionStack.back()));
                 expressionStack.pop_back();
             }

@@ -25,7 +25,6 @@ expression VariableExpression::integrate(const std::string& var) {
 
 bool VariableExpression::evaluable(){ return !gsl_isnan(num); }
 
-double VariableExpression::value() { return num; }
 
 double VariableExpression::value(const Variables& vars) {
     if (vars.count(name) > 0){
