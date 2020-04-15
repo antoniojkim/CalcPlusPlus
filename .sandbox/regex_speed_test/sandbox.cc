@@ -56,4 +56,3 @@ int main(){
     timeit(list_func, str);
     timeit(regex_func, str);
 }
-

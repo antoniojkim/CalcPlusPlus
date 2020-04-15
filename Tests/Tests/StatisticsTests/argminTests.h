@@ -4,7 +4,7 @@
 #include <Catch2>
 
 TEST_CASE("argmin Function Evaluation Tests", "[argmin]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("argmin()", "Insufficient Number of Arguments for Function: argmin");
     }
@@ -50,4 +50,3 @@ TEST_CASE("argmin Function Evaluation Tests", "[argmin]") {
     }
 
 }
-

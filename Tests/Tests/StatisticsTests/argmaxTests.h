@@ -4,7 +4,7 @@
 #include <Catch2>
 
 TEST_CASE("argmax Function Evaluation Tests", "[argmax]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("argmax()", "Insufficient Number of Arguments for Function: argmax");
     }
@@ -50,4 +50,3 @@ TEST_CASE("argmax Function Evaluation Tests", "[argmax]") {
     }
 
 }
-

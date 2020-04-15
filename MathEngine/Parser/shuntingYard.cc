@@ -46,7 +46,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             default:
                 break;
         }
-        
+
         if (token->type == FUNCTION){
             int functionIndex = getFunctionIndex(token->lexeme);
             if (functionIndex == -1){
@@ -159,7 +159,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
         return std::move(expr);
     }
 
-    cout << outputStack << endl;
+    // cout << outputStack << endl;
     return make_unique<InvalidExpression>(Exception("Expression Stack left with more than one expression"));
 }
 
@@ -228,7 +228,7 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             operatorStack.push_back(&token);
             continue;
         }
-        
+
         if (token.type == RPAREN){
             list<Scanner::Token*> commaList;
             while(true){

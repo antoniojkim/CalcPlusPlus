@@ -31,4 +31,3 @@ class MathEngine {
         std::list<Scanner::Token> tokens;
 #endif
 };
-

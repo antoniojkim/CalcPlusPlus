@@ -9,4 +9,3 @@ using namespace std;
 int main(){
     cout << std::setprecision(16) << sin(3) << endl;
 }
-

@@ -44,7 +44,7 @@ int main(int argc, char** argv){
     int code = gsl_integration_qags(&F, 2, 32, 0, 1e-9, 1000, w, &result, &abserr);
 
     printf ("result          = % .18f\n", result);
-    printf ("exact result    = % .18f\n", expected); 
+    printf ("exact result    = % .18f\n", expected);
     printf ("estimated error = % .18f\n", abserr);
     printf ("actual error    = % .18f\n", result - expected);
     printf ("intervals       = %zu\n", w->size);

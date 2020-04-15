@@ -74,4 +74,3 @@ expression operator^(expression&& expr1, expression&&expr2) {
     int operatorIndex = getOperatorIndex("^");
     return make_unique<BinaryOperatorExpression>(operatorIndex, std::move(expr1), std::move(expr2));
 }
-

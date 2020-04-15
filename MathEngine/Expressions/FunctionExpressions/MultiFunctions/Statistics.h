@@ -120,5 +120,3 @@ double f_median(list<expression>& args, const Variables& vars){
     auto data = to_array(args, size, vars);
     return gsl_stats_median(data.get(), 1, size);
 }
-
-

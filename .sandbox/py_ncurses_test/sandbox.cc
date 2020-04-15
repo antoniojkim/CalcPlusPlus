@@ -14,4 +14,3 @@ int main(){
     getch();
     endwin();
 }
-

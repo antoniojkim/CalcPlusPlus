@@ -6,7 +6,7 @@
 #include <gsl/gsl_math.h>
 
 TEST_CASE("Lag-1 Autocorrelate Function Evaluation Tests", "[lag1]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("lag1()", "Insufficient Number of Arguments for Function: lag1");
     }
@@ -52,4 +52,3 @@ TEST_CASE("Lag-1 Autocorrelate Function Evaluation Tests", "[lag1]") {
     }
 
 }
-

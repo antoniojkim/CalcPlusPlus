@@ -33,4 +33,3 @@ namespace Scanner {
 	std::string join(std::list<Token> tokens, const std::string& delimiter="", const bool& printType=false);
 
 }
-

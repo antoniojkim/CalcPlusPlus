@@ -72,5 +72,3 @@ std::ostream& UnaryFunctionExpression::print(std::ostream& out) {
 std::ostream& UnaryFunctionExpression::postfix(std::ostream& out) {
     return arg->postfix(out) << " " << functionNames[functionIndex];
 }
-
-

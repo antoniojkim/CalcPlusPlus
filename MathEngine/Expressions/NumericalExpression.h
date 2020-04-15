@@ -9,7 +9,7 @@
 class NumExpression: public Expression {
 
     double real, imag;
-  
+
   public:
     NumExpression(double real, double imag = 0);
     NumExpression(const gsl_complex& z);
@@ -25,7 +25,7 @@ class NumExpression: public Expression {
 class HexExpression: public Expression {
 
     unsigned long long num;
-  
+
   public:
     HexExpression(unsigned long long num);
     HexExpression(const std::string&);
@@ -37,7 +37,7 @@ class HexExpression: public Expression {
 class BinExpression: public Expression {
 
     unsigned long long num;
-  
+
   public:
     BinExpression(unsigned long long num);
     BinExpression(const std::string&);
@@ -45,4 +45,3 @@ class BinExpression: public Expression {
     EXPRESSION_OVERRIDES
 
 };
-

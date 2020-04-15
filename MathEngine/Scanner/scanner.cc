@@ -133,7 +133,7 @@ static bool startsWithNum(const char* str, size_t size, int& index){
                     default:
                         index = i;
                         return true;
-                }   
+                }
             }
         }
         index = size;

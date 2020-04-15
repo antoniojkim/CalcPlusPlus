@@ -6,7 +6,7 @@ class VariableExpression: public Expression {
 
     const std::string name;
     double num;
-  
+
   public:
     VariableExpression(const std::string& name);
     VariableExpression(const std::string& name, double num);

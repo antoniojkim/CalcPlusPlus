@@ -5,7 +5,7 @@
 #include <string>
 
 struct Exception: std::exception {
-    
+
     std::string msg;
 
     template <typename...Args>
@@ -25,4 +25,3 @@ struct Exception: std::exception {
     }
 
 };
-

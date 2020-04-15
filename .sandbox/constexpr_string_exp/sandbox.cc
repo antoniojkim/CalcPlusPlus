@@ -12,4 +12,3 @@ int main(){
     const int j = str_func("abcsdfg");
     assert( j == -1 );
 }
-

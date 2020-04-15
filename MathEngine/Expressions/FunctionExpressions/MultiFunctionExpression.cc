@@ -66,7 +66,7 @@ double MultiFunctionExpression::value(const Variables& vars) {
     return GSL_NAN;
 }
 
-bool MultiFunctionExpression::isComplex(){    
+bool MultiFunctionExpression::isComplex(){
     for(auto& arg: args){
         if (arg->isComplex()){
             return true;
@@ -103,5 +103,3 @@ std::ostream& MultiFunctionExpression::postfix(std::ostream& out) {
     }
     return out << functionNames[functionIndex];
 }
-
-

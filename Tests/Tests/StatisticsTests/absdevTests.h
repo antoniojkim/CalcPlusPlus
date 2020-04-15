@@ -5,7 +5,7 @@
 
 
 TEST_CASE("Absolute Deviation Function Evaluation Tests", "[absdev]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("absdev()", "Insufficient Number of Arguments for Function: absdev");
     }
@@ -51,4 +51,3 @@ TEST_CASE("Absolute Deviation Function Evaluation Tests", "[absdev]") {
     }
 
 }
-

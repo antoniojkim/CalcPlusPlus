@@ -5,4 +5,3 @@
 #include "../Scanner/scanner.h"
 
 void preprocess(std::list<Scanner::Token>&);
-

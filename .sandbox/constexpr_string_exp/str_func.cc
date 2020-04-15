@@ -12,4 +12,3 @@ constexpr int str_func(const char * str){
     }
     return -1;
 }
-

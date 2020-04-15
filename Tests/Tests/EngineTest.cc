@@ -145,7 +145,7 @@ bool printDifference(const std::string& input, expression& expr, expression& out
 void requireIsEqual(const string& input, const double& expected){
     auto expression = engine.parse(input);
     double output = expression->value();
-    REQUIRE( (compare(output, expected) != 0 ? printDifference(input, expression, output, expected) : true) ); 
+    REQUIRE( (compare(output, expected) != 0 ? printDifference(input, expression, output, expected) : true) );
 }
 
 void requireIsEqual(const string& input, const std::string& expected, bool evaluate){
@@ -153,7 +153,7 @@ void requireIsEqual(const string& input, const std::string& expected, bool evalu
     ostringstream out;
     out << expression;
     string output = out.str();
-    REQUIRE( ((output != expected) ? printDifference(input, expression, output, expected) : true) ); 
+    REQUIRE( ((output != expected) ? printDifference(input, expression, output, expected) : true) );
 }
 
 void requireIsEqual(const string& input, const std::vector<double>& expected){
@@ -161,7 +161,7 @@ void requireIsEqual(const string& input, const std::vector<double>& expected){
     auto output = expr->evaluate();
     auto tuple = dynamic_cast<TupleExpression*>(output.get());
     if (tuple){
-        REQUIRE( (!compare(tuple->data, expected) ? printDifference(input, expr, output, expected) : true) ); 
+        REQUIRE( (!compare(tuple->data, expected) ? printDifference(input, expr, output, expected) : true) );
     }
     else{
         printDifference(input, expr, output, expected);
@@ -174,7 +174,7 @@ void requireIsEqual(const string& input, const std::vector<gsl_complex>& expecte
     auto output = expr->evaluate();
     auto tuple = dynamic_cast<TupleExpression*>(output.get());
     if (tuple){
-        REQUIRE( (!compare(tuple->data, expected) ? printDifference(input, expr, output, expected) : true) ); 
+        REQUIRE( (!compare(tuple->data, expected) ? printDifference(input, expr, output, expected) : true) );
     }
     else{
         printDifference(input, expr, output, expected);

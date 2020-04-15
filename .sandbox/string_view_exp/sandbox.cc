@@ -6,7 +6,7 @@ using namespace std;
 
 int main(){
     char array[5] = {'a', 'b', 'c', 'd', 'e'};
-    
+
     string_view sv1 (array, 5);
 
     cout << sv1 << endl;
@@ -15,4 +15,3 @@ int main(){
 
     cout << sv1 << endl;
 }
-

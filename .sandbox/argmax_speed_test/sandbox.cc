@@ -46,4 +46,3 @@ int main(){
     timeit(argmax, a, 1, N);  // 4.86935 seconds
     timeit(gsl_stats_max_index, a, 1, N);  // 9.24717 seconds
 }
-

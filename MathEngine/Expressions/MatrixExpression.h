@@ -11,7 +11,7 @@
 class MatrixExpression: public Expression {
     std::list<expression> mat;
     size_t numRows, numCols;
-  
+
   public:
 
     MatrixExpression();

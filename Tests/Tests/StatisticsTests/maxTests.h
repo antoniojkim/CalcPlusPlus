@@ -4,7 +4,7 @@
 #include <Catch2>
 
 TEST_CASE("Max Function Evaluation Tests", "[max]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("max()", "Insufficient Number of Arguments for Function: max");
     }
@@ -34,4 +34,3 @@ TEST_CASE("Max Function Evaluation Tests", "[max]") {
     }
 
 }
-

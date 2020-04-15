@@ -26,7 +26,7 @@ class MultiFunctionExpression: public Expression {
 
     int functionIndex;
     std::list<expression> args;
-  
+
   public:
     MultiFunctionExpression(const std::string& name, std::list<expression>&& args);
     MultiFunctionExpression(int functionIndex, std::list<expression>&& args);
@@ -36,4 +36,3 @@ class MultiFunctionExpression: public Expression {
     EXPRESSION_OVERRIDES
 
 };
-

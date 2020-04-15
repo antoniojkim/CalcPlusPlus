@@ -5,7 +5,7 @@
 
 
 TEST_CASE("Total Sum of Squares Function Evaluation Tests", "[tss]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("tss()", "Insufficient Number of Arguments for Function: tss");
     }
@@ -51,4 +51,3 @@ TEST_CASE("Total Sum of Squares Function Evaluation Tests", "[tss]") {
     }
 
 }
-

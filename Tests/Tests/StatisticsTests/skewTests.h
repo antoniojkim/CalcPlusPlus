@@ -6,7 +6,7 @@
 #include <gsl/gsl_math.h>
 
 TEST_CASE("Skew Function Evaluation Tests", "[skew]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("skew()", "Insufficient Number of Arguments for Function: skew");
     }
@@ -52,4 +52,3 @@ TEST_CASE("Skew Function Evaluation Tests", "[skew]") {
     }
 
 }
-

@@ -4,7 +4,7 @@
 #include <Catch2>
 
 TEST_CASE("Min Function Evaluation Tests", "[min]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("min()", "Insufficient Number of Arguments for Function: min");
     }
@@ -34,4 +34,3 @@ TEST_CASE("Min Function Evaluation Tests", "[min]") {
     }
 
 }
-

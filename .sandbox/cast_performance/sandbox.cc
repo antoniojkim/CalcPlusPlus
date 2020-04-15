@@ -75,4 +75,3 @@ int main(){
         delete a[i];
     }
 }
-

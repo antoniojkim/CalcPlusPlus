@@ -49,5 +49,5 @@ TEST_CASE("Standard Deviation (ddof=1) Function Evaluation Tests", "[stdev]") {
     SECTION("`sd` Test 10"){
         requireIsEqual("sd(-8.89, 0.76, -5.74, -0.48, -4.62, 4.52, 6.05)", 5.4937085228);
     }
-    
+
 }

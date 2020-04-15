@@ -6,7 +6,7 @@
 #include <gsl/gsl_math.h>
 
 TEST_CASE("kurtosis Function Evaluation Tests", "[kurtosis]") {
-    
+
     SECTION("Empty Test"){
         requireIsEqual("kurtosis()", "Insufficient Number of Arguments for Function: kurtosis");
     }
@@ -52,4 +52,3 @@ TEST_CASE("kurtosis Function Evaluation Tests", "[kurtosis]") {
     }
 
 }
-

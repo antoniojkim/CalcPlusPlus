@@ -4,7 +4,7 @@
 
 class ShuntingYard: public Parser {
 
-    
+
 
     public:
         ShuntingYard();

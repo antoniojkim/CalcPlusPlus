@@ -12,7 +12,7 @@ class TupleExpression: public Expression {
 
   public:
     std::list<expression> data;
-  
+
     TupleExpression();
     TupleExpression(std::list<expression>&& tuple);
     TupleExpression(std::initializer_list<double> tuple);

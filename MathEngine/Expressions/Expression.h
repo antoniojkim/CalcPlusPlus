@@ -18,11 +18,11 @@ typedef std::unordered_map<std::string, expression> Variables;
 double gsl_expression_function(double x, void* params);
 
 struct Expression {
-    
+
     virtual expression simplify() = 0;
     virtual expression derivative(const std::string& var) = 0;
     virtual expression integrate(const std::string& var) = 0;
-    
+
     virtual bool evaluable() = 0;
     virtual expression evaluate();
     virtual expression evaluate(const Variables& vars);
@@ -64,4 +64,3 @@ std::ostream& operator<<(std::ostream&, expression&);
     expression copy() override;                                    \
     std::ostream& print(std::ostream&) override;                   \
     std::ostream& postfix(std::ostream&) override;
-
