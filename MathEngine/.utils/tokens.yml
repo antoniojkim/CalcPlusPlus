@@ -75,6 +75,7 @@ operators:
     STAR:
         lexeme: "*"
         precedence: 12
+        expression: True
     SLASH:
         lexeme: "/"
         precedence: 12

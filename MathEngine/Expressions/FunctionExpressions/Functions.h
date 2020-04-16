@@ -1,154 +1,96 @@
+#pragma once
+
+#ifndef __FUNCTION_DIRECTORY_H__
+#define __FUNCTION_DIRECTORY_H__
 
 /***************************************************
  *************** Auto-Generated File ***************
  ***************************************************/
 
-#include "../../Utils/exceptions.h"
-#include "FunctionDirectory.h"
-#include "Functions.h"
-#include "MultiFunctions/Calculus.h"
-#include "MultiFunctions/ExpLogFunctions.h"
-#include "MultiFunctions/Statistics.h"
-#include "MultiFunctionExprs/polynomial.h"
-#include "MultiFunctionExprs/tuple.h"
-#include "UnaryFunctions/BasicFunctions.h"
-#include "UnaryFunctions/ExpLogFunctions.h"
-#include "UnaryFunctions/TrigFunctions.h"
-#include "UnaryFunctionExprs/linalg.h"
+#include <cstring>
+#include <string>
 
-using namespace std;
-
-/***************************************************
- ***************** Unary Functions *****************
- ***************************************************/
-
-const UnaryFunction unaryFunctions[numFunctions] = {
-    nullptr, nullptr, nullptr, nullptr, nullptr, f_arctanh, f_arcsinh, f_arcsech, f_arccsch,
-	f_arccoth, f_arccosh, nullptr, nullptr, f_artanh, f_arsinh, f_arsech, nullptr, nullptr,
-	f_arctan, f_arcsin, f_arcsec, f_arcsch, f_arcoth, f_arcosh, f_arccsc, f_arccot,
-	f_arccos, nullptr, nullptr, nullptr, f_log_2, f_log1p, f_expm1, f_exp_2, nullptr,
-	nullptr, f_atanh, f_asinh, f_asech, f_acsch, f_acoth, f_acosh, f_tanh, f_sqrt, nullptr,
-	f_sinh, f_sech, nullptr, nullptr, nullptr, f_ln_2, f_ln1p, nullptr, nullptr, f_csch,
-	f_coth, f_cosh, f_atan, f_asin, f_asec, f_acsc, f_acot, f_acos, nullptr, nullptr, f_tan,
-	nullptr, f_sin, f_sec, f_neg, nullptr, nullptr, f_log, f_exp, nullptr, f_csc, f_cot,
-	f_cos, f_abs, nullptr, f_ln, nullptr
+constexpr const int numFunctions = 82;
+constexpr const char* functionNames[numFunctions] = {
+    "integrate", "variance", "kurtosis", "integral", "autocorr", "arctanh", "arcsinh",
+	"arcsech", "arccsch", "arccoth", "arccosh", "median", "cubicc", "artanh", "arsinh",
+	"arsech", "argmin", "argmax", "arctan", "arcsin", "arcsec", "arcsch", "arcoth",
+	"arcosh", "arccsc", "arccot", "arccos", "absdev", "stdev", "quadc", "log_2", "log1p",
+	"expm1", "exp_2", "deriv", "cubic", "atanh", "asinh", "asech", "acsch", "acoth",
+	"acosh", "tanh", "sqrt", "skew", "sinh", "sech", "quad", "mean", "logn", "ln_2", "ln1p",
+	"lag1", "kurt", "csch", "coth", "cosh", "atan", "asin", "asec", "acsc", "acot", "acos",
+	"var", "tss", "tan", "std", "sin", "sec", "neg", "min", "max", "log", "exp", "det",
+	"csc", "cot", "cos", "abs", "sd", "ln", "dx"
+};
+constexpr const size_t functionNameLengths[numFunctions] = {
+    9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5,
+	5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2
+};
+constexpr const int functionNumArgs[numFunctions] = {
+    0, -1, -1, 3, -1, 1, 1, 1, 1, 1, 1, -1, 4, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+	-1, -1, 3, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 3, -1, 2, 1, 1, -1, -1,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 0
 };
 
-UnaryFunction get_unary_function(const string& name){
-    int index = getFunctionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Unary Function: ", name);
+/*
+Returns index of the function in the functionNames array.
+
+Parameters
+----------
+name: The name of the function
+
+Returns
+-------
+The index or -1 if the provided name is not a function.
+*/
+constexpr int getFunctionIndex(const char* name){
+    for (int i = 0; i < numFunctions; ++i){
+        if (std::strcmp(name, functionNames[i]) == 0){
+            return i;
+        }
     }
-    return get_unary_function(index);
+    return -1;
 }
-UnaryFunction get_unary_function(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (functionNumArgs[functionIndex] != 1){
-        throw Exception("Function is not Unary: ", functionNames[functionIndex]);
-    }
-    return unaryFunctions[functionIndex];
-}
-
-
-/***************************************************
- ************** Unary Function Exprs ***************
- ***************************************************/
-
-const UnaryFunctionExpr unaryFunctionExprs[numFunctions] = {
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, fe_det, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
-};
-
-UnaryFunctionExpr get_unary_function_expr(const string& name){
-    int index = getFunctionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Unary Function: ", name);
-    }
-    return get_unary_function_expr(index);
-}
-UnaryFunctionExpr get_unary_function_expr(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (functionNumArgs[functionIndex] != 1){
-        throw Exception("Function is not Unary: ", functionNames[functionIndex]);
-    }
-    return unaryFunctionExprs[functionIndex];
+inline int getFunctionIndex(const std::string& name){
+    return getFunctionIndex(name.c_str());
 }
 
+/*
+Returns the number of arguments for the function at the provided index.
 
-/***************************************************
- ***************** Multi Functions *****************
- ***************************************************/
+Parameters
+----------
+index: the index of the function name
 
-const MultiFunction multiFunctions[numFunctions] = {
-    nullptr, f_variance, f_kurtosis, f_integral, f_autocorr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, f_median, nullptr, nullptr, nullptr, nullptr, f_argmin,
-	f_argmax, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, f_absdev, f_stdev, nullptr, nullptr, nullptr, nullptr, nullptr, f_deriv,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_skew,
-	nullptr, nullptr, nullptr, f_mean, f_logn, nullptr, nullptr, f_lag1, f_kurt, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_var, f_tss,
-	nullptr, f_std, nullptr, nullptr, nullptr, f_min, f_max, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, f_sd, nullptr, nullptr
-};
-
-MultiFunction get_multi_function(const string& name){
-    int index = getFunctionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Multi Function: ", name);
+Returns
+-------
+If the index is valid, it will return the number of arguments.
+If the index is not valid, the function will return 0.
+Note: a return value of -1 means that it accepts a variable number of parameters.
+*/
+constexpr int getFunctionNumArgs(int index){
+    if (index >= 0 && index < numFunctions){
+        return functionNumArgs[index];
     }
-    return get_multi_function(index);
-}
-MultiFunction get_multi_function(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (functionNumArgs[functionIndex] < 1 && functionNumArgs[functionIndex] != -1){
-        throw Exception("Function is not Multi Arg: ", functionNames[functionIndex]);
-    }
-    return multiFunctions[functionIndex];
+    return 0;
 }
 
+/*
+Returns the number of arguments that a function takes in.
 
-/***************************************************
- *************** Multi Expr Functions **************
- ***************************************************/
+Parameters
+----------
+name: The name of the function
 
-const MultiFunctionExpr multiFunctionExprs[numFunctions] = {
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, fe_cubicc, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, fe_quadc, nullptr, nullptr, nullptr, nullptr, nullptr, fe_cubic,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, fe_quad, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
-};
-
-MultiFunctionExpr get_multi_function_expr(const string& name){
-    int index = getFunctionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Multi Function: ", name);
-    }
-    return get_multi_function_expr(index);
+Returns
+-------
+If the name is a valid function it will return the number of arguments.
+If the name is not valid, the function will return 0.
+Note: a return value of -1 means that it accepts a variable number of parameters.
+*/
+inline int getFunctionNumArgs(const std::string& name){
+    return getFunctionNumArgs(getFunctionIndex(name));
 }
-MultiFunctionExpr get_multi_function_expr(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (functionNumArgs[functionIndex] < 1 && functionNumArgs[functionIndex] != -1){
-        throw Exception("Function is not Multi Arg: ", functionNames[functionIndex]);
-    }
-    return multiFunctionExprs[functionIndex];
-}
+
+#endif // __FUNCTION_DIRECTORY_H__

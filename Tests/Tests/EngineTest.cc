@@ -3,7 +3,9 @@
 
 #include <Catch2>
 #include <gsl/gsl_math.h>
+#include <gsl/gsl_matrix.h>
 #include <Expressions/TupleExpression.h>
+#include <Expressions/MatrixExpression.h>
 
 #include "EngineTest.h"
 
@@ -71,6 +73,42 @@ bool compare(const list<expression>& l, const vector<gsl_complex>& v) {
     return true;
 }
 
+bool compare(gsl_matrix* m, const vector<vector<double>>& v) {
+    if (m->size1 != v.size() || m->size2 != v.begin()->size()){
+        return false;
+    }
+    size_t i = 0, j = 0;
+    for (auto& iter : v){
+        j = 0;
+        for (auto& element : iter){
+            if (compare(gsl_matrix_get(m, i, j), element) != 0){
+                return false;
+            }
+            ++j;
+        }
+        ++i;
+    }
+    return true;
+}
+
+bool compare(gsl_matrix_complex* m, const vector<vector<gsl_complex>>& v) {
+    if (m->size1 != v.size() || m->size2 != v.begin()->size()){
+        return false;
+    }
+    size_t i = 0, j = 0;
+    for (auto& iter : v){
+        j = 0;
+        for (auto& element : iter){
+            if (compare(gsl_matrix_complex_get(m, i, j), element) != 0){
+                return false;
+            }
+            ++j;
+        }
+        ++i;
+    }
+    return true;
+}
+
 ostream& operator<<(ostream& out, const vector<double>& iterable){
     out << "(";
     for (auto& element : iterable){
@@ -78,7 +116,6 @@ ostream& operator<<(ostream& out, const vector<double>& iterable){
     }
     return out << ")";
 }
-
 ostream& operator<<(ostream& out, const vector<gsl_complex>& iterable){
     out << "(";
     for (auto& element : iterable){
@@ -91,6 +128,34 @@ ostream& operator<<(ostream& out, const vector<gsl_complex>& iterable){
         }
     }
     return out << ")";
+}
+ostream& operator<<(ostream& out, const vector<vector<double>>& iterable){
+    out << "{";
+    for(auto& iter : iterable){
+        out << "{";
+        for (auto& element : iter){
+            out << element << " ";
+        }
+        out << "}";
+    }
+    return out << "}";
+}
+ostream& operator<<(ostream& out, const vector<vector<gsl_complex>>& iterable){
+    out << "{";
+    for(auto& iter : iterable){
+        out << "{";
+        for (auto& element : iter){
+            out << GSL_REAL(element);
+            if (GSL_IMAG(element) < 0){
+                out << GSL_IMAG(element) << "i" << " ";
+            }
+            else{
+                out << "+" << GSL_IMAG(element) << "i" << " ";
+            }
+        }
+        out << "}";
+    }
+    return out << "}";
 }
 
 
@@ -141,6 +206,30 @@ bool printDifference(const std::string& input, expression& expr, expression& out
     return false;
 }
 
+bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<std::vector<double>>& expected){
+    cout << "Input:      " << input << endl;
+    cout << "Expression: " << expr << endl;
+    cout << "Postfix:    "; expr->postfix(cout) << endl;
+#ifdef DEBUG
+    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
+#endif
+    cout << "Output:     "; output->print(cout) << endl;
+    cout << "Expected:   " << expected << endl;
+    return false;
+}
+
+bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<std::vector<gsl_complex>>& expected){
+    cout << "Input:      " << input << endl;
+    cout << "Expression: " << expr << endl;
+    cout << "Postfix:    "; expr->postfix(cout) << endl;
+#ifdef DEBUG
+    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
+#endif
+    cout << "Output:     "; output->print(cout) << endl;
+    cout << "Expected:   " << expected << endl;
+    return false;
+}
+
 
 void requireIsEqual(const string& input, const double& expected){
     auto expression = engine.parse(input);
@@ -159,7 +248,7 @@ void requireIsEqual(const string& input, const std::string& expected, bool evalu
 void requireIsEqual(const string& input, const std::vector<double>& expected){
     auto expr = engine.parse(input);
     auto output = expr->evaluate();
-    auto tuple = dynamic_cast<TupleExpression*>(output.get());
+    auto tuple = output->tuple();
     if (tuple){
         REQUIRE( (!compare(tuple->data, expected) ? printDifference(input, expr, output, expected) : true) );
     }
@@ -172,9 +261,35 @@ void requireIsEqual(const string& input, const std::vector<double>& expected){
 void requireIsEqual(const string& input, const std::vector<gsl_complex>& expected){
     auto expr = engine.parse(input);
     auto output = expr->evaluate();
-    auto tuple = dynamic_cast<TupleExpression*>(output.get());
+    auto tuple = output->tuple();
     if (tuple){
         REQUIRE( (!compare(tuple->data, expected) ? printDifference(input, expr, output, expected) : true) );
+    }
+    else{
+        printDifference(input, expr, output, expected);
+        REQUIRE( false );
+    }
+}
+
+void requireIsEqual(const string& input, const std::vector<std::vector<double>>& expected){
+    auto expr = engine.parse(input);
+    auto output = expr->evaluate();
+    auto matrix = output->matrix();
+    if (matrix){
+        REQUIRE( (!compare(matrix->to_gsl_matrix().get(), expected) ? printDifference(input, expr, output, expected) : true) );
+    }
+    else{
+        printDifference(input, expr, output, expected);
+        REQUIRE( false );
+    }
+}
+
+void requireIsEqual(const string& input, const std::vector<std::vector<gsl_complex>>& expected){
+    auto expr = engine.parse(input);
+    auto output = expr->evaluate();
+    auto matrix = output->matrix();
+    if (matrix){
+        REQUIRE( (!compare(matrix->to_gsl_matrix_complex().get(), expected) ? printDifference(input, expr, output, expected) : true) );
     }
     else{
         printDifference(input, expr, output, expected);

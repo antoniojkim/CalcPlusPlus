@@ -31,16 +31,16 @@ with open(os.path.join(file_dir, "tokens.yml")) as file:
         tokens["tokens"].items()
     )
 
-    operators = [
-        (
-            key,
-            tokens["operators"].get(key, {}).get("lexeme", ""),
-            tokens["operators"].get(key, {}).get("precedence", 0),
-            "rightAssociative" in tokens["operators"].get(key, {}),
-            "singleOperator" in tokens["operators"].get(key, {}),
-        )
+    operatorLexemes = [tokens["operators"].get(key, {}).get("lexeme", "") for key in keys]
+    operatorPrecedences = [
+        (tokens["operators"].get(key, {}).get("precedence", 0), "rightAssociative" in tokens["operators"].get(key, {}))
         for key in keys
     ]
+    singleOperators = ["singleOperator" in tokens["operators"].get(key, {}) for key in keys]
+    operatorExprs = ["expression" in tokens["operators"].get(key, {}) for key in keys]
+    operatorDerivatives = ["derivative" in tokens["operators"].get(key, {}) for key in keys]
+    operatorIntegrals = ["integral" in tokens["operators"].get(key, {}) for key in keys]
+    operatorSimplifys = ["simplify" in tokens["operators"].get(key, {}) for key in keys]
 
     functions = [(name, 1 if nargs is None else nargs) for name, nargs in tokens["functions"].items()]
     functions.sort(key=lambda f: (len(f[0]), f[0]), reverse=True)
@@ -92,18 +92,13 @@ with Template(
     os.path.join(file_dir, "..", "Expressions", "OperatorExpressions", "Operators.h"),
 ) as template:
     template.replace(
-        operators=wrap((f'"{lexeme}"' for _0, lexeme, _2, _3, _4 in operators)),
+        operators=wrap(map('"{}"'.format, operatorLexemes)),
         precedences=wrap(
-            (
-                str(precedence * (1 if rightAssociative else -1))
-                for _0, _1, precedence, rightAssociative, _4 in operators
-            )
+            (str(precedence * (1 if rightAssociative else -1)) for precedence, rightAssociative in operatorPrecedences)
         ),
-        singleOperators=wrap(
-            (str(int(singleOperator)) for name, lexeme, precedence, rightAssociative, singleOperator in operators)
-        ),
-        operatorStart=next((i for i, operator in enumerate(operators) if len(operator[1]) > 0)),
-        operatorEnd=next((i for i, operator in reversed(list(enumerate(operators))) if len(operator[1]) > 0)),
+        singleOperators=wrap((str(int(singleOperator)) for singleOperator in singleOperators)),
+        operatorStart=next((i for i, lexeme in enumerate(operatorLexemes) if len(lexeme) > 0)),
+        operatorEnd=next((i for i, lexeme in reversed(list(enumerate(operatorLexemes))) if len(lexeme) > 0)),
     )
 
 
@@ -115,9 +110,39 @@ with Template(
         binaryOperators=wrap(
             (
                 f"f_{name}" if lexeme != "" and not singleOperator else "nullptr"
-                for name, lexeme, precedence, rightAssociative, singleOperator in operators
+                for name, lexeme, singleOperator in zip(keys, operatorLexemes, singleOperators)
             )
-        )
+        ),
+        binaryOperatorExprs=wrap(
+            (
+                f"fe_{name}" if expr and lexeme != "" and not singleOperator else "nullptr"
+                for name, lexeme, singleOperator, expr in zip(keys, operatorLexemes, singleOperators, operatorExprs)
+            )
+        ),
+        binaryOperatorDerivatives=wrap(
+            (
+                f"fd_{name}" if derivative and lexeme != "" and not singleOperator else "nullptr"
+                for name, lexeme, singleOperator, derivative in zip(
+                    keys, operatorLexemes, singleOperators, operatorDerivatives
+                )
+            )
+        ),
+        binaryOperatorIntegrals=wrap(
+            (
+                f"fi_{name}" if integral and lexeme != "" and not singleOperator else "nullptr"
+                for name, lexeme, singleOperator, integral in zip(
+                    keys, operatorLexemes, singleOperators, operatorIntegrals
+                )
+            )
+        ),
+        binaryOperatorSimplifys=wrap(
+            (
+                f"fs_{name}" if simplify and lexeme != "" and not singleOperator else "nullptr"
+                for name, lexeme, singleOperator, simplify in zip(
+                    keys, operatorLexemes, singleOperators, operatorSimplifys
+                )
+            )
+        ),
     )
 
 
@@ -135,7 +160,7 @@ with Template(
 
 with Template(
     os.path.join(template_dir, "FunctionDirectory.cc"),
-    os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "Functions.h"),
+    os.path.join(file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.cc"),
 ) as template:
     template.replace(
         unaryFunctions=wrap(
