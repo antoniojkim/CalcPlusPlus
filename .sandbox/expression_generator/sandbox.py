@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 rules = """
 statement expr
 expr lvalue EQUALS expr1
@@ -57,8 +58,16 @@ rules = [r.split() for r in rules.strip().split("\n")]
 #     "_".join(rule) if not (len(rule) == 2 and any("expr" in r for r in rule)) else "first"
 # ) for rule in rules)))
 
-print("\n\n".join("""
+print(
+    "\n\n".join(
+        """
 expression generate_{0}_expression(NonTerminal* nonterminal){{
     throw Exception("{0} not implemented");
 }}
-""".strip().format("_".join(rule)) for rule in rules if not (len(rule) == 2 and any("expr" in r for r in rule))))
+""".strip().format(
+            "_".join(rule)
+        )
+        for rule in rules
+        if not (len(rule) == 2 and any("expr" in r for r in rule))
+    )
+)

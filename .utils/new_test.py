@@ -1,11 +1,13 @@
+# -*- coding: utf-8 -*-
 
 import argparse
 import os
 
+
 def main(args):
     name = args.name
     if not os.path.isdir(f"Tests/Tests/{name}"):
-        os.mkdir(f"Tests/Tests/{name}", )
+        os.mkdir(f"Tests/Tests/{name}")
 
     with open(".utils/.templates/new_test.cc") as file:
         template = "".join(file)
@@ -14,7 +16,6 @@ def main(args):
 
     with open(f"Tests/Tests/{name}/{name}.cc", "w") as file:
         file.write(template)
-
 
 
 if __name__ == "__main__":

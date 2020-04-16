@@ -16,17 +16,16 @@ using namespace Scanner;
 
 constexpr int numLexemes = 47;
 static const std::string lexemes[numLexemes] = {
-	":=", "<-", "||", "&&", "^|", "==", "!=", "<=", ">=", "<<", ">>", "//", "**",
-	"->", "\"", "\'", "\\", ",", "=", "|", "&", "<", ">", "~", "+", "-", "*", "/",
-	"%", "!", "^", ":", "(", ")", "[", "]", "{", "}", ".", ";", "?", "#", "$", "`",
-	"_", "C", "P"
+	":=", "<-", "||", "&&", "^|", "==", "!=", "<=", ">=", "<<", ">>", "//", "**", "->",
+	"\"", "\'", "\\", ",", "=", "|", "&", "<", ">", "~", "+", "-", "*", "/", "%", "!", "^",
+	":", "(", ")", "[", "]", "{", "}", ".", ";", "?", "#", "$", "`", "_", "C", "P"
 };
 static const Type lexemeTypes[numLexemes] = {
-	COLON_EQUALS, L_ARROW, PIPE_PIPE, AMP_AMP, CARET_PIPE, EQUALS_EQUALS,
-	NOT_EQUALS, LT_EQ, GT_EQ, LT_LT, GT_GT, SLASH_SLASH, STAR_STAR, R_ARROW, QUOTE,
-	APOSTROPHE, BACKSLASH, COMMA, EQUALS, PIPE, AMP, LT, GT, TILDE, PLUS, MINUS,
-	STAR, SLASH, PCT, EXCL, CARET, COLON, LPAREN, RPAREN, LSQUARE, RSQUARE, LBRACE,
-	RBRACE, DOT, SEMICOLON, QUESTION, POUND, DOLLAR, BACKTICK, UNDERSCORE, C, P
+	COLON_EQUALS, L_ARROW, PIPE_PIPE, AMP_AMP, CARET_PIPE, EQUALS_EQUALS, NOT_EQUALS, LT_EQ,
+	GT_EQ, LT_LT, GT_GT, SLASH_SLASH, STAR_STAR, R_ARROW, QUOTE, APOSTROPHE, BACKSLASH,
+	COMMA, EQUALS, PIPE, AMP, LT, GT, TILDE, PLUS, MINUS, STAR, SLASH, PCT, EXCL, CARET,
+	COLON, LPAREN, RPAREN, LSQUARE, RSQUARE, LBRACE, RBRACE, DOT, SEMICOLON, QUESTION,
+	POUND, DOLLAR, BACKTICK, UNDERSCORE, C, P
 };
 
 bool Scanner::isPreImplicit(Type type){

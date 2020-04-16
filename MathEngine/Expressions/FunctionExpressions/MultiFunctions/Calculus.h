@@ -14,6 +14,9 @@ using namespace std;
 double f_deriv(list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
+        if (!(*arg)->evaluable()){
+
+        }
         gsl_function F = (*(arg++))->function();
         double x = (*arg)->value();
 
