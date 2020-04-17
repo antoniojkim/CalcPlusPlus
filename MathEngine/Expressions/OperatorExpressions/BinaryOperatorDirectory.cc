@@ -7,7 +7,10 @@
 #include "Operators.h"
 #include "BinaryOperatorDirectory.h"
 #include "OperatorDirectory/BinaryOperators.h"
-#include "OperatorExpressions/BinaryOperatorExprs.h"
+#include "OperatorExpressions/Addition.h"
+#include "OperatorExpressions/Division.h"
+#include "OperatorExpressions/Multiplication.h"
+#include "OperatorExpressions/Subtraction.h"
 
 using namespace std;
 using namespace Scanner;
@@ -43,8 +46,8 @@ BinaryOperator getBinaryOperator(int operatorIndex) {
 const BinaryOperatorExpr binaryOperatorExprs[numTokens] = {
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, fe_STAR, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_PLUS,
+	fe_MINUS, fe_STAR, fe_SLASH, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 };

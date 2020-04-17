@@ -36,7 +36,7 @@ expression HexExpression::copy() {
 }
 
 std::ostream& HexExpression::print(std::ostream& out) {
-    out << std::hex << num;
+    out << "0x" << std::hex << num;
     return out;
 }
 std::ostream& HexExpression::postfix(std::ostream& out) {

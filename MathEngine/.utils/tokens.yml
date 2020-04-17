@@ -69,16 +69,19 @@ operators:
     PLUS:
         lexeme: "+"
         precedence: 11
+        expression:
     MINUS:
         lexeme: "-"
         precedence: 11
+        expression:
     STAR:
         lexeme: "*"
         precedence: 12
-        expression: True
+        expression:
     SLASH:
         lexeme: "/"
         precedence: 12
+        expression:
     PCT:
         lexeme: "%"
         precedence: 12

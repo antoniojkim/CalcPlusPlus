@@ -37,11 +37,18 @@ TEST_CASE("Basic Postfix Tests", "[postfix]" ) {
 
 }
 
-TEST_CASE("Multi Arg Function Postfix Tests", "[postfix]") {
+TEST_CASE("Basic Operator Tests", "[postfixOperator]" ) {
+
+    postfixTest("3 + 4", "3 4 +");
+    postfixTest("3 * 4", "3 4 *");
+
+}
+
+TEST_CASE("Multi Arg Function Postfix Tests", "[postfixMultiArg]") {
 
     postfixTest("logn(10, 4)", "10 4 , logn");
     postfixTest("deriv(sinx, 3)", "x sin 3 , deriv");
-    postfixTest("mean(1, -1, 7, -4, 5)", "1 -1 7 -4 5 , , , , mean");
+    postfixTest("mean(1, -1, 7, -4, 5)", "1 1 neg 7 4 neg 5 , , , , mean");
 
 }
 
@@ -59,12 +66,14 @@ TEST_CASE("Matrix Postfix Tests", "[postfix]") {
     postfixTest("{{1, 2, 3, 4}}", "1 2 3 4 matrix_1x4");
     postfixTest("det({{1, 2, 3, 4}})", "1 2 3 4 matrix_1x4 det");
     postfixTest("det{{1, 2, 3, 4}}", "1 2 3 4 matrix_1x4 det");
+    postfixTest("{{0.11, 0.12, 0.13}, {0.21, 0.22, 0.23}} * {{1011, 1012}, {1021, 1022}, {1031, 1032}}",
+                "0.11 0.12 0.13 0.21 0.22 0.23 matrix_2x3 1011 1012 1021 1022 1031 1032 matrix_3x2 *");
 
 }
 
 TEST_CASE("Complex Postfix Tests", "[postfix]" ) {
 
-    // postfixTest("cossinh3+5i-arcsin(x, 4)+6integral(sinx, 4, 5)^|4+0x3aF",
-    //             "3 sinh cos 5i + arcsin ( x , 4 ) - 6 integral ( sin x , 4 , 5 )  4 ^| 0x3aF + +");
+    postfixTest("cossinh3+5i-arcsin(x)+6integral(sinx, 4, 5)^|4+0x3aF",
+                "3 sinh cos 5i + x arcsin - 6 x sin 4 5 , , integral * + 4 0x3af + ^|");
 
 }

@@ -63,12 +63,13 @@ bool BinaryOperatorExpression::evaluable(){ return lhs->evaluable() && rhs->eval
 bool BinaryOperatorExpression::isComplex(){ return lhs->isComplex() || rhs->isComplex(); }
 
 std::ostream& BinaryOperatorExpression::print(std::ostream& out) {
-    lhs->print(out) << operators[operatorIndex];
-    return rhs->print(out);
+    out << "(";
+    lhs->print(out) << ") " << operators[operatorIndex] << " (";
+    return rhs->print(out) << ")";
 }
 std::ostream& BinaryOperatorExpression::postfix(std::ostream& out) {
-    rhs->postfix(out) << ' ';
-    return  lhs->postfix(out) << ' ' << operators[operatorIndex];
+    lhs->postfix(out) << ' ';
+    return  rhs->postfix(out) << ' ' << operators[operatorIndex];
 }
 
 

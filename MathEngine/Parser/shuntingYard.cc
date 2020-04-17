@@ -63,9 +63,9 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 ));
             }
             if (numArgs == 1){
-                auto expr = make_unique<UnaryFunctionExpression>(functionIndex, std::move(expressionStack.back()));
+                auto expr = std::move(expressionStack.back());
                 expressionStack.pop_back();
-                expressionStack.push_back(std::move(expr));
+                expressionStack.push_back(make_unique<UnaryFunctionExpression>(functionIndex, std::move(expr)));
             }
             else {
                 argumentQueue.emplace_front(std::move(expressionStack.back()));

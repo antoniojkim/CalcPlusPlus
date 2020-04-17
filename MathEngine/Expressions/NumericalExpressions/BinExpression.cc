@@ -36,7 +36,7 @@ expression BinExpression::copy() {
 }
 
 std::ostream& BinExpression::print(std::ostream& out) {
-    out << std::bitset<sizeof(unsigned long long)>(num);
+    out << "0b" << std::bitset<sizeof(unsigned long long)>(num);
     return out;
 }
 std::ostream& BinExpression::postfix(std::ostream& out) {

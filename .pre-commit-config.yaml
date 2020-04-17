@@ -24,7 +24,7 @@ repos:
         language_version: python3.8
         args: [--line-length=120]
 -   repo: https://github.com/antoniojkim/Sandboxer
-    rev: 2bedd3c1e3ad1938d91bfc18501d117cd2c1f923
+    rev: e8389a2
     hooks:
     -   id: clean-sandboxer
         name: remove-empty-templates

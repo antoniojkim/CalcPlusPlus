@@ -30,6 +30,9 @@ experiment:
 install:
 	.utils/install
 
+requirements:
+	pip install -r requirements.txt
+
 generate:
 	python3 -u MathEngine/.utils/auto_generate.py
 

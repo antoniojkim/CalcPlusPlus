@@ -45,23 +45,34 @@ expression NumExpression::copy() {
 }
 
 std::ostream& NumExpression::print(std::ostream& out) {
-    out << std::setprecision(16) << real;
-    if (imag > 0){
-        out << '+' << std::setprecision(16) << imag << "i";
+    if (real != 0){
+        out << std::setprecision(16) << real;
+        if (imag > 0){ out << "+"; }
     }
-    else if (imag < 0){
+    if (imag != 0){
         out << std::setprecision(16) << imag << "i";
     }
     return out;
 }
 
 std::ostream& NumExpression::postfix(std::ostream& out) {
-    out << std::setprecision(16) << real;
-    if (imag > 0){
-        out << std::setprecision(16) << imag << "i" << " +";
+    if (real != 0){
+        out << std::setprecision(16) << real;
+        if (imag > 0){
+            out << " " << std::setprecision(16) << imag << "i" << " +";
+        }
+        else if (imag < 0){
+            out << " " << std::setprecision(16) << -imag << "i" << " -";
+        }
+    }
+    else if (imag > 0){
+        out << std::setprecision(16) << imag << "i";
     }
     else if (imag < 0){
-        out << std::setprecision(16) << -imag << "i" << " -";
+        out << std::setprecision(16) << imag << "i";
+    }
+    else{
+        out << 0;
     }
     return out;
 }

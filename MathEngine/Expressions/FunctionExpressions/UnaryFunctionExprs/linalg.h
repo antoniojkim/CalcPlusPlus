@@ -17,11 +17,12 @@
 using namespace std;
 
 expression fe_det(expression& arg, const Variables& vars){
-    if (arg->matrix()){
-        auto matrix = arg->evaluate(vars);
+    auto evaluated = arg->evaluate(vars);
+    auto matrix = evaluated->matrix();
+    if (matrix){
         if (matrix->isComplex()){
-            auto gsl_mat = matrix->matrix()->to_gsl_matrix_complex();
-            auto gsl_perm = matrix->matrix()->to_gsl_permutation();
+            auto gsl_mat = matrix->to_gsl_matrix_complex();
+            auto gsl_perm = matrix->to_gsl_permutation();
             int signum;
             gsl_linalg_complex_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
             return make_unique<NumExpression>(
@@ -29,8 +30,8 @@ expression fe_det(expression& arg, const Variables& vars){
             );
         }
         else{
-            auto gsl_mat = matrix->matrix()->to_gsl_matrix();
-            auto gsl_perm = matrix->matrix()->to_gsl_permutation();
+            auto gsl_mat = matrix->to_gsl_matrix();
+            auto gsl_perm = matrix->to_gsl_permutation();
             int signum;
             gsl_linalg_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
             return make_unique<NumExpression>(

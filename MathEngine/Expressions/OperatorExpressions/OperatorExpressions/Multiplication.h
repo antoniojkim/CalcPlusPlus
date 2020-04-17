@@ -1,12 +1,15 @@
 #pragma once
 
 #include <memory>
-#include <gsl/gsl_math.h>
+
 #include <gsl/gsl_blas.h>
+#include <gsl/gsl_complex_math.h>
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_matrix.h>
 
 #include "../../InvalidExpression.h"
-#include "../../NumericalExpression.h"
 #include "../../MatrixExpression.h"
+#include "../../NumericalExpression.h"
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
@@ -53,8 +56,13 @@ expression matrix_multiplication(MatrixExpression* lhs, MatrixExpression* rhs){
 }
 
 expression fe_STAR(expression& lhs, expression& rhs, const Variables& vars){
-    if (lhs->matrix() && rhs->matrix()){
-        return matrix_multiplication(lhs->matrix(), rhs->matrix());
+    auto lexpr = lhs->evaluate(vars);
+    auto rexpr = rhs->evaluate(vars);
+    if (lexpr->matrix() && rexpr->matrix()){
+        return matrix_multiplication(lexpr->matrix(), rexpr->matrix());
     }
-    return std::make_unique<NumExpression>(f_STAR(lhs->value(vars), rhs->value(vars)));
+    if (lexpr->isComplex() || rexpr->isComplex()){
+        return std::make_unique<NumExpression>(gsl_complex_mul(lexpr->complex(), rexpr->complex()));
+    }
+    return std::make_unique<NumExpression>(f_STAR(lexpr->value(vars), rexpr->value(vars)));
 }

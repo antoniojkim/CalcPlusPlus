@@ -7,7 +7,10 @@
 #include "Operators.h"
 #include "BinaryOperatorDirectory.h"
 #include "OperatorDirectory/BinaryOperators.h"
-#include "OperatorExpressions/BinaryOperatorExprs.h"
+#include "OperatorExpressions/Addition.h"
+#include "OperatorExpressions/Division.h"
+#include "OperatorExpressions/Multiplication.h"
+#include "OperatorExpressions/Subtraction.h"
 
 using namespace std;
 using namespace Scanner;
