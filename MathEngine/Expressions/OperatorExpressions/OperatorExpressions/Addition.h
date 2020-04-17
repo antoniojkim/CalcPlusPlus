@@ -35,11 +35,30 @@ expression matrix_addition(MatrixExpression* lhs, MatrixExpression* rhs){
     ));
 }
 
+expression matrix_scalar_addition(expression& scalar, MatrixExpression* mat, const Variables& vars){
+    if (scalar->isComplex() || mat->isComplex()){
+        auto gsl_mat = mat->to_gsl_matrix_complex();
+        gsl_matrix_complex_add_constant(gsl_mat.get(), scalar->complex(vars));
+        return std::make_unique<MatrixExpression>(gsl_mat.get());
+    }
+    else{
+        auto gsl_mat = mat->to_gsl_matrix();
+        gsl_matrix_add_constant(gsl_mat.get(), scalar->value(vars));
+        return std::make_unique<MatrixExpression>(gsl_mat.get());
+    }
+}
+
 expression fe_PLUS(expression& lhs, expression& rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
     if (lexpr->matrix() && rexpr->matrix()){
         return matrix_addition(lexpr->matrix(), rexpr->matrix());
+    }
+    if (lexpr->matrix()){
+        return matrix_scalar_addition(rexpr, lexpr->matrix(), vars);
+    }
+    if (rexpr->matrix()){
+        return matrix_scalar_addition(lexpr, rexpr->matrix(), vars);
     }
     if (lexpr->isComplex() || rexpr->isComplex()){
         return std::make_unique<NumExpression>(gsl_complex_add(lexpr->complex(), rexpr->complex()));

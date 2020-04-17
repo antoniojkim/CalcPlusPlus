@@ -29,3 +29,24 @@ TEST_CASE("Matrix Multiplication Tests", "[matmul]" ) {
                    vector<vector<double>>{{111.21, 121.44, 132.73}, {214.62, 226.82, 237.36}});
 
 }
+
+TEST_CASE("Matrix Scalar Operation Tests", "[matscalar]"){
+
+    SECTION("Matrix Scalar Addition"){
+        requireIsEqual("{{1, 2}, {3, 4}} + 2", vector<vector<double>>{{3, 4}, {5, 6}});
+        requireIsEqual("2 + {{1, 2}, {3, 4}}", vector<vector<double>>{{3, 4}, {5, 6}});
+    }
+    SECTION("Matrix Scalar Subtraction"){
+        requireIsEqual("{{1, 2}, {3, 4}} - 2", vector<vector<double>>{{-1, 0}, {1, 2}});
+        requireIsEqual("2 - {{1, 2}, {3, 4}}", vector<vector<double>>{{1, 0}, {-1, -2}});
+    }
+    SECTION("Matrix Scalar Multiplication"){
+        requireIsEqual("{{1, 2}, {3, 4}} * 2", vector<vector<double>>{{2, 4}, {6, 8}});
+        requireIsEqual("2 * {{1, 2}, {3, 4}}", vector<vector<double>>{{2, 4}, {6, 8}});
+    }
+    SECTION("Matrix Scalar Division"){
+        requireIsEqual("{{1, 2}, {3, 4}} / 2", vector<vector<double>>{{0.5, 1}, {1.5, 2}});
+        requireIsEqual("2 / {{1, 2}, {3, 4}}", vector<vector<double>>{{2, 1}, {2.0/3.0, 0.5}});
+    }
+
+}
