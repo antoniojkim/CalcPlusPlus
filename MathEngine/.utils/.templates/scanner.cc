@@ -108,25 +108,33 @@ static bool startsWithBin(const char* str, size_t size, int& index){
 
 static bool startsWithNum(const char* str, size_t size, int& index){
     if (size > 0){
-        bool isDecimal = false;
+        int decimalIndex = -1;
         for (unsigned int i = 0; i < size; ++i){
             if (!isdigit(str[i])){
-                if (i == 0) return false;
                 switch(str[i]){
                     case '.':
-                        if (!isDecimal){
-                            isDecimal = true;
+                        if (decimalIndex == -1){
+                            decimalIndex = i;
                             break;
                         }
                         return false;
                     case 'i':
-                        index = (i+1 < size && !isalpha(str[i+1])) ? i+1 : i;
-                        return true;
+                    case 'j':
+                        if (i+1 >= size || !isalpha(str[i+1])){
+                            index = i+1;
+                            return true;
+                        }
                     default:
-                        index = i;
-                        return true;
+                        if (i > 0){
+                            index = i;
+                            return true;
+                        }
+                        return false;
                 }
             }
+        }
+        if (decimalIndex != -1 && !(decimalIndex > 0 || decimalIndex+1 < size)){
+            return false;
         }
         index = size;
         return true;

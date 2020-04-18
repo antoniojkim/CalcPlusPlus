@@ -19,10 +19,10 @@ const BinaryOperator binaryOperators[numTokens] = {
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_COMMA,
 	f_EQUALS, f_COLON_EQUALS, f_L_ARROW, f_PIPE_PIPE, f_AMP_AMP, f_PIPE, f_CARET_PIPE,
 	f_AMP, f_EQUALS_EQUALS, f_NOT_EQUALS, f_LT, f_GT, f_LT_EQ, f_GT_EQ, nullptr, f_LT_LT,
-	f_GT_GT, f_PLUS, f_MINUS, f_STAR, f_SLASH, f_PCT, f_SLASH_SLASH, nullptr, f_CARET,
-	f_STAR_STAR, f_R_ARROW, f_COLON, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	f_GT_GT, f_PLUS, f_MINUS, f_STAR, f_SLASH, f_PCT, f_SLASH_SLASH, nullptr, nullptr,
+	f_CHOOSE, f_PERMUTE, f_CARET, f_STAR_STAR, f_R_ARROW, f_COLON, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 };
 
 BinaryOperator getBinaryOperator(const std::string& name) {
@@ -49,7 +49,8 @@ const BinaryOperatorExpr binaryOperatorExprs[numTokens] = {
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_PLUS,
 	fe_MINUS, fe_STAR, fe_SLASH, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr
 };
 
 BinaryOperatorExpr getBinaryOperatorExpr(const std::string& name) {
@@ -73,7 +74,8 @@ const BinaryOperatorDerivative binaryOperatorDerivatives[numTokens] = {
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr
 };
 
 BinaryOperatorDerivative getBinaryOperatorDerivative(const std::string& name) {
@@ -97,7 +99,8 @@ const BinaryOperatorIntegral binaryOperatorIntegrals[numTokens] = {
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr
 };
 
 BinaryOperatorIntegral getBinaryOperatorIntegral(const std::string& name) {
@@ -121,7 +124,8 @@ const BinaryOperatorSimplify binaryOperatorSimplifys[numTokens] = {
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr
 };
 
 BinaryOperatorSimplify getBinaryOperatorSimplify(const std::string& name) {

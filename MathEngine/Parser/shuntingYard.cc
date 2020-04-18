@@ -213,6 +213,16 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                 operatorStack.push_back(&newTokens.back());
                 continue;
             }
+            if (token.type == EXCL){
+                newTokens.emplace_back(Token{"fact", FUNCTION});
+                operatorStack.push_back(&newTokens.back());
+                continue;
+            }
+            if (token.type == EXCL_EXCL){
+                newTokens.emplace_back(Token{"dfact", FUNCTION});
+                operatorStack.push_back(&newTokens.back());
+                continue;
+            }
             if (!operatorStack.empty()){
                 auto type = operatorStack.back()->type;
                 while((type == FUNCTION

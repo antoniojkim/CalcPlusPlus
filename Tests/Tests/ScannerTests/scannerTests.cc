@@ -3,15 +3,36 @@
 #include <list>
 #include <sstream>
 
-using namespace std;
-
 #include <Catch2>
+#include "Scanner/scanner.h"
+
 #include "../EngineTest.h"
+
+using namespace std;
+using namespace Scanner;
 
 void scannerTest(const string& input, const string& expected){
     auto tokens = engine.scan(input);
-    REQUIRE( join(tokens, " ") == expected );
+    auto joined = join(tokens, " ");
+    if (joined != expected){
+        cout << "Tokens: ";
+        for (auto& token : tokens){
+            cout << typeStrings[token.type] << " ";
+        }
+        cout << endl;
+    }
+    REQUIRE( joined == expected );
 }
+
+TEST_CASE("Basic Number Scanner Tests", "[scanner]" ) {
+
+    scannerTest("123", "123");
+    scannerTest("0.5", "0.5");
+    scannerTest("5i", "5i");
+    scannerTest("5j", "5j");
+
+}
+
 
 TEST_CASE("Basic Scanner Tests", "[scanner]" ) {
 

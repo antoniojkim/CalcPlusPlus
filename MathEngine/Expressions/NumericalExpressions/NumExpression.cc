@@ -10,6 +10,14 @@ using namespace std;
 NumExpression::NumExpression(double real, double imag): real{real}, imag{imag} {}
 NumExpression::NumExpression(const gsl_complex& z): real{GSL_REAL(z)}, imag{GSL_IMAG(z)} {}
 NumExpression::NumExpression(const std::string& num): real{0}, imag{0} {
+    switch(num.at(0)){
+        case 'i':
+        case 'j':
+            imag = 1;
+            return;
+        default:
+            break;
+    }
     istringstream iss{num};
     if (!(iss >> real)){
         throw Exception("Number Error: Invalid Number ", num);

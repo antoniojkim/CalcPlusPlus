@@ -8,11 +8,13 @@
 #include "Functions.h"
 #include "MultiFunctions/Calculus.h"
 #include "MultiFunctions/ExpLogFunctions.h"
+#include "MultiFunctions/SpecialFunctions.h"
 #include "MultiFunctions/Statistics.h"
 #include "MultiFunctionExprs/polynomial.h"
 #include "MultiFunctionExprs/tuple.h"
 #include "UnaryFunctions/BasicFunctions.h"
 #include "UnaryFunctions/ExpLogFunctions.h"
+#include "UnaryFunctions/SpecialFunctions.h"
 #include "UnaryFunctions/TrigFunctions.h"
 #include "UnaryFunctionExprs/linalg.h"
 

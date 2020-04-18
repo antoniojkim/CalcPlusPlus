@@ -92,6 +92,16 @@ operators:
         lexeme: "!"
         precedence: 12
         singleOperator:
+    EXCL_EXCL:
+        lexeme: "!!"
+        precedence: 12
+        singleOperator:
+    CHOOSE:
+        lexeme: "C"
+        precedence: 12
+    PERMUTE:
+        lexeme: "P"
+        precedence: 12
     CARET:
         lexeme: "^"
         precedence: 13
@@ -217,6 +227,29 @@ functions:
     cubicc: 4
     # Linear Algebra
     det: 1
+    # Special Functions
+    gamma:
+    lngamma:
+    gammastar:
+    gammainv:
+    fact:
+    dfact:
+    lnfact:
+    lndfact:
+    choose: 2
+    lnchoose: 2
+    permute: 2
+    lnpermute: 2
+    taylorcoeff: 2
+    poch: 2
+    lnpoch: 2
+    pochrel: 2
+    gammainc: 2
+    gammaincq: 2
+    gammaincp: 2
+    beta: 2
+    lnbeta: 2
+    betainc: 3
 functionExprs:
     - tuple
     - quad

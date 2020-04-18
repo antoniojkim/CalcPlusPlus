@@ -14,18 +14,19 @@
 using namespace std;
 using namespace Scanner;
 
-constexpr int numLexemes = 47;
+constexpr int numLexemes = 50;
 static const std::string lexemes[numLexemes] = {
-	":=", "<-", "||", "&&", "^|", "==", "!=", "<=", ">=", "<<", ">>", "//", "**", "->",
-	"\"", "\'", "\\", ",", "=", "|", "&", "<", ">", "~", "+", "-", "*", "/", "%", "!", "^",
-	":", "(", ")", "[", "]", "{", "}", ".", ";", "?", "#", "$", "`", "_", "C", "P"
+	":=", "<-", "||", "&&", "^|", "==", "!=", "<=", ">=", "<<", ">>", "//", "!!", "**",
+	"->", "\"", "\'", "\\", ",", "=", "|", "&", "<", ">", "~", "+", "-", "*", "/", "%", "!",
+	"C", "P", "^", ":", "(", ")", "[", "]", "{", "}", ".", ";", "?", "#", "$", "`", "_",
+	"C", "P"
 };
 static const Type lexemeTypes[numLexemes] = {
 	COLON_EQUALS, L_ARROW, PIPE_PIPE, AMP_AMP, CARET_PIPE, EQUALS_EQUALS, NOT_EQUALS, LT_EQ,
-	GT_EQ, LT_LT, GT_GT, SLASH_SLASH, STAR_STAR, R_ARROW, QUOTE, APOSTROPHE, BACKSLASH,
-	COMMA, EQUALS, PIPE, AMP, LT, GT, TILDE, PLUS, MINUS, STAR, SLASH, PCT, EXCL, CARET,
-	COLON, LPAREN, RPAREN, LSQUARE, RSQUARE, LBRACE, RBRACE, DOT, SEMICOLON, QUESTION,
-	POUND, DOLLAR, BACKTICK, UNDERSCORE, C, P
+	GT_EQ, LT_LT, GT_GT, SLASH_SLASH, EXCL_EXCL, STAR_STAR, R_ARROW, QUOTE, APOSTROPHE,
+	BACKSLASH, COMMA, EQUALS, PIPE, AMP, LT, GT, TILDE, PLUS, MINUS, STAR, SLASH, PCT, EXCL,
+	CHOOSE, PERMUTE, CARET, COLON, LPAREN, RPAREN, LSQUARE, RSQUARE, LBRACE, RBRACE, DOT,
+	SEMICOLON, QUESTION, POUND, DOLLAR, BACKTICK, UNDERSCORE, C, P
 };
 
 bool Scanner::isPreImplicit(Type type){
@@ -114,25 +115,33 @@ static bool startsWithBin(const char* str, size_t size, int& index){
 
 static bool startsWithNum(const char* str, size_t size, int& index){
     if (size > 0){
-        bool isDecimal = false;
+        int decimalIndex = -1;
         for (unsigned int i = 0; i < size; ++i){
             if (!isdigit(str[i])){
-                if (i == 0) return false;
                 switch(str[i]){
                     case '.':
-                        if (!isDecimal){
-                            isDecimal = true;
+                        if (decimalIndex == -1){
+                            decimalIndex = i;
                             break;
                         }
                         return false;
                     case 'i':
-                        index = (i+1 < size && !isalpha(str[i+1])) ? i+1 : i;
-                        return true;
+                    case 'j':
+                        if (i+1 >= size || !isalpha(str[i+1])){
+                            index = i+1;
+                            return true;
+                        }
                     default:
-                        index = i;
-                        return true;
+                        if (i > 0){
+                            index = i;
+                            return true;
+                        }
+                        return false;
                 }
             }
+        }
+        if (decimalIndex != -1 && !(decimalIndex > 0 || decimalIndex+1 < size)){
+            return false;
         }
         index = size;
         return true;

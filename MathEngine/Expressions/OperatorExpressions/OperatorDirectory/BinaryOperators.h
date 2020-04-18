@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <gsl/gsl_math.h>
+#include <gsl/gsl_sf_gamma.h>
 
 #include "../BinaryOperatorDirectory.h"
 
@@ -15,6 +16,18 @@ double f_SLASH_SLASH(double lhs, double rhs){
     double intpart;
     modf(lhs / rhs, &intpart);
     return intpart;
+}
+double f_CHOOSE(double n, double m){
+    if (n >= 0 && m >= 0 && std::trunc(n) == n && std::trunc(m) == m){
+        return gsl_sf_choose((unsigned int) n, (unsigned int) m);
+    }
+    return GSL_NAN;
+}
+double f_PERMUTE(double n, double m){
+    if (n >= 0 && m >= 0 && std::trunc(n) == n && std::trunc(m) == m){
+        return gsl_sf_choose((unsigned int) n, (unsigned int) m) * gsl_sf_fact((unsigned int) m);
+    }
+    return GSL_NAN;
 }
 BinaryOperator f_CARET = std::pow;
 BinaryOperator f_STAR_STAR = std::pow;
