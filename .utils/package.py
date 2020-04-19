@@ -6,7 +6,8 @@ import subprocess as sp
 
 CURR_DIR = os.getcwd()
 PKG_DIR = os.path.join(CURR_DIR, ".package")
-LIB_DIR = os.path.join(PKG_DIR, ".libs")
+CALC_DIR = os.path.join(PKG_DIR, "CalcPlusPlus")
+LIB_DIR = os.path.join(CALC_DIR, "libs")
 
 
 def main(args):
@@ -14,18 +15,18 @@ def main(args):
         rmtree(PKG_DIR)
 
     os.mkdir(PKG_DIR)
+    os.mkdir(CALC_DIR)
     os.mkdir(LIB_DIR)
+    os.mkdir(os.path.join(CALC_DIR, "bin"))
 
     CalcUI = os.path.join(CURR_DIR, "CalcUI", "CalcUI")
     assert os.path.isfile(CalcUI)
 
-    copyfile(CalcUI, os.path.join(PKG_DIR, args.exec))
-    copyfile(
-        os.path.join(CURR_DIR, ".utils", ".templates", f"{args.exec}.sh"), os.path.join(PKG_DIR, f"{args.exec}.sh")
-    )
+    copyfile(CalcUI, os.path.join(CALC_DIR, "bin", "CalcUI"))
+    copyfile(os.path.join(CURR_DIR, ".utils", ".templates", f"Calculator.sh"), os.path.join(CALC_DIR, f"{args.exec}"))
 
-    sp.call(f"chmod +x {os.path.join(PKG_DIR, args.exec)}", shell=True)
-    sp.call(f"chmod +x {os.path.join(PKG_DIR, args.exec)}.sh", shell=True)
+    sp.call(f"chmod +x {os.path.join(CALC_DIR, 'bin', 'CalcUI')}", shell=True)
+    sp.call(f"chmod +x {os.path.join(CALC_DIR, args.exec)}", shell=True)
 
     # proc = sp.Popen("qtchooser -print-env", shell=True, stdout=sp.PIPE)
     # stdout, stderr = proc.communicate()
@@ -48,14 +49,14 @@ def main(args):
     for dep in depends:
         copyfile(dep, os.path.join(LIB_DIR, dep.split("/")[-1]))
 
-    copytree("/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms", os.path.join(PKG_DIR, "platforms"))
+    copytree("/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms", os.path.join(CALC_DIR, "platforms"))
 
     os.chdir(PKG_DIR)
-    sp.call(f"tar -czvf {CURR_DIR}/calcplusplus.tar.gz {args.exec} {args.exec}.sh .libs/*.so* platforms/", shell=True)
+    sp.call(f"tar -czvf {PKG_DIR}/calcplusplus.tar.gz CalcPlusPlus/", shell=True)
 
     os.chdir(CURR_DIR)
     copyfile(
-        os.path.join(CURR_DIR, "calcplusplus.tar.gz"),
+        os.path.join(PKG_DIR, "calcplusplus.tar.gz"),
         "/media/antonio/HDD-1/VirtualBox/Ubuntu1604/Shared/calcplusplus.tar.gz",
     )
 

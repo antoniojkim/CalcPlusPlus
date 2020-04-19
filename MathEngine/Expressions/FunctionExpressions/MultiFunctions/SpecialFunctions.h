@@ -14,7 +14,7 @@ double f_choose(std::list<expression>& args, const Variables& vars){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
         double m = (*arg)->value(vars);
-        if (n >= 0 && m >= 0 && std::trunc(n) == n && std::trunc(m) == m){
+        if (m >= 0 && n >= m && std::trunc(n) == n && std::trunc(m) == m){
             return gsl_sf_choose((unsigned int) n, (unsigned int) m);
         }
     }
@@ -25,7 +25,7 @@ double f_lnchoose(std::list<expression>& args, const Variables& vars){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
         double m = (*arg)->value(vars);
-        if (n >= 0 && m >= 0 && std::trunc(n) == n && std::trunc(m) == m){
+        if (m >= 0 && n >= m && std::trunc(n) == n && std::trunc(m) == m){
             return gsl_sf_lnchoose((unsigned int) n, (unsigned int) m);
         }
     }
@@ -36,7 +36,7 @@ double f_permute(std::list<expression>& args, const Variables& vars){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
         double m = (*arg)->value(vars);
-        if (n >= 0 && m >= 0 && std::trunc(n) == n && std::trunc(m) == m){
+        if (m >= 0 && n >= m && std::trunc(n) == n && std::trunc(m) == m){
             return gsl_sf_choose((unsigned int) n, (unsigned int) m) * gsl_sf_fact((unsigned int) m);
         }
     }
@@ -47,7 +47,7 @@ double f_lnpermute(std::list<expression>& args, const Variables& vars){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
         double m = (*arg)->value(vars);
-        if (n >= 0 && m >= 0 && std::trunc(n) == n && std::trunc(m) == m){
+        if (m >= 0 && n >= m && std::trunc(n) == n && std::trunc(m) == m){
             return gsl_sf_lnchoose((unsigned int) n, (unsigned int) m) + gsl_sf_lnfact((unsigned int) m);
         }
     }
