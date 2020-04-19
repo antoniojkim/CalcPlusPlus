@@ -18,7 +18,7 @@ debug: build ui
 	gdb -q -ex="run" ./CalcUI/CalcUI
 
 package:
-	.utils/package
+	python -u .utils/package.py
 
 sandbox:
 	sandboxer --create --name $(name) --lang $(lang)
