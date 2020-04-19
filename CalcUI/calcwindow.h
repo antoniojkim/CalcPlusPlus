@@ -2,6 +2,7 @@
 #define CALCWINDOW_H
 
 #include <QMainWindow>
+#include <QTextEdit>
 #include <MathEngine.h>
 
 QT_BEGIN_NAMESPACE
@@ -12,12 +13,11 @@ class CalcWindow : public QMainWindow
 {
     Q_OBJECT
 
+    void connect_textchanged(QTextEdit* input, QTextEdit* output);
+
 public:
     CalcWindow(QWidget *parent = nullptr);
     ~CalcWindow();
-
-private slots:
-    void on_textChanged();
 
 private:
     Ui::CalcWindow *ui;

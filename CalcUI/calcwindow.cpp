@@ -18,7 +18,7 @@ CalcWindow::CalcWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->input1, &QTextEdit::textChanged, this, &CalcWindow::on_textChanged);
+    connect_textchanged(ui->input1, ui->output1);
 }
 
 CalcWindow::~CalcWindow()
@@ -27,19 +27,21 @@ CalcWindow::~CalcWindow()
 }
 
 
-void CalcWindow::on_textChanged()
+void CalcWindow::connect_textchanged(QTextEdit* input, QTextEdit* output)
 {
-    string input = ui->input1->toPlainText().toStdString();
+    connect(input, &QTextEdit::textChanged, this, [=](){
+        string inputString = input->toPlainText().toStdString();
 
-    try {
-        auto expr = engine.evaluate(input);
-        if (!dynamic_cast<InvalidExpression*>(expr.get())){
-            ostringstream out;
-            out << expr;
-            string output = out.str();
-            ui->output1->setText(QString::fromUtf8(output.c_str()));
-        }
-    } catch(const Exception& e){
-        cerr << e.what() << endl;
-    } catch(...){}
+        try {
+            auto expr = engine.evaluate(inputString);
+            if (!dynamic_cast<InvalidExpression*>(expr.get())){
+                ostringstream out;
+                out << expr;
+                string outputString = out.str();
+                output->setText(QString::fromUtf8(outputString.c_str()));
+            }
+        } catch(const Exception& e){
+            cerr << e.what() << endl;
+        } catch(...){}
+    });
 }
