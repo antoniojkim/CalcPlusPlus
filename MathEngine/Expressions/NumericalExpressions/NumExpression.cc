@@ -18,12 +18,12 @@ NumExpression::NumExpression(const std::string& num): real{0}, imag{0} {
         default:
             break;
     }
-    istringstream iss{num};
-    if (!(iss >> real)){
+    istringstream ss {num};
+    if (!(ss >> real)){
         throw Exception("Number Error: Invalid Number ", num);
     }
     char i;
-    if ((iss >> i) && i == 'i'){
+    if ((ss >> i) && (i == 'i' || i == 'j')){
         imag = real;
         real = 0;
     }

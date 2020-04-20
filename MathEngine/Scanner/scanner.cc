@@ -116,6 +116,7 @@ static bool startsWithBin(const char* str, size_t size, int& index){
 static bool startsWithNum(const char* str, size_t size, int& index){
     if (size > 0){
         int decimalIndex = -1;
+        int eIndex = -1;
         for (unsigned int i = 0; i < size; ++i){
             if (!isdigit(str[i])){
                 switch(str[i]){
@@ -123,6 +124,24 @@ static bool startsWithNum(const char* str, size_t size, int& index){
                         if (decimalIndex == -1){
                             decimalIndex = i;
                             break;
+                        }
+                        return false;
+                    case 'E':
+                    case 'e':
+                        if (eIndex == -1 && i+1 < size &&
+                            ((isdigit(str[i+1]))
+                             || (str[i+1] == '-' && i+2 < size && isdigit(str[i+2])))){
+                            eIndex = i;
+                            break;
+                        }
+                        return false;
+                    case '-':
+                        if (eIndex != -1 && eIndex+1 == i){
+                            break;
+                        }
+                        if (i > 0){
+                            index = i;
+                            return true;
                         }
                         return false;
                     case 'i':

@@ -16,7 +16,7 @@ double f_deriv(std::list<expression>& args, const Variables& vars){
 
         }
         gsl_function F = (*(arg++))->function();
-        double x = (*arg)->value();
+        double x = (*arg)->value(vars);
 
         double result, abserr;
         gsl_deriv_central(&F, x, 1e-8, &result, &abserr);
@@ -30,8 +30,8 @@ double f_integral(std::list<expression>& args, const Variables& vars){
     if (args.size() == 3){
         auto arg = args.begin();
         gsl_function F = (*(arg++))->function();
-        double a = (*(arg++))->value();
-        double b = (*arg)->value();
+        double a = (*(arg++))->value(vars);
+        double b = (*arg)->value(vars);
 
         double result, abserr;
 

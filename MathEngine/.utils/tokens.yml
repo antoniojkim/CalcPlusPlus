@@ -142,6 +142,10 @@ functions:
     neg:
     abs:
     sqrt:
+    hypot: -1
+    ldexp: 2
+    frexp:
+    fcmp: -1
     # Trigonometry
     sin:
     cos:
@@ -250,12 +254,18 @@ functions:
     beta: 2
     lnbeta: 2
     betainc: 3
+    # Fast Fourier Transforms
+    fft: -1
+    ifft: -1
 functionExprs:
+    - frexp
     - tuple
     - quad
     - quadc
     - cubic
     - cubicc
     - det
+    - fft
+    - ifft
 printFunctions:
     - tuple

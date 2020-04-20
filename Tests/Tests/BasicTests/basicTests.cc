@@ -39,3 +39,17 @@ TEST_CASE("Basic Function Evaluation Tests", "[function]" ) {
         requireIsEqual("sincos3", -0.83602186153773);
     }
 }
+
+TEST_CASE("Basic GSL Math Function Tests", "[basic_function]"){
+    requireIsEqual("hypot(3, 4)", 5);
+    requireIsEqual("hypot(3, 4, 5)", 7.071067811865475244);
+
+    requireIsEqual("ldexp(.53, 7)", 67.84);
+    requireIsEqual("frexp(67.84)", std::vector<double>{0.53, 7});
+
+    requireIsEqual("fcmp(3, 3)", 1);
+    requireIsEqual("fcmp(3, 3.1)", 0);
+    requireIsEqual("fcmp(3, 3.000000000000001)", 1);
+    requireIsEqual("fcmp(3, 3.0001, 1e-2)", 1);
+    requireIsEqual("fcmp(3, 3.0001, 1E-2)", 1);
+}

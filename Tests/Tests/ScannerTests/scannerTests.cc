@@ -28,8 +28,19 @@ TEST_CASE("Basic Number Scanner Tests", "[scanner]" ) {
 
     scannerTest("123", "123");
     scannerTest("0.5", "0.5");
-    scannerTest("5i", "5i");
-    scannerTest("5j", "5j");
+
+    SECTION("Imaginary Numbers Test"){
+        scannerTest("5i", "5i");
+        scannerTest("5j", "5j");
+    }
+
+    SECTION("Exponential Notation Tests"){
+        scannerTest("1e8", "1e8");
+        scannerTest("1e-8", "1e-8");
+        scannerTest("1e-8-", "1e-8 -");
+        scannerTest("1-e8", "1 - e8");
+        scannerTest("-1e8", "- 1e8");
+    }
 
 }
 

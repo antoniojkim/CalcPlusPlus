@@ -40,8 +40,17 @@ void CalcWindow::connect_textchanged(QTextEdit* input, QTextEdit* output)
                 string outputString = out.str();
                 output->setText(QString::fromUtf8(outputString.c_str()));
             }
+            else {
+                string outputText = output->toPlainText().toStdString();
+                if (!outputText.empty() && outputText.at(0) != '`'){
+                    ostringstream out;
+                    out << "` " << outputText << " `";
+                    string outputString = out.str();
+                    output->setText(QString::fromUtf8(outputString.c_str()));
+                }
+            }
         } catch(const Exception& e){
-            cerr << e.what() << endl;
+            cout << e.what() << endl;
         } catch(...){}
     });
 }
