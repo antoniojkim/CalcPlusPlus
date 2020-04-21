@@ -1,0 +1,14 @@
+#!/bin/bash
+
+CURR_DIR=$(pwd)
+
+cd $CURR_DIR/CalcUI
+make clean
+
+cd $CURR_DIR/MathEngine
+make clean
+
+cd $CURR_DIR/Tests
+make clean
+
+cd $CURR_DIR

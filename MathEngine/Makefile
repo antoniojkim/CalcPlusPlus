@@ -20,5 +20,5 @@ ${TARGET_LIB}: ${OBJECTS}
 -include ${DEPENDS}
 
 clean:
-	rm ${OBJECTS} ${EXEC} ${DEPENDS}
+	rm -f ${OBJECTS} ${EXEC} ${DEPENDS}
 .PHONY: clean

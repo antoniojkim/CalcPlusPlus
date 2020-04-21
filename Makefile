@@ -39,6 +39,9 @@ generate:
 bp:  # breakpoints
 	vim Tests/.gdbinit
 
+cleanall:
+	.utils/cleanall
+
 clean:
 	rm -f MathEngine/libMathEngine.a Tests/run CalcUI/CalcUI
 

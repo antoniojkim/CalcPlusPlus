@@ -9,11 +9,12 @@ mkdir -p $include_dir
 rm -rf $libs_dir
 mkdir -p $libs_dir
 
+cd $include_dir
+
 # Install Catch2
 wget https://raw.githubusercontent.com/catchorg/Catch2/master/single_include/catch2/catch.hpp -O Catch2
 
 # Install GNU Scientific Library
-cd $include_dir
 wget ftp://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz
 tar -xzf gsl-latest.tar.gz
 rm -f gsl-latest.tar.gz

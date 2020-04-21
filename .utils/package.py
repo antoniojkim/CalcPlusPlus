@@ -23,7 +23,10 @@ def main(args):
     assert os.path.isfile(CalcUI)
 
     copyfile(CalcUI, os.path.join(CALC_DIR, "bin", "CalcUI"))
-    copyfile(os.path.join(CURR_DIR, ".utils", ".templates", f"Calculator.sh"), os.path.join(CALC_DIR, f"{args.exec}"))
+    copyfile(
+        os.path.join(CURR_DIR, ".utils", ".templates", f"Calculator.sh"),
+        os.path.join(CALC_DIR, f"{args.exec}"),
+    )
 
     sp.call(f"chmod +x {os.path.join(CALC_DIR, 'bin', 'CalcUI')}", shell=True)
     sp.call(f"chmod +x {os.path.join(CALC_DIR, args.exec)}", shell=True)
@@ -49,7 +52,10 @@ def main(args):
     for dep in depends:
         copyfile(dep, os.path.join(LIB_DIR, dep.split("/")[-1]))
 
-    copytree("/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms", os.path.join(CALC_DIR, "platforms"))
+    copytree(
+        "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms",
+        os.path.join(CALC_DIR, "platforms"),
+    )
 
     os.chdir(PKG_DIR)
     sp.call(f"tar -czvf {PKG_DIR}/calcplusplus.tar.gz CalcPlusPlus/", shell=True)

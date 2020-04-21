@@ -51,13 +51,6 @@ arglist expr COMMA arglist
 
 rules = [r.split() for r in rules.strip().split("\n")]
 
-# print("""{{
-#     {}
-# }}""".format(",\n    ".join("{{\"{0}\", generate_{1}_expression}}".format(
-#     " ".join(rule),
-#     "_".join(rule) if not (len(rule) == 2 and any("expr" in r for r in rule)) else "first"
-# ) for rule in rules)))
-
 print(
     "\n\n".join(
         """
