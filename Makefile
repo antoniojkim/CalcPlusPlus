@@ -20,6 +20,14 @@ debug: build ui
 package:
 	python -u .utils/package.py
 
+pkg: package
+
+
+buildwin:
+	.utils/build_win32
+	.utils/build_ui_win32
+
+
 sandbox:
 	sandboxer --create --name $(name) --lang $(lang)
 

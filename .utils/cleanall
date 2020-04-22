@@ -4,6 +4,7 @@ CURR_DIR=$(pwd)
 
 cd $CURR_DIR/CalcUI
 make clean
+rm Makefile
 
 cd $CURR_DIR/MathEngine
 make clean

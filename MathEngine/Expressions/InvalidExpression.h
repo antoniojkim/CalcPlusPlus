@@ -10,7 +10,8 @@ class InvalidExpression: public Expression {
     std::string message;
 
   public:
-    InvalidExpression(const Exception&);
+    InvalidExpression(const std::string& message);
+    explicit InvalidExpression(const Exception&);
 
     EXPRESSION_OVERRIDES
 

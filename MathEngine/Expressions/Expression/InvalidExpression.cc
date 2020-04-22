@@ -6,6 +6,7 @@
 
 using namespace std;
 
+InvalidExpression::InvalidExpression(const string& msg): message{msg} {}
 InvalidExpression::InvalidExpression(const Exception& e): message{e.msg} {}
 
 expression InvalidExpression::simplify() {

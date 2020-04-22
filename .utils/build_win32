@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd MathEngine
+
+export PATH=$PATH:~/mxe/usr/bin/
+
+make -j10 CXX="i686-w64-mingw32.static-g++" AR="i686-w64-mingw32.static-ar" 2> mathengine.cerr
+if [ $? -ne 0 ]; then
+    vi -R mathengine.cerr
+    exit 1
+else
+    rm -f mathengine.cerr
+fi
