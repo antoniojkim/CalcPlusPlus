@@ -139,7 +139,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             }
             else{
                 if (expressionStack.empty()){
-                    return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Binary Operator"));
+                    return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Binary Operator", token->lexeme));
                 }
                 expression expr2 = std::move(expressionStack.back());
                 expressionStack.pop_back();

@@ -11,6 +11,8 @@
 MathEngine/libMathEngine.a
 Tests/run
 CalcUI/CalcUI
+CalcUI/debug
+CalcUI/release
 .includes/
 .libs/
 .package

@@ -3,6 +3,8 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
+QMAKE_CXXFLAGS += -std=c++17
+QMAKE_LFLAGS += -std=c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -24,6 +26,14 @@ HEADERS += \
 
 FORMS += \
     calcwindow.ui
+
+INCLUDEPATH += ../MathEngine
+LIBS += -L../MathEngine -lMathEngine
+
+win32 {
+    INCLUDEPATH += C:\DEV\vcpkg\packages\gsl_x64-windows\include
+    LIBS += -LC:\DEV\vcpkg\packages\gsl_x64-windows\bin -lgsl -lgslcblas -lm
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

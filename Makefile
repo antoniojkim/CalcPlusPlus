@@ -24,8 +24,7 @@ pkg: package
 
 
 buildwin:
-	.utils/build_win32
-	.utils/build_ui_win32
+	powershell.exe -noprofile -executionpolicy bypass -file .utils/build.ps1
 
 
 sandbox:
