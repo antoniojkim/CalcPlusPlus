@@ -31,5 +31,13 @@ def main():
         print()
 
 
+def test_fft2_definition():
+    n = np.random.randint(2, 7)
+    m = np.random.randint(2, 7)
+    array = np.round(np.random.uniform(-10, 10, size=(n, m)), 2)
+    print(array)
+
+
 if __name__ == "__main__":
-    main()
+    # main()
+    test_fft2_definition()

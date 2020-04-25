@@ -71,7 +71,7 @@ static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
 
 static bool startsWithFunction(const char* str, size_t size, int& index){
     if (size > 0){
-        for (int i = 0; i < numFunctions; ++i){
+        for (int i : functionOrderByLength){
             if (size >= functionNameLengths[i]){
                 if (strncmp(str, functionNames[i], functionNameLengths[i]) == 0){
                     index = i;

@@ -33,6 +33,11 @@ sandbox:
 experiment:
 	sandboxer --build --name $(name) --lang $(lang)
 
+exp: experiment
+
+pyexp:
+	sandboxer --build --name $(name) --lang python
+
 
 install:
 	.utils/install

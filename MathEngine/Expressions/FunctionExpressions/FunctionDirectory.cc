@@ -28,18 +28,18 @@ using namespace std;
  ***************************************************/
 
 const UnaryFunction unaryFunctions[numFunctions] = {
-    nullptr, nullptr, nullptr, f_gammastar, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, f_gammainv, nullptr, nullptr, nullptr, nullptr, f_lngamma, f_lndfact, nullptr,
-	f_arctanh, f_arcsinh, f_arcsech, f_arccsch, f_arccoth, f_arccosh, nullptr, nullptr,
-	f_lnfact, nullptr, nullptr, nullptr, f_artanh, f_arsinh, f_arsech, nullptr, nullptr,
-	f_arctan, f_arcsin, f_arcsec, f_arcsch, f_arcoth, f_arcosh, f_arccsc, f_arccot,
-	f_arccos, nullptr, nullptr, nullptr, f_log_2, f_log1p, nullptr, nullptr, f_gamma,
-	nullptr, f_expm1, f_exp_2, f_dfact, nullptr, nullptr, f_atanh, f_asinh, f_asech,
-	f_acsch, f_acoth, f_acosh, f_tanh, f_sqrt, nullptr, f_sinh, f_sech, nullptr, nullptr,
-	nullptr, nullptr, f_ln_2, f_ln1p, nullptr, nullptr, nullptr, nullptr, f_fact, f_csch,
-	f_coth, f_cosh, nullptr, f_atan, f_asin, f_asec, f_acsc, f_acot, f_acos, nullptr,
-	nullptr, f_tan, nullptr, f_sin, f_sec, f_neg, nullptr, nullptr, f_log, nullptr, f_exp,
-	nullptr, f_csc, f_cot, f_cos, f_abs, nullptr, f_ln, nullptr
+    f_abs, nullptr, f_acos, f_acosh, f_acot, f_acoth, f_acsc, f_acsch, f_arccos, f_arccosh,
+	f_arccot, f_arccoth, f_arccsc, f_arccsch, f_arcosh, f_arcoth, f_arcsch, f_arcsec,
+	f_arcsech, f_arcsin, f_arcsinh, f_arctan, f_arctanh, nullptr, nullptr, f_arsech,
+	f_arsinh, f_artanh, f_asec, f_asech, f_asin, f_asinh, f_atan, f_atanh, nullptr, nullptr,
+	nullptr, nullptr, f_cos, f_cosh, f_cot, f_coth, f_csc, f_csch, nullptr, nullptr,
+	nullptr, nullptr, f_dfact, nullptr, f_exp, f_exp_2, f_expm1, f_fact, nullptr, nullptr,
+	nullptr, f_gamma, nullptr, nullptr, nullptr, f_gammainv, f_gammastar, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_ln, f_ln1p, f_ln_2, nullptr,
+	nullptr, f_lndfact, f_lnfact, f_lngamma, nullptr, nullptr, f_log, f_log1p, f_log_2,
+	nullptr, nullptr, nullptr, nullptr, nullptr, f_neg, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, f_sec, f_sech, f_sin, f_sinh, nullptr, f_sqrt, nullptr, nullptr,
+	f_tan, f_tanh, nullptr, nullptr, nullptr, nullptr
 };
 
 UnaryFunction get_unary_function(const string& name){
@@ -70,14 +70,13 @@ const UnaryFunctionExpr unaryFunctionExprs[numFunctions] = {
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_frexp, nullptr,
+	nullptr, nullptr, fe_det, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, fe_frexp, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, fe_det, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 };
 
 UnaryFunctionExpr get_unary_function_expr(const string& name){
@@ -103,18 +102,19 @@ UnaryFunctionExpr get_unary_function_expr(int functionIndex){
  ***************************************************/
 
 const MultiFunction multiFunctions[numFunctions] = {
-    f_taylorcoeff, f_lnpermute, nullptr, nullptr, f_gammaincq, f_gammaincp, f_variance,
-	f_lnchoose, f_kurtosis, f_integral, nullptr, f_gammainc, f_autocorr, f_pochrel,
-	f_permute, nullptr, nullptr, f_betainc, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, f_median, f_lnpoch, nullptr, f_lnbeta, nullptr, f_choose, nullptr, nullptr,
-	nullptr, f_argmin, f_argmax, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, f_absdev, f_stdev, nullptr, nullptr, nullptr, f_ldexp,
-	f_hypot, nullptr, nullptr, nullptr, nullptr, nullptr, f_deriv, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_skew, nullptr, nullptr,
-	nullptr, f_poch, f_mean, f_logn, nullptr, nullptr, f_lag1, f_kurt, nullptr, f_fcmp,
-	nullptr, nullptr, nullptr, nullptr, f_beta, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, f_var, f_tss, nullptr, f_std, nullptr, nullptr, nullptr, f_min, f_max, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_sd, nullptr, nullptr
+    nullptr, f_absdev, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, f_argmax, f_argmin, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_autocorr, f_beta,
+	f_betainc, f_choose, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, f_deriv, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_fcmp,
+	nullptr, nullptr, nullptr, f_gammainc, f_gammaincp, f_gammaincq, nullptr, nullptr,
+	f_hypot, nullptr, f_integral, nullptr, f_kurt, f_kurtosis, f_lag1, f_ldexp, nullptr,
+	nullptr, nullptr, f_lnbeta, f_lnchoose, nullptr, nullptr, nullptr, f_lnpermute,
+	f_lnpoch, nullptr, nullptr, nullptr, f_logn, f_max, f_mean, f_median, f_min, nullptr,
+	f_permute, f_poch, f_pochrel, nullptr, nullptr, f_sd, nullptr, nullptr, nullptr,
+	nullptr, f_skew, nullptr, f_std, f_stdev, nullptr, nullptr, f_taylorcoeff, f_tss, f_var,
+	f_variance
 };
 
 MultiFunction get_multi_function(const string& name){
@@ -143,16 +143,15 @@ const MultiFunctionExpr multiFunctionExprs[numFunctions] = {
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, fe_cubicc, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, fe_quadc, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, fe_cubic, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_quad, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, fe_ifft, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_cubic,
+	fe_cubicc, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, fe_fft, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr
+	fe_ifft, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, fe_quad, fe_quadc, nullptr, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 };
 
 MultiFunctionExpr get_multi_function_expr(const string& name){

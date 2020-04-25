@@ -17,12 +17,17 @@ constexpr const char* functionNames[numFunctions] = {
 constexpr const size_t functionNameLengths[numFunctions] = {
     {functionNameLengths}
 };
+constexpr const size_t functionOrderByLength[numFunctions] = {
+    {functionOrderByLength}
+};
 constexpr const int functionNumArgs[numFunctions] = {
     {functionNumArgs}
 };
 
 /*
 Returns index of the function in the functionNames array.
+
+Uses binary search under the hood to search for the index.
 
 Parameters
 ----------
@@ -33,9 +38,23 @@ Returns
 The index or -1 if the provided name is not a function.
 */
 constexpr int getFunctionIndex(const char* name){
-    for (int i = 0; i < numFunctions; ++i){
-        if (std::strcmp(name, functionNames[i]) == 0){
-            return i;
+    int low = 0;
+    int high = numFunctions - 1;
+    while (true){
+        if (low > high){
+            return -1;
+        }
+
+        int mid = (low + high) / 2;
+        int cmp = std::strcmp(name, functionNames[mid]);
+        if (cmp == 0){
+            return mid;
+        }
+        else if (cmp < 0){
+            high = mid-1;
+        }
+        else{
+            low = mid+1;
         }
     }
     return -1;
