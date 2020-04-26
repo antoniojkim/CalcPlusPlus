@@ -16,5 +16,5 @@ expression fe_tuple(list<expression>& args, const Variables& vars){
     for (auto& arg : args){
         exprs.emplace_back(arg->evaluate(vars));
     }
-    return make_unique<TupleExpression>(std::move(exprs));
+    return TupleExpression::construct(std::move(exprs));
 }

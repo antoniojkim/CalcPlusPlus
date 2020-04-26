@@ -1,12 +1,17 @@
 
 build:
-	.utils/build
+	.utils/build MathEngine
 
-test: build
-	.utils/test
+test: build cleantest
+	.utils/build Tests
+	gdb -q -ex="run" Tests/run
+
+bp:  # breakpoints
+	vim Tests/.gdbinit
 
 newtest:
 	python3 -u .utils/new_test.py --name $(name)
+
 
 ui:
 	.utils/build_ui
@@ -16,6 +21,7 @@ run: build ui
 
 debug: build ui
 	gdb -q -ex="run" ./CalcUI/CalcUI
+
 
 package:
 	python -u .utils/package.py
@@ -48,13 +54,16 @@ requirements:
 generate:
 	python3 -u MathEngine/.utils/auto_generate.py
 
-bp:  # breakpoints
-	vim Tests/.gdbinit
 
-cleanall:
-	.utils/cleanall
+cleanui:
+	cd CalcUI && make clean
+cleanengine:
+	cd MathEngine && make clean
+cleantest:
+	rm -f Tests/Tests/EngineTest.o
+cleanall: cleanui cleanengine cleantest
 
 clean:
-	rm -f MathEngine/libMathEngine.a Tests/run CalcUI/CalcUI
+	rm -f MathEngine/libMathEngine.a Tests/run Tests/Tests/EngineTest.o CalcUI/CalcUI
 
 .PHONY: clean

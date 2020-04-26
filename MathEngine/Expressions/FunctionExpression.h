@@ -12,13 +12,19 @@ class UnaryFunctionExpression: public Expression {
     // UnaryFunction fint;
     expression arg;
 
-  public:
-    UnaryFunctionExpression(const std::string& name, expression&& arg);
+    UnaryFunctionExpression(const char * name, expression&& arg);
+    UnaryFunctionExpression(std::string& name, expression&& arg);
     UnaryFunctionExpression(int functionIndex, expression&& arg);
 
-    expression evaluate(const Variables& vars) override;
+    public:
 
-    EXPRESSION_OVERRIDES
+        static expression construct(const char * name, expression&& arg);
+        static expression construct(std::string& name, expression&& arg);
+        static expression construct(int functionIndex, expression&& arg);
+
+        expression evaluate(const Variables& vars) override;
+
+        EXPRESSION_OVERRIDES
 
 };
 
@@ -27,12 +33,18 @@ class MultiFunctionExpression: public Expression {
     int functionIndex;
     std::list<expression> args;
 
-  public:
-    MultiFunctionExpression(const std::string& name, std::list<expression>&& args);
+    MultiFunctionExpression(const char * name, std::list<expression>&& args);
+    MultiFunctionExpression(std::string& name, std::list<expression>&& args);
     MultiFunctionExpression(int functionIndex, std::list<expression>&& args);
 
-    expression evaluate(const Variables& vars) override;
+    public:
 
-    EXPRESSION_OVERRIDES
+        static expression construct(const char * name, std::list<expression>&& args);
+        static expression construct(std::string& name, std::list<expression>&& args);
+        static expression construct(int functionIndex, std::list<expression>&& args);
+
+        expression evaluate(const Variables& vars) override;
+
+        EXPRESSION_OVERRIDES
 
 };

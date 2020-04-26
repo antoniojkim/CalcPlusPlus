@@ -12,33 +12,17 @@
 #include "../../TupleExpression.h"
 #include "../../MatrixExpression.h"
 
-using namespace std;
+#define MAKE_UNIQUE_GSL(F) \
+    typedef std::unique_ptr<gsl_##F, decltype(&gsl_##F##_free)> unique_##F; \
+    unique_##F make_unique_##F(size_t n){ \
+        return unique_##F(gsl_##F##_alloc(n), gsl_##F##_free); \
+    }
 
-
-typedef std::unique_ptr<gsl_fft_real_workspace, decltype(&gsl_fft_real_workspace_free)> unique_fft_workspace;
-unique_fft_workspace make_unique_fft_workspace(size_t n){
-    return unique_fft_workspace(gsl_fft_real_workspace_alloc(n), gsl_fft_real_workspace_free);
-}
-
-typedef std::unique_ptr<gsl_fft_real_wavetable, decltype(&gsl_fft_real_wavetable_free)> unique_fft_real_wavetable;
-unique_fft_real_wavetable make_unique_fft_real_wavetable(size_t n){
-    return unique_fft_real_wavetable(gsl_fft_real_wavetable_alloc(n), gsl_fft_real_wavetable_free);
-}
-
-typedef std::unique_ptr<gsl_fft_halfcomplex_wavetable, decltype(&gsl_fft_halfcomplex_wavetable_free)> unique_fft_halfcomplex_wavetable;
-unique_fft_halfcomplex_wavetable make_unique_fft_halfcomplex_wavetable(size_t n){
-    return unique_fft_halfcomplex_wavetable(gsl_fft_halfcomplex_wavetable_alloc(n), gsl_fft_halfcomplex_wavetable_free);
-}
-
-typedef std::unique_ptr<gsl_fft_complex_workspace, decltype(&gsl_fft_complex_workspace_free)> unique_fft_complex_workspace;
-unique_fft_complex_workspace make_unique_fft_complex_workspace(size_t n){
-    return unique_fft_complex_workspace(gsl_fft_complex_workspace_alloc(n), gsl_fft_complex_workspace_free);
-}
-
-typedef std::unique_ptr<gsl_fft_complex_wavetable, decltype(&gsl_fft_complex_wavetable_free)> unique_fft_complex_wavetable;
-unique_fft_complex_wavetable make_unique_fft_complex_wavetable(size_t n){
-    return unique_fft_complex_wavetable(gsl_fft_complex_wavetable_alloc(n), gsl_fft_complex_wavetable_free);
-}
+MAKE_UNIQUE_GSL(fft_real_workspace)
+MAKE_UNIQUE_GSL(fft_real_wavetable)
+MAKE_UNIQUE_GSL(fft_halfcomplex_wavetable)
+MAKE_UNIQUE_GSL(fft_complex_workspace)
+MAKE_UNIQUE_GSL(fft_complex_wavetable)
 
 inline std::unique_ptr<double[]> make_complex_packed_array(size_t n){
     return make_unique<double[]>(n * 2);
@@ -47,7 +31,7 @@ inline std::unique_ptr<double[]> make_complex_packed_array(size_t n){
 expression fft(MatrixExpression* matrix){
     if (matrix && (matrix->rows() == 1 || matrix->cols() == 1)){
         size_t N = matrix->rows() * matrix->cols();
-        auto work = make_unique_fft_workspace(N);
+        auto work = make_unique_fft_real_workspace(N);
         if (matrix->isComplex()){
             auto gsl_mat = matrix->to_gsl_matrix_complex();
             auto data = make_complex_packed_array(N);
@@ -65,7 +49,7 @@ expression fft(MatrixExpression* matrix){
                 gsl_matrix_complex_set(result.get(), 0, i,
                                         gsl_complex{data.get()[2*i], data.get()[2*i+1]});
             }
-            return make_unique<MatrixExpression>(result.get());
+            return MatrixExpression::construct(result.get());
         }
         else{
             auto gsl_mat = matrix->to_gsl_matrix();
@@ -81,7 +65,7 @@ expression fft(MatrixExpression* matrix){
                 gsl_matrix_complex_set(result.get(), 0, i,
                                         gsl_complex{data.get()[2*i], data.get()[2*i+1]});
             }
-            return make_unique<MatrixExpression>(result.get());
+            return MatrixExpression::construct(result.get());
         }
     }
 }
@@ -96,7 +80,7 @@ expression fe_fft(list<expression>& args, const Variables& vars){
         for (auto& arg : args){
             exprs.emplace_back(arg->evaluate(vars));
         }
-        auto expr = make_unique<MatrixExpression>(std::move(exprs), 1, args.size());
+        auto expr = MatrixExpression::construct(std::move(exprs), 1, args.size());
         return fft(expr->matrix());
     }
 }
@@ -104,7 +88,7 @@ expression fe_fft(list<expression>& args, const Variables& vars){
 expression ifft(MatrixExpression* matrix){
     if (matrix && (matrix->rows() == 1 || matrix->cols() == 1)){
         size_t N = matrix->rows() * matrix->cols();
-        auto work = make_unique_fft_workspace(N);
+        auto work = make_unique_fft_real_workspace(N);
         if (matrix->isComplex()){
             auto gsl_mat = matrix->to_gsl_matrix_complex();
             auto data = make_complex_packed_array(N);
@@ -122,7 +106,7 @@ expression ifft(MatrixExpression* matrix){
                 gsl_matrix_complex_set(result.get(), 0, i,
                                         gsl_complex{data.get()[2*i], data.get()[2*i+1]});
             }
-            return make_unique<MatrixExpression>(result.get());
+            return MatrixExpression::construct(result.get());
         }
         else{
             auto gsl_mat = matrix->to_gsl_matrix();
@@ -138,7 +122,7 @@ expression ifft(MatrixExpression* matrix){
                 gsl_matrix_complex_set(result.get(), 0, i,
                                         gsl_complex{data.get()[2*i], data.get()[2*i+1]});
             }
-            return make_unique<MatrixExpression>(result.get());
+            return MatrixExpression::construct(result.get());
         }
     }
 }
@@ -153,7 +137,7 @@ expression fe_ifft(list<expression>& args, const Variables& vars){
         for (auto& arg : args){
             exprs.emplace_back(arg->evaluate(vars));
         }
-        auto expr = make_unique<MatrixExpression>(std::move(exprs), 1, args.size());
+        auto expr = MatrixExpression::construct(std::move(exprs), 1, args.size());
         return ifft(expr->matrix());
     }
 }

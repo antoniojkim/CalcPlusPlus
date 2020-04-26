@@ -10,18 +10,26 @@
 
 class TupleExpression: public Expression {
 
-  public:
-    std::list<expression> data;
+    std::list<expression> _data;
 
     TupleExpression();
     TupleExpression(std::list<expression>&& tuple);
     TupleExpression(std::initializer_list<double> tuple);
     TupleExpression(std::initializer_list<gsl_complex> tuple);
 
-    inline TupleExpression* tuple() override { return this; }
+    public:
+        static expression construct();
+        static expression construct(std::list<expression>&& tuple);
+        static expression construct(std::initializer_list<double> tuple);
+        static expression construct(std::initializer_list<gsl_complex> tuple);
 
-    expression evaluate(const Variables& vars) override;
 
-    EXPRESSION_OVERRIDES
+        expression evaluate(const Variables& vars) override;
+
+        inline TupleExpression* tuple() override { return this; }
+
+        inline std::list<expression>& data(){ return _data; }
+
+        EXPRESSION_OVERRIDES
 
 };

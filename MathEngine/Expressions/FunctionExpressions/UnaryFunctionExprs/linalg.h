@@ -25,7 +25,7 @@ expression fe_det(expression& arg, const Variables& vars){
             auto gsl_perm = matrix->to_gsl_permutation();
             int signum;
             gsl_linalg_complex_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
-            return make_unique<NumExpression>(
+            return NumExpression::construct(
                 gsl_linalg_complex_LU_det(gsl_mat.get(), signum)
             );
         }
@@ -34,10 +34,10 @@ expression fe_det(expression& arg, const Variables& vars){
             auto gsl_perm = matrix->to_gsl_permutation();
             int signum;
             gsl_linalg_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
-            return make_unique<NumExpression>(
+            return NumExpression::construct(
                 gsl_linalg_LU_det(gsl_mat.get(), signum)
             );
         }
     }
-    return make_unique<InvalidExpression>(Exception("Determinant expects a matrix expression"));
+    return InvalidExpression::construct(Exception("Determinant expects a matrix expression"));
 }

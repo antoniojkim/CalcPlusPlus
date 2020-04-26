@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_blas.h>
 
@@ -21,5 +20,5 @@ expression fe_R_ARROW(expression& lhs, expression& rhs, const Variables& vars){
     if (lexpr->unit() && rexpr->unit()){
         return unit_conversion(lexpr->unit(), rexpr->unit());
     }
-    return std::make_unique<InvalidExpression>(Exception("Right Arrow requires both arguments to be unit expressions."));
+    return InvalidExpression::construct(Exception("Right Arrow requires both arguments to be unit expressions."));
 }

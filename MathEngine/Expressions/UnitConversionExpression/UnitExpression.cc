@@ -1,6 +1,6 @@
 
-#include <cmath>
 #include <iomanip>
+#include <memory>
 #include <sstream>
 
 #include "../../Utils/exceptions.h"
@@ -23,6 +23,13 @@ UnitExpression::UnitExpression(const std::string& unit, double val): abbr{unit},
 }
 UnitExpression::UnitExpression(UnitType type, const std::string& unit, double val): type{type}, abbr{unit}, val{val} {}
 
+expression UnitExpression::construct(const std::string& unit, double val){
+    return unique_ptr<UnitExpression>(new UnitExpression(unit, val));
+}
+expression UnitExpression::construct(UnitType type, const std::string& unit, double val){
+    return unique_ptr<UnitExpression>(new UnitExpression(type, unit, val));
+}
+
 expression UnitExpression::evaluate(const Variables& vars){
     return copy();
 }
@@ -44,7 +51,7 @@ double UnitExpression::value(const Variables& vars) { return val; }
 bool UnitExpression::isComplex(){ return false; }
 
 expression UnitExpression::copy() {
-    return make_unique<UnitExpression>(type, abbr, val);
+    return UnitExpression::construct(type, abbr, val);
 }
 
 std::ostream& UnitExpression::print(std::ostream& out) {

@@ -1,5 +1,6 @@
 
 #include <iomanip>
+#include <memory>
 #include <sstream>
 
 #include "../NumericalExpression.h"
@@ -8,7 +9,6 @@
 using namespace std;
 
 NumExpression::NumExpression(double real, double imag): real{real}, imag{imag} {}
-NumExpression::NumExpression(const gsl_complex& z): real{GSL_REAL(z)}, imag{GSL_IMAG(z)} {}
 NumExpression::NumExpression(const std::string& num): real{0}, imag{0} {
     switch(num.at(0)){
         case 'i':
@@ -29,11 +29,21 @@ NumExpression::NumExpression(const std::string& num): real{0}, imag{0} {
     }
 }
 
+expression NumExpression::construct(double real, double imag){
+    return unique_ptr<NumExpression>(new NumExpression(real, imag));
+}
+expression NumExpression::construct(const gsl_complex& z){
+    return unique_ptr<NumExpression>(new NumExpression(GSL_REAL(z), GSL_IMAG(z)));
+}
+expression NumExpression::construct(const std::string& num){
+    return unique_ptr<NumExpression>(new NumExpression(num));
+}
+
 expression NumExpression::simplify() {
-    return make_unique<NumExpression>(real, imag);
+    return copy();
 }
 expression NumExpression::derivative(const std::string& var) {
-    return make_unique<NumExpression>(0);
+    return construct(0);
 }
 expression NumExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: NumExpression::integrate");
@@ -49,7 +59,7 @@ gsl_complex NumExpression::complex(const Variables& vars) { return gsl_complex{r
 bool NumExpression::isComplex(){ return imag != 0; }
 
 expression NumExpression::copy() {
-    return make_unique<NumExpression>(real, imag);
+    return construct(real, imag);
 }
 
 std::ostream& NumExpression::print(std::ostream& out) {

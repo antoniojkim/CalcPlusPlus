@@ -9,10 +9,12 @@ class InvalidExpression: public Expression {
 
     std::string message;
 
-  public:
     InvalidExpression(const std::string& message);
-    explicit InvalidExpression(const Exception&);
 
-    EXPRESSION_OVERRIDES
+    public:
+        static expression construct(const std::string& message);
+        static expression construct(const Exception&);
+
+        EXPRESSION_OVERRIDES
 
 };

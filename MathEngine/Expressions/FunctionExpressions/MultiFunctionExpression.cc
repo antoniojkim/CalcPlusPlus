@@ -1,4 +1,5 @@
 
+#include <memory>
 #include <utility>
 
 #include <gsl/gsl_math.h>
@@ -11,15 +12,28 @@
 
 using namespace std;
 
-MultiFunctionExpression::MultiFunctionExpression(const std::string& name, std::list<expression>&& args):
+MultiFunctionExpression::MultiFunctionExpression(const char * name, std::list<expression>&& args):
     MultiFunctionExpression{getFunctionIndex(name), std::move(args)} {
     if (functionIndex == -1){
         throw Exception("Invalid Unary Function: ", name);
     }
 }
+MultiFunctionExpression::MultiFunctionExpression(std::string& name, std::list<expression>&& args):
+    MultiFunctionExpression{name.c_str(), std::move(args)} {}
 MultiFunctionExpression::MultiFunctionExpression(int functionIndex, std::list<expression>&& args):
     functionIndex{functionIndex},
     args{std::move(args)} {}
+
+
+expression MultiFunctionExpression::construct(const char * name, std::list<expression>&& args){
+    return unique_ptr<MultiFunctionExpression>(new MultiFunctionExpression(name, std::move(args)));
+}
+expression MultiFunctionExpression::construct(std::string& name, std::list<expression>&& args){
+    return unique_ptr<MultiFunctionExpression>(new MultiFunctionExpression(name, std::move(args)));
+}
+expression MultiFunctionExpression::construct(int functionIndex, std::list<expression>&& args){
+    return unique_ptr<MultiFunctionExpression>(new MultiFunctionExpression(functionIndex, std::move(args)));
+}
 
 
 expression MultiFunctionExpression::simplify() {
@@ -28,13 +42,13 @@ expression MultiFunctionExpression::simplify() {
 expression MultiFunctionExpression::derivative(const std::string& var) {
     throw Exception("Unimplemented Error: MultiFunctionExpression::derivative");
     // return make_unique<MultiplicationExpression>(
-    //     make_unique<MultiFunctionExpression>(fprime, arg->copy()),
+    //     MultiFunctionExpression::construct(fprime, arg->copy()),
     //     arg->derivative(var)
     // );
 }
 expression MultiFunctionExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: MultiFunctionExpression::integrate");
-    // return make_unique<MultiFunctionExpression>(
+    // return MultiFunctionExpression::construct(
     //     lhs->integrate(var),
     //     rhs->integrate(var)
     // );
@@ -55,7 +69,7 @@ expression MultiFunctionExpression::evaluate(const Variables& vars) {
     if (fe){
         return fe(args, vars);
     }
-    return make_unique<NumExpression>(value(vars));
+    return NumExpression::construct(value(vars));
 }
 
 double MultiFunctionExpression::value(const Variables& vars) {
@@ -80,7 +94,7 @@ expression MultiFunctionExpression::copy() {
     for(auto& arg: args){
         new_args.emplace_back(arg->copy());
     }
-    return make_unique<MultiFunctionExpression>(functionIndex, std::move(new_args));
+    return MultiFunctionExpression::construct(functionIndex, std::move(new_args));
 }
 
 std::ostream& MultiFunctionExpression::print(std::ostream& out) {

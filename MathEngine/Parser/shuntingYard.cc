@@ -32,16 +32,16 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
     for (auto token : outputStack){
         switch(token->type){
             case NUM:
-                expressionStack.push_back(make_unique<NumExpression>(token->lexeme));
+                expressionStack.emplace_back(NumExpression::construct(token->lexeme));
                 continue;
             case HEX:
-                expressionStack.push_back(make_unique<HexExpression>(token->lexeme));
+                expressionStack.emplace_back(HexExpression::construct(token->lexeme));
                 continue;
             case BIN:
-                expressionStack.push_back(make_unique<BinExpression>(token->lexeme));
+                expressionStack.emplace_back(BinExpression::construct(token->lexeme));
                 continue;
             case ID:
-                expressionStack.push_back(make_unique<VariableExpression>(token->lexeme));
+                expressionStack.emplace_back(VariableExpression::construct(token->lexeme));
                 continue;
             default:
                 break;
@@ -50,14 +50,14 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
         if (token->type == FUNCTION){
             int functionIndex = getFunctionIndex(token->lexeme);
             if (functionIndex == -1){
-                return make_unique<InvalidExpression>(Exception("Invalid Function: ", token->lexeme));
+                return InvalidExpression::construct(Exception("Invalid Function: ", token->lexeme));
             }
             if (expressionStack.empty()){
-                return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
+                return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
             }
             int numArgs = getFunctionNumArgs(functionIndex);
             if (numArgs != -1 && numArgs != (int) argumentQueue.size() + 1){
-                return make_unique<InvalidExpression>(Exception(
+                return InvalidExpression::construct(Exception(
                     "Invalid Number of Arguments for Function. Expected: ", numArgs,
                     "  Got: ", argumentQueue.size() + 1
                 ));
@@ -65,40 +65,36 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             if (numArgs == 1){
                 auto expr = std::move(expressionStack.back());
                 expressionStack.pop_back();
-                expressionStack.push_back(make_unique<UnaryFunctionExpression>(functionIndex, std::move(expr)));
+                expressionStack.push_back(UnaryFunctionExpression::construct(functionIndex, std::move(expr)));
             }
             else {
                 argumentQueue.emplace_front(std::move(expressionStack.back()));
                 expressionStack.pop_back();
                 expressionStack.push_back(
-                    make_unique<MultiFunctionExpression>(functionIndex, std::move(argumentQueue))
+                    MultiFunctionExpression::construct(functionIndex, std::move(argumentQueue))
                 );
                 argumentQueue.clear();
             }
-            continue;
         }
-
-        if (token->type == TUPLE){
+        else if (token->type == TUPLE){
             istringstream tupleLexeme {token->lexeme};
             char c;
             size_t size;
             while ((tupleLexeme >> c) && c != '_');
             tupleLexeme >> size;
             if (size > expressionStack.size()){
-                return make_unique<InvalidExpression>(Exception("Tuple Expected ", size, " elements. Got: ", expressionStack.size()));
+                return InvalidExpression::construct(Exception("Tuple Expected ", size, " elements. Got: ", expressionStack.size()));
             }
             for (size_t i = 0; i < size; ++i){
                 argumentQueue.emplace_front(std::move(expressionStack.back()));
                 expressionStack.pop_back();
             }
             expressionStack.push_back(
-                make_unique<TupleExpression>(std::move(argumentQueue))
+                TupleExpression::construct(std::move(argumentQueue))
             );
             argumentQueue.clear();
-            continue;
         }
-
-        if (token->type == MATRIX){
+        else if (token->type == MATRIX){
             istringstream matrixLexeme {token->lexeme};
             char c;
             size_t numRows, numCols, size;
@@ -106,61 +102,56 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             matrixLexeme >> numRows >> c >> numCols;
             size = numRows * numCols;
             if (size > expressionStack.size()){
-                return make_unique<InvalidExpression>(Exception("Matrix Expected ", size, " elements. Got: ", expressionStack.size()));
+                return InvalidExpression::construct(Exception("Matrix Expected ", size, " elements. Got: ", expressionStack.size()));
             }
             for (size_t i = 0; i < size; ++i){
                 argumentQueue.emplace_front(std::move(expressionStack.back()));
                 expressionStack.pop_back();
             }
             expressionStack.push_back(
-                make_unique<MatrixExpression>(std::move(argumentQueue), numRows, numCols)
+                MatrixExpression::construct(std::move(argumentQueue), numRows, numCols)
             );
             argumentQueue.clear();
-            continue;
         }
-
-        if (token->type == COMMA){
+        else if (token->type == COMMA){
             if (expressionStack.empty()){
-                return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
+                return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
             }
             argumentQueue.emplace_front(std::move(expressionStack.back()));
             expressionStack.pop_back();
-            continue;
         }
-
-        if (isOperator(token->type)){
+        else if (isOperator(token->type)){
             if (expressionStack.empty()){
-                return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Unary Operator"));
+                return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Unary Operator"));
             }
             expression expr1 = std::move(expressionStack.back());
             expressionStack.pop_back();
             if (isSingleOperator(token->type)){
-                return make_unique<InvalidExpression>(Exception("Unary Operator not yet supported: ", typeStrings[token->type]));
+                return InvalidExpression::construct(Exception("Unary Operator not yet supported: ", typeStrings[token->type]));
             }
             else{
                 if (expressionStack.empty()){
-                    return make_unique<InvalidExpression>(Exception("Insufficient Number of Arguments for Binary Operator: ", token->lexeme));
+                    return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Binary Operator: ", token->lexeme));
                 }
                 expression expr2 = std::move(expressionStack.back());
                 expressionStack.pop_back();
                 expressionStack.push_back(
-                    make_unique<BinaryOperatorExpression>(token->type, std::move(expr2), std::move(expr1))
+                    BinaryOperatorExpression::construct(token->type, std::move(expr2), std::move(expr1))
                 );
             }
-            continue;
         }
-
-        return make_unique<InvalidExpression>(Exception("Unsupported Token type found: ", typeStrings[token->type]));
+        else{
+            return InvalidExpression::construct(Exception("Unsupported Token type found: ", typeStrings[token->type]));
+        }
     }
 
     if (expressionStack.size() == 1){
         expression expr = std::move(expressionStack.back());
         expressionStack.pop_back();
-        return std::move(expr);
+        return expr;
     }
 
-    // cout << outputStack << endl;
-    return make_unique<InvalidExpression>(Exception("Expression Stack left with more than one expression"));
+    return InvalidExpression::construct(Exception("Expression Stack left with more than one expression"));
 }
 
 expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
@@ -197,7 +188,7 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             case LBRACE:
                 ++lbraceCount;
                 if (lbraceCount > 2){
-                    throw Exception("Unsupported matrix of rank: ", lbraceCount);
+                    return InvalidExpression::construct(Exception("Unsupported matrix of rank: ", lbraceCount));
                 }
             case LPAREN:
             case FUNCTION:
@@ -211,39 +202,36 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             if (token.type == MINUS && (current == tokens.begin() || !isPreImplicit(std::prev(current)->type))){
                 newTokens.emplace_back(Token{"neg", FUNCTION});
                 operatorStack.push_back(&newTokens.back());
-                continue;
             }
-            if (token.type == EXCL){
+            else if (token.type == EXCL){
                 newTokens.emplace_back(Token{"fact", FUNCTION});
                 operatorStack.push_back(&newTokens.back());
-                continue;
             }
-            if (token.type == EXCL_EXCL){
+            else if (token.type == EXCL_EXCL){
                 newTokens.emplace_back(Token{"dfact", FUNCTION});
                 operatorStack.push_back(&newTokens.back());
-                continue;
             }
-            if (!operatorStack.empty()){
-                auto type = operatorStack.back()->type;
-                while((type == FUNCTION
-                       || (isOperator(type) && getPrecedence(type) > getPrecedence(token.type))
-                       || (isOperator(type) && getPrecedence(type) == getPrecedence(token.type) && !isRightAssociative(token.type)))
-                      && type != LPAREN) {
-                    outputStack.push_back(operatorStack.back());
-                    operatorStack.pop_back();
-                    if (operatorStack.empty()) break;
-                    type = operatorStack.back()->type;
+            else {
+                if (!operatorStack.empty()){
+                    auto type = operatorStack.back()->type;
+                    while((type == FUNCTION
+                        || (isOperator(type) && getPrecedence(type) > getPrecedence(token.type))
+                        || (isOperator(type) && getPrecedence(type) == getPrecedence(token.type) && !isRightAssociative(token.type)))
+                        && type != LPAREN) {
+                        outputStack.push_back(operatorStack.back());
+                        operatorStack.pop_back();
+                        if (operatorStack.empty()) break;
+                        type = operatorStack.back()->type;
+                    }
                 }
+                operatorStack.push_back(&token);
             }
-            operatorStack.push_back(&token);
-            continue;
         }
-
-        if (token.type == RPAREN){
+        else if (token.type == RPAREN){
             list<Scanner::Token*> commaList;
             while(true){
                 if (operatorStack.size() == 0){
-                    throw Exception("Mismatched Parentheses: ')'");
+                    return InvalidExpression::construct(Exception("Mismatched Parentheses: ')'"));
                 }
                 Scanner::Token* topOperator = operatorStack.back();
                 operatorStack.pop_back();
@@ -271,15 +259,13 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                     outputStack.push_back(topOperator);
                 }
             }
-            continue;
         }
-
-        if (token.type == RBRACE){
+        else if (token.type == RBRACE){
             --lbraceCount;
             int numCols = 1;
             while(true){
                 if (operatorStack.size() == 0){
-                    throw Exception("Mismatched Parentheses: '}'");
+                    return InvalidExpression::construct(Exception("Mismatched Parentheses: '}'"));
                 }
                 Scanner::Token* topOperator = operatorStack.back();
                 operatorStack.pop_back();
@@ -312,12 +298,12 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                 matrixColCount = numCols;
             }
             else if (matrixColCount != numCols){
-                return make_unique<InvalidExpression>(Exception("Row Expected ", matrixColCount, " columns. Got: ", numCols));
+                return InvalidExpression::construct(Exception("Row Expected ", matrixColCount, " columns. Got: ", numCols));
             }
-            continue;
         }
-
-        return make_unique<InvalidExpression>(Exception("Unsupported Token: '", token.lexeme, "'"));
+        else{
+            return InvalidExpression::construct(Exception("Unsupported Token: '", token.lexeme, "'"));
+        }
     }
     while(!operatorStack.empty()){
         outputStack.push_back(operatorStack.back());

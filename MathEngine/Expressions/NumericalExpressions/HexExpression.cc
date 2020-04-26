@@ -14,11 +14,18 @@ HexExpression::HexExpression(const std::string& num) {
     this->num = strtoull(num.c_str()+2, &endptr, 16);
 }
 
+expression HexExpression::construct(unsigned long long num){
+    return unique_ptr<HexExpression>(new HexExpression(num));
+}
+expression HexExpression::construct(const std::string& num){
+    return unique_ptr<HexExpression>(new HexExpression(num));
+}
+
 expression HexExpression::simplify() {
-    return make_unique<HexExpression>(num);
+    return HexExpression::construct(num);
 }
 expression HexExpression::derivative(const std::string& var) {
-    return make_unique<HexExpression>(0);
+    return HexExpression::construct(0);
 }
 expression HexExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: HexExpression::integrate");
@@ -32,7 +39,7 @@ double HexExpression::value(const Variables& vars) { return double(num); }
 bool HexExpression::isComplex(){ return false; }
 
 expression HexExpression::copy() {
-    return make_unique<HexExpression>(num);
+    return HexExpression::construct(num);
 }
 
 std::ostream& HexExpression::print(std::ostream& out) {

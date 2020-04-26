@@ -7,15 +7,18 @@ class VariableExpression: public Expression {
     const std::string name;
     double num;
 
-  public:
     VariableExpression(const std::string& name);
     VariableExpression(const std::string& name, double num);
 
-    expression evaluate(const Variables& vars) override;
+    public:
+        static expression construct(const std::string& name);
+        static expression construct(const std::string& name, double num);
 
-    inline VariableExpression* variable(){ return this; }
-    inline const std::string& getName(){ return name; }
+        expression evaluate(const Variables& vars) override;
 
-    EXPRESSION_OVERRIDES
+        inline VariableExpression* variable(){ return this; }
+        inline const std::string& getName(){ return name; }
+
+        EXPRESSION_OVERRIDES
 
 };

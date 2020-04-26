@@ -13,19 +13,17 @@
 #include "../../TupleExpression.h"
 #include "../FunctionDirectory.h"
 
-using namespace std;
-
-unique_ptr<double[]> to_array(list<expression>& args, size_t& size, const Variables& vars){
+std::unique_ptr<double[]> to_array(list<expression>& args, size_t& size, const Variables& vars){
     if (args.size() == 1){
         auto tuple = args.back()->tuple();
         if (tuple){
-            unique_ptr<double[]> data (new double[tuple->data.size()]);
+            unique_ptr<double[]> data (new double[tuple->data().size()]);
             double* d = data.get();
-            for (auto& expr : tuple->data){
+            for (auto& expr : tuple->data()){
                 *(d++) = expr->value(vars);
             }
-            size = tuple->data.size();
-            return std::move(data);
+            size = tuple->data().size();
+            return data;
         }
     }
 
@@ -35,7 +33,7 @@ unique_ptr<double[]> to_array(list<expression>& args, size_t& size, const Variab
         *(d++) = arg->value(vars);
     }
     size = args.size();
-    return std::move(data);
+    return data;
 }
 
 double f_mean(list<expression>& args, const Variables& vars){

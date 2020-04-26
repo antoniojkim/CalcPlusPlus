@@ -26,10 +26,4 @@ ln -s $gsl_dir/.libs/libgsl.a $libs_dir/libgsl.a
 ln -s $gsl_dir/cblas/.libs/libgslcblas.a $libs_dir/libgslcblas.a
 
 # Install QT5
-# cd $include_dir
-# git clone https://code.qt.io/qt/qt5.git
-# qt_dir=$include_dir/qt5
-# cd $qt_dir
-# perl init-repository
-# ./configure -developer-build -opensource -nomake examples -nomake tests -confirm-license
-# make -j10
+sudo apt-get install qt5-default

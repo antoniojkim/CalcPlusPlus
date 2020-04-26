@@ -1,5 +1,6 @@
 
 #include <list>
+#include <memory>
 #include <utility>
 
 #include <gsl/gsl_math.h>
@@ -23,7 +24,7 @@ MatrixExpression::MatrixExpression(std::initializer_list<double> matrix, size_t 
         throw Exception("Matrix Expression expected ", numRows*numCols, " elements. Got: ", matrix.size());
     }
     for (auto val : matrix){
-        mat.emplace_back(make_unique<NumExpression>(val));
+        mat.emplace_back(NumExpression::construct(val));
     }
 }
 MatrixExpression::MatrixExpression(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols):
@@ -32,7 +33,7 @@ MatrixExpression::MatrixExpression(std::initializer_list<gsl_complex> matrix, si
         throw Exception("Matrix Expression expected ", numRows*numCols, " elements. Got: ", matrix.size());
     }
     for (auto val : matrix){
-        mat.emplace_back(make_unique<NumExpression>(val));
+        mat.emplace_back(NumExpression::construct(val));
     }
 }
 MatrixExpression::MatrixExpression(gsl_matrix* matrix):
@@ -40,7 +41,7 @@ MatrixExpression::MatrixExpression(gsl_matrix* matrix):
 
     for (size_t r = 0; r < numRows; ++r){
         for (size_t c = 0; c < numCols; ++c){
-            mat.emplace_back(make_unique<NumExpression>(gsl_matrix_get(matrix, r, c)));
+            mat.emplace_back(NumExpression::construct(gsl_matrix_get(matrix, r, c)));
         }
     }
 }
@@ -49,9 +50,29 @@ MatrixExpression::MatrixExpression(gsl_matrix_complex* matrix):
 
     for (size_t r = 0; r < numRows; ++r){
         for (size_t c = 0; c < numCols; ++c){
-            mat.emplace_back(make_unique<NumExpression>(gsl_matrix_complex_get(matrix, r, c)));
+            mat.emplace_back(NumExpression::construct(gsl_matrix_complex_get(matrix, r, c)));
         }
     }
+}
+
+
+expression MatrixExpression::construct(){
+    return unique_ptr<MatrixExpression>(new MatrixExpression());
+}
+expression MatrixExpression::construct(std::list<expression>&& matrix, size_t numRows, size_t numCols){
+    return unique_ptr<MatrixExpression>(new MatrixExpression(std::move(matrix), numRows, numCols));
+}
+expression MatrixExpression::construct(std::initializer_list<double> matrix, size_t numRows, size_t numCols){
+    return unique_ptr<MatrixExpression>(new MatrixExpression(std::forward<std::initializer_list<double>>(matrix), numRows, numCols));
+}
+expression MatrixExpression::construct(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols){
+    return unique_ptr<MatrixExpression>(new MatrixExpression(std::forward<std::initializer_list<gsl_complex>>(matrix), numRows, numCols));
+}
+expression MatrixExpression::construct(gsl_matrix* matrix){
+    return unique_ptr<MatrixExpression>(new MatrixExpression(matrix));
+}
+expression MatrixExpression::construct(gsl_matrix_complex* matrix){
+    return unique_ptr<MatrixExpression>(new MatrixExpression(matrix));
 }
 
 
@@ -68,14 +89,14 @@ expression MatrixExpression::derivative(const std::string& var) {
     for (auto& expr : mat){
         derivatives.emplace_back(expr->derivative(var));
     }
-    return make_unique<MatrixExpression>(std::move(derivatives), numRows, numCols);
+    return MatrixExpression::construct(std::move(derivatives), numRows, numCols);
 }
 expression MatrixExpression::integrate(const std::string& var) {
     list<expression> integrals;
     for (auto& expr : mat){
         integrals.emplace_back(expr->integrate(var));
     }
-    return make_unique<MatrixExpression>(std::move(integrals), numRows, numCols);
+    return MatrixExpression::construct(std::move(integrals), numRows, numCols);
 }
 
 bool MatrixExpression::evaluable(){
@@ -92,7 +113,7 @@ expression MatrixExpression::evaluate(const Variables& vars){
     for (auto& expr : mat){
         evaluated.emplace_back(expr->evaluate(vars));
     }
-    return make_unique<MatrixExpression>(std::move(evaluated), numRows, numCols);
+    return MatrixExpression::construct(std::move(evaluated), numRows, numCols);
 }
 
 double MatrixExpression::value(const Variables& vars) { return GSL_NAN; }
@@ -111,7 +132,7 @@ expression MatrixExpression::copy() {
     for (auto& expr : mat){
         matrixCopy.emplace_back(expr->copy());
     }
-    return make_unique<MatrixExpression>(std::move(matrixCopy), numRows, numCols);
+    return MatrixExpression::construct(std::move(matrixCopy), numRows, numCols);
 }
 
 std::ostream& MatrixExpression::print(std::ostream& out) {

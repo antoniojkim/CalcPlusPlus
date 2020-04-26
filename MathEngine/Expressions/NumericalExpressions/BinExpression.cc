@@ -14,11 +14,18 @@ BinExpression::BinExpression(const std::string& num) {
     this->num = strtoull(num.c_str()+2, &endptr, 2);
 }
 
+expression BinExpression::construct(unsigned long long num){
+    return unique_ptr<BinExpression>(new BinExpression(num));
+}
+expression BinExpression::construct(const std::string& num){
+    return unique_ptr<BinExpression>(new BinExpression(num));
+}
+
 expression BinExpression::simplify() {
-    return make_unique<BinExpression>(num);
+    return BinExpression::construct(num);
 }
 expression BinExpression::derivative(const std::string& var) {
-    return make_unique<BinExpression>(0);
+    return BinExpression::construct(0);
 }
 expression BinExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: BinExpression::integrate");
@@ -32,7 +39,7 @@ double BinExpression::value(const Variables& vars) { return double(num); }
 bool BinExpression::isComplex(){ return false; }
 
 expression BinExpression::copy() {
-    return make_unique<BinExpression>(num);
+    return BinExpression::construct(num);
 }
 
 std::ostream& BinExpression::print(std::ostream& out) {

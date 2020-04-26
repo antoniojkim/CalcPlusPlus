@@ -12,9 +12,9 @@ using namespace std;
 
 expression convert(UnitExpression& from, UnitExpression& to){
     if (from.type != to.type){
-        return make_unique<InvalidExpression>(Exception("Invalid Unit Conversion: ", from.abbr, " -> ", to.abbr));
+        return InvalidExpression::construct(Exception("Invalid Unit Conversion: ", from.abbr, " -> ", to.abbr));
     }
-    return make_unique<UnitExpression>(from.type, to.abbr, from.val / to.val);
+    return UnitExpression::construct(from.type, to.abbr, from.val / to.val);
 }
 
 UnitType operator*(UnitType t1, UnitType t2){
@@ -33,14 +33,14 @@ UnitType operator*(UnitType t1, UnitType t2){
 expression operator*(UnitExpression& unit1, UnitExpression& unit2){
     auto newType = unit1.type * unit2.type;
     if (newType == NONE) {
-        return make_unique<InvalidExpression>(Exception("Invalid Unit: ", unit1.abbr, " * ", unit2.abbr));
+        return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " * ", unit2.abbr));
     }
     ostringstream newabbr;
     newabbr << unit1.abbr << "*" << unit2.abbr;
-    return make_unique<UnitExpression>(newType, newabbr.str(), unit1.val * unit2.val);
+    return UnitExpression::construct(newType, newabbr.str(), unit1.val * unit2.val);
 }
 expression operator*(UnitExpression& unit1, expression& expr){
-    return make_unique<UnitExpression>(unit1.type, unit1.abbr, unit1.val * expr->value());
+    return UnitExpression::construct(unit1.type, unit1.abbr, unit1.val * expr->value());
 }
 
 UnitType operator/(UnitType t1, UnitType t2){
@@ -60,14 +60,14 @@ UnitType operator/(UnitType t1, UnitType t2){
 expression operator/(UnitExpression& unit1, UnitExpression& unit2){
     auto newType = unit1.type / unit2.type;
     if (newType == NONE) {
-        return make_unique<InvalidExpression>(Exception("Invalid Unit: ", unit1.abbr, " / ", unit2.abbr));
+        return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " / ", unit2.abbr));
     }
     ostringstream newabbr;
     newabbr << unit1.abbr << "/" << unit2.abbr;
-    return make_unique<UnitExpression>(newType, newabbr.str(), unit1.val / unit2.val);
+    return UnitExpression::construct(newType, newabbr.str(), unit1.val / unit2.val);
 }
 expression operator/(UnitExpression& unit1, expression& expr){
-    return make_unique<UnitExpression>(unit1.type, unit1.abbr, unit1.val / expr->value());
+    return UnitExpression::construct(unit1.type, unit1.abbr, unit1.val / expr->value());
 }
 
 UnitType operator^(UnitType t1, int n){
@@ -90,13 +90,13 @@ UnitType operator^(UnitType t1, int n){
 expression operator^(UnitExpression& unit1, expression& expr){
     double n = expr->value();
     if (std::trunc(n) != n){
-        return make_unique<InvalidExpression>(Exception("Invalid Unit: ", unit1.abbr, " ^ ", n));
+        return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " ^ ", n));
     }
     auto newType = unit1.type ^ (int) n;
     if (newType == NONE) {
-        return make_unique<InvalidExpression>(Exception("Invalid Unit: ", unit1.abbr, " ^ ", n));
+        return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " ^ ", n));
     }
     ostringstream newabbr;
     newabbr << unit1.abbr << "^" << int(n);
-    return make_unique<UnitExpression>(newType, newabbr.str(), std::pow(unit1.val, n));
+    return UnitExpression::construct(newType, newabbr.str(), std::pow(unit1.val, n));
 }

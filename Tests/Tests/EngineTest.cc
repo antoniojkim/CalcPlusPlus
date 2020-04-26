@@ -279,7 +279,7 @@ void requireIsEqual(const string& input, const std::vector<double>& expected){
     auto output = expr->evaluate();
     auto tuple = output->tuple();
     if (tuple){
-        REQUIRE( (!compare(tuple->data, expected) ? printDifference(input, expr, output, expected) : true) );
+        REQUIRE( (!compare(tuple->data(), expected) ? printDifference(input, expr, output, expected) : true) );
     }
     else{
         printDifference(input, expr, output, expected);
@@ -292,7 +292,7 @@ void requireIsEqual(const string& input, const std::vector<gsl_complex>& expecte
     auto output = expr->evaluate();
     auto tuple = output->tuple();
     if (tuple){
-        REQUIRE( (!compare(tuple->data, expected) ? printDifference(input, expr, output, expected) : true) );
+        REQUIRE( (!compare(tuple->data(), expected) ? printDifference(input, expr, output, expected) : true) );
     }
     else{
         printDifference(input, expr, output, expected);

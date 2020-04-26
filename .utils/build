@@ -1,11 +1,16 @@
 #!/bin/bash
 
-cd MathEngine
+MAKEFILE_DIR=$1
+if [ "$MAKEFILE_DIR" == "" ]; then
+    echo "No Makefile Directory provided!"
+fi
 
-make -j10 2> mathengine.cerr
+cd $MAKEFILE_DIR
+
+make -j10 2> $MAKEFILE_DIR.cerr
 if [ $? -ne 0 ]; then
-    vi -R mathengine.cerr
+    vi -R $MAKEFILE_DIR.cerr
     exit 1
 else
-    rm -f mathengine.cerr
+    rm -f $MAKEFILE_DIR.cerr
 fi

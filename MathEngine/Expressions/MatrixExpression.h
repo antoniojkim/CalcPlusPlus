@@ -18,14 +18,21 @@ class MatrixExpression: public Expression {
     std::list<expression> mat;
     size_t numRows, numCols;
 
+    MatrixExpression();
+    MatrixExpression(std::list<expression>&& matrix, size_t numRows, size_t numCols);
+    MatrixExpression(std::initializer_list<double> matrix, size_t numRows, size_t numCols);
+    MatrixExpression(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols);
+    MatrixExpression(gsl_matrix* matrix);
+    MatrixExpression(gsl_matrix_complex* matrix);
+
     public:
 
-        MatrixExpression();
-        MatrixExpression(std::list<expression>&& matrix, size_t numRows, size_t numCols);
-        MatrixExpression(std::initializer_list<double> matrix, size_t numRows, size_t numCols);
-        MatrixExpression(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols);
-        MatrixExpression(gsl_matrix* matrix);
-        MatrixExpression(gsl_matrix_complex* matrix);
+        static expression construct();
+        static expression construct(std::list<expression>&& matrix, size_t numRows, size_t numCols);
+        static expression construct(std::initializer_list<double> matrix, size_t numRows, size_t numCols);
+        static expression construct(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols);
+        static expression construct(gsl_matrix* matrix);
+        static expression construct(gsl_matrix_complex* matrix);
 
         std::list<expression>& getMatrix();
         size_t rows();
@@ -43,11 +50,11 @@ class MatrixExpression: public Expression {
 };
 
 inline unique_gsl_matrix make_gsl_matrix(size_t rows, size_t cols){
-   return unique_gsl_matrix(gsl_matrix_alloc(rows, cols), gsl_matrix_free);
+    return unique_gsl_matrix(gsl_matrix_alloc(rows, cols), gsl_matrix_free);
 }
 inline unique_gsl_matrix_complex make_gsl_matrix_complex(size_t rows, size_t cols){
-   return unique_gsl_matrix_complex(gsl_matrix_complex_alloc(rows, cols), gsl_matrix_complex_free);
+    return unique_gsl_matrix_complex(gsl_matrix_complex_alloc(rows, cols), gsl_matrix_complex_free);
 }
 inline unique_gsl_permutation make_gsl_permutation(size_t rows){
-   return unique_gsl_permutation(gsl_permutation_alloc(rows), gsl_permutation_free);
+    return unique_gsl_permutation(gsl_permutation_alloc(rows), gsl_permutation_free);
 }

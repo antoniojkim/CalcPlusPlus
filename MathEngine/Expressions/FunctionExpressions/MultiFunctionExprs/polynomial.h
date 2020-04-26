@@ -14,10 +14,10 @@
 using namespace std;
 
 inline expression make_tuple(initializer_list<double> vals){
-    return make_unique<TupleExpression>(std::forward<initializer_list<double>>(vals));
+    return TupleExpression::construct(std::forward<initializer_list<double>>(vals));
 }
 inline expression make_tuple(initializer_list<gsl_complex> vals){
-    return make_unique<TupleExpression>(std::forward<initializer_list<gsl_complex>>(vals));
+    return TupleExpression::construct(std::forward<initializer_list<gsl_complex>>(vals));
 }
 
 
@@ -30,7 +30,7 @@ expression fe_quad(list<expression>& args, const Variables& vars){
     int num_roots = gsl_poly_solve_quadratic(a, b, c, &x0, &x1);
     switch(num_roots){
         case 0:
-            return make_unique<TupleExpression>();
+            return TupleExpression::construct();
         case 1:
             return make_tuple({x0});
         case 2:
@@ -52,7 +52,7 @@ expression fe_quadc(list<expression>& args, const Variables& vars){
     int num_roots = gsl_poly_complex_solve_quadratic(a, b, c, &z0, &z1);
     switch(num_roots){
         case 0:
-            return make_unique<TupleExpression>();
+            return TupleExpression::construct();
         case 1:
             return make_tuple({z0});
         case 2:

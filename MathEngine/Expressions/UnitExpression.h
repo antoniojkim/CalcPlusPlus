@@ -13,9 +13,12 @@ class UnitExpression: public Expression {
     std::string abbr;
     double val;
 
+    UnitExpression(const std::string& unit, double val);
+    UnitExpression(UnitType type, const std::string& unit, double val);
+
     public:
-        UnitExpression(const std::string& unit, double val = 1);
-        UnitExpression(UnitType type, const std::string& unit, double val);
+        static expression construct(const std::string& unit, double val = 1);
+        static expression construct(UnitType type, const std::string& unit, double val);
 
         expression evaluate(const Variables& vars) override;
 
