@@ -1,5 +1,7 @@
 #pragma once
 
+
+#include <iostream>
 #include <memory>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_blas.h>
@@ -7,6 +9,7 @@
 #include "../../InvalidExpression.h"
 #include "../../NumericalExpression.h"
 #include "../../MatrixExpression.h"
+#include "../../UnitExpression.h"
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
@@ -65,6 +68,13 @@ expression matrix_scalar_multiply(expression& scalar, MatrixExpression* mat, con
     }
 }
 
+inline expression unit_conversion_multiply(UnitExpression* unit1, UnitExpression* unit2){
+    return (*unit1) * (*unit2);
+}
+inline expression unit_conversion_multiply(UnitExpression* unit1, expression& expr){
+    return (*unit1) * expr;
+}
+
 expression fe_STAR(expression& lhs, expression& rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
@@ -76,6 +86,15 @@ expression fe_STAR(expression& lhs, expression& rhs, const Variables& vars){
     }
     if (rexpr->matrix()){
         return matrix_scalar_multiply(lexpr, rexpr->matrix(), vars);
+    }
+    if (lexpr->unit() && rexpr->unit()){
+        return unit_conversion_multiply(lexpr->unit(), rexpr->unit());
+    }
+    if (lexpr->unit()){
+        return unit_conversion_multiply(lexpr->unit(), rexpr);
+    }
+    if (rexpr->unit()){
+        return unit_conversion_multiply(rexpr->unit(), lexpr);
     }
     if (lexpr->isComplex() || rexpr->isComplex()){
         return std::make_unique<NumExpression>(gsl_complex_mul(lexpr->complex(vars), rexpr->complex(vars)));

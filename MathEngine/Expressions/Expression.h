@@ -11,6 +11,8 @@
 struct Expression;
 struct MatrixExpression;
 struct TupleExpression;
+struct UnitExpression;
+struct VariableExpression;
 
 typedef std::unique_ptr<Expression> expression;
 typedef std::unordered_map<std::string, expression> Variables;
@@ -42,6 +44,8 @@ struct Expression {
 
     virtual inline MatrixExpression* matrix(){ return nullptr; }
     virtual inline TupleExpression* tuple(){ return nullptr; }
+    virtual inline UnitExpression* unit(){ return nullptr; }
+    virtual inline VariableExpression* variable(){ return nullptr; }
 
     virtual bool isComplex() = 0;
 

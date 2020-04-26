@@ -118,23 +118,23 @@ inline UnitType getUnitType(int index){
 	return unitTypes[index];
 }
 
-constexpr UnitType getUnitType(const char* name){
+constexpr double getUnitConversion(const char* name){
     int index = getUnitIndex(name);
     if (index != -1){
 		return NONE;
 	}
-	return unitTypes[index];
+	return unitConversions[index];
 }
-inline UnitType getUnitType(const std::string& name){
+inline double getUnitConversion(const std::string& name){
     int index = getUnitIndex(name);
     if (index != -1){
 		return NONE;
 	}
-	return unitTypes[index];
+	return unitConversions[index];
 }
-inline UnitType getUnitType(int index){
+inline double getUnitConversion(int index){
     if (index < 0 || index >= numUnits){
 		return NONE;
 	}
-	return unitTypes[index];
+	return unitConversions[index];
 }

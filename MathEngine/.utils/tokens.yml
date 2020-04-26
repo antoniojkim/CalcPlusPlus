@@ -23,6 +23,11 @@ operators:
         lexeme: "<-"
         precedence: 2
         rightAssociative:
+    R_ARROW:
+        lexeme: "->"
+        precedence: 2
+        rightAssociative: True
+        expression:
     PIPE_PIPE:
         lexeme: "||"
         precedence: 3
@@ -106,14 +111,12 @@ operators:
         lexeme: "^"
         precedence: 13
         rightAssociative: True
+        expression:
     STAR_STAR:
         lexeme: "**"
         precedence: 13
         rightAssociative: True
-    R_ARROW:
-        lexeme: "->"
-        precedence: 14
-        rightAssociative: True
+        expression:
     COLON:
         lexeme: ":"
         precedence: 14
@@ -141,7 +144,10 @@ functions:
     # Basic
     neg:
     abs:
+    sqr:
     sqrt:
+    cb:
+    cbrt:
     hypot: -1
     ldexp: 2
     frexp:
@@ -264,6 +270,7 @@ functions:
     # rand:
     # randup:
 functionExprs:
+    - neg
     - frexp
     - tuple
     - quad
@@ -301,7 +308,7 @@ unitconversions:
             baseabbr: s
             baseprefixes:
             conversions: {
-                "minute": "min", "hour": "hr", "week": "wk", "month": "mth", "year": "yr",
+                "minute": "M", "hour": "h", "week": "wk", "month": "mth", "year": "yr",
                 "decade": "dec", "century": "cen", "millenium": "mln"
             }
             custom:
@@ -310,6 +317,22 @@ unitconversions:
                 decade: 315360000
                 century: 3153600000
                 millenium: 31536000000
+        timesquared:
+            base: secondsquared
+            baseabbr: "s^2"
+        speed:
+            base: meterspersecond
+            baseabbr: "m/s"
+            # baseprefixes:
+            conversions: {
+                "speed_of_light": "c", "kilometers_per_hour": "kph", "miles_per_hour": "mph", "knot": "knt"
+            }
+        acceleration:
+            base: meterspersecondsquared
+            baseabbr: "m/s^2"
+            conversions: {
+                "grav_accel": "G"
+            }
         area:
             base: meterssquared
             baseabbr: "m^2"
@@ -332,17 +355,10 @@ unitconversions:
         mass:
             base: gram
             baseabbr: g
+            baseconversion: 1e-3
             baseprefixes:
             conversions: {
-                "pound": "lb", "ounce": "oz", "ton": "t", "metric_ton": "mt", "uk_ton": "UKT", "troy_ounce": "toz",
-                "carat": "CD", "unified_atomic_mass": "UAM"
+                "pound_mass": "lb", "ounce_mass": "oz", "ton": "t", "metric_ton": "mt", "uk_ton": "UKT", "troy_ounce": "toz",
+                "carat": "CD", "unified_atomic_mass": "UAM", "solar_mass": "SM",
+                "mass_electron": "mE", "mass_muon": "mMu", "mass_proton": "mPt", "mass_neutron": "mNt"
             }
-            custom:
-                pound: "GSL_CONST_MKSA_POUND_MASS*1e3"
-                ounce: "GSL_CONST_MKSA_OUNCE_MASS*1e3"
-                ton: "GSL_CONST_MKSA_TON*1e3"
-                metric_ton: "GSL_CONST_MKSA_METRIC_TON*1e3"
-                uk_ton: "GSL_CONST_MKSA_UK_TON*1e3"
-                troy_ounce: "GSL_CONST_MKSA_TROY_OUNCE*1e3"
-                carat: "GSL_CONST_MKSA_CARAT"
-                unified_atomic_mass: "GSL_CONST_MKSA_UNIFIED_ATOMIC_MASS"

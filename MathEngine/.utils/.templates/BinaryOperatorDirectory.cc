@@ -9,7 +9,9 @@
 #include "OperatorDirectory/BinaryOperators.h"
 #include "OperatorExpressions/Addition.h"
 #include "OperatorExpressions/Division.h"
+#include "OperatorExpressions/Exponent.h"
 #include "OperatorExpressions/Multiplication.h"
+#include "OperatorExpressions/RightArrow.h"
 #include "OperatorExpressions/Subtraction.h"
 
 using namespace std;

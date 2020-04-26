@@ -3,22 +3,28 @@
 import numpy as np
 
 
-def complex_to_string(array):
-    return ", ".join(
-        f"{{{real}, {imag}}}" for real, imag in zip(array.real, array.imag)
+def numpy_to_string(array):
+    return (
+        np.array2string(
+            array,
+            separator=",",
+            formatter={"complexfloat": lambda cf: f"{{{cf.real}, {cf.imag}}}"},
+        )
+        .replace("[", "{")
+        .replace("]", "}")
     )
 
 
 def function(array):
-    result = np.round(np.fft.ifft(array), 10)
-    return f"std::vector<std::vector<gsl_complex>>{{{{{complex_to_string(result)}}}}}"
+    result = np.round(np.fft.fft(array), 10)
+    return f"std::vector<std::vector<gsl_complex>>{numpy_to_string(result)}"
 
 
 names = ["ifft"]
 
 
 def main():
-    for i in range(10):
+    for i in range(1):
         num = np.random.randint(2, 17)
         array = np.round(
             np.random.uniform(-10, 10, size=num)
@@ -39,5 +45,5 @@ def test_fft2_definition():
 
 
 if __name__ == "__main__":
-    # main()
-    test_fft2_definition()
+    main()
+    # test_fft2_definition()

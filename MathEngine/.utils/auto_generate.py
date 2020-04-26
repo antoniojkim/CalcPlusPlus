@@ -269,6 +269,8 @@ with Template(
     for category, specs in unitconversions["categories"].items():
         base = specs["base"]
         abbr = specs["baseabbr"]
+        baseconversion = float(specs.get("baseconversion", 1))
+        bc = f"*{1/baseconversion}" if baseconversion != 1 else ""
 
         units.append(base)
         abbrs.append(abbr)
@@ -278,6 +280,8 @@ with Template(
         prefixes = specs.get("prefixes", {})
         if "baseprefixes" in specs:
             prefixes.update(unitconversions["prefixes"])
+
+        baseconversion = specs.get("baseconversion", 1)
 
         units.extend((f"{prefix}{base}" for prefix in prefixes.keys()))
         abbrs.extend((f"{prefix}{abbr}" for prefix in prefixes.values()))
@@ -294,7 +298,7 @@ with Template(
         unitTypes.extend((category for c in specs.get("conversions", {})))
         conversions.extend(
             (
-                specs.get("custom", {}).get(conv, f"GSL_CONST_MKSA_{conv.upper()}")
+                specs.get("custom", {}).get(conv, f"GSL_CONST_MKSA_{conv.upper()}{bc}")
                 for conv in specs.get("conversions", {}).keys()
             )
         )

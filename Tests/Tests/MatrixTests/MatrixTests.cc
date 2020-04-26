@@ -53,3 +53,31 @@ TEST_CASE("Matrix Scalar Operation Tests", "[matscalar]"){
     }
 
 }
+
+TEST_CASE("Matrix Transpose Tests", "[transpose]"){
+
+    SECTION("Real Matrix Transpose Tests"){
+        requireIsEqual("{{1, 2}, {3, 4}}^T", vector<vector<double>>{{1, 3}, {2, 4}});
+        requireIsEqual("{{1, 2, 3}, {4, 5, 6}}^T", vector<vector<double>>{{1, 4}, {2, 5}, {3, 6}});
+    }
+
+    SECTION("Complex Matrix Transpose Tests"){
+        requireIsEqual("{{1+2i, 2-5i}, {3, 4}}^T", vector<vector<gsl_complex>>{{{1, 2}, {3, 0}}, {{2, -5}, {4, 0}}});
+        requireIsEqual("{{1, 2, 3i}, {4, 5, 6}}^T", vector<vector<gsl_complex>>{{{1, 0}, {4, 0}}, {{2, 0}, {5, 0}}, {{0, 3}, {6, 0}}});
+    }
+
+}
+
+TEST_CASE("Matrix Inverse Tests", "[transpose]"){
+
+    SECTION("Real Matrix Inverse Tests"){
+        requireIsEqual("{{1, 2}, {3, 4}}^-1", vector<vector<double>>{{-2, 1}, {1.5, -0.5}});
+        requireIsEqual("{{10, -9, -12}, {7, -12, 11}, {-10, 10, 3}}^-1", vector<vector<double>>{{-146./319, -93./319, -243./319}, {-131./319, -90./319, -194./319}, {-50./319, -10./319, -57./319}});
+    }
+
+    SECTION("Complex Matrix Inverse Tests"){
+        requireIsEqual("{{1i, 2}, {3, 4i}}^-1", vector<vector<gsl_complex>>{{{0.0, -0.4},{0.2, 0.0}},  {{0.3, 0.0},{0.0, -0.1}}});
+        requireIsEqual("{{10, -9i, -12}, {7, -12, 11i}, {-10i, 10, 3}}^-1", vector<vector<gsl_complex>>{{{0.0568283247, 0.0698351186},{0.0796074604, -0.0530825327},   {0.0326773457, -0.012553547}},  {{-0.0646285282, 0.0248281262},{0.0116912281, 0.0955086199},   {0.0916841601, 0.0564446685}},  {{-0.0173553014, 0.1066673283},{0.1379710152, -0.053003865},   {0.0695646228, -0.0792244093}}});
+    }
+
+}

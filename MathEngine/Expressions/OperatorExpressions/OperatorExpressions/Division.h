@@ -10,6 +10,7 @@
 #include "../../InvalidExpression.h"
 #include "../../MatrixExpression.h"
 #include "../../NumericalExpression.h"
+#include "../../UnitExpression.h"
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
@@ -65,6 +66,13 @@ expression matrix_scalar_division(MatrixExpression* mat, expression& scalar, con
     }
 }
 
+inline expression unit_conversion_division(UnitExpression* unit1, UnitExpression* unit2){
+    return (*unit1) / (*unit2);
+}
+inline expression unit_conversion_division(UnitExpression* unit1, expression& expr){
+    return (*unit1) / expr;
+}
+
 expression fe_SLASH(expression& lhs, expression& rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
@@ -76,6 +84,12 @@ expression fe_SLASH(expression& lhs, expression& rhs, const Variables& vars){
     }
     if (rexpr->matrix()){
         return matrix_scalar_division(lexpr, rexpr->matrix(), vars);
+    }
+    if (lexpr->unit()){
+        if (rexpr->unit()){
+            return unit_conversion_division(lexpr->unit(), rexpr->unit());
+        }
+        return unit_conversion_division(lexpr->unit(), rexpr);
     }
     if (lexpr->isComplex() || rexpr->isComplex()){
         return std::make_unique<NumExpression>(gsl_complex_div(lexpr->complex(vars), rexpr->complex(vars)));

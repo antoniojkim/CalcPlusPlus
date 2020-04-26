@@ -1,9 +1,11 @@
 
 #include <gsl/gsl_math.h>
 
-#include "../NumericalExpression.h"
-#include "../VariableExpression.h"
 #include "../../Utils/exceptions.h"
+#include "../NumericalExpression.h"
+#include "../UnitConversionExpression/Units.h"
+#include "../UnitExpression.h"
+#include "../VariableExpression.h"
 
 using namespace std;
 
@@ -25,6 +27,15 @@ expression VariableExpression::integrate(const std::string& var) {
 
 bool VariableExpression::evaluable(){ return !gsl_isnan(num); }
 
+expression VariableExpression::evaluate(const Variables& vars){
+    if (vars.count(name) == 0){
+        if (getAbbrIndex(name) != -1 || getUnitIndex(name) != -1){
+            return make_unique<UnitExpression>(name);
+        }
+        return copy();
+    }
+    return vars.at(name)->evaluate();
+}
 
 double VariableExpression::value(const Variables& vars) {
     if (vars.count(name) > 0){

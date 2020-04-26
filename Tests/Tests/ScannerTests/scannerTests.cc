@@ -67,3 +67,11 @@ TEST_CASE("Complex Scanner Tests", "[scanner]" ) {
                 "cos sinh 3 + 5i - arcsin ( x , 4 ) + 6 integral ( sin x , 4 , 5 ) ^| 4 + 0x3aF");
 
 }
+
+TEST_CASE("Unit Conversion Scanner Tests", "[scanner]" ) {
+
+    scannerTest("4km->m", "4 km -> m");
+    scannerTest("5.7m/s -> km/h", "5.7 m / s -> km / h");
+    scannerTest("5.7m/s^2 -> G", "5.7 m / s ^ 2 -> G");
+
+}
