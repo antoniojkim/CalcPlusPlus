@@ -6,6 +6,7 @@
 #include "../../Utils/exceptions.h"
 #include "Operators.h"
 #include "BinaryOperatorDirectory.h"
+#include "OperatorDerivatives/BasicOperators.h"
 #include "OperatorDirectory/BinaryOperators.h"
 #include "OperatorExpressions/Addition.h"
 #include "OperatorExpressions/Division.h"
@@ -74,10 +75,10 @@ const BinaryOperatorDerivative binaryOperatorDerivatives[numTokens] = {
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+	fprime_PLUS, fprime_MINUS, fprime_STAR, fprime_SLASH, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, fprime_CARET, fprime_STAR_STAR, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 };
 
 BinaryOperatorDerivative getBinaryOperatorDerivative(const std::string& name) {

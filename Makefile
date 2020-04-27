@@ -1,6 +1,9 @@
 
-build:
+build: generate
 	.utils/build MathEngine
+
+generate:
+	python3 -u MathEngine/.utils/auto_generate.py
 
 test: build cleantest
 	.utils/build Tests
@@ -14,6 +17,7 @@ newtest:
 
 
 ui:
+	rm -f CalcUI/CalcUI
 	.utils/build_ui
 
 run: build ui
@@ -51,8 +55,8 @@ install:
 requirements:
 	pip install -r requirements.txt
 
-generate:
-	python3 -u MathEngine/.utils/auto_generate.py
+lc:
+	.utils/linecount
 
 
 cleanui:

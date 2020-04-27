@@ -6,6 +6,7 @@
 #include "../../Utils/exceptions.h"
 #include "Operators.h"
 #include "BinaryOperatorDirectory.h"
+#include "OperatorDerivatives/BasicOperators.h"
 #include "OperatorDirectory/BinaryOperators.h"
 #include "OperatorExpressions/Addition.h"
 #include "OperatorExpressions/Division.h"

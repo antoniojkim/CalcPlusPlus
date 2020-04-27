@@ -10,7 +10,7 @@
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
-inline expression unit_conversion(UnitExpression* unit1, UnitExpression* unit2){
+inline expression unit_conversion(BaseUnitExpression* unit1, BaseUnitExpression* unit2){
     return convert(*unit1, *unit2);
 }
 

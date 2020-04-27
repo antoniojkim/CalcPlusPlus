@@ -75,18 +75,22 @@ operators:
         lexeme: "+"
         precedence: 11
         expression:
+        derivative:
     MINUS:
         lexeme: "-"
         precedence: 11
         expression:
+        derivative:
     STAR:
         lexeme: "*"
         precedence: 12
         expression:
+        derivative:
     SLASH:
         lexeme: "/"
         precedence: 12
         expression:
+        derivative:
     PCT:
         lexeme: "%"
         precedence: 12
@@ -112,11 +116,13 @@ operators:
         precedence: 13
         rightAssociative: True
         expression:
+        derivative:
     STAR_STAR:
         lexeme: "**"
         precedence: 13
         rightAssociative: True
         expression:
+        derivative:
     COLON:
         lexeme: ":"
         precedence: 14
@@ -140,225 +146,3 @@ tokens:
     UNDERSCORE: "_"
     C: "C"
     P: "P"
-functions:
-    # Basic
-    neg:
-    abs:
-    sqr:
-    sqrt:
-    cb:
-    cbrt:
-    hypot: -1
-    ldexp: 2
-    frexp:
-    fcmp: -1
-    # Trigonometry
-    sin:
-    cos:
-    tan:
-    csc:
-    sec:
-    cot:
-    asin:
-    acos:
-    atan:
-    acsc:
-    asec:
-    acot:
-    arcsin:
-    arccos:
-    arctan:
-    arccsc:
-    arcsec:
-    arccot:
-    sinh:
-    cosh:
-    tanh:
-    csch:
-    sech:
-    coth:
-    asinh:
-    acosh:
-    atanh:
-    acsch:
-    asech:
-    acoth:
-    arsinh:
-    arcosh:
-    artanh:
-    arcsch:
-    arsech:
-    arcoth:
-    arcsinh:
-    arccosh:
-    arctanh:
-    arccsch:
-    arcsech:
-    arccoth:
-    # Exponentials
-    exp:
-    exp_2:
-    expm1:
-    log:
-    log_2:
-    log1p:
-    ln:
-    ln_2:
-    ln1p:
-    logn: 2
-    # Calculus
-    dx: 0
-    deriv: 2
-    integral: 3
-    integrate: 0
-    # Statistics
-    mean: -1
-    var: -1
-    variance: -1
-    sd: -1
-    std: -1
-    stdev: -1
-    tss: -1
-    absdev: -1
-    skew: -1
-    kurt: -1
-    kurtosis: -1
-    lag1: -1
-    autocorr: -1
-    max: -1
-    min: -1
-    argmax: -1
-    argmin: -1
-    median: -1
-    # Polynomials
-    quad: 3
-    quadc: 3
-    cubic: 4
-    cubicc: 4
-    # Linear Algebra
-    det: 1
-    # Special Functions
-    gamma:
-    lngamma:
-    gammastar:
-    gammainv:
-    fact:
-    dfact:
-    lnfact:
-    lndfact:
-    choose: 2
-    lnchoose: 2
-    permute: 2
-    lnpermute: 2
-    taylorcoeff: 2
-    poch: 2
-    lnpoch: 2
-    pochrel: 2
-    gammainc: 2
-    gammaincq: 2
-    gammaincp: 2
-    beta: 2
-    lnbeta: 2
-    betainc: 3
-    # Fast Fourier Transforms
-    fft: -1
-    ifft: -1
-    # Random Number Generators
-    # randseed:
-    # rseed:
-    # randu:
-    # rand:
-    # randup:
-functionExprs:
-    - neg
-    - frexp
-    - tuple
-    - quad
-    - quadc
-    - cubic
-    - cubicc
-    - det
-    - fft
-    - ifft
-printFunctions:
-    - tuple
-unitconversions:
-    prefixes: {
-        "yocto": "y", "zepto": "z", "atto": "a",  "femto": "f", "pico": "p", "nano": "n", "micro": "u", "milli": "m", "kilo": "k",
-        "mega": "M",  "giga": "G",  "tera": "T",  "peta": "P",  "exa": "E",  "zetta": "Z", "yotta": "Y",
-    }
-    categories:
-        distance:
-            base: meter
-            baseabbr: m
-            baseprefixes:
-            prefixes: {
-                "centi": "c", "deci": "d", "deca": "dc", "hecto": "h"
-            }
-            custom:
-                centi: 1e-2
-                deci: 1e-1
-                deca: 1e1
-                hecto: 1e2
-            conversions: {
-                "inch": "in", "foot": "ft", "yard": "yd", "mile": "mi", "mil": "mil", "nautical_mile": "nmi", "fathom": "fth"
-            }
-        time:
-            base: second
-            baseabbr: s
-            baseprefixes:
-            conversions: {
-                "minute": "M", "hour": "h", "week": "wk", "month": "mth", "year": "yr",
-                "decade": "dec", "century": "cen", "millenium": "mln"
-            }
-            custom:
-                month: 2628288
-                year: 31536000
-                decade: 315360000
-                century: 3153600000
-                millenium: 31536000000
-        timesquared:
-            base: secondsquared
-            baseabbr: "s^2"
-        speed:
-            base: meterspersecond
-            baseabbr: "m/s"
-            # baseprefixes:
-            conversions: {
-                "speed_of_light": "c", "kilometers_per_hour": "kph", "miles_per_hour": "mph", "knot": "knt"
-            }
-        acceleration:
-            base: meterspersecondsquared
-            baseabbr: "m/s^2"
-            conversions: {
-                "grav_accel": "G"
-            }
-        area:
-            base: meterssquared
-            baseabbr: "m^2"
-            baseprefixes:
-            conversions: {
-                "hectare": "hec", "acre": "ac", "barn": "bn"
-            }
-        volume:
-            base: meterscubed
-            baseabbr: "m^3"
-            baseprefixes:
-            conversions: {
-                "liter": "L", "us_gallon": "USG", "quart": "qt", "pint": "pt", "cup": "cp", "fluid_ounce": "floz",
-                "tablespoon": "tbsp", "teaspoon": "tsp", "canadian_gallon": "CG", "uk_gallon": "UKG",
-                "milliliter": "ml", "microliter": "ul"
-            }
-            custom:
-                milliliter: 1e-6
-                microliter: 1e-9
-        mass:
-            base: gram
-            baseabbr: g
-            baseconversion: 1e-3
-            baseprefixes:
-            conversions: {
-                "pound_mass": "lb", "ounce_mass": "oz", "ton": "t", "metric_ton": "mt", "uk_ton": "UKT", "troy_ounce": "toz",
-                "carat": "CD", "unified_atomic_mass": "UAM", "solar_mass": "SM",
-                "mass_electron": "mE", "mass_muon": "mMu", "mass_proton": "mPt", "mass_neutron": "mNt"
-            }

@@ -1,0 +1,108 @@
+unitconversions:
+    prefixes: {
+        "yocto": "y", "zepto": "z", "atto": "a",  "femto": "f", "pico": "p", "nano": "n", "micro": "u", "milli": "m", "kilo": "k",
+        "mega": "M",  "giga": "G",  "tera": "T",  "peta": "P",  "exa": "E",  "zetta": "Z", "yotta": "Y",
+    }
+    categories:
+        distance:
+            base: meter
+            baseabbr: m
+            baseprefixes:
+            prefixes: {
+                "centi": "c", "deci": "d", "deca": "dc", "hecto": "h"
+            }
+            custom:
+                centi: 1e-2
+                deci: 1e-1
+                deca: 1e1
+                hecto: 1e2
+            conversions: {
+                "inch": "in", "foot": "ft", "yard": "yd", "mile": "mi", "mil": "mil", "nautical_mile": "nmi", "fathom": "fth",
+                "astronomical_unit": "AU", "light_year": "ly"
+            }
+        time:
+            base: second
+            baseabbr: s
+            baseprefixes:
+            conversions: {
+                "minute": "M", "hour": "h", "week": "wk", "month": "mth", "year": "yr",
+                "decade": "dec", "century": "cen", "millenium": "mln"
+            }
+            custom:
+                month: 2628288
+                year: 31536000
+                decade: 315360000
+                century: 3153600000
+                millenium: 31536000000
+        timesquared:
+            base: secondsquared
+            baseabbr: "s^2"
+        speed:
+            base: meterspersecond
+            baseabbr: "m/s"
+            # baseprefixes:
+            conversions: {
+                "speed_of_light": "c", "kilometers_per_hour": "kph", "miles_per_hour": "mph", "knot": "knt"
+            }
+        acceleration:
+            base: meterspersecondsquared
+            baseabbr: "m/s^2"
+            conversions: {
+                "grav_accel": "G"
+            }
+        area:
+            base: meterssquared
+            baseabbr: "m^2"
+            baseprefixes:
+            conversions: {
+                "hectare": "hec", "acre": "ac", "barn": "bn"
+            }
+        volume:
+            base: meterscubed
+            baseabbr: "m^3"
+            baseprefixes:
+            conversions: {
+                "liter": "L", "us_gallon": "USG", "quart": "qt", "pint": "pt", "cup": "cp", "fluid_ounce": "floz",
+                "tablespoon": "tbsp", "teaspoon": "tsp", "canadian_gallon": "CG", "uk_gallon": "UKG",
+                "milliliter": "ml", "microliter": "ul"
+            }
+            custom:
+                milliliter: 1e-6
+                microliter: 1e-9
+        mass:
+            base: gram
+            baseabbr: g
+            baseconversion: 1e-3
+            baseprefixes:
+            conversions: {
+                "pound_mass": "lb", "ounce_mass": "oz", "ton": "t", "metric_ton": "mt", "uk_ton": "UKT", "troy_ounce": "toz",
+                "carat": "CD", "unified_atomic_mass": "UAM", "solar_mass": "SM",
+                "mass_electron": "mE", "mass_muon": "mMu", "mass_proton": "mPt", "mass_neutron": "mNt"
+            }
+        force:
+            base: grammeterspersecondsquared
+            baseabbr: "g*m/s^2"
+            baseconversion: 1e-3
+            conversions: {
+                "gram_force": "gF", "pound_force": "lbF", "kilopound_force": "klbF", "poundal": "pdl",
+                "newton": "N", "dyne": "Dy"
+            }
+        massdistance:
+            base: grammeter
+            baseabbr: "g*m"
+        masspertimesquared:
+            base: grampersecondsquared
+            baseabbr: "g/s^2"
+        energy:
+            base: grammeterssquaredpersecondsquared
+            baseabbr: "g*m^2/s^2"
+            baseconversion: 1e-3
+            conversions: {
+                "joule": "J", "erg": "erg", "electron_volt": "EV", "rydberg": "Ry",
+                "calorie": "cal", "btu": "btu", "therm": "thm", "newton_meter": "Nm"
+            }
+            custom:
+                newton_meter: 1000
+        massarea:
+            base: grammeterssquared
+            baseabbr: "g*m^2"

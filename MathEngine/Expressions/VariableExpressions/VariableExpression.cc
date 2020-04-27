@@ -39,7 +39,7 @@ bool VariableExpression::evaluable(){ return !gsl_isnan(num); }
 expression VariableExpression::evaluate(const Variables& vars){
     if (vars.count(name) == 0){
         if (getAbbrIndex(name) != -1 || getUnitIndex(name) != -1){
-            return UnitExpression::construct(name);
+            return BaseUnitExpression::construct(name);
         }
         return copy();
     }

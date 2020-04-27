@@ -1,0 +1,3 @@
+#!/bin/bash
+
+find MathEngine/ -print | egrep "\.(h|cc|yml|py)" | xargs cat | sed '/^\s*$/d' | wc -l

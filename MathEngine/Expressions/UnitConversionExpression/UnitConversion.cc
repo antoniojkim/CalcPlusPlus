@@ -10,11 +10,11 @@
 
 using namespace std;
 
-expression convert(UnitExpression& from, UnitExpression& to){
+expression convert(BaseUnitExpression& from, BaseUnitExpression& to){
     if (from.type != to.type){
         return InvalidExpression::construct(Exception("Invalid Unit Conversion: ", from.abbr, " -> ", to.abbr));
     }
-    return UnitExpression::construct(from.type, to.abbr, from.val / to.val);
+    return ConvertedUnitExpression::construct(from.type, to.abbr, from.val / to.val);
 }
 
 UnitType operator*(UnitType t1, UnitType t2){
@@ -27,20 +27,32 @@ UnitType operator*(UnitType t1, UnitType t2){
 	if (t1 == TIME && t2 == TIME){
 		return TIMESQUARED;
 	}
+	if ((t1 == MASS && t2 == ACCELERATION) || (t1 == ACCELERATION && t2 == MASS) ||
+		(t1 == MASSPERTIMESQUARED && t2 == DISTANCE) ||
+		(t1 == DISTANCE && t2 == MASSPERTIMESQUARED)){
+		return FORCE;
+	}
+	if ((t1 == MASS && t2 == AREA) || (t1 == AREA && t2 == MASS)){
+		return MASSAREA;
+	}
+	if ((t1 == FORCE && t2 == DISTANCE) || (t1 == DISTANCE && t2 == FORCE)){
+		return ENERGY;
+	}
+
 	return NONE;
 }
 
-expression operator*(UnitExpression& unit1, UnitExpression& unit2){
+expression operator*(BaseUnitExpression& unit1, BaseUnitExpression& unit2){
     auto newType = unit1.type * unit2.type;
     if (newType == NONE) {
         return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " * ", unit2.abbr));
     }
     ostringstream newabbr;
     newabbr << unit1.abbr << "*" << unit2.abbr;
-    return UnitExpression::construct(newType, newabbr.str(), unit1.val * unit2.val);
+    return BaseUnitExpression::construct(newType, newabbr.str(), unit1.val * unit2.val);
 }
-expression operator*(UnitExpression& unit1, expression& expr){
-    return UnitExpression::construct(unit1.type, unit1.abbr, unit1.val * expr->value());
+expression operator*(BaseUnitExpression& unit1, expression& expr){
+    return BaseUnitExpression::construct(unit1.type, unit1.abbr, unit1.val * expr->value());
 }
 
 UnitType operator/(UnitType t1, UnitType t2){
@@ -54,20 +66,26 @@ UnitType operator/(UnitType t1, UnitType t2){
 				return NONE;
 		}
 	}
+	else if (t1 == MASSDISTANCE && t2 == TIMESQUARED){
+		return FORCE;
+	}
+	else if (t1 == MASSAREA && t2 == TIMESQUARED){
+		return ENERGY;
+	}
 	return NONE;
 }
 
-expression operator/(UnitExpression& unit1, UnitExpression& unit2){
+expression operator/(BaseUnitExpression& unit1, BaseUnitExpression& unit2){
     auto newType = unit1.type / unit2.type;
     if (newType == NONE) {
         return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " / ", unit2.abbr));
     }
     ostringstream newabbr;
     newabbr << unit1.abbr << "/" << unit2.abbr;
-    return UnitExpression::construct(newType, newabbr.str(), unit1.val / unit2.val);
+    return BaseUnitExpression::construct(newType, newabbr.str(), unit1.val / unit2.val);
 }
-expression operator/(UnitExpression& unit1, expression& expr){
-    return UnitExpression::construct(unit1.type, unit1.abbr, unit1.val / expr->value());
+expression operator/(BaseUnitExpression& unit1, expression& expr){
+    return BaseUnitExpression::construct(unit1.type, unit1.abbr, unit1.val / expr->value());
 }
 
 UnitType operator^(UnitType t1, int n){
@@ -87,7 +105,7 @@ UnitType operator^(UnitType t1, int n){
 	return NONE;
 }
 
-expression operator^(UnitExpression& unit1, expression& expr){
+expression operator^(BaseUnitExpression& unit1, expression& expr){
     double n = expr->value();
     if (std::trunc(n) != n){
         return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " ^ ", n));
@@ -98,5 +116,5 @@ expression operator^(UnitExpression& unit1, expression& expr){
     }
     ostringstream newabbr;
     newabbr << unit1.abbr << "^" << int(n);
-    return UnitExpression::construct(newType, newabbr.str(), std::pow(unit1.val, n));
+    return BaseUnitExpression::construct(newType, newabbr.str(), std::pow(unit1.val, n));
 }

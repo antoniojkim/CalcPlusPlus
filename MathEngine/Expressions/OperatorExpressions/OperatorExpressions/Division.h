@@ -64,10 +64,10 @@ expression matrix_scalar_division(MatrixExpression* mat, expression& scalar, con
     }
 }
 
-inline expression unit_conversion_division(UnitExpression* unit1, UnitExpression* unit2){
+inline expression unit_conversion_division(BaseUnitExpression* unit1, BaseUnitExpression* unit2){
     return (*unit1) / (*unit2);
 }
-inline expression unit_conversion_division(UnitExpression* unit1, expression& expr){
+inline expression unit_conversion_division(BaseUnitExpression* unit1, expression& expr){
     return (*unit1) / expr;
 }
 

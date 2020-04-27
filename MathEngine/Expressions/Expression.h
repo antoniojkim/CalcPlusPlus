@@ -11,7 +11,7 @@
 struct Expression;
 struct MatrixExpression;
 struct TupleExpression;
-struct UnitExpression;
+struct BaseUnitExpression;
 struct VariableExpression;
 
 typedef std::unique_ptr<Expression> expression;
@@ -44,7 +44,7 @@ struct Expression {
 
     virtual inline MatrixExpression* matrix(){ return nullptr; }
     virtual inline TupleExpression* tuple(){ return nullptr; }
-    virtual inline UnitExpression* unit(){ return nullptr; }
+    virtual inline BaseUnitExpression* unit(){ return nullptr; }
     virtual inline VariableExpression* variable(){ return nullptr; }
 
     virtual bool isComplex() = 0;

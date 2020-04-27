@@ -65,10 +65,10 @@ expression matrix_scalar_multiply(expression& scalar, MatrixExpression* mat, con
     }
 }
 
-inline expression unit_conversion_multiply(UnitExpression* unit1, UnitExpression* unit2){
+inline expression unit_conversion_multiply(BaseUnitExpression* unit1, BaseUnitExpression* unit2){
     return (*unit1) * (*unit2);
 }
-inline expression unit_conversion_multiply(UnitExpression* unit1, expression& expr){
+inline expression unit_conversion_multiply(BaseUnitExpression* unit1, expression& expr){
     return (*unit1) * expr;
 }
 

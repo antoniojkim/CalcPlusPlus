@@ -9,8 +9,9 @@
 #include <gsl/gsl_fft_complex.h>
 
 #include "../../Expression.h"
-#include "../../TupleExpression.h"
+#include "../../InvalidExpression.h"
 #include "../../MatrixExpression.h"
+#include "../../TupleExpression.h"
 
 #define MAKE_UNIQUE_GSL(F) \
     typedef std::unique_ptr<gsl_##F, decltype(&gsl_##F##_free)> unique_##F; \
@@ -68,6 +69,7 @@ expression fft(MatrixExpression* matrix){
             return MatrixExpression::construct(result.get());
         }
     }
+    return InvalidExpression::construct(Exception("FFT expected 1D Matrix."));
 }
 
 expression fe_fft(list<expression>& args, const Variables& vars){
@@ -125,6 +127,7 @@ expression ifft(MatrixExpression* matrix){
             return MatrixExpression::construct(result.get());
         }
     }
+    return InvalidExpression::construct(Exception("IFFT expected 1D Matrix."));
 }
 
 expression fe_ifft(list<expression>& args, const Variables& vars){
