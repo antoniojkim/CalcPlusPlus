@@ -41,6 +41,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 expressionStack.emplace_back(BinExpression::construct(token->lexeme));
                 continue;
             case ID:
+            case SPECIALID:
                 expressionStack.emplace_back(VariableExpression::construct(token->lexeme));
                 continue;
             default:
@@ -173,6 +174,7 @@ expression ShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             case HEX:
             case BIN:
             case ID:
+            case SPECIALID:
                 outputStack.push_back(&token);
                 continue;
             case COMMA:

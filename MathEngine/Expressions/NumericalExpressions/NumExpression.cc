@@ -5,6 +5,7 @@
 
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
+#include "../../Utils/fraction.h"
 
 using namespace std;
 
@@ -93,4 +94,16 @@ std::ostream& NumExpression::postfix(std::ostream& out) {
         out << 0;
     }
     return out;
+}
+
+bool NumExpression::prettyprint(std::ostream& out){
+    if (imag == 0){
+        long numerator, denominator;
+        if (to_fraction(real, numerator, denominator) && denominator != 1 &&
+            std::abs(numerator) < 1e6 && std::abs(denominator) < 1e6){
+            out << numerator << "/" << denominator;
+            return true;
+        }
+    }
+    return false;
 }

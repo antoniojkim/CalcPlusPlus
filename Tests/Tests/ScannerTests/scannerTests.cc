@@ -42,6 +42,11 @@ TEST_CASE("Basic Number Scanner Tests", "[scanner]" ) {
         scannerTest("-1e8", "- 1e8");
     }
 
+    SECTION("Constants Test"){
+        scannerTest("πe", "π e");
+        scannerTest("eπ", "e π");
+    }
+
 }
 
 

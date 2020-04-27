@@ -53,6 +53,7 @@ struct Expression {
 
     virtual std::ostream& print(std::ostream&) = 0;
     virtual std::ostream& postfix(std::ostream&) = 0;
+    virtual bool prettyprint(std::ostream&);
 
 };
 

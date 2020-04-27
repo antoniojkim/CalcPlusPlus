@@ -17,6 +17,8 @@ gsl_complex Expression::complex(const Variables& vars){ return gsl_complex{this-
 
 double Expression::value(){ return value(emptyVars); }
 
+bool Expression::prettyprint(std::ostream& out){ return false; }
+
 std::ostream& operator<<(std::ostream& out, expression& e){
     return e->print(out);
 }

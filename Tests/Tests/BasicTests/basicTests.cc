@@ -66,5 +66,8 @@ TEST_CASE("Basic Constants Tests", "[constants]"){
     requireIsEqual("sqrtπ", M_SQRTPI);
     requireIsEqual("sqrte", sqrt(M_E));
     requireIsEqual("ϕ", 1.6180339887498948482);
+    requireIsEqual("vphi", 1.6180339887498948482);
     requireIsEqual("γ", M_EULER);
+    requireIsEqual("πe", M_PI * M_E);
+    requireIsEqual("eπ", M_PI * M_E);
 }

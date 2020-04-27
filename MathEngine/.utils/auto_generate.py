@@ -220,6 +220,11 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
             constants=wrap((f'"{name}"' for name, val in constants)),
             constantValues=wrap((str(val["val"]) for name, val in constants)),
             shortConstants=wrap((f'"{val["short"]}"' for name, val in constants)),
+            constantLongValues=",\n\t".join(
+                f'"{val["longval"]}"' for name, val in constants
+            ),
+            shortestConstantName=str(min(len(name) for name, val in constants)),
+            longestConstantName=str(max(len(name) for name, val in constants)),
         )
 
 

@@ -29,6 +29,8 @@ bool Scanner::isPreImplicit(Type type){
         case RPAREN:
         case RSQUARE:
         case RBRACE:
+        case ID:
+        case SPECIALID:
             return true;
         default:
             return false;
@@ -42,6 +44,7 @@ bool Scanner::isPostImplicit(Type type){
         case LSQUARE:
         case LBRACE:
         case ID:
+        case SPECIALID:
         case FUNCTION:
             return true;
         default:
@@ -177,9 +180,12 @@ static bool startsWithID(const char* str, size_t size, int& index){
 }
 
 static bool startsWithGreekLetter(const char* str, size_t size, int& index){
-    if (size > 1 && startsWithGreekLetter(str) != -1){
-        index = greekLetterLength;
-        return true;
+    if (size > 1){
+        std::string letter {str, str+greekLetterLength};
+        if (getGreekLetterIndex(letter) != -1){
+            index = greekLetterLength;
+            return true;
+        }
     }
     return false;
 }
@@ -235,7 +241,7 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             i += index;
         }
         else if (startsWithGreekLetter(c_str, size, index)){
-            tokens.emplace_back(Token{str.substr(i, index), ID});
+            tokens.emplace_back(Token{str.substr(i, index), SPECIALID});
             i += index;
         }
         else{

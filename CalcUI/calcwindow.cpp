@@ -30,27 +30,24 @@ CalcWindow::~CalcWindow()
 void CalcWindow::connect_textchanged(QTextEdit* input, QTextEdit* output)
 {
     connect(input, &QTextEdit::textChanged, this, [=](){
-        string inputString = input->toPlainText().toStdString();
-
         try {
-            auto expr = engine.evaluate(inputString);
-            if (!dynamic_cast<InvalidExpression*>(expr.get())){
-                ostringstream out;
-                out << expr;
-                string outputString = out.str();
-                output->setText(QString::fromUtf8(outputString.c_str()));
-            }
-            else {
-                string outputText = output->toPlainText().toStdString();
-                if (!outputText.empty() && outputText.at(0) != '`'){
-                    ostringstream out;
-                    out << "` " << outputText << " `";
-                    string outputString = out.str();
-                    output->setText(QString::fromUtf8(outputString.c_str()));
-                }
-            }
+            string inputString = input->toPlainText().toStdString();
+            auto cursor = input->textCursor();
+            int cursorPosition = input->textCursor().position();
+
+            inputString = engine.formatInput(inputString, cursorPosition);
+
+            input->blockSignals(true);
+            input->setText(QString::fromUtf8(inputString.c_str()));
+            cursor.setPosition(cursorPosition);
+            input->setTextCursor(cursor);
+            input->blockSignals(false);
+
+            string outputString = output->toPlainText().toStdString();
+            outputString = engine.evaluateOutput(inputString, outputString);
+            output->setText(QString::fromUtf8(outputString.c_str()));
         } catch(const Exception& e){
             cout << e.what() << endl;
-        } catch(...){}
+        } // catch(...){}
     });
 }

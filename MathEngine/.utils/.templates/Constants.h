@@ -22,6 +22,11 @@ constexpr const double constantValues[numConstants] = {
 const std::string shortConstants[numConstants] = {
     {shortConstants}
 };
+constexpr const char * constantLongValues[numConstants] = {
+    {constantLongValues}
+};
+constexpr const int longestConstantName = {longestConstantName};
+constexpr const int shortestConstantName = {shortestConstantName};
 
 /*
 Returns index of the constant in the constants array.
@@ -75,7 +80,7 @@ If the index is valid, it will return the number of arguments.
 If the index is not valid, the function will return 0.
 Note: a return value of -1 means that it accepts a variable number of parameters.
 */
-double getConstantValue(const std::string& name){
+static double getConstantValue(const std::string& name){
     int index = getConstantIndex(name.c_str());
     if (index != -1){
         return constantValues[index];

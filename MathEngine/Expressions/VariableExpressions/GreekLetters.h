@@ -14,8 +14,10 @@ constexpr const char* greekLetterNames[numGreekLetters] = {
 	"Mu", "Nu", "Omega", "Omicron", "Phi", "Pi", "Psi", "Rho", "Sigma", "Tau", "Theta",
 	"Upsilon", "Xi", "Zeta", "alpha", "beta", "chi", "delta", "epsilon", "eta", "gamma",
 	"iota", "kappa", "lambda", "mu", "nu", "omega", "omicron", "phi", "pi", "psi", "rho",
-	"sigma", "tau", "theta", "upsilon", "varphi", "xi", "zeta"
+	"sigma", "tau", "theta", "upsilon", "vphi", "xi", "zeta"
 };
+constexpr const int shortestGreekLetterName = 2;
+constexpr const int longestGreekLetterName = 7;
 constexpr const int greekLetterLength = 2;
 const std::string greekLetters[numGreekLetters] = {
 	u8"\u0391", u8"\u0392", u8"\u03A7", u8"\u0394", u8"\u0395", u8"\u0397", u8"\u0393",
@@ -37,7 +39,7 @@ Parameters
 name: The name of the constantaddMissingRParens
 The index or -1 if the provided name is not a constant.
 */
-static constexpr int getGreekLetterIndex(const char* name){
+static constexpr int getGreekLetterNameIndex(const char* name){
     int low = 0;
     int high = numGreekLetters - 1;
     while (true){
@@ -59,14 +61,16 @@ static constexpr int getGreekLetterIndex(const char* name){
     }
     return -1;
 }
-inline int getGreekLetterIndex(const std::string& name){
-    return getGreekLetterIndex(name.c_str());
+inline int getGreekLetterNameIndex(const std::string& name){
+    return getGreekLetterNameIndex(name.c_str());
 }
 
-constexpr int startsWithGreekLetter(const std::string& name){
-    for (int i = 0; i < numGreekLetters; ++i){
-        if (name == greekLetters[i]){
-            return i;
+static int getGreekLetterIndex(const std::string& name){
+    if (name.size() <= greekLetterLength){
+        for (int i = 0; i < numGreekLetters; ++i){
+            if (name == greekLetters[i]){
+                return i;
+            }
         }
     }
     return -1;

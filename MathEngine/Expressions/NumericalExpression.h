@@ -23,6 +23,8 @@ class NumExpression: public Expression {
 
         EXPRESSION_OVERRIDES
 
+        bool prettyprint(std::ostream&);
+
 };
 
 class HexExpression: public Expression {

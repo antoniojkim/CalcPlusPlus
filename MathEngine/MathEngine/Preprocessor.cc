@@ -31,9 +31,11 @@ void addMissingRParens(list<Token>& tokens){
 
 void replaceGreekLetters(list<Token>& tokens){
     for (auto& token : tokens){
-        int index = startsWithGreekLetter(token.lexeme);
-        if (index != -1){
-            token.lexeme = greekLetterNames[index];
+        if (token.type == SPECIALID){
+            int index = getGreekLetterIndex(token.lexeme);
+            if (index != -1){
+                token.lexeme = greekLetterNames[index];
+            }
         }
     }
 }
