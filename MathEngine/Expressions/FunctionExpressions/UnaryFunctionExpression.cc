@@ -16,6 +16,7 @@ UnaryFunctionExpression::UnaryFunctionExpression(const char * name, expression&&
     if (functionIndex == -1){
         throw Exception("Invalid Unary Function: ", std::string{name});
     }
+
 }
 UnaryFunctionExpression::UnaryFunctionExpression(std::string& name, expression&& arg):
     UnaryFunctionExpression{name.c_str(), std::move(arg)} {}

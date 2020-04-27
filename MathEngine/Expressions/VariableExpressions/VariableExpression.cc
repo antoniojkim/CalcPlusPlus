@@ -1,4 +1,5 @@
 
+#include <iomanip>
 #include <memory>
 
 #include <gsl/gsl_math.h>
@@ -8,6 +9,7 @@
 #include "../UnitConversionExpression/Units.h"
 #include "../UnitExpression.h"
 #include "../VariableExpression.h"
+#include "Constants.h"
 
 using namespace std;
 
@@ -34,10 +36,15 @@ expression VariableExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: VariableExpression::integrate");
 }
 
-bool VariableExpression::evaluable(){ return !gsl_isnan(num); }
+bool VariableExpression::evaluable(){
+    return !gsl_isnan(num) || getConstantIndex(name) != -1;
+}
 
 expression VariableExpression::evaluate(const Variables& vars){
     if (vars.count(name) == 0){
+        if (getConstantIndex(name) != -1){
+            return VariableExpression::construct(name, getConstantValue(name));
+        }
         if (getAbbrIndex(name) != -1 || getUnitIndex(name) != -1){
             return BaseUnitExpression::construct(name);
         }
@@ -50,6 +57,9 @@ double VariableExpression::value(const Variables& vars) {
     if (vars.count(name) > 0){
         return vars.at(name)->value();
     }
+    if (getConstantIndex(name) != -1){
+        return getConstantValue(name);
+    }
     return num;
 }
 
@@ -60,7 +70,12 @@ expression VariableExpression::copy() {
 }
 
 std::ostream& VariableExpression::print(std::ostream& out) {
-    return out << name;
+    if (gsl_isnan(num)){
+        return out << name;
+    }
+    else{
+        return out << std::setprecision(16) << num;
+    }
 }
 std::ostream& VariableExpression::postfix(std::ostream& out) {
     return out << name;

@@ -1,10 +1,13 @@
 
-#include "../EngineTest.h"
 
-#include <Catch2>
+#include <cmath>
 #include <iostream>
 #include <string>
+
+#include <Catch2>
 #include <gsl/gsl_math.h>
+
+#include "../EngineTest.h"
 
 using namespace std;
 
@@ -52,4 +55,16 @@ TEST_CASE("Basic GSL Math Function Tests", "[basic_function]"){
     requireIsEqual("fcmp(3, 3.000000000000001)", 1);
     requireIsEqual("fcmp(3, 3.0001, 1e-2)", 1);
     requireIsEqual("fcmp(3, 3.0001, 1E-2)", 1);
+}
+
+TEST_CASE("Basic Constants Tests", "[constants]"){
+    requireIsEqual("pi", M_PI);
+    requireIsEqual("π", M_PI);
+    requireIsEqual("pi/2", M_PI_2);
+    requireIsEqual("sqrt(pi)", M_SQRTPI);
+    requireIsEqual("sqrtpi", M_SQRTPI);
+    requireIsEqual("sqrtπ", M_SQRTPI);
+    requireIsEqual("sqrte", sqrt(M_E));
+    requireIsEqual("ϕ", 1.6180339887498948482);
+    requireIsEqual("γ", M_EULER);
 }

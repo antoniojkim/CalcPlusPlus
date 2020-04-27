@@ -8,8 +8,6 @@
 class UnaryFunctionExpression: public Expression {
 
     int functionIndex;
-    // UnaryFunction fprime;
-    // UnaryFunction fint;
     expression arg;
 
     UnaryFunctionExpression(const char * name, expression&& arg);

@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <regex>
 #include <sstream>
+#include <cstring>
 #include <string>
 
 using namespace std;
@@ -62,7 +63,7 @@ static const std::wregex greekLetterRegex ((const wchar_t*) "^[\\u0391-\\u03C9]"
 inline std::wstring convert( const std::string& as )
 {
     wchar_t* buf = new wchar_t[as.size() * 2 + 2];
-    swprintf( buf, L"%S", as.c_str() );
+    swprintf( buf, as.size() * 2 + 2, L"%S", as.c_str() );
     std::wstring rval = buf;
     delete[] buf;
     return rval;
@@ -76,13 +77,8 @@ int main() {
     }
 	cout << endl;
 
-	std::wstring s = convert(out.str());
-	cout << s << endl;
+	cout << out.str() << endl;
 
-    std::wsmatch match;
-    while (std::regex_search(s, match, greekLetterRegex)){
-		s = match.suffix();
-		cout << match[0];
-    }
-	cout << endl;
+	std::string s = out.str();
+	cout << s << endl;
 }

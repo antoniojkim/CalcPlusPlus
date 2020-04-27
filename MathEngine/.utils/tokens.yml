@@ -146,3 +146,16 @@ tokens:
     UNDERSCORE: "_"
     C: "C"
     P: "P"
+constants:
+    pi:
+        val: M_PI
+        short: π
+    e:  # Euler's Number
+        val: M_E
+        short: e
+    gamma:  # Euler–Mascheroni constant
+        val: M_EULER
+        short: γ
+    varphi:  # Golden Ratio
+        val: 1.6180339887498948482
+        short: ϕ

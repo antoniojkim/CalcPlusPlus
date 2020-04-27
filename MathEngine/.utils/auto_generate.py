@@ -19,77 +19,67 @@ def wrap(text, width=88, indent="\t", delimiter=", "):
     return (os.linesep + indent).join(textwrap.fill(text, width).split(os.linesep))
 
 
+class Specifications:
+    def __init__(self, spec_path):
+        self.spec_path = spec_path
+
+    def __enter__(self):
+        with open(self.spec_path) as file:
+            self.specs = yaml.load(file, Loader=Loader)
+
+        return self
+
+    def __exit__(self, type, value, traceback):
+        pass
+
+    def __getitem__(self, key):
+        return self.specs[key]
+
+
 def is_newer(file1, file2):
     return os.path.getmtime(file1) > os.path.getmtime(file2)
 
 
 class Template:
-    def __init__(self, template_path, write_path):
+    def __init__(self, specs, template_path, write_path):
         self.template_path = template_path
         self.write_path = write_path
+        self.update = is_newer(specs.spec_path, write_path) or is_newer(
+            template_path, write_path
+        )
 
     def __enter__(self):
-        with open(self.template_path) as file:
-            self.template = file.read()
+        if self.update:
+            with open(self.template_path) as file:
+                self.template = file.read()
 
         return self
 
     def __exit__(self, type, value, traceback):
-        with open(self.write_path, "w") as file:
-            file.write(self.template)
+        if self.update:
+            with open(self.write_path, "w") as file:
+                file.write(self.template)
 
     def replace(self, **kwargs):
-        for key, val in kwargs.items():
-            self.template = self.template.replace(f"{{{key}}}", str(val))
+        if self.update:
+            for key, val in kwargs.items():
+                self.template = self.template.replace(f"{{{key}}}", str(val))
 
 
 file_dir = pathlib.Path(__file__).parent.absolute()
 template_dir = os.path.join(file_dir, ".templates")
+expr_dir = os.path.join(file_dir, "..", "Expressions")
 
-if is_newer(
-    os.path.join(file_dir, "tokens.yml"),
-    os.path.join(file_dir, "..", "Scanner", "scanner.h"),
-):
-    with open(os.path.join(file_dir, "tokens.yml")) as file:
-        tokens = yaml.load(file, Loader=Loader)
+with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
 
-        keys = tuple(
-            list(tokens["specialTokens"])
-            + list(tokens["operators"].keys())
-            + list(tokens["tokens"].keys())
-        )
-
-        lexemes = [
-            (operator, vals["lexeme"]) for operator, vals in tokens["operators"].items()
-        ] + list(tokens["tokens"].items())
-
-        operatorLexemes = [
-            tokens["operators"].get(key, {}).get("lexeme", "") for key in keys
-        ]
-        operatorPrecedences = [
-            (
-                tokens["operators"].get(key, {}).get("precedence", 0),
-                "rightAssociative" in tokens["operators"].get(key, {}),
-            )
-            for key in keys
-        ]
-        singleOperators = [
-            "singleOperator" in tokens["operators"].get(key, {}) for key in keys
-        ]
-        operatorExprs = [
-            "expression" in tokens["operators"].get(key, {}) for key in keys
-        ]
-        operatorDerivatives = [
-            "derivative" in tokens["operators"].get(key, {}) for key in keys
-        ]
-        operatorIntegrals = [
-            "integral" in tokens["operators"].get(key, {}) for key in keys
-        ]
-        operatorSimplifys = [
-            "simplify" in tokens["operators"].get(key, {}) for key in keys
-        ]
+    keys = tuple(
+        list(specs["specialTokens"])
+        + list(specs["operators"].keys())
+        + list(specs["tokens"].keys())
+    )
 
     with Template(
+        specs,
         os.path.join(template_dir, "scanner.h"),
         os.path.join(file_dir, "..", "Scanner", "scanner.h"),
     ) as template:
@@ -100,9 +90,13 @@ if is_newer(
         )
 
     with Template(
+        specs,
         os.path.join(template_dir, "scanner.cc"),
         os.path.join(file_dir, "..", "Scanner", "scanner.cc"),
     ) as template:
+        lexemes = [
+            (operator, vals["lexeme"]) for operator, vals in specs["operators"].items()
+        ] + list(specs["tokens"].items())
         lexemes.sort(key=lambda l: len(l[1]), reverse=True)
         template.replace(
             numLexemes=len(lexemes),
@@ -110,11 +104,30 @@ if is_newer(
             lexemeTypes=wrap((name for name, lexeme in lexemes)),
         )
 
+    operatorLexemes = [
+        specs["operators"].get(key, {}).get("lexeme", "") for key in keys
+    ]
+    operatorPrecedences = [
+        (
+            specs["operators"].get(key, {}).get("precedence", 0),
+            "rightAssociative" in specs["operators"].get(key, {}),
+        )
+        for key in keys
+    ]
+
+    def operators_constains(conditionKey):
+        return [conditionKey in specs["operators"].get(key, {}) for key in keys]
+
+    singleOperators = operators_constains("singleOperator")
+    operatorExprs = operators_constains("expression")
+    operatorDerivatives = operators_constains("derivative")
+    operatorIntegrals = operators_constains("integral")
+    operatorSimplifys = operators_constains("simplify")
+
     with Template(
+        specs,
         os.path.join(template_dir, "Operators.h"),
-        os.path.join(
-            file_dir, "..", "Expressions", "OperatorExpressions", "Operators.h"
-        ),
+        os.path.join(expr_dir, "OperatorExpressions", "Operators.h"),
     ) as template:
         template.replace(
             operators=wrap(map('"{}"'.format, operatorLexemes)),
@@ -140,14 +153,9 @@ if is_newer(
         )
 
     with Template(
+        specs,
         os.path.join(template_dir, "BinaryOperatorDirectory.cc"),
-        os.path.join(
-            file_dir,
-            "..",
-            "Expressions",
-            "OperatorExpressions",
-            "BinaryOperatorDirectory.cc",
-        ),
+        os.path.join(expr_dir, "OperatorExpressions", "BinaryOperatorDirectory.cc",),
     ) as template:
         template.replace(
             binaryOperators=wrap(
@@ -200,29 +208,33 @@ if is_newer(
             ),
         )
 
+    with Template(
+        specs,
+        os.path.join(template_dir, "Constants.h"),
+        os.path.join(expr_dir, "VariableExpressions", "Constants.h",),
+    ) as template:
+        constants = list(specs["constants"].items())
+        constants.sort(key=lambda k: k[0])
+        template.replace(
+            numConstants=len(constants),
+            constants=wrap((f'"{name}"' for name, val in constants)),
+            constantValues=wrap((str(val["val"]) for name, val in constants)),
+            shortConstants=wrap((f'"{val["short"]}"' for name, val in constants)),
+        )
 
-if is_newer(
-    os.path.join(file_dir, "functions.yml"),
-    os.path.join(
-        file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.cc"
-    ),
-):
-    with open(os.path.join(file_dir, "functions.yml")) as file:
-        specs = yaml.load(file, Loader=Loader)
 
-        functions = [
-            (name, 1 if nargs is None else nargs)
-            for name, nargs in specs["functions"].items()
-        ]
-        functions.sort()
+with Specifications(os.path.join(file_dir, "functions.yml")) as specs:
 
-        functionExprs = set(specs["functionExprs"])
+    functions = [
+        (name, 1 if nargs is None else nargs)
+        for name, nargs in specs["functions"].items()
+    ]
+    functions.sort()
 
     with Template(
+        specs,
         os.path.join(template_dir, "Functions.h"),
-        os.path.join(
-            file_dir, "..", "Expressions", "FunctionExpressions", "Functions.h"
-        ),
+        os.path.join(expr_dir, "FunctionExpressions", "Functions.h"),
     ) as template:
         template.replace(
             numFunctions=len(functions),
@@ -244,11 +256,11 @@ if is_newer(
         )
 
     with Template(
+        specs,
         os.path.join(template_dir, "FunctionDirectory.cc"),
-        os.path.join(
-            file_dir, "..", "Expressions", "FunctionExpressions", "FunctionDirectory.cc"
-        ),
+        os.path.join(expr_dir, "FunctionExpressions", "FunctionDirectory.cc"),
     ) as template:
+        functionExprs = set(specs["functionExprs"])
         template.replace(
             unaryFunctions=wrap(
                 (
@@ -283,19 +295,13 @@ if is_newer(
         )
 
 
-if is_newer(
-    os.path.join(file_dir, "unitconversions.yml"),
-    os.path.join(file_dir, "..", "Expressions", "UnitConversionExpression", "Units.h"),
-):
-    with open(os.path.join(file_dir, "unitconversions.yml")) as file:
-        specs = yaml.load(file, Loader=Loader)
-        unitconversions = specs["unitconversions"]
+with Specifications(os.path.join(file_dir, "unitconversions.yml")) as specs:
+    unitconversions = specs["unitconversions"]
 
     with Template(
+        specs,
         os.path.join(template_dir, "Units.h"),
-        os.path.join(
-            file_dir, "..", "Expressions", "UnitConversionExpression", "Units.h"
-        ),
+        os.path.join(expr_dir, "UnitConversionExpression", "Units.h"),
     ) as template:
         units = []
         abbrs = []
@@ -348,6 +354,7 @@ if is_newer(
         assert np.all(unq_cnt == 1), np.array(abbrs)[unq_cnt != 1]
 
         assert len(set(abbrs) & set(name for name, nargs in functions)) == 0
+        assert len(set(abbrs) & set(name for name, val in constants)) == 0
         assert len(set(abbrs)) == len(abbrs)
         assert len(units) == len(abbrs)
         assert len(units) == len(unitTypes)

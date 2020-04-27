@@ -1,8 +1,10 @@
 
+#include <iostream>
 #include <iterator>
 #include <unordered_set>
 
 #include "../Scanner/scanner.h"
+#include "../Expressions/VariableExpressions/GreekLetters.h"
 #include "Preprocessor.h"
 
 using namespace std;
@@ -27,6 +29,15 @@ void addMissingRParens(list<Token>& tokens){
     }
 }
 
+void replaceGreekLetters(list<Token>& tokens){
+    for (auto& token : tokens){
+        int index = startsWithGreekLetter(token.lexeme);
+        if (index != -1){
+            token.lexeme = greekLetterNames[index];
+        }
+    }
+}
+
 void implicitMultiplication(list<Token>& tokens){
     for (auto token = tokens.begin(); token != tokens.end(); ++token){
         if (isPreImplicit(token->type) && isPostImplicit(std::next(token)->type)){
@@ -37,5 +48,6 @@ void implicitMultiplication(list<Token>& tokens){
 
 void preprocess(list<Token>& tokens){
     addMissingRParens(tokens);
+    replaceGreekLetters(tokens);
     implicitMultiplication(tokens);
 }

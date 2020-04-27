@@ -10,6 +10,7 @@
 #include "scanner.h"
 #include "../Utils/exceptions.h"
 #include "../Expressions/FunctionExpressions/Functions.h"
+#include "../Expressions/VariableExpressions/GreekLetters.h"
 
 using namespace std;
 using namespace Scanner;
@@ -182,6 +183,14 @@ static bool startsWithID(const char* str, size_t size, int& index){
     return false;
 }
 
+static bool startsWithGreekLetter(const char* str, size_t size, int& index){
+    if (size > 1 && startsWithGreekLetter(str) != -1){
+        index = greekLetterLength;
+        return true;
+    }
+    return false;
+}
+
 static bool startsWithWhitespace(const char* str, size_t size, int& index){
     if (size > 0){
         for (unsigned int i = 0; i < size; ++i){
@@ -229,6 +238,10 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             i += functionNameLengths[index];
         }
         else if (startsWithID(c_str, size, index)){
+            tokens.emplace_back(Token{str.substr(i, index), ID});
+            i += index;
+        }
+        else if (startsWithGreekLetter(c_str, size, index)){
             tokens.emplace_back(Token{str.substr(i, index), ID});
             i += index;
         }
