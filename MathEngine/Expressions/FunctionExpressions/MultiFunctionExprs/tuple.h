@@ -11,7 +11,7 @@
 using namespace std;
 
 
-expression fe_tuple(list<expression>& args, const Variables& vars){
+expression fe_tuple(const list<expression>& args, const Variables& vars){
     list<expression> exprs;
     for (auto& arg : args){
         exprs.emplace_back(arg->evaluate(vars));

@@ -10,7 +10,7 @@
 #include "../../Expression.h"
 #include "../FunctionDirectory.h"
 
-double f_deriv(std::list<expression>& args, const Variables& vars){
+double f_deriv(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         if (!(*arg)->evaluable()){
@@ -32,7 +32,7 @@ double f_deriv(std::list<expression>& args, const Variables& vars){
     throw Exception("Invalid Number of Arguments for f_deriv");
 }
 
-double f_integral(std::list<expression>& args, const Variables& vars){
+double f_integral(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 3){
         auto arg = args.begin();
         gsl_function F = (*(arg++))->function();

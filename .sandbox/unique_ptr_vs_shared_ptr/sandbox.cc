@@ -54,7 +54,7 @@ class B: public std::enable_shared_from_this<B> {
             }
         }
 
-        double sum(){
+        virtual double sum(){
             double total = 0;
             for (int i = 0; i < classSize; ++i){
                 total += values[i];
@@ -64,6 +64,17 @@ class B: public std::enable_shared_from_this<B> {
 
         shared_ptr<B> copy(){
             return shared_from_this();
+        }
+};
+
+class B2: public B {
+    double bvalue;
+
+    public:
+        B2(double value): B{value}, bvalue{value * 2.178} {}
+
+        double sum() override {
+            return B::sum() / bvalue;
         }
 };
 
@@ -97,8 +108,19 @@ void timeit(func_t f){
 }
 
 int main(){
-    timeit(timeA);
-    timeit(timeB);
-    timeit(timeA);
-    timeit(timeB);
+    // timeit(timeA);
+    // timeit(timeB);
+    // timeit(timeA);
+    // timeit(timeB);
+
+    auto s1 = std::make_shared<B>(3);
+    auto s2 = std::make_shared<B>(4);
+
+    cout << s1.get() << " != " << s2.get() << endl;
+    cout << "s1.sum(): " << s1->sum() << endl;
+
+    auto b2 = std::shared_ptr<B2>(new B2(3));
+    cout << "b2.sum(): " << b2->sum() << endl;
+    auto b2c = b2->copy();
+    cout << "b2c.sum(): " << b2c->sum() << endl;
 }

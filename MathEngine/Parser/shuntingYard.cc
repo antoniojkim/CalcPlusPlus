@@ -66,7 +66,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
             if (numArgs == 1){
                 auto expr = std::move(expressionStack.back());
                 expressionStack.pop_back();
-                expressionStack.push_back(UnaryFunctionExpression::construct(functionIndex, std::move(expr)));
+                expressionStack.push_back(UnaryFunctionExpression::construct(functionIndex, expr));
             }
             else {
                 argumentQueue.emplace_front(std::move(expressionStack.back()));
@@ -137,7 +137,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 expression expr2 = std::move(expressionStack.back());
                 expressionStack.pop_back();
                 expressionStack.push_back(
-                    BinaryOperatorExpression::construct(token->type, std::move(expr2), std::move(expr1))
+                    BinaryOperatorExpression::construct(token->type, expr2, expr1)
                 );
             }
         }

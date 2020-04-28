@@ -57,33 +57,31 @@ MatrixExpression::MatrixExpression(gsl_matrix_complex* matrix):
 
 
 expression MatrixExpression::construct(){
-    return unique_ptr<MatrixExpression>(new MatrixExpression());
+    return shared_ptr<MatrixExpression>(new MatrixExpression());
 }
 expression MatrixExpression::construct(std::list<expression>&& matrix, size_t numRows, size_t numCols){
-    return unique_ptr<MatrixExpression>(new MatrixExpression(std::move(matrix), numRows, numCols));
+    return shared_ptr<MatrixExpression>(new MatrixExpression(std::move(matrix), numRows, numCols));
 }
 expression MatrixExpression::construct(std::initializer_list<double> matrix, size_t numRows, size_t numCols){
-    return unique_ptr<MatrixExpression>(new MatrixExpression(std::forward<std::initializer_list<double>>(matrix), numRows, numCols));
+    return shared_ptr<MatrixExpression>(new MatrixExpression(std::forward<std::initializer_list<double>>(matrix), numRows, numCols));
 }
 expression MatrixExpression::construct(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols){
-    return unique_ptr<MatrixExpression>(new MatrixExpression(std::forward<std::initializer_list<gsl_complex>>(matrix), numRows, numCols));
+    return shared_ptr<MatrixExpression>(new MatrixExpression(std::forward<std::initializer_list<gsl_complex>>(matrix), numRows, numCols));
 }
 expression MatrixExpression::construct(gsl_matrix* matrix){
-    return unique_ptr<MatrixExpression>(new MatrixExpression(matrix));
+    return shared_ptr<MatrixExpression>(new MatrixExpression(matrix));
 }
 expression MatrixExpression::construct(gsl_matrix_complex* matrix){
-    return unique_ptr<MatrixExpression>(new MatrixExpression(matrix));
+    return shared_ptr<MatrixExpression>(new MatrixExpression(matrix));
 }
 
 
 std::list<expression>& MatrixExpression::getMatrix(){ return mat; }
-size_t MatrixExpression::rows(){ return numRows; }
-size_t MatrixExpression::cols(){ return numCols; }
+size_t MatrixExpression::rows() const { return numRows; }
+size_t MatrixExpression::cols() const { return numCols; }
 
 
-expression MatrixExpression::simplify() {
-    return copy();
-}
+expression MatrixExpression::simplify() { return copy(); }
 expression MatrixExpression::derivative(const std::string& var) {
     list<expression> derivatives;
     for (auto& expr : mat){
@@ -99,7 +97,7 @@ expression MatrixExpression::integrate(const std::string& var) {
     return MatrixExpression::construct(std::move(integrals), numRows, numCols);
 }
 
-bool MatrixExpression::evaluable(){
+bool MatrixExpression::evaluable() const {
     for(auto& expr: mat){
         if (!expr->evaluable()){
             return false;
@@ -108,7 +106,7 @@ bool MatrixExpression::evaluable(){
     return true;
 }
 
-expression MatrixExpression::evaluate(const Variables& vars){
+expression MatrixExpression::evaluate(const Variables& vars) {
     list<expression> evaluated;
     for (auto& expr : mat){
         evaluated.emplace_back(expr->evaluate(vars));
@@ -116,9 +114,9 @@ expression MatrixExpression::evaluate(const Variables& vars){
     return MatrixExpression::construct(std::move(evaluated), numRows, numCols);
 }
 
-double MatrixExpression::value(const Variables& vars) { return GSL_NAN; }
+double MatrixExpression::value(const Variables& vars) const { return GSL_NAN; }
 
-bool MatrixExpression::isComplex(){
+bool MatrixExpression::isComplex() const {
     for(auto& expr: mat){
         if (expr->isComplex()){
             return true;
@@ -127,15 +125,7 @@ bool MatrixExpression::isComplex(){
     return false;
 }
 
-expression MatrixExpression::copy() {
-    list<expression> matrixCopy;
-    for (auto& expr : mat){
-        matrixCopy.emplace_back(expr->copy());
-    }
-    return MatrixExpression::construct(std::move(matrixCopy), numRows, numCols);
-}
-
-std::ostream& MatrixExpression::print(std::ostream& out) {
+std::ostream& MatrixExpression::print(std::ostream& out) const {
     out << "{";
     if (!mat.empty()){
         auto expr = mat.begin();
@@ -151,7 +141,7 @@ std::ostream& MatrixExpression::print(std::ostream& out) {
     }
     return out << "}";
 }
-std::ostream& MatrixExpression::postfix(std::ostream& out) {
+std::ostream& MatrixExpression::postfix(std::ostream& out) const {
     for (auto& expr: mat){
         expr->postfix(out) << " ";
     }
@@ -159,7 +149,7 @@ std::ostream& MatrixExpression::postfix(std::ostream& out) {
 }
 
 
-unique_gsl_matrix MatrixExpression::to_gsl_matrix(){
+unique_gsl_matrix MatrixExpression::to_gsl_matrix() const {
     auto gsl_mat = make_gsl_matrix(numRows, numCols);
     auto expr = mat.begin();
     for (size_t r = 0; r < numRows; ++r){
@@ -167,9 +157,9 @@ unique_gsl_matrix MatrixExpression::to_gsl_matrix(){
             gsl_matrix_set(gsl_mat.get(), r, c, (*(expr++))->value());
         }
     }
-    return std::move(gsl_mat);
+    return gsl_mat;
 }
-unique_gsl_matrix_complex MatrixExpression::to_gsl_matrix_complex(){
+unique_gsl_matrix_complex MatrixExpression::to_gsl_matrix_complex() const {
     auto gsl_mat = make_gsl_matrix_complex(numRows, numCols);
     auto expr = mat.begin();
     for (size_t r = 0; r < numRows; ++r){
@@ -177,8 +167,8 @@ unique_gsl_matrix_complex MatrixExpression::to_gsl_matrix_complex(){
             gsl_matrix_complex_set(gsl_mat.get(), r, c, (*(expr++))->complex());
         }
     }
-    return std::move(gsl_mat);
+    return gsl_mat;
 }
-unique_gsl_permutation MatrixExpression::to_gsl_permutation(){
+unique_gsl_permutation MatrixExpression::to_gsl_permutation() const {
     return make_gsl_permutation(numRows);
 }

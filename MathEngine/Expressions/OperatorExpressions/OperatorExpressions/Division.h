@@ -12,7 +12,7 @@
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
-expression matrix_division(MatrixExpression* lhs, MatrixExpression* rhs){
+expression matrix_division(const MatrixExpression* lhs, const MatrixExpression* rhs){
     if (lhs->rows() == rhs->rows() && lhs->cols() == rhs->cols()){
         if (lhs->isComplex() || rhs->isComplex()){
             auto lmat = lhs->to_gsl_matrix_complex();
@@ -34,7 +34,7 @@ expression matrix_division(MatrixExpression* lhs, MatrixExpression* rhs){
     ));
 }
 
-expression matrix_scalar_division(expression& scalar, MatrixExpression* mat, const Variables& vars){
+expression matrix_scalar_division(const expression scalar, const MatrixExpression* mat, const Variables& vars){
     if (scalar->isComplex() || mat->isComplex()){
         auto gsl_mat = mat->to_gsl_matrix_complex();
         auto scalar_mat = make_gsl_matrix_complex(mat->rows(), mat->cols());
@@ -51,7 +51,7 @@ expression matrix_scalar_division(expression& scalar, MatrixExpression* mat, con
     }
 }
 
-expression matrix_scalar_division(MatrixExpression* mat, expression& scalar, const Variables& vars){
+expression matrix_scalar_division(const MatrixExpression* mat, const expression scalar, const Variables& vars){
     if (scalar->isComplex() || mat->isComplex()){
         auto gsl_mat = mat->to_gsl_matrix_complex();
         gsl_matrix_complex_scale(gsl_mat.get(), gsl_complex_inverse(scalar->complex(vars)));
@@ -64,14 +64,14 @@ expression matrix_scalar_division(MatrixExpression* mat, expression& scalar, con
     }
 }
 
-inline expression unit_conversion_division(BaseUnitExpression* unit1, BaseUnitExpression* unit2){
+inline expression unit_conversion_division(const BaseUnitExpression* unit1, const BaseUnitExpression* unit2){
     return (*unit1) / (*unit2);
 }
-inline expression unit_conversion_division(BaseUnitExpression* unit1, expression& expr){
+inline expression unit_conversion_division(const BaseUnitExpression* unit1, const expression expr){
     return (*unit1) / expr;
 }
 
-expression fe_SLASH(expression& lhs, expression& rhs, const Variables& vars){
+expression fe_SLASH(const expression lhs, const expression rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
     if (lexpr->matrix() && rexpr->matrix()){
@@ -88,6 +88,12 @@ expression fe_SLASH(expression& lhs, expression& rhs, const Variables& vars){
             return unit_conversion_division(lexpr->unit(), rexpr->unit());
         }
         return unit_conversion_division(lexpr->unit(), rexpr);
+    }
+    if (lexpr->hex() || rexpr->hex()){
+        return HexExpression::construct((unsigned long long) (lexpr->value() / rexpr->value()));
+    }
+    if (lexpr->bin() || rexpr->bin()){
+        return BinExpression::construct((unsigned long long) (lexpr->value() / rexpr->value()));
     }
     if (lexpr->isComplex() || rexpr->isComplex()){
         return NumExpression::construct(gsl_complex_div(lexpr->complex(vars), rexpr->complex(vars)));

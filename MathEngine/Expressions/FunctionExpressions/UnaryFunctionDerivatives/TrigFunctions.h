@@ -8,17 +8,17 @@
 #include "../../ExpressionFunctions.h"
 
 
-expression fprime_sin(expression& arg, const std::string& var){
+expression fprime_sin(const expression arg, const std::string& var){
     return UnaryFunctionExpression::construct("cos", arg->copy());
 }
-expression fprime_cos(expression& arg, const std::string& var){
+expression fprime_cos(const expression arg, const std::string& var){
     return -UnaryFunctionExpression::construct("sin", arg->copy());
 }
-expression fprime_tan(expression& arg, const std::string& var){
+expression fprime_tan(const expression arg, const std::string& var){
     return UnaryFunctionExpression::construct("sec", arg->copy()) ^ 2;
 }
 
-expression fprime_asin(expression& arg, const std::string& var){
+expression fprime_asin(const expression arg, const std::string& var){
     return 1 / sqrt(1 - (arg->copy() ^ 2));
 }
 

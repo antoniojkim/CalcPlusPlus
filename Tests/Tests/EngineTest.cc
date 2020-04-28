@@ -170,7 +170,7 @@ ostream& operator<<(ostream& out, const vector<vector<gsl_complex>>& iterable){
 }
 
 
-bool printDifference(const std::string& input, expression& expression, const double& output, const double& expected){
+bool printDifference(const std::string& input, const expression expression, const double& output, const double& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expression << endl;
     cout << "Postfix:    "; expression->postfix(cout) << endl;
@@ -182,7 +182,7 @@ bool printDifference(const std::string& input, expression& expression, const dou
     return false;
 }
 
-bool printDifference(const std::string& input, expression& expression, const std::string& output, const std::string& expected){
+bool printDifference(const std::string& input, const expression expression, const std::string& output, const std::string& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expression << endl;
     cout << "Postfix:    "; expression->postfix(cout) << endl;
@@ -193,7 +193,7 @@ bool printDifference(const std::string& input, expression& expression, const std
     return false;
 }
 
-bool printDifference(const std::string& input, expression& expression, const gsl_complex& output, const gsl_complex& expected){
+bool printDifference(const std::string& input, const expression expression, const gsl_complex& output, const gsl_complex& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expression << endl;
     cout << "Postfix:    "; expression->postfix(cout) << endl;
@@ -205,7 +205,7 @@ bool printDifference(const std::string& input, expression& expression, const gsl
     return false;
 }
 
-bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<double>& expected){
+bool printDifference(const std::string& input, const expression expr, const expression output, const std::vector<double>& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expr << endl;
     cout << "Postfix:    "; expr->postfix(cout) << endl;
@@ -217,7 +217,7 @@ bool printDifference(const std::string& input, expression& expr, expression& out
     return false;
 }
 
-bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<gsl_complex>& expected){
+bool printDifference(const std::string& input, const expression expr, const expression output, const std::vector<gsl_complex>& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expr << endl;
     cout << "Postfix:    "; expr->postfix(cout) << endl;
@@ -229,7 +229,7 @@ bool printDifference(const std::string& input, expression& expr, expression& out
     return false;
 }
 
-bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<std::vector<double>>& expected){
+bool printDifference(const std::string& input, const expression expr, const expression output, const std::vector<std::vector<double>>& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expr << endl;
     cout << "Postfix:    "; expr->postfix(cout) << endl;
@@ -241,7 +241,7 @@ bool printDifference(const std::string& input, expression& expr, expression& out
     return false;
 }
 
-bool printDifference(const std::string& input, expression& expr, expression& output, const std::vector<std::vector<gsl_complex>>& expected){
+bool printDifference(const std::string& input, const expression expr, const expression output, const std::vector<std::vector<gsl_complex>>& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expr << endl;
     cout << "Postfix:    "; expr->postfix(cout) << endl;

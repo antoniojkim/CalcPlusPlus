@@ -32,13 +32,13 @@ NumExpression::NumExpression(const std::string& num): real{0}, imag{0} {
 }
 
 expression NumExpression::construct(double real, double imag){
-    return unique_ptr<NumExpression>(new NumExpression(real, imag));
+    return shared_ptr<NumExpression>(new NumExpression(real, imag));
 }
 expression NumExpression::construct(const gsl_complex& z){
-    return unique_ptr<NumExpression>(new NumExpression(GSL_REAL(z), GSL_IMAG(z)));
+    return shared_ptr<NumExpression>(new NumExpression(GSL_REAL(z), GSL_IMAG(z)));
 }
 expression NumExpression::construct(const std::string& num){
-    return unique_ptr<NumExpression>(new NumExpression(num));
+    return shared_ptr<NumExpression>(new NumExpression(num));
 }
 
 expression NumExpression::simplify() {
@@ -48,30 +48,24 @@ expression NumExpression::derivative(const std::string& var) {
     return construct(0);
 }
 expression NumExpression::integrate(const std::string& var) {
-    throw Exception("Unimplemented Error: NumExpression::integrate");
+    return InvalidExpression::construct(Exception("Unimplemented Error: NumExpression::integrate"));
 }
 
-bool NumExpression::evaluable(){ return !gsl_isnan(real) && !gsl_isnan(imag); }
+bool NumExpression::evaluable() const { return !gsl_isnan(real) && !gsl_isnan(imag); }
 
-expression NumExpression::evaluate(const Variables& vars){
-    if (evaluable()){
-        return NumExpression::construct(real, imag);
-    }
+expression NumExpression::evaluate(const Variables& vars) {
+    if (evaluable()){ return copy(); }
     return InvalidExpression::construct(Exception("Invalid Number."));
 }
 
-double NumExpression::value(const Variables& vars) { return real; }
+double NumExpression::value(const Variables& vars) const { return real; }
 
-gsl_complex NumExpression::complex() { return gsl_complex{real, imag}; }
-gsl_complex NumExpression::complex(const Variables& vars) { return gsl_complex{real, imag}; }
+gsl_complex NumExpression::complex() const { return gsl_complex{real, imag}; }
+gsl_complex NumExpression::complex(const Variables& vars) const { return gsl_complex{real, imag}; }
 
-bool NumExpression::isComplex(){ return imag != 0; }
+bool NumExpression::isComplex() const { return imag != 0; }
 
-expression NumExpression::copy() {
-    return construct(real, imag);
-}
-
-std::ostream& NumExpression::print(std::ostream& out) {
+std::ostream& NumExpression::print(std::ostream& out) const {
     if (!evaluable()){
         return out << "NaN";
     }
@@ -85,7 +79,7 @@ std::ostream& NumExpression::print(std::ostream& out) {
     return out;
 }
 
-std::ostream& NumExpression::postfix(std::ostream& out) {
+std::ostream& NumExpression::postfix(std::ostream& out) const {
     if (!evaluable()){
         return out << "NaN";
     }
@@ -110,7 +104,7 @@ std::ostream& NumExpression::postfix(std::ostream& out) {
     return out;
 }
 
-bool NumExpression::prettyprint(std::ostream& out){
+bool NumExpression::prettyprint(std::ostream& out) const {
     if (!evaluable()){
         return false;
     }

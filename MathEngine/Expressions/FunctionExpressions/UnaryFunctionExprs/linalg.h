@@ -16,7 +16,7 @@
 
 using namespace std;
 
-expression fe_det(expression& arg, const Variables& vars){
+expression fe_det(const expression arg, const Variables& vars){
     auto evaluated = arg->evaluate(vars);
     auto matrix = evaluated->matrix();
     if (matrix){
@@ -25,18 +25,14 @@ expression fe_det(expression& arg, const Variables& vars){
             auto gsl_perm = matrix->to_gsl_permutation();
             int signum;
             gsl_linalg_complex_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
-            return NumExpression::construct(
-                gsl_linalg_complex_LU_det(gsl_mat.get(), signum)
-            );
+            return NumExpression::construct(gsl_linalg_complex_LU_det(gsl_mat.get(), signum));
         }
         else{
             auto gsl_mat = matrix->to_gsl_matrix();
             auto gsl_perm = matrix->to_gsl_permutation();
             int signum;
             gsl_linalg_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
-            return NumExpression::construct(
-                gsl_linalg_LU_det(gsl_mat.get(), signum)
-            );
+            return NumExpression::construct(gsl_linalg_LU_det(gsl_mat.get(), signum));
         }
     }
     return InvalidExpression::construct(Exception("Determinant expects a matrix expression"));

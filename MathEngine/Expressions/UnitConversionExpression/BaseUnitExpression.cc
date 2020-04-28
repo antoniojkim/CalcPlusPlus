@@ -24,13 +24,13 @@ BaseUnitExpression::BaseUnitExpression(const std::string& unit, double val): abb
 BaseUnitExpression::BaseUnitExpression(UnitType type, const std::string& unit, double val): type{type}, abbr{unit}, val{val} {}
 
 expression BaseUnitExpression::construct(const std::string& unit, double val){
-    return unique_ptr<BaseUnitExpression>(new BaseUnitExpression(unit, val));
+    return shared_ptr<BaseUnitExpression>(new BaseUnitExpression(unit, val));
 }
 expression BaseUnitExpression::construct(UnitType type, const std::string& unit, double val){
-    return unique_ptr<BaseUnitExpression>(new BaseUnitExpression(type, unit, val));
+    return shared_ptr<BaseUnitExpression>(new BaseUnitExpression(type, unit, val));
 }
 
-expression BaseUnitExpression::evaluate(const Variables& vars){
+expression BaseUnitExpression::evaluate(const Variables& vars) {
     return InvalidExpression::construct(Exception("Cannot evaluate a base unit expression."));
 }
 
@@ -44,20 +44,16 @@ expression BaseUnitExpression::integrate(const std::string& var) {
     return InvalidExpression::construct(Exception("Unimplemented Error: BaseUnitExpression::integrate"));
 }
 
-bool BaseUnitExpression::evaluable(){ return false; }
+bool BaseUnitExpression::evaluable() const { return false; }
 
-double BaseUnitExpression::value(const Variables& vars) { return val; }
+double BaseUnitExpression::value(const Variables& vars) const { return val; }
 
-bool BaseUnitExpression::isComplex(){ return false; }
+bool BaseUnitExpression::isComplex() const { return false; }
 
-expression BaseUnitExpression::copy() {
-    return BaseUnitExpression::construct(type, abbr, val);
-}
-
-std::ostream& BaseUnitExpression::print(std::ostream& out) {
+std::ostream& BaseUnitExpression::print(std::ostream& out) const {
     return out << abbr;
 }
 
-std::ostream& BaseUnitExpression::postfix(std::ostream& out) {
+std::ostream& BaseUnitExpression::postfix(std::ostream& out) const {
     return out << abbr;
 }

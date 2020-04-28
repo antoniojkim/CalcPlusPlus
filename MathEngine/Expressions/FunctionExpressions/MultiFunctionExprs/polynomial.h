@@ -21,7 +21,7 @@ inline expression make_tuple(initializer_list<gsl_complex> vals){
 }
 
 
-expression fe_quad(list<expression>& args, const Variables& vars){
+expression fe_quad(const list<expression>& args, const Variables& vars){
     auto arg = args.begin();
     double a = (*(arg++))->value(vars);
     double b = (*(arg++))->value(vars);
@@ -43,7 +43,7 @@ expression fe_quad(list<expression>& args, const Variables& vars){
     }
 }
 
-expression fe_quadc(list<expression>& args, const Variables& vars){
+expression fe_quadc(const list<expression>& args, const Variables& vars){
     auto arg = args.begin();
     double a = (*(arg++))->value(vars);
     double b = (*(arg++))->value(vars);
@@ -62,7 +62,7 @@ expression fe_quadc(list<expression>& args, const Variables& vars){
     }
 }
 
-expression fe_cubic(list<expression>& args, const Variables& vars){
+expression fe_cubic(const list<expression>& args, const Variables& vars){
     auto arg = args.begin();
     double a = (*(arg++))->value(vars);
     double b = (*(arg++))->value(vars) / a;
@@ -80,7 +80,7 @@ expression fe_cubic(list<expression>& args, const Variables& vars){
     }
 }
 
-expression fe_cubicc(list<expression>& args, const Variables& vars){
+expression fe_cubicc(const list<expression>& args, const Variables& vars){
     auto arg = args.begin();
     double a = (*(arg++))->value(vars);
     double b = (*(arg++))->value(vars) / a;

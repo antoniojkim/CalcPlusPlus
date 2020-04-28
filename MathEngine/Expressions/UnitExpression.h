@@ -22,18 +22,18 @@ class BaseUnitExpression: public Expression {
 
         expression evaluate(const Variables& vars) override;
 
-        inline BaseUnitExpression* unit() override { return this; }
+        inline const BaseUnitExpression* unit() const override { return this; }
 
         EXPRESSION_OVERRIDES
 
 
-        friend expression operator*(BaseUnitExpression& unit1, BaseUnitExpression& unit2);
-        friend expression operator*(BaseUnitExpression& unit1, expression& expr);
-        friend expression operator/(BaseUnitExpression& unit1, BaseUnitExpression& unit2);
-        friend expression operator/(BaseUnitExpression& unit1, expression& expr);
-        friend expression operator^(BaseUnitExpression& unit1, expression& expr);
+        friend expression operator*(const BaseUnitExpression& unit1, const BaseUnitExpression& unit2);
+        friend expression operator*(const BaseUnitExpression& unit1, const expression expr);
+        friend expression operator/(const BaseUnitExpression& unit1, const BaseUnitExpression& unit2);
+        friend expression operator/(const BaseUnitExpression& unit1, const expression expr);
+        friend expression operator^(const BaseUnitExpression& unit1, const expression expr);
 
-        friend expression convert(BaseUnitExpression& from, BaseUnitExpression& to);
+        friend expression convert(const BaseUnitExpression& from, const BaseUnitExpression& to);
 };
 
 class ConvertedUnitExpression: public Expression {

@@ -10,7 +10,7 @@
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
-expression matrix_multiplication(MatrixExpression* lhs, MatrixExpression* rhs){
+expression matrix_multiplication(const MatrixExpression* lhs, const MatrixExpression* rhs){
     if (lhs->cols() == rhs->rows()){
         if (lhs->isComplex() || rhs->isComplex()){
             auto lmat = lhs->to_gsl_matrix_complex();
@@ -52,7 +52,7 @@ expression matrix_multiplication(MatrixExpression* lhs, MatrixExpression* rhs){
     ));
 }
 
-expression matrix_scalar_multiply(expression& scalar, MatrixExpression* mat, const Variables& vars){
+expression matrix_scalar_multiply(const expression scalar, const MatrixExpression* mat, const Variables& vars){
     if (scalar->isComplex() || mat->isComplex()){
         auto gsl_mat = mat->to_gsl_matrix_complex();
         gsl_matrix_complex_scale(gsl_mat.get(), scalar->complex(vars));
@@ -65,14 +65,14 @@ expression matrix_scalar_multiply(expression& scalar, MatrixExpression* mat, con
     }
 }
 
-inline expression unit_conversion_multiply(BaseUnitExpression* unit1, BaseUnitExpression* unit2){
+inline expression unit_conversion_multiply(const BaseUnitExpression* unit1, const BaseUnitExpression* unit2){
     return (*unit1) * (*unit2);
 }
-inline expression unit_conversion_multiply(BaseUnitExpression* unit1, expression& expr){
+inline expression unit_conversion_multiply(const BaseUnitExpression* unit1, const expression expr){
     return (*unit1) * expr;
 }
 
-expression fe_STAR(expression& lhs, expression& rhs, const Variables& vars){
+expression fe_STAR(const expression lhs, const expression rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
     if (lexpr->matrix() && rexpr->matrix()){
@@ -92,6 +92,12 @@ expression fe_STAR(expression& lhs, expression& rhs, const Variables& vars){
     }
     if (rexpr->unit()){
         return unit_conversion_multiply(rexpr->unit(), lexpr);
+    }
+    if (lexpr->hex() || rexpr->hex()){
+        return HexExpression::construct((unsigned long long) (lexpr->value() * rexpr->value()));
+    }
+    if (lexpr->bin() || rexpr->bin()){
+        return BinExpression::construct((unsigned long long) (lexpr->value() * rexpr->value()));
     }
     if (lexpr->isComplex() || rexpr->isComplex()){
         return NumExpression::construct(gsl_complex_mul(lexpr->complex(vars), rexpr->complex(vars)));

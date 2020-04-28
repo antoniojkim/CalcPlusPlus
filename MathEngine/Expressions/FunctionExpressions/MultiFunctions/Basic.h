@@ -8,7 +8,7 @@
 #include "../../Expression.h"
 #include "../FunctionDirectory.h"
 
-double f_hypot(std::list<expression>& args, const Variables& vars){
+double f_hypot(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double x = (*(arg++))->value(vars);
@@ -33,7 +33,7 @@ double f_hypot(std::list<expression>& args, const Variables& vars){
     throw Exception("Invalid Number of Arguments for f_hypot");
 }
 
-double f_ldexp(std::list<expression>& args, const Variables& vars){
+double f_ldexp(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double x = (*(arg++))->value(vars);
@@ -46,7 +46,7 @@ double f_ldexp(std::list<expression>& args, const Variables& vars){
     throw Exception("Invalid Number of Arguments for f_ldexp");
 }
 
-double f_fcmp(std::list<expression>& args, const Variables& vars){
+double f_fcmp(const std::list<expression>& args, const Variables& vars){
     if (args.size() >= 2){
         auto arg = args.begin();
         double x = (*(arg++))->value(vars);

@@ -7,18 +7,28 @@ double gsl_expression_function(double x, void* params){
     return ((Expression *) params)->value(vars);
 }
 
+gsl_function Expression::function() {
+    gsl_function F;
+    F.function = &gsl_expression_function;
+    F.params = this;
+    return F;
+}
+
+
 const Variables emptyVars;
 
-expression Expression::evaluate(){ return evaluate(emptyVars); }
-expression Expression::evaluate(const Variables& vars){ return NumExpression::construct(this->complex(vars)); }
+expression Expression::evaluate() { return evaluate(emptyVars); }
+expression Expression::evaluate(const Variables& vars) { return NumExpression::construct(this->complex(vars)); }
 
-gsl_complex Expression::complex(){ return complex(emptyVars); }
-gsl_complex Expression::complex(const Variables& vars){ return gsl_complex{this->value(vars), 0}; }
+gsl_complex Expression::complex() const { return complex(emptyVars); }
+gsl_complex Expression::complex(const Variables& vars) const { return gsl_complex{this->value(vars), 0}; }
 
-double Expression::value(){ return value(emptyVars); }
+double Expression::value() const { return value(emptyVars); }
 
-bool Expression::prettyprint(std::ostream& out){ return false; }
+expression Expression::copy(){ return shared_from_this(); }
 
-std::ostream& operator<<(std::ostream& out, expression& e){
+bool Expression::prettyprint(std::ostream& out) const { return false; }
+
+std::ostream& operator<<(std::ostream& out, const expression e){
     return e->print(out);
 }

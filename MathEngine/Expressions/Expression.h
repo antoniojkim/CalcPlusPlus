@@ -9,63 +9,64 @@
 #include <gsl/gsl_math.h>
 
 struct Expression;
+
+struct BaseUnitExpression;
+struct BinExpression;
+struct HexExpression;
+struct InvalidExpression;
 struct MatrixExpression;
 struct TupleExpression;
-struct BaseUnitExpression;
 struct VariableExpression;
 
-typedef std::unique_ptr<Expression> expression;
+typedef std::shared_ptr<Expression> expression;
 typedef std::unordered_map<std::string, expression> Variables;
 
 double gsl_expression_function(double x, void* params);
 
-struct Expression {
+struct Expression: public std::enable_shared_from_this<Expression> {
 
     virtual expression simplify() = 0;
     virtual expression derivative(const std::string& var) = 0;
     virtual expression integrate(const std::string& var) = 0;
 
-    virtual bool evaluable() = 0;
+    virtual bool evaluable() const = 0;
     virtual expression evaluate();
     virtual expression evaluate(const Variables& vars);
 
-    virtual gsl_function function() {
-        gsl_function F;
-        F.function = &gsl_expression_function;
-        F.params = this;
-        return F;
-    }
+    virtual gsl_function function();
 
-    virtual double value();
-    virtual double value(const Variables& vars) = 0;
+    virtual double value() const;
+    virtual double value(const Variables& vars) const = 0;
 
-    virtual gsl_complex complex();
-    virtual gsl_complex complex(const Variables& vars);
+    virtual gsl_complex complex() const;
+    virtual gsl_complex complex(const Variables& vars) const;
 
-    virtual inline MatrixExpression* matrix(){ return nullptr; }
-    virtual inline TupleExpression* tuple(){ return nullptr; }
-    virtual inline BaseUnitExpression* unit(){ return nullptr; }
-    virtual inline VariableExpression* variable(){ return nullptr; }
+    virtual const inline BaseUnitExpression* unit() const { return nullptr; }
+    virtual const inline BinExpression* bin() const { return nullptr; }
+    virtual const inline HexExpression* hex() const { return nullptr; }
+    virtual const inline InvalidExpression* invalid() const { return nullptr; }
+    virtual const inline MatrixExpression* matrix() const { return nullptr; }
+    virtual const inline TupleExpression* tuple() const { return nullptr; }
+    virtual const inline VariableExpression* variable() const { return nullptr; }
 
-    virtual bool isComplex() = 0;
+    virtual bool isComplex() const = 0;
 
-    virtual expression copy() = 0;
+    expression copy();
 
-    virtual std::ostream& print(std::ostream&) = 0;
-    virtual std::ostream& postfix(std::ostream&) = 0;
-    virtual bool prettyprint(std::ostream&);
+    virtual std::ostream& print(std::ostream&) const = 0;
+    virtual std::ostream& postfix(std::ostream&) const = 0;
+    virtual bool prettyprint(std::ostream&) const;
 
 };
 
-std::ostream& operator<<(std::ostream&, expression&);
+std::ostream& operator<<(std::ostream&, const expression);
 
 #define EXPRESSION_OVERRIDES                                       \
     expression simplify() override;                                \
     expression derivative(const std::string& var = "x") override;  \
     expression integrate(const std::string& var = "x") override;   \
-    bool evaluable() override;                                     \
-    double value(const Variables& vars) override;                  \
-    bool isComplex() override;                                     \
-    expression copy() override;                                    \
-    std::ostream& print(std::ostream&) override;                   \
-    std::ostream& postfix(std::ostream&) override;
+    bool evaluable() const override;                               \
+    double value(const Variables& vars) const override;            \
+    bool isComplex() const override;                               \
+    std::ostream& print(std::ostream&) const override;             \
+    std::ostream& postfix(std::ostream&) const override;

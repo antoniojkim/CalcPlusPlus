@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <sstream>
 
+#include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 
@@ -15,37 +16,45 @@ BinExpression::BinExpression(const std::string& num) {
 }
 
 expression BinExpression::construct(unsigned long long num){
-    return unique_ptr<BinExpression>(new BinExpression(num));
+    return shared_ptr<BinExpression>(new BinExpression(num));
 }
 expression BinExpression::construct(const std::string& num){
-    return unique_ptr<BinExpression>(new BinExpression(num));
+    return shared_ptr<BinExpression>(new BinExpression(num));
 }
 
-expression BinExpression::simplify() {
-    return BinExpression::construct(num);
-}
+expression BinExpression::simplify() { return copy(); }
 expression BinExpression::derivative(const std::string& var) {
     return BinExpression::construct(0);
 }
 expression BinExpression::integrate(const std::string& var) {
-    throw Exception("Unimplemented Error: BinExpression::integrate");
+    return InvalidExpression::construct(Exception("Unimplemented Error: BinExpression::integrate"));
 }
 
-bool BinExpression::evaluable(){ return true; }
+bool BinExpression::evaluable() const { return true; }
 
+expression BinExpression::evaluate(const Variables&) { return copy(); }
 
-double BinExpression::value(const Variables& vars) { return double(num); }
+double BinExpression::value(const Variables& vars) const { return double(num); }
 
-bool BinExpression::isComplex(){ return false; }
+bool BinExpression::isComplex() const { return false; }
 
-expression BinExpression::copy() {
-    return BinExpression::construct(num);
-}
-
-std::ostream& BinExpression::print(std::ostream& out) {
-    out << "0b" << std::bitset<sizeof(unsigned long long)>(num);
+std::ostream& BinExpression::print(std::ostream& out) const {
+    unsigned long long n = num;
+    char buffer[128];
+    int i = 0;
+    while (n > 0){
+        if (i >= 128){
+            throw Exception("Buffer too short.");
+        }
+        buffer[i++] = ((n & 0b1) == 1) ? '1' : '0';
+        n >>= 1;
+    }
+    out << "0b";
+    while(i > 0){
+        out << buffer[--i];
+    }
     return out;
 }
-std::ostream& BinExpression::postfix(std::ostream& out) {
+std::ostream& BinExpression::postfix(std::ostream& out) const {
     return print(out);
 }

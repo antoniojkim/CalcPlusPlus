@@ -38,7 +38,7 @@ expression MathEngine::parse(const std::string& input){
                 string name = tokens.front().lexeme;
                 tokens.pop_front(); tokens.pop_front();
                 variables[name] = parser->parse(tokens);
-                return variables[name]->copy();
+                return variables[name];
             }
         }
         else if (tokens.size() == 2 && tokens.front().type == POUND){
@@ -56,7 +56,7 @@ expression MathEngine::parse(const std::string& input){
 
         return parser->parse(tokens);
     }
-    return InvalidExpression::construct(Exception(""));
+    return InvalidExpression::construct(Exception("Unable to scan input: ", input));
 }
 expression MathEngine::operator()(const std::string& input){
     return parse(input);
@@ -64,7 +64,7 @@ expression MathEngine::operator()(const std::string& input){
 
 expression MathEngine::evaluate(const std::string& input){
     auto expr = parse(input);
-    if (dynamic_cast<InvalidExpression*>(expr.get())){
+    if (expr->invalid()){
         return expr;
     }
     return expr->evaluate(variables);
@@ -108,7 +108,7 @@ std::string MathEngine::evaluateOutput(const std::string& input, const std::stri
     }
 
     auto expr = evaluate(input);
-    if (!dynamic_cast<InvalidExpression*>(expr.get())){
+    if (!expr->invalid()){
         ostringstream out;
         out << "= ";
         if (expr->prettyprint(out)){

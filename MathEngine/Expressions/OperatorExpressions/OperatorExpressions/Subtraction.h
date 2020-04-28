@@ -11,7 +11,7 @@
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
-expression matrix_subtraction(MatrixExpression* lhs, MatrixExpression* rhs){
+expression matrix_subtraction(const MatrixExpression* lhs, const MatrixExpression* rhs){
     if (lhs->rows() == rhs->rows() && lhs->cols() == rhs->cols()){
         if (lhs->isComplex() || rhs->isComplex()){
             auto lmat = lhs->to_gsl_matrix_complex();
@@ -33,7 +33,7 @@ expression matrix_subtraction(MatrixExpression* lhs, MatrixExpression* rhs){
     ));
 }
 
-expression matrix_scalar_subtraction(expression& scalar, MatrixExpression* mat, const Variables& vars){
+expression matrix_scalar_subtraction(const expression scalar, const MatrixExpression* mat, const Variables& vars){
     if (scalar->isComplex() || mat->isComplex()){
         auto gsl_mat = mat->to_gsl_matrix_complex();
         gsl_matrix_complex_scale(gsl_mat.get(), gsl_complex{-1, 0});
@@ -48,7 +48,7 @@ expression matrix_scalar_subtraction(expression& scalar, MatrixExpression* mat, 
     }
 }
 
-expression matrix_scalar_subtraction(MatrixExpression* mat, expression& scalar, const Variables& vars){
+expression matrix_scalar_subtraction(const MatrixExpression* mat, const expression scalar, const Variables& vars){
     if (scalar->isComplex() || mat->isComplex()){
         auto gsl_mat = mat->to_gsl_matrix_complex();
         gsl_matrix_complex_add_constant(gsl_mat.get(), gsl_complex_negative(scalar->complex(vars)));
@@ -61,7 +61,7 @@ expression matrix_scalar_subtraction(MatrixExpression* mat, expression& scalar, 
     }
 }
 
-expression fe_MINUS(expression& lhs, expression& rhs, const Variables& vars){
+expression fe_MINUS(const expression lhs, const expression rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
     if (lexpr->matrix() && rexpr->matrix()){
@@ -72,6 +72,12 @@ expression fe_MINUS(expression& lhs, expression& rhs, const Variables& vars){
     }
     if (rexpr->matrix()){
         return matrix_scalar_subtraction(lexpr, rexpr->matrix(), vars);
+    }
+    if (lexpr->hex() || rexpr->hex()){
+        return HexExpression::construct((unsigned long long) (lexpr->value() - rexpr->value()));
+    }
+    if (lexpr->bin() || rexpr->bin()){
+        return BinExpression::construct((unsigned long long) (lexpr->value() - rexpr->value()));
     }
     if (lexpr->isComplex() || rexpr->isComplex()){
         return NumExpression::construct(gsl_complex_sub(lexpr->complex(), rexpr->complex()));

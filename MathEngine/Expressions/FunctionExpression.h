@@ -10,15 +10,15 @@ class UnaryFunctionExpression: public Expression {
     int functionIndex;
     expression arg;
 
-    UnaryFunctionExpression(const char * name, expression&& arg);
-    UnaryFunctionExpression(std::string& name, expression&& arg);
-    UnaryFunctionExpression(int functionIndex, expression&& arg);
+    UnaryFunctionExpression(const char * name, expression arg);
+    UnaryFunctionExpression(std::string& name, expression arg);
+    UnaryFunctionExpression(int functionIndex, expression arg);
 
     public:
 
-        static expression construct(const char * name, expression&& arg);
-        static expression construct(std::string& name, expression&& arg);
-        static expression construct(int functionIndex, expression&& arg);
+        static expression construct(const char * name, expression arg);
+        static expression construct(std::string& name, expression arg);
+        static expression construct(int functionIndex, expression arg);
 
         expression evaluate(const Variables& vars) override;
 

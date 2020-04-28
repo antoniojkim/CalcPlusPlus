@@ -3,6 +3,7 @@
 #include <sstream>
 #include <ios>
 
+#include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 
@@ -15,37 +16,32 @@ HexExpression::HexExpression(const std::string& num) {
 }
 
 expression HexExpression::construct(unsigned long long num){
-    return unique_ptr<HexExpression>(new HexExpression(num));
+    return shared_ptr<HexExpression>(new HexExpression(num));
 }
 expression HexExpression::construct(const std::string& num){
-    return unique_ptr<HexExpression>(new HexExpression(num));
+    return shared_ptr<HexExpression>(new HexExpression(num));
 }
 
-expression HexExpression::simplify() {
-    return HexExpression::construct(num);
-}
+expression HexExpression::simplify() { return copy(); }
 expression HexExpression::derivative(const std::string& var) {
     return HexExpression::construct(0);
 }
 expression HexExpression::integrate(const std::string& var) {
-    throw Exception("Unimplemented Error: HexExpression::integrate");
+    return InvalidExpression::construct(Exception("Unimplemented Error: HexExpression::integrate"));
 }
 
-bool HexExpression::evaluable(){ return true; }
+bool HexExpression::evaluable() const { return true; }
 
+expression HexExpression::evaluate(const Variables&) { return copy(); }
 
-double HexExpression::value(const Variables& vars) { return double(num); }
+double HexExpression::value(const Variables& vars) const  { return double(num); }
 
-bool HexExpression::isComplex(){ return false; }
+bool HexExpression::isComplex() const { return false; }
 
-expression HexExpression::copy() {
-    return HexExpression::construct(num);
-}
-
-std::ostream& HexExpression::print(std::ostream& out) {
+std::ostream& HexExpression::print(std::ostream& out) const {
     out << "0x" << std::hex << num;
     return out;
 }
-std::ostream& HexExpression::postfix(std::ostream& out) {
+std::ostream& HexExpression::postfix(std::ostream& out) const {
     return print(out);
 }

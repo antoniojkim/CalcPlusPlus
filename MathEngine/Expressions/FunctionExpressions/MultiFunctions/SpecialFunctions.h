@@ -9,7 +9,7 @@
 #include "../../Expression.h"
 #include "../FunctionDirectory.h"
 
-double f_choose(std::list<expression>& args, const Variables& vars){
+double f_choose(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
@@ -20,7 +20,7 @@ double f_choose(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_lnchoose(std::list<expression>& args, const Variables& vars){
+double f_lnchoose(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
@@ -31,7 +31,7 @@ double f_lnchoose(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_permute(std::list<expression>& args, const Variables& vars){
+double f_permute(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
@@ -42,7 +42,7 @@ double f_permute(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_lnpermute(std::list<expression>& args, const Variables& vars){
+double f_lnpermute(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
@@ -53,7 +53,7 @@ double f_lnpermute(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_taylorcoeff(std::list<expression>& args, const Variables& vars){
+double f_taylorcoeff(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double n = (*(arg++))->value(vars);
@@ -64,7 +64,7 @@ double f_taylorcoeff(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_poch(std::list<expression>& args, const Variables& vars){
+double f_poch(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);
@@ -73,7 +73,7 @@ double f_poch(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_lnpoch(std::list<expression>& args, const Variables& vars){
+double f_lnpoch(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);
@@ -82,7 +82,7 @@ double f_lnpoch(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_pochrel(std::list<expression>& args, const Variables& vars){
+double f_pochrel(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);
@@ -91,7 +91,7 @@ double f_pochrel(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_gammainc(std::list<expression>& args, const Variables& vars){
+double f_gammainc(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);
@@ -100,7 +100,7 @@ double f_gammainc(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_gammaincq(std::list<expression>& args, const Variables& vars){
+double f_gammaincq(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);
@@ -109,7 +109,7 @@ double f_gammaincq(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_gammaincp(std::list<expression>& args, const Variables& vars){
+double f_gammaincp(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);
@@ -118,7 +118,7 @@ double f_gammaincp(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_beta(std::list<expression>& args, const Variables& vars){
+double f_beta(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);
@@ -129,7 +129,7 @@ double f_beta(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_lnbeta(std::list<expression>& args, const Variables& vars){
+double f_lnbeta(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);
@@ -140,7 +140,7 @@ double f_lnbeta(std::list<expression>& args, const Variables& vars){
     }
     return GSL_NAN;
 }
-double f_betainc(std::list<expression>& args, const Variables& vars){
+double f_betainc(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 3){
         auto arg = args.begin();
         double a = (*(arg++))->value(vars);

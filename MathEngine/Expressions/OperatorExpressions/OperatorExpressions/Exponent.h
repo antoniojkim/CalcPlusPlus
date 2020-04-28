@@ -13,7 +13,7 @@
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
-expression matrix_inverse(MatrixExpression* matrix){
+expression matrix_inverse(const MatrixExpression* matrix){
     if (matrix->rows() == matrix->cols()){
         if (matrix->isComplex()){
             auto gsl_mat = matrix->to_gsl_matrix_complex();
@@ -38,7 +38,7 @@ expression matrix_inverse(MatrixExpression* matrix){
     ));
 }
 
-expression matrix_transpose(MatrixExpression* matrix){
+expression matrix_transpose(const MatrixExpression* matrix){
     if (matrix->rows() == matrix->cols()){
         if (matrix->isComplex()){
             auto gsl_mat = matrix->to_gsl_matrix_complex();
@@ -71,11 +71,11 @@ expression matrix_transpose(MatrixExpression* matrix){
     ));
 }
 
-inline expression unit_conversion_pow(BaseUnitExpression* unit1, expression& expr){
+inline expression unit_conversion_pow(const BaseUnitExpression* unit1, const expression expr){
     return (*unit1) ^ expr;
 }
 
-expression fe_CARET(expression& lhs, expression& rhs, const Variables& vars){
+expression fe_CARET(const expression lhs, const expression rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
     if (lexpr->matrix()){
@@ -89,6 +89,12 @@ expression fe_CARET(expression& lhs, expression& rhs, const Variables& vars){
     }
     if (lexpr->unit()){
         return unit_conversion_pow(lexpr->unit(), rexpr);
+    }
+    if (lexpr->hex() || rexpr->hex()){
+        return HexExpression::construct((unsigned long long) pow(lexpr->value(), rexpr->value()));
+    }
+    if (lexpr->bin() || rexpr->bin()){
+        return BinExpression::construct((unsigned long long) pow(lexpr->value(), rexpr->value()));
     }
     if (lexpr->isComplex() || rexpr->isComplex()){
         return NumExpression::construct(gsl_complex_pow(lexpr->complex(vars), rexpr->complex(vars)));

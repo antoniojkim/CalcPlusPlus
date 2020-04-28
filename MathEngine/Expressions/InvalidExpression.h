@@ -17,4 +17,8 @@ class InvalidExpression: public Expression {
 
         EXPRESSION_OVERRIDES
 
+        expression evaluate(const Variables& vars) override;
+
+        inline const InvalidExpression* invalid() const override { return this; }
+
 };

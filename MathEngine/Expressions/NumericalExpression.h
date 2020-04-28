@@ -18,14 +18,14 @@ class NumExpression: public Expression {
         static expression construct(const gsl_complex& z);
         static expression construct(const std::string&);
 
-        expression evaluate(const Variables&);
+        expression evaluate(const Variables&) override;
 
-        gsl_complex complex() override;
-        gsl_complex complex(const Variables& vars) override;
+        gsl_complex complex() const override;
+        gsl_complex complex(const Variables& vars) const override;
 
         EXPRESSION_OVERRIDES
 
-        bool prettyprint(std::ostream&);
+        bool prettyprint(std::ostream&) const override;
 
 };
 
@@ -40,7 +40,11 @@ class HexExpression: public Expression {
         static expression construct(unsigned long long num);
         static expression construct(const std::string&);
 
+        expression evaluate(const Variables&) override;
+
         EXPRESSION_OVERRIDES
+
+        inline const HexExpression* hex() const override { return this; }
 
 };
 
@@ -55,6 +59,10 @@ class BinExpression: public Expression {
         static expression construct(unsigned long long num);
         static expression construct(const std::string&);
 
+        expression evaluate(const Variables&) override;
+
         EXPRESSION_OVERRIDES
+
+        inline const BinExpression* bin() const override { return this; }
 
 };

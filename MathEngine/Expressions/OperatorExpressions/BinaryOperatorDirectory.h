@@ -8,18 +8,18 @@ typedef double (*BinaryOperator)(double, double);
 BinaryOperator getBinaryOperator(const std::string& name);
 BinaryOperator getBinaryOperator(int functionIndex);
 
-typedef expression (*BinaryOperatorExpr)(expression&, expression&, const Variables& vars);
+typedef expression (*BinaryOperatorExpr)(const expression, const expression, const Variables& vars);
 BinaryOperatorExpr getBinaryOperatorExpr(const std::string& name);
 BinaryOperatorExpr getBinaryOperatorExpr(int functionIndex);
 
-typedef expression (*BinaryOperatorDerivative)(expression&, expression&, const std::string&);
+typedef expression (*BinaryOperatorDerivative)(const expression, const expression, const std::string&);
 BinaryOperatorDerivative getBinaryOperatorDerivative(const std::string& name);
 BinaryOperatorDerivative getBinaryOperatorDerivative(int functionIndex);
 
-typedef expression (*BinaryOperatorIntegral)(expression&, expression&, const std::string&);
+typedef expression (*BinaryOperatorIntegral)(const expression, const expression, const std::string&);
 BinaryOperatorIntegral getBinaryOperatorIntegral(const std::string& name);
 BinaryOperatorIntegral getBinaryOperatorIntegral(int functionIndex);
 
-typedef expression (*BinaryOperatorSimplify)(expression&, expression&);
+typedef expression (*BinaryOperatorSimplify)(const expression, const expression);
 BinaryOperatorSimplify getBinaryOperatorSimplify(const std::string& name);
 BinaryOperatorSimplify getBinaryOperatorSimplify(int functionIndex);

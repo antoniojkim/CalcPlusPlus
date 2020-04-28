@@ -10,7 +10,7 @@
 
 using namespace std;
 
-expression convert(BaseUnitExpression& from, BaseUnitExpression& to){
+expression convert(const BaseUnitExpression& from, const BaseUnitExpression& to){
     if (from.type != to.type){
         return InvalidExpression::construct(Exception("Invalid Unit Conversion: ", from.abbr, " -> ", to.abbr));
     }
@@ -42,7 +42,7 @@ UnitType operator*(UnitType t1, UnitType t2){
 	return NONE;
 }
 
-expression operator*(BaseUnitExpression& unit1, BaseUnitExpression& unit2){
+expression operator*(const BaseUnitExpression& unit1, const BaseUnitExpression& unit2){
     auto newType = unit1.type * unit2.type;
     if (newType == NONE) {
         return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " * ", unit2.abbr));
@@ -51,7 +51,7 @@ expression operator*(BaseUnitExpression& unit1, BaseUnitExpression& unit2){
     newabbr << unit1.abbr << "*" << unit2.abbr;
     return BaseUnitExpression::construct(newType, newabbr.str(), unit1.val * unit2.val);
 }
-expression operator*(BaseUnitExpression& unit1, expression& expr){
+expression operator*(const BaseUnitExpression& unit1, const expression expr){
     return BaseUnitExpression::construct(unit1.type, unit1.abbr, unit1.val * expr->value());
 }
 
@@ -75,7 +75,7 @@ UnitType operator/(UnitType t1, UnitType t2){
 	return NONE;
 }
 
-expression operator/(BaseUnitExpression& unit1, BaseUnitExpression& unit2){
+expression operator/(const BaseUnitExpression& unit1, const BaseUnitExpression& unit2){
     auto newType = unit1.type / unit2.type;
     if (newType == NONE) {
         return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " / ", unit2.abbr));
@@ -84,7 +84,7 @@ expression operator/(BaseUnitExpression& unit1, BaseUnitExpression& unit2){
     newabbr << unit1.abbr << "/" << unit2.abbr;
     return BaseUnitExpression::construct(newType, newabbr.str(), unit1.val / unit2.val);
 }
-expression operator/(BaseUnitExpression& unit1, expression& expr){
+expression operator/(const BaseUnitExpression& unit1, const expression expr){
     return BaseUnitExpression::construct(unit1.type, unit1.abbr, unit1.val / expr->value());
 }
 
@@ -105,7 +105,7 @@ UnitType operator^(UnitType t1, int n){
 	return NONE;
 }
 
-expression operator^(BaseUnitExpression& unit1, expression& expr){
+expression operator^(const BaseUnitExpression& unit1, const expression expr){
     double n = expr->value();
     if (std::trunc(n) != n){
         return InvalidExpression::construct(Exception("Invalid Unit: ", unit1.abbr, " ^ ", n));

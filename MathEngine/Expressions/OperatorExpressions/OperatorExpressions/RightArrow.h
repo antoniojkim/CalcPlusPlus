@@ -10,11 +10,11 @@
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
-inline expression unit_conversion(BaseUnitExpression* unit1, BaseUnitExpression* unit2){
+inline expression unit_conversion(const BaseUnitExpression* unit1, const BaseUnitExpression* unit2){
     return convert(*unit1, *unit2);
 }
 
-expression fe_R_ARROW(expression& lhs, expression& rhs, const Variables& vars){
+expression fe_R_ARROW(const expression lhs, const expression rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
     if (lexpr->unit() && rexpr->unit()){

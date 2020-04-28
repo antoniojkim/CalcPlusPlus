@@ -13,10 +13,10 @@ using namespace std;
 ConvertedUnitExpression::ConvertedUnitExpression(UnitType type, const std::string& unit, double val): type{type}, abbr{unit}, val{val} {}
 
 expression ConvertedUnitExpression::construct(UnitType type, const std::string& unit, double val){
-    return unique_ptr<ConvertedUnitExpression>(new ConvertedUnitExpression(type, unit, val));
+    return shared_ptr<ConvertedUnitExpression>(new ConvertedUnitExpression(type, unit, val));
 }
 
-expression ConvertedUnitExpression::evaluate(const Variables& vars){
+expression ConvertedUnitExpression::evaluate(const Variables& vars) {
     return copy();
 }
 
@@ -30,20 +30,16 @@ expression ConvertedUnitExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: ConvertedUnitExpression::integrate");
 }
 
-bool ConvertedUnitExpression::evaluable(){ return true; }
+bool ConvertedUnitExpression::evaluable() const { return true; }
 
-double ConvertedUnitExpression::value(const Variables& vars) { return val; }
+double ConvertedUnitExpression::value(const Variables& vars) const { return val; }
 
-bool ConvertedUnitExpression::isComplex(){ return false; }
+bool ConvertedUnitExpression::isComplex() const { return false; }
 
-expression ConvertedUnitExpression::copy() {
-    return ConvertedUnitExpression::construct(type, abbr, val);
-}
-
-std::ostream& ConvertedUnitExpression::print(std::ostream& out) {
+std::ostream& ConvertedUnitExpression::print(std::ostream& out) const {
     return out << val << abbr;
 }
 
-std::ostream& ConvertedUnitExpression::postfix(std::ostream& out) {
+std::ostream& ConvertedUnitExpression::postfix(std::ostream& out) const {
     return out << val << abbr;
 }

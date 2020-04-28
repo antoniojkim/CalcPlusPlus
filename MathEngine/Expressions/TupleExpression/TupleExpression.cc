@@ -25,21 +25,19 @@ TupleExpression::TupleExpression(std::initializer_list<gsl_complex> tuple) {
 }
 
 expression TupleExpression::construct(){
-    return unique_ptr<TupleExpression>(new TupleExpression());
+    return shared_ptr<TupleExpression>(new TupleExpression());
 }
 expression TupleExpression::construct(std::list<expression>&& tuple){
-    return unique_ptr<TupleExpression>(new TupleExpression(std::move(tuple)));
+    return shared_ptr<TupleExpression>(new TupleExpression(std::move(tuple)));
 }
 expression TupleExpression::construct(std::initializer_list<double> tuple){
-    return unique_ptr<TupleExpression>(new TupleExpression(std::forward<std::initializer_list<double>>(tuple)));
+    return shared_ptr<TupleExpression>(new TupleExpression(std::forward<std::initializer_list<double>>(tuple)));
 }
 expression TupleExpression::construct(std::initializer_list<gsl_complex> tuple){
-    return unique_ptr<TupleExpression>(new TupleExpression(std::forward<std::initializer_list<gsl_complex>>(tuple)));
+    return shared_ptr<TupleExpression>(new TupleExpression(std::forward<std::initializer_list<gsl_complex>>(tuple)));
 }
 
-expression TupleExpression::simplify() {
-    return copy();
-}
+expression TupleExpression::simplify() { return copy(); }
 expression TupleExpression::derivative(const std::string& var) {
     list<expression> derivatives;
     for (auto& expr : _data){
@@ -55,7 +53,7 @@ expression TupleExpression::integrate(const std::string& var) {
     return TupleExpression::construct(std::move(integrals));
 }
 
-bool TupleExpression::evaluable(){
+bool TupleExpression::evaluable() const {
     for(auto& expr : _data){
         if (!expr->evaluable()){
             return false;
@@ -64,7 +62,7 @@ bool TupleExpression::evaluable(){
     return true;
 }
 
-expression TupleExpression::evaluate(const Variables& vars){
+expression TupleExpression::evaluate(const Variables& vars) {
     list<expression> evaluated;
     for (auto& expr : _data){
         evaluated.emplace_back(expr->evaluate(vars));
@@ -72,9 +70,9 @@ expression TupleExpression::evaluate(const Variables& vars){
     return TupleExpression::construct(std::move(evaluated));
 }
 
-double TupleExpression::value(const Variables& vars) { return GSL_NAN; }
+double TupleExpression::value(const Variables& vars) const { return GSL_NAN; }
 
-bool TupleExpression::isComplex(){
+bool TupleExpression::isComplex() const {
     for(auto& expr : _data){
         if (expr->isComplex()){
             return true;
@@ -83,15 +81,7 @@ bool TupleExpression::isComplex(){
     return false;
 }
 
-expression TupleExpression::copy() {
-    list<expression> tupleCopy;
-    for (auto& expr : _data){
-        tupleCopy.emplace_back(expr->copy());
-    }
-    return TupleExpression::construct(std::move(tupleCopy));
-}
-
-std::ostream& TupleExpression::print(std::ostream& out) {
+std::ostream& TupleExpression::print(std::ostream& out) const {
     out << "(";
     if (!_data.empty()){
         auto expr = _data.begin();
@@ -103,7 +93,7 @@ std::ostream& TupleExpression::print(std::ostream& out) {
     }
     return out << ")";
 }
-std::ostream& TupleExpression::postfix(std::ostream& out) {
+std::ostream& TupleExpression::postfix(std::ostream& out) const {
     for (auto& expr : _data){
         expr->postfix(out) << " ";
     }

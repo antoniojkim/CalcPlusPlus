@@ -35,18 +35,18 @@ class MatrixExpression: public Expression {
         static expression construct(gsl_matrix_complex* matrix);
 
         std::list<expression>& getMatrix();
-        size_t rows();
-        size_t cols();
+        size_t rows() const;
+        size_t cols() const;
 
-        inline MatrixExpression* matrix() override { return this; }
+        inline const MatrixExpression* matrix() const override { return this; }
 
         expression evaluate(const Variables& vars) override;
 
         EXPRESSION_OVERRIDES
 
-        unique_gsl_matrix to_gsl_matrix();
-        unique_gsl_matrix_complex to_gsl_matrix_complex();
-        unique_gsl_permutation to_gsl_permutation();
+        unique_gsl_matrix to_gsl_matrix() const;
+        unique_gsl_matrix_complex to_gsl_matrix_complex() const;
+        unique_gsl_permutation to_gsl_permutation() const;
 };
 
 inline unique_gsl_matrix make_gsl_matrix(size_t rows, size_t cols){

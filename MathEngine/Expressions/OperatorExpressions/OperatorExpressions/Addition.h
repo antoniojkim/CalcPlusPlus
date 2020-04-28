@@ -11,7 +11,7 @@
 #include "../BinaryOperatorDirectory.h"
 #include "../OperatorDirectory/BinaryOperators.h"
 
-expression matrix_addition(MatrixExpression* lhs, MatrixExpression* rhs){
+expression matrix_addition(const MatrixExpression* lhs, const MatrixExpression* rhs){
     if (lhs->rows() == rhs->rows() && lhs->cols() == rhs->cols()){
         if (lhs->isComplex() || rhs->isComplex()){
             auto lmat = lhs->to_gsl_matrix_complex();
@@ -33,7 +33,7 @@ expression matrix_addition(MatrixExpression* lhs, MatrixExpression* rhs){
     ));
 }
 
-expression matrix_scalar_addition(expression& scalar, MatrixExpression* mat, const Variables& vars){
+expression matrix_scalar_addition(const expression scalar, const MatrixExpression* mat, const Variables& vars){
     if (scalar->isComplex() || mat->isComplex()){
         auto gsl_mat = mat->to_gsl_matrix_complex();
         gsl_matrix_complex_add_constant(gsl_mat.get(), scalar->complex(vars));
@@ -46,7 +46,7 @@ expression matrix_scalar_addition(expression& scalar, MatrixExpression* mat, con
     }
 }
 
-expression fe_PLUS(expression& lhs, expression& rhs, const Variables& vars){
+expression fe_PLUS(const expression lhs, const expression rhs, const Variables& vars){
     auto lexpr = lhs->evaluate(vars);
     auto rexpr = rhs->evaluate(vars);
     if (lexpr->matrix() && rexpr->matrix()){
@@ -57,6 +57,12 @@ expression fe_PLUS(expression& lhs, expression& rhs, const Variables& vars){
     }
     if (rexpr->matrix()){
         return matrix_scalar_addition(lexpr, rexpr->matrix(), vars);
+    }
+    if (lexpr->hex() || rexpr->hex()){
+        return HexExpression::construct((unsigned long long) (lexpr->value() + rexpr->value()));
+    }
+    if (lexpr->bin() || rexpr->bin()){
+        return BinExpression::construct((unsigned long long) (lexpr->value() + rexpr->value()));
     }
     if (lexpr->isComplex() || rexpr->isComplex()){
         return NumExpression::construct(gsl_complex_add(lexpr->complex(), rexpr->complex()));

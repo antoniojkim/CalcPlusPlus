@@ -26,9 +26,9 @@ class TupleExpression: public Expression {
 
         expression evaluate(const Variables& vars) override;
 
-        inline TupleExpression* tuple() override { return this; }
+        inline const TupleExpression* tuple() const override { return this; }
 
-        inline std::list<expression>& data(){ return _data; }
+        inline const std::list<expression>& data() const { return _data; }
 
         EXPRESSION_OVERRIDES
 

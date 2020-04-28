@@ -77,7 +77,27 @@ TEST_CASE("Basic Variable Setting Tests", "[constants]"){
     requireIsEqual("3*a", 9);
     requireIsEqual("a:=4", 4);
     requireIsEqual("3*a", 12);
-    requireIsEqual("a<-5", 5);
-    requireIsEqual("3*a", 15);
+    requireIsEqual("a<-3*2", 6);
+    requireIsEqual("3*a", 18);
     requireIsEqual("#a", "Deleted Variable: a", true);
+    requireIsEqual("3*a", GSL_NAN);
+}
+
+TEST_CASE("Hex and Bin Conversion Tests", "[hexbin]"){
+    SECTION("Hex Conversion Tests"){
+        requireIsEqual("hex(345)", "0x159", true);
+        requireIsEqual("0x7b * 0x1c8", "0xdb18", true);
+        requireIsEqual("hex(123) * hex(456)", "0xdb18", true);
+        requireIsEqual("hex(123 * 456)", "0xdb18", true);
+    }
+
+    SECTION("Bin Conversion Tests"){
+        requireIsEqual("bin(345)", "0b101011001", true);
+        requireIsEqual("bin(123 * 456)", "0b1101101100011000", true);
+        requireIsEqual("bin(123) * bin(456)", "0b1101101100011000", true);
+        requireIsEqual("0b1111011 * 0b111001000", "0b1101101100011000", true);
+    }
+
+    requireIsEqual("hex(123) * 0b111001000", "0xdb18", true);
+    requireIsEqual("num(hex(123) * 0b111001000)", 56088);
 }

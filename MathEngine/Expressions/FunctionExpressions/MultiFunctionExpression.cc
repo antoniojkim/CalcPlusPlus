@@ -6,6 +6,7 @@
 
 #include "../../Utils/exceptions.h"
 #include "../FunctionExpression.h"
+#include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
 #include "Functions.h"
 #include "FunctionDirectory.h"
@@ -26,35 +27,27 @@ MultiFunctionExpression::MultiFunctionExpression(int functionIndex, std::list<ex
 
 
 expression MultiFunctionExpression::construct(const char * name, std::list<expression>&& args){
-    return unique_ptr<MultiFunctionExpression>(new MultiFunctionExpression(name, std::move(args)));
+    return shared_ptr<MultiFunctionExpression>(new MultiFunctionExpression(name, std::move(args)));
 }
 expression MultiFunctionExpression::construct(std::string& name, std::list<expression>&& args){
-    return unique_ptr<MultiFunctionExpression>(new MultiFunctionExpression(name, std::move(args)));
+    return shared_ptr<MultiFunctionExpression>(new MultiFunctionExpression(name, std::move(args)));
 }
 expression MultiFunctionExpression::construct(int functionIndex, std::list<expression>&& args){
-    return unique_ptr<MultiFunctionExpression>(new MultiFunctionExpression(functionIndex, std::move(args)));
+    return shared_ptr<MultiFunctionExpression>(new MultiFunctionExpression(functionIndex, std::move(args)));
 }
 
 
 expression MultiFunctionExpression::simplify() {
-    throw Exception("Unimplemented Error: MultiFunctionExpression::simplify");
+    return InvalidExpression::construct(Exception("Unimplemented Error: MultiFunctionExpression::simplify"));
 }
 expression MultiFunctionExpression::derivative(const std::string& var) {
-    throw Exception("Unimplemented Error: MultiFunctionExpression::derivative");
-    // return make_unique<MultiplicationExpression>(
-    //     MultiFunctionExpression::construct(fprime, arg->copy()),
-    //     arg->derivative(var)
-    // );
+    return InvalidExpression::construct(Exception("Unimplemented Error: MultiFunctionExpression::derivative"));
 }
 expression MultiFunctionExpression::integrate(const std::string& var) {
-    throw Exception("Unimplemented Error: MultiFunctionExpression::integrate");
-    // return MultiFunctionExpression::construct(
-    //     lhs->integrate(var),
-    //     rhs->integrate(var)
-    // );
+    return InvalidExpression::construct(Exception("Unimplemented Error: MultiFunctionExpression::integrate"));
 }
 
-bool MultiFunctionExpression::evaluable(){
+bool MultiFunctionExpression::evaluable() const {
     for(auto& arg: args){
         if (!arg->evaluable()){
             return false;
@@ -72,7 +65,7 @@ expression MultiFunctionExpression::evaluate(const Variables& vars) {
     return NumExpression::construct(value(vars));
 }
 
-double MultiFunctionExpression::value(const Variables& vars) {
+double MultiFunctionExpression::value(const Variables& vars) const {
     auto f = get_multi_function(functionIndex);
     if (f){
         return f(args, vars);
@@ -80,7 +73,7 @@ double MultiFunctionExpression::value(const Variables& vars) {
     return GSL_NAN;
 }
 
-bool MultiFunctionExpression::isComplex(){
+bool MultiFunctionExpression::isComplex() const {
     for(auto& arg: args){
         if (arg->isComplex()){
             return true;
@@ -89,15 +82,7 @@ bool MultiFunctionExpression::isComplex(){
     return false;
 }
 
-expression MultiFunctionExpression::copy() {
-    list<expression> new_args;
-    for(auto& arg: args){
-        new_args.emplace_back(arg->copy());
-    }
-    return MultiFunctionExpression::construct(functionIndex, std::move(new_args));
-}
-
-std::ostream& MultiFunctionExpression::print(std::ostream& out) {
+std::ostream& MultiFunctionExpression::print(std::ostream& out) const {
     out << functionNames[functionIndex] << "(";
     auto arg = args.begin();
     auto end = args.end();
@@ -108,7 +93,7 @@ std::ostream& MultiFunctionExpression::print(std::ostream& out) {
     }
     return out << ")";
 }
-std::ostream& MultiFunctionExpression::postfix(std::ostream& out) {
+std::ostream& MultiFunctionExpression::postfix(std::ostream& out) const {
     for (auto& arg: args){
         arg->postfix(out) << " ";
     }

@@ -26,10 +26,10 @@ MAKE_UNIQUE_GSL(fft_complex_workspace)
 MAKE_UNIQUE_GSL(fft_complex_wavetable)
 
 inline std::unique_ptr<double[]> make_complex_packed_array(size_t n){
-    return make_unique<double[]>(n * 2);
+    return std::make_unique<double[]>(n * 2);
 }
 
-expression fft(MatrixExpression* matrix){
+expression fft(const MatrixExpression* matrix){
     if (matrix && (matrix->rows() == 1 || matrix->cols() == 1)){
         size_t N = matrix->rows() * matrix->cols();
         auto work = make_unique_fft_real_workspace(N);
@@ -72,13 +72,13 @@ expression fft(MatrixExpression* matrix){
     return InvalidExpression::construct(Exception("FFT expected 1D Matrix."));
 }
 
-expression fe_fft(list<expression>& args, const Variables& vars){
+expression fe_fft(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 1){
         auto expr = args.front()->evaluate(vars);
         return fft(expr->matrix());
     }
     else{
-        list<expression> exprs;
+        std::list<expression> exprs;
         for (auto& arg : args){
             exprs.emplace_back(arg->evaluate(vars));
         }
@@ -87,7 +87,7 @@ expression fe_fft(list<expression>& args, const Variables& vars){
     }
 }
 
-expression ifft(MatrixExpression* matrix){
+expression ifft(const MatrixExpression* matrix){
     if (matrix && (matrix->rows() == 1 || matrix->cols() == 1)){
         size_t N = matrix->rows() * matrix->cols();
         auto work = make_unique_fft_real_workspace(N);
@@ -130,13 +130,13 @@ expression ifft(MatrixExpression* matrix){
     return InvalidExpression::construct(Exception("IFFT expected 1D Matrix."));
 }
 
-expression fe_ifft(list<expression>& args, const Variables& vars){
+expression fe_ifft(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 1){
         auto expr = args.front()->evaluate(vars);
         return ifft(expr->matrix());
     }
     else{
-        list<expression> exprs;
+        std::list<expression> exprs;
         for (auto& arg : args){
             exprs.emplace_back(arg->evaluate(vars));
         }

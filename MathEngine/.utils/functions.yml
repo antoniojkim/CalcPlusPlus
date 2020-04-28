@@ -23,6 +23,12 @@ functions:
         nargs: -1
     rad:
     deg:
+    num:
+        expression:
+    hex:
+        expression:
+    bin:
+        expression:
     # Trigonometry
     sin:
     cos:

@@ -13,24 +13,24 @@
 
 using namespace std;
 
-BinaryOperatorExpression::BinaryOperatorExpression(const char * lexeme, expression&& lhs, expression&& rhs):
+BinaryOperatorExpression::BinaryOperatorExpression(const char * lexeme, expression lhs, expression rhs):
     operatorIndex{getOperatorIndex(lexeme)}, lhs{std::move(lhs)}, rhs{std::move(rhs)} {}
-BinaryOperatorExpression::BinaryOperatorExpression(std::string& lexeme, expression&& lhs, expression&& rhs):
+BinaryOperatorExpression::BinaryOperatorExpression(std::string& lexeme, expression lhs, expression rhs):
     operatorIndex{getOperatorIndex(lexeme)}, lhs{std::move(lhs)}, rhs{std::move(rhs)} {}
-BinaryOperatorExpression::BinaryOperatorExpression(int operatorIndex, expression&& lhs, expression&& rhs):
+BinaryOperatorExpression::BinaryOperatorExpression(int operatorIndex, expression lhs, expression rhs):
     operatorIndex{operatorIndex}, lhs{std::move(lhs)}, rhs{std::move(rhs)} {}
 
-expression BinaryOperatorExpression::construct(const char * lexeme, expression&& lhs, expression&& rhs){
-    return unique_ptr<BinaryOperatorExpression>(new BinaryOperatorExpression(lexeme, std::move(lhs), std::move(rhs)));
+expression BinaryOperatorExpression::construct(const char * lexeme, expression lhs, expression rhs){
+    return shared_ptr<BinaryOperatorExpression>(new BinaryOperatorExpression(lexeme, std::move(lhs), std::move(rhs)));
 }
-expression BinaryOperatorExpression::construct(std::string& lexeme, expression&& lhs, expression&& rhs){
-    return unique_ptr<BinaryOperatorExpression>(new BinaryOperatorExpression(lexeme, std::move(lhs), std::move(rhs)));
+expression BinaryOperatorExpression::construct(std::string& lexeme, expression lhs, expression rhs){
+    return shared_ptr<BinaryOperatorExpression>(new BinaryOperatorExpression(lexeme, std::move(lhs), std::move(rhs)));
 }
-expression BinaryOperatorExpression::construct(int operatorIndex, expression&& lhs, expression&& rhs){
-    return unique_ptr<BinaryOperatorExpression>(new BinaryOperatorExpression(operatorIndex, std::move(lhs), std::move(rhs)));
+expression BinaryOperatorExpression::construct(int operatorIndex, expression lhs, expression rhs){
+    return shared_ptr<BinaryOperatorExpression>(new BinaryOperatorExpression(operatorIndex, std::move(lhs), std::move(rhs)));
 }
 
-expression BinaryOperatorExpression::evaluate(const Variables& vars){
+expression BinaryOperatorExpression::evaluate(const Variables& vars) {
     auto fe = getBinaryOperatorExpr(operatorIndex);
     if (fe){ return fe(lhs, rhs, vars); }
     return NumExpression::construct(value(vars));
@@ -52,25 +52,21 @@ expression BinaryOperatorExpression::integrate(const std::string& var) {
     return InvalidExpression::construct(Exception("Integrate not defined for: ", operators[operatorIndex]));
 }
 
-double BinaryOperatorExpression::value(const Variables& vars) {
+double BinaryOperatorExpression::value(const Variables& vars) const {
     auto f = getBinaryOperator(operatorIndex);
     if (f){ return f(lhs->value(vars), rhs->value(vars)); }
     return GSL_NAN;
 }
 
-expression BinaryOperatorExpression::copy() {
-    return BinaryOperatorExpression::construct(operatorIndex, lhs->copy(), rhs->copy());
-}
+bool BinaryOperatorExpression::evaluable() const { return lhs->evaluable() && rhs->evaluable(); }
+bool BinaryOperatorExpression::isComplex() const { return lhs->isComplex() || rhs->isComplex(); }
 
-bool BinaryOperatorExpression::evaluable(){ return lhs->evaluable() && rhs->evaluable(); }
-bool BinaryOperatorExpression::isComplex(){ return lhs->isComplex() || rhs->isComplex(); }
-
-std::ostream& BinaryOperatorExpression::print(std::ostream& out) {
+std::ostream& BinaryOperatorExpression::print(std::ostream& out) const {
     out << "(";
     lhs->print(out) << ") " << operators[operatorIndex] << " (";
     return rhs->print(out) << ")";
 }
-std::ostream& BinaryOperatorExpression::postfix(std::ostream& out) {
+std::ostream& BinaryOperatorExpression::postfix(std::ostream& out) const {
     lhs->postfix(out) << ' ';
     return  rhs->postfix(out) << ' ' << operators[operatorIndex];
 }
