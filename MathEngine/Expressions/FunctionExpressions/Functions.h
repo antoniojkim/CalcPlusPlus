@@ -10,42 +10,42 @@
 #include <cstring>
 #include <string>
 
-constexpr const int numFunctions = 115;
+constexpr const int numFunctions = 113;
 constexpr const char* functionNames[numFunctions] = {
     "abs", "absdev", "acos", "acosh", "acot", "acoth", "acsc", "acsch", "arccos", "arccosh",
 	"arccot", "arccoth", "arccsc", "arccsch", "arcosh", "arcoth", "arcsch", "arcsec",
 	"arcsech", "arcsin", "arcsinh", "arctan", "arctanh", "argmax", "argmin", "arsech",
 	"arsinh", "artanh", "asec", "asech", "asin", "asinh", "atan", "atanh", "autocorr",
 	"beta", "betainc", "cb", "cbrt", "choose", "cos", "cosh", "cot", "coth", "csc", "csch",
-	"cubic", "cubicc", "deg", "deriv", "det", "dfact", "dx", "exp", "exp_2", "expm1",
-	"fact", "fcmp", "fft", "frexp", "gamma", "gammainc", "gammaincp", "gammaincq",
-	"gammainv", "gammastar", "hypot", "ifft", "integral", "integrate", "kurt", "kurtosis",
-	"lag1", "ldexp", "ln", "ln1p", "ln_2", "lnbeta", "lnchoose", "lndfact", "lnfact",
-	"lngamma", "lnpermute", "lnpoch", "log", "log1p", "log_2", "logn", "max", "mean",
-	"median", "min", "neg", "permute", "poch", "pochrel", "quad", "quadc", "rad", "sd",
-	"sec", "sech", "sin", "sinh", "skew", "sqr", "sqrt", "std", "stdev", "tan", "tanh",
-	"taylorcoeff", "tss", "var", "variance"
+	"cubic", "cubicc", "deg", "deriv", "det", "dfact", "exp", "exp_2", "expm1", "fact",
+	"fcmp", "fft", "frexp", "gamma", "gammainc", "gammaincp", "gammaincq", "gammainv",
+	"gammastar", "hypot", "ifft", "integral", "kurt", "kurtosis", "lag1", "ldexp", "ln",
+	"ln1p", "ln_2", "lnbeta", "lnchoose", "lndfact", "lnfact", "lngamma", "lnpermute",
+	"lnpoch", "log", "log1p", "log_2", "logn", "max", "mean", "median", "min", "neg",
+	"permute", "poch", "pochrel", "quad", "quadc", "rad", "sd", "sec", "sech", "sin",
+	"sinh", "skew", "sqr", "sqrt", "std", "stdev", "tan", "tanh", "taylorcoeff", "tss",
+	"var", "variance"
 };
 constexpr const size_t functionNameLengths[numFunctions] = {
     3, 6, 4, 5, 4, 5, 4, 5, 6, 7, 6, 7, 6, 7, 6, 6, 6, 6, 7, 6, 7, 6, 7, 6, 6, 6, 6, 6, 4,
-	5, 4, 5, 4, 5, 8, 4, 7, 2, 4, 6, 3, 4, 3, 4, 3, 4, 5, 6, 3, 5, 3, 5, 2, 3, 5, 5, 4, 4,
-	3, 5, 5, 8, 9, 9, 8, 9, 5, 4, 8, 9, 4, 8, 4, 5, 2, 4, 4, 6, 8, 7, 6, 7, 9, 6, 3, 5, 5,
-	4, 3, 4, 6, 3, 3, 7, 4, 7, 4, 5, 3, 2, 3, 4, 3, 4, 4, 3, 4, 3, 5, 3, 4, 11, 3, 3, 8
+	5, 4, 5, 4, 5, 8, 4, 7, 2, 4, 6, 3, 4, 3, 4, 3, 4, 5, 6, 3, 5, 3, 5, 3, 5, 5, 4, 4, 3,
+	5, 5, 8, 9, 9, 8, 9, 5, 4, 8, 4, 8, 4, 5, 2, 4, 4, 6, 8, 7, 6, 7, 9, 6, 3, 5, 5, 4, 3,
+	4, 6, 3, 3, 7, 4, 7, 4, 5, 3, 2, 3, 4, 3, 4, 4, 3, 4, 3, 5, 3, 4, 11, 3, 3, 8
 };
 constexpr const size_t functionOrderByLength[numFunctions] = {
-    111, 62, 63, 65, 69, 82, 34, 61, 64, 68, 71, 78, 114, 9, 11, 13, 18, 20, 22, 36, 79, 81,
-	93, 95, 1, 8, 10, 12, 14, 15, 16, 17, 19, 21, 23, 24, 25, 26, 27, 39, 47, 77, 80, 83,
-	90, 3, 5, 7, 29, 31, 33, 46, 49, 51, 54, 55, 59, 60, 66, 73, 85, 86, 97, 108, 2, 4, 6,
-	28, 30, 32, 35, 38, 41, 43, 45, 56, 57, 67, 70, 72, 75, 76, 87, 89, 94, 96, 101, 103,
-	104, 106, 110, 0, 40, 42, 44, 48, 50, 53, 58, 84, 88, 91, 92, 98, 100, 102, 105, 107,
-	109, 112, 113, 37, 52, 74, 99
+    112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94,
+	93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72,
+	71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50,
+	49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28,
+	27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
+	4, 3, 2, 1, 0
 };
 constexpr const int functionNumArgs[numFunctions] = {
     1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, -1, 2, 3, 1, 1, 2, 1, 1, 1, 1, 1, 1, 4, 4, 1, 2, 1, 1, 0, 1, 1, 1, 1,
-	-1, -1, 1, 1, 2, 2, 2, 1, 1, -1, -1, 3, 0, -1, -1, -1, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2,
-	1, 1, 1, 2, -1, -1, -1, -1, 1, 2, 2, 2, 3, 3, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1,
-	2, -1, -1, -1
+	1, 1, 1, 1, 1, 1, -1, 2, 3, 1, 1, 2, 1, 1, 1, 1, 1, 1, 4, 4, 1, 2, 1, 1, 1, 1, 1, 1, -1,
+	-1, 1, 1, 2, 2, 2, 1, 1, -1, -1, 3, -1, -1, -1, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1,
+	1, 2, -1, -1, -1, -1, 1, 2, 2, 2, 3, 3, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1, 2,
+	-1, -1, -1
 };
 
 /*

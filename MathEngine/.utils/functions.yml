@@ -1,15 +1,26 @@
 functions:
+    # All function definitions are dictionaries.
+    #   Default values:
+    #       nargs: 1
+    #       expression: None
+    #       derivative: None
+
     # Basic
     neg:
+        expression:
     abs:
     sqr:
     sqrt:
     cb:
     cbrt:
-    hypot: -1
-    ldexp: 2
+    hypot:
+        nargs: -1
+    ldexp:
+        nargs: 2
     frexp:
-    fcmp: -1
+        expression:
+    fcmp:
+        nargs: -1
     rad:
     deg:
     # Trigonometry
@@ -65,38 +76,66 @@ functions:
     ln:
     ln_2:
     ln1p:
-    logn: 2
+    logn:
+        nargs: 2
     # Calculus
-    dx: 0
-    deriv: 2
-    integral: 3
-    integrate: 0
+    deriv:
+        nargs: 2
+    integral:
+        nargs: 3
     # Statistics
-    mean: -1
-    var: -1
-    variance: -1
-    sd: -1
-    std: -1
-    stdev: -1
-    tss: -1
-    absdev: -1
-    skew: -1
-    kurt: -1
-    kurtosis: -1
-    lag1: -1
-    autocorr: -1
-    max: -1
-    min: -1
-    argmax: -1
-    argmin: -1
-    median: -1
+    mean:
+        nargs: -1
+    var:
+        nargs: -1
+    variance:
+        nargs: -1
+    sd:
+        nargs: -1
+    std:
+        nargs: -1
+    stdev:
+        nargs: -1
+    tss:
+        nargs: -1
+    absdev:
+        nargs: -1
+    skew:
+        nargs: -1
+    kurt:
+        nargs: -1
+    kurtosis:
+        nargs: -1
+    lag1:
+        nargs: -1
+    autocorr:
+        nargs: -1
+    max:
+        nargs: -1
+    min:
+        nargs: -1
+    argmax:
+        nargs: -1
+    argmin:
+        nargs: -1
+    median:
+        nargs: -1
     # Polynomials
-    quad: 3
-    quadc: 3
-    cubic: 4
-    cubicc: 4
+    quad:
+        nargs: 3
+        expression:
+    quadc:
+        nargs: 3
+        expression:
+    cubic:
+        nargs: 4
+        expression:
+    cubicc:
+        nargs: 4
+        expression:
     # Linear Algebra
-    det: 1
+    det:
+        expression:
     # Special Functions
     gamma:
     lngamma:
@@ -106,39 +145,44 @@ functions:
     dfact:
     lnfact:
     lndfact:
-    choose: 2
-    lnchoose: 2
-    permute: 2
-    lnpermute: 2
-    taylorcoeff: 2
-    poch: 2
-    lnpoch: 2
-    pochrel: 2
-    gammainc: 2
-    gammaincq: 2
-    gammaincp: 2
-    beta: 2
-    lnbeta: 2
-    betainc: 3
+    choose:
+        nargs: 2
+    lnchoose:
+        nargs: 2
+    permute:
+        nargs: 2
+    lnpermute:
+        nargs: 2
+    taylorcoeff:
+        nargs: 2
+    poch:
+        nargs: 2
+    lnpoch:
+        nargs: 2
+    pochrel:
+        nargs: 2
+    gammainc:
+        nargs: 2
+    gammaincq:
+        nargs: 2
+    gammaincp:
+        nargs: 2
+    beta:
+        nargs: 2
+    lnbeta:
+        nargs: 2
+    betainc:
+        nargs: 3
     # Fast Fourier Transforms
-    fft: -1
-    ifft: -1
+    fft:
+        nargs: -1
+        expression:
+    ifft:
+        nargs: -1
+        expression:
     # Random Number Generators
     # randseed:
     # rseed:
     # randu:
     # rand:
     # randup:
-functionExprs:
-    - neg
-    - frexp
-    - tuple
-    - quad
-    - quadc
-    - cubic
-    - cubicc
-    - det
-    - fft
-    - ifft
-printFunctions:
-    - tuple

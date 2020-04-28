@@ -3,6 +3,7 @@
 #include <list>
 #include <cmath>
 #include <gsl/gsl_deriv.h>
+#include <gsl/gsl_errno.h>
 #include <gsl/gsl_integration.h>
 
 #include "../../../Utils/exceptions.h"
@@ -19,7 +20,12 @@ double f_deriv(std::list<expression>& args, const Variables& vars){
         double x = (*arg)->value(vars);
 
         double result, abserr;
-        gsl_deriv_central(&F, x, 1e-8, &result, &abserr);
+        gsl_set_error_handler_off();
+        int status = gsl_deriv_central(&F, x, 1e-8, &result, &abserr);
+
+        if (status == GSL_FAILURE){
+            return GSL_NAN;
+        }
 
         return result;
     }
@@ -35,9 +41,14 @@ double f_integral(std::list<expression>& args, const Variables& vars){
 
         double result, abserr;
 
+        gsl_set_error_handler_off();
         gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
-        gsl_integration_qags(&F, a, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
+        int status = gsl_integration_qags(&F, a, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
         gsl_integration_workspace_free (w);
+
+        if (status == GSL_FAILURE){
+            return GSL_NAN;
+        }
 
         return result;
     }

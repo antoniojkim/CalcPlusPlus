@@ -71,3 +71,13 @@ TEST_CASE("Basic Constants Tests", "[constants]"){
     requireIsEqual("πe", M_PI * M_E);
     requireIsEqual("eπ", M_PI * M_E);
 }
+
+TEST_CASE("Basic Variable Setting Tests", "[constants]"){
+    requireIsEqual("a=3", 3);
+    requireIsEqual("3*a", 9);
+    requireIsEqual("a:=4", 4);
+    requireIsEqual("3*a", 12);
+    requireIsEqual("a<-5", 5);
+    requireIsEqual("3*a", 15);
+    requireIsEqual("#a", "Deleted Variable: a", true);
+}

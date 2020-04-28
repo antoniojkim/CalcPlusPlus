@@ -3,6 +3,7 @@
 #include <memory>
 #include <sstream>
 
+#include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 #include "../../Utils/fraction.h"
@@ -50,7 +51,14 @@ expression NumExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: NumExpression::integrate");
 }
 
-bool NumExpression::evaluable(){ return true; }
+bool NumExpression::evaluable(){ return !gsl_isnan(real) && !gsl_isnan(imag); }
+
+expression NumExpression::evaluate(const Variables& vars){
+    if (evaluable()){
+        return NumExpression::construct(real, imag);
+    }
+    return InvalidExpression::construct(Exception("Invalid Number."));
+}
 
 double NumExpression::value(const Variables& vars) { return real; }
 
@@ -64,6 +72,9 @@ expression NumExpression::copy() {
 }
 
 std::ostream& NumExpression::print(std::ostream& out) {
+    if (!evaluable()){
+        return out << "NaN";
+    }
     if (real != 0){
         out << std::setprecision(16) << real;
         if (imag > 0){ out << "+"; }
@@ -75,6 +86,9 @@ std::ostream& NumExpression::print(std::ostream& out) {
 }
 
 std::ostream& NumExpression::postfix(std::ostream& out) {
+    if (!evaluable()){
+        return out << "NaN";
+    }
     if (real != 0){
         out << std::setprecision(16) << real;
         if (imag > 0){
@@ -97,6 +111,9 @@ std::ostream& NumExpression::postfix(std::ostream& out) {
 }
 
 bool NumExpression::prettyprint(std::ostream& out){
+    if (!evaluable()){
+        return false;
+    }
     if (imag == 0){
         long numerator, denominator;
         if (to_fraction(real, numerator, denominator) && denominator != 1 &&

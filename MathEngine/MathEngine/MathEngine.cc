@@ -31,6 +31,29 @@ expression MathEngine::parse(const std::string& input){
 #endif
     if (Scanner::scan(input, tokens)) {
         preprocess(tokens);
+
+        if (tokens.size() >= 3 && (tokens.front().type == ID || tokens.front().type == SPECIALID)){
+            auto& second = *std::next(tokens.begin());
+            if (second.type == EQUALS || second.type == COLON_EQUALS || second.type == L_ARROW){
+                string name = tokens.front().lexeme;
+                tokens.pop_front(); tokens.pop_front();
+                variables[name] = parser->parse(tokens);
+                return variables[name]->copy();
+            }
+        }
+        else if (tokens.size() == 2 && tokens.front().type == POUND){
+            auto& second = *std::next(tokens.begin());
+            if (second.type == ID || second.type == SPECIALID){
+                if (variables.count(second.lexeme) > 0){
+                    variables.erase(second.lexeme);
+                    return InvalidExpression::construct(Exception("Deleted Variable: ", second.lexeme));
+                }
+                else{
+                    return InvalidExpression::construct(Exception("Variable does not exist: ", second.lexeme));
+                }
+            }
+        }
+
         return parser->parse(tokens);
     }
     return InvalidExpression::construct(Exception(""));
@@ -52,6 +75,9 @@ expression MathEngine::evaluate(const std::string& input){
 std::string MathEngine::formatInput(const std::string& input, int& cursorPosition){
     if (input.size() >= shortestGreekLetterName){
         for (int length = min(cursorPosition, longestGreekLetterName); length >= shortestGreekLetterName; --length){
+            if (!isalpha(input.at(cursorPosition - length))){
+                continue;
+            }
             auto subinput = input.substr(cursorPosition - length, length);
             int index = getGreekLetterNameIndex(subinput);
             if (index != -1){

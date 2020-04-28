@@ -42,28 +42,33 @@ def is_newer(file1, file2):
 
 class Template:
     def __init__(self, specs, template_path, write_path):
+        self.spec_path = specs.spec_path
         self.template_path = template_path
         self.write_path = write_path
-        self.update = is_newer(specs.spec_path, write_path) or is_newer(
-            template_path, write_path
-        )
+
+    def verify(self):
+        if not (
+            is_newer(self.spec_path, self.write_path)
+            or is_newer(self.template_path, self.write_path)
+        ):
+            raise Exception("Nothing to update")
 
     def __enter__(self):
-        if self.update:
-            with open(self.template_path) as file:
-                self.template = file.read()
+        with open(self.template_path) as file:
+            self.template = file.read()
 
         return self
 
     def __exit__(self, type, value, traceback):
-        if self.update:
+        if type is None and value is None and traceback is None:
             with open(self.write_path, "w") as file:
                 file.write(self.template)
 
+        return True
+
     def replace(self, **kwargs):
-        if self.update:
-            for key, val in kwargs.items():
-                self.template = self.template.replace(f"{{{key}}}", str(val))
+        for key, val in kwargs.items():
+            self.template = self.template.replace(f"{{{key}}}", str(val))
 
 
 file_dir = pathlib.Path(__file__).parent.absolute()
@@ -83,6 +88,7 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
         os.path.join(template_dir, "scanner.h"),
         os.path.join(file_dir, "..", "Scanner", "scanner.h"),
     ) as template:
+        template.verify()
         template.replace(
             types=wrap(keys, indent="\t\t"),
             numTokens=len(keys),
@@ -94,6 +100,7 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
         os.path.join(template_dir, "scanner.cc"),
         os.path.join(file_dir, "..", "Scanner", "scanner.cc"),
     ) as template:
+        template.verify()
         lexemes = [
             (operator, vals["lexeme"]) for operator, vals in specs["operators"].items()
         ] + list(specs["tokens"].items())
@@ -121,7 +128,6 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
     singleOperators = operators_constains("singleOperator")
     operatorExprs = operators_constains("expression")
     operatorDerivatives = operators_constains("derivative")
-    operatorIntegrals = operators_constains("integral")
     operatorSimplifys = operators_constains("simplify")
 
     with Template(
@@ -129,6 +135,7 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
         os.path.join(template_dir, "Operators.h"),
         os.path.join(expr_dir, "OperatorExpressions", "Operators.h"),
     ) as template:
+        template.verify()
         template.replace(
             operators=wrap(map('"{}"'.format, operatorLexemes)),
             precedences=wrap(
@@ -157,6 +164,7 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
         os.path.join(template_dir, "BinaryOperatorDirectory.cc"),
         os.path.join(expr_dir, "OperatorExpressions", "BinaryOperatorDirectory.cc",),
     ) as template:
+        template.verify()
         template.replace(
             binaryOperators=wrap(
                 (
@@ -186,16 +194,16 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
                     )
                 )
             ),
-            binaryOperatorIntegrals=wrap(
-                (
-                    f"fi_{name}"
-                    if integral and lexeme != "" and not singleOperator
-                    else "nullptr"
-                    for name, lexeme, singleOperator, integral in zip(
-                        keys, operatorLexemes, singleOperators, operatorIntegrals
-                    )
-                )
-            ),
+            # binaryOperatorIntegrals=wrap(
+            #     (
+            #         f"fi_{name}"
+            #         if integral and lexeme != "" and not singleOperator
+            #         else "nullptr"
+            #         for name, lexeme, singleOperator, integral in zip(
+            #             keys, operatorLexemes, singleOperators, operatorIntegrals
+            #         )
+            #     )
+            # ),
             binaryOperatorSimplifys=wrap(
                 (
                     f"fs_{name}"
@@ -213,6 +221,7 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
         os.path.join(template_dir, "Constants.h"),
         os.path.join(expr_dir, "VariableExpressions", "Constants.h",),
     ) as template:
+        template.verify()
         constants = list(specs["constants"].items())
         constants.sort(key=lambda k: k[0])
         template.replace(
@@ -230,34 +239,39 @@ with Specifications(os.path.join(file_dir, "tokens.yml")) as specs:
 
 with Specifications(os.path.join(file_dir, "functions.yml")) as specs:
 
-    functions = [
-        (name, 1 if nargs is None else nargs)
-        for name, nargs in specs["functions"].items()
-    ]
-    functions.sort()
+    functionNames = sorted(list(specs["functions"].keys()))
+    functions = {
+        name: val if val is not None else {} for name, val in specs["functions"].items()
+    }
+
+    def nargs(name):
+        return functions[name].get("nargs", 1)
+
+    def hasExpression(name):
+        return "expression" in functions[name]
+
+    def hasDerivative(name):
+        return "derivative" in functions[name]
 
     with Template(
         specs,
         os.path.join(template_dir, "Functions.h"),
         os.path.join(expr_dir, "FunctionExpressions", "Functions.h"),
     ) as template:
+        template.verify()
         template.replace(
             numFunctions=len(functions),
-            functionNames=wrap(map('"{}"'.format, (name for name, nargs in functions))),
-            functionNameLengths=wrap(
-                map(str, (len(name) for name, nargs in functions))
-            ),
+            functionNames=wrap((f'"{name}"' for name in functionNames)),
+            functionNameLengths=wrap(map(str, (len(name) for name in functionNames))),
             functionOrderByLength=wrap(
                 (
                     str(i)
-                    for i, f in sorted(
-                        list(enumerate(functions)),
-                        key=lambda k: len(k[1][0]),
-                        reverse=True,
-                    )
+                    for i, f in sorted(list(enumerate(functionNames)), reverse=True,)
                 )
             ),
-            functionNumArgs=wrap(map(str, (nargs for name, nargs in functions))),
+            functionNumArgs=wrap(
+                (str(functions[name].get("nargs", 1)) for name in functionNames)
+            ),
         )
 
     with Template(
@@ -265,20 +279,30 @@ with Specifications(os.path.join(file_dir, "functions.yml")) as specs:
         os.path.join(template_dir, "FunctionDirectory.cc"),
         os.path.join(expr_dir, "FunctionExpressions", "FunctionDirectory.cc"),
     ) as template:
-        functionExprs = set(specs["functionExprs"])
+        template.verify()
         template.replace(
             unaryFunctions=wrap(
                 (
                     f"f_{name}"
-                    if name not in functionExprs and nargs == 1
+                    if nargs(name) == 1 and not hasExpression(name)
                     else "nullptr"
-                    for name, nargs in functions
+                    for name in functionNames
                 )
             ),
             unaryFunctionExprs=wrap(
                 (
-                    f"fe_{name}" if name in functionExprs and nargs == 1 else "nullptr"
-                    for name, nargs in functions
+                    f"fe_{name}"
+                    if hasExpression(name) and nargs(name) == 1
+                    else "nullptr"
+                    for name in functionNames
+                )
+            ),
+            unaryFunctionDerivatives=wrap(
+                (
+                    f"fprime_{name}"
+                    if hasDerivative(name) and nargs(name) == 1
+                    else "nullptr"
+                    for name in functionNames
                 )
             ),
         )
@@ -286,15 +310,17 @@ with Specifications(os.path.join(file_dir, "functions.yml")) as specs:
             multiFunctions=wrap(
                 (
                     f"f_{name}"
-                    if name not in functionExprs and (nargs < 0 or nargs > 1)
+                    if not hasExpression(name) and not (0 <= nargs(name) <= 1)
                     else "nullptr"
-                    for name, nargs in functions
+                    for name in functionNames
                 )
             ),
             multiFunctionExprs=wrap(
                 (
-                    f"fe_{name}" if name in functionExprs and nargs != 1 else "nullptr"
-                    for name, nargs in functions
+                    f"fe_{name}"
+                    if hasExpression(name) and not (0 <= nargs(name) <= 1)
+                    else "nullptr"
+                    for name in functionNames
                 )
             ),
         )
@@ -308,6 +334,7 @@ with Specifications(os.path.join(file_dir, "unitconversions.yml")) as specs:
         os.path.join(template_dir, "Units.h"),
         os.path.join(expr_dir, "UnitConversionExpression", "Units.h"),
     ) as template:
+        template.verify()
         units = []
         abbrs = []
         unitTypes = []
@@ -358,7 +385,7 @@ with Specifications(os.path.join(file_dir, "unitconversions.yml")) as specs:
         )
         assert np.all(unq_cnt == 1), np.array(abbrs)[unq_cnt != 1]
 
-        assert len(set(abbrs) & set(name for name, nargs in functions)) == 0
+        assert len(set(abbrs) & set(functionNames)) == 0
         assert len(set(abbrs) & set(name for name, val in constants)) == 0
         assert len(set(abbrs)) == len(abbrs)
         assert len(units) == len(abbrs)

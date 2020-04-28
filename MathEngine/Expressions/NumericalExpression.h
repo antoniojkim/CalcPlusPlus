@@ -18,6 +18,8 @@ class NumExpression: public Expression {
         static expression construct(const gsl_complex& z);
         static expression construct(const std::string&);
 
+        expression evaluate(const Variables&);
+
         gsl_complex complex() override;
         gsl_complex complex(const Variables& vars) override;
 

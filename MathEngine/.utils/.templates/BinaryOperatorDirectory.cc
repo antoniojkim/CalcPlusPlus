@@ -78,22 +78,24 @@ BinaryOperatorDerivative getBinaryOperatorDerivative(int operatorIndex) {
 }
 
 
-const BinaryOperatorIntegral binaryOperatorIntegrals[numTokens] = {
-    {binaryOperatorIntegrals}
-};
+// const BinaryOperatorIntegral binaryOperatorIntegrals[numTokens] = {
+//     {binaryOperatorIntegrals}
+// };
 
 BinaryOperatorIntegral getBinaryOperatorIntegral(const std::string& name) {
-    int index = getOperatorIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Binary Operator: ", name);
-    }
-    return getBinaryOperatorIntegral(index);
+    // int index = getOperatorIndex(name);
+    // if (index == -1){
+    //     throw Exception("Unknown Binary Operator: ", name);
+    // }
+    // return getBinaryOperatorIntegral(index);
+    return nullptr;
 }
 BinaryOperatorIntegral getBinaryOperatorIntegral(int operatorIndex) {
-    if (operatorIndex < 0 || operatorIndex >= numTokens){
-        throw Exception("Invalid Operator Index: ", operatorIndex);
-    }
-    return binaryOperatorIntegrals[operatorIndex];
+    // if (operatorIndex < 0 || operatorIndex >= numTokens){
+    //     throw Exception("Invalid Operator Index: ", operatorIndex);
+    // }
+    // return binaryOperatorIntegrals[operatorIndex];
+    return nullptr;
 }
 
 

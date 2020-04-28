@@ -76,6 +76,32 @@ UnaryFunctionExpr get_unary_function_expr(int functionIndex){
 
 
 /***************************************************
+ *********** Unary Function Derivatives ************
+ ***************************************************/
+
+const UnaryFunctionDerivative unaryFunctionDerivatives[numFunctions] = {
+    {unaryFunctionDerivatives}
+};
+
+UnaryFunctionDerivative get_unary_function_derivative(const string& name){
+    int index = getFunctionIndex(name);
+    if (index == -1){
+        throw Exception("Unknown Unary Function: ", name);
+    }
+    return get_unary_function_derivative(index);
+}
+UnaryFunctionDerivative get_unary_function_derivative(int functionIndex){
+    if (functionIndex < 0 || functionIndex >= numFunctions){
+        throw Exception("Invalid Function Index: ", functionIndex);
+    }
+    if (functionNumArgs[functionIndex] != 1){
+        throw Exception("Function is not Unary: ", functionNames[functionIndex]);
+    }
+    return unaryFunctionDerivatives[functionIndex];
+}
+
+
+/***************************************************
  ***************** Multi Functions *****************
  ***************************************************/
 
