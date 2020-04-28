@@ -12,10 +12,14 @@
 
 double f_deriv(const std::list<expression>& args, const Variables& vars){
     if (args.size() == 2){
-        auto arg = args.begin();
-        if (!(*arg)->evaluable()){
-
+        auto derivative = args.front()->derivative("x");
+        if (!derivative->invalid()){
+            Variables xvars;
+            xvars["x"] = args.back()->evaluate(vars);
+            return derivative->value(xvars);
         }
+
+        auto arg = args.begin();
         gsl_function F = (*(arg++))->function();
         double x = (*arg)->value(vars);
 

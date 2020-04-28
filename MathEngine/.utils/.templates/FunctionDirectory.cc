@@ -11,6 +11,7 @@
 #include "MultiFunctions/ExpLogFunctions.h"
 #include "MultiFunctions/SpecialFunctions.h"
 #include "MultiFunctions/Statistics.h"
+#include "MultiFunctionExprs/calculus.h"
 #include "MultiFunctionExprs/fft.h"
 #include "MultiFunctionExprs/polynomial.h"
 #include "MultiFunctionExprs/tuple.h"
@@ -18,6 +19,9 @@
 #include "UnaryFunctions/ExpLogFunctions.h"
 #include "UnaryFunctions/SpecialFunctions.h"
 #include "UnaryFunctions/TrigFunctions.h"
+#include "UnaryFunctionDerivatives/BasicFunctions.h"
+#include "UnaryFunctionDerivatives/ExpLogFunctions.h"
+#include "UnaryFunctionDerivatives/TrigFunctions.h"
 #include "UnaryFunctionExprs/basic.h"
 #include "UnaryFunctionExprs/linalg.h"
 

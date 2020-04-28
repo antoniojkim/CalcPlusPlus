@@ -8,11 +8,17 @@ functions:
     # Basic
     neg:
         expression:
+        derivative:
     abs:
+        derivative:
     sqr:
+        derivative:
     sqrt:
+        derivative:
     cb:
+        derivative:
     cbrt:
+        derivative:
     hypot:
         nargs: -1
     ldexp:
@@ -31,62 +37,117 @@ functions:
         expression:
     # Trigonometry
     sin:
+        derivative:
     cos:
+        derivative:
     tan:
+        derivative:
     csc:
+        derivative:
     sec:
+        derivative:
     cot:
+        derivative:
     asin:
+        derivative:
     acos:
+        derivative:
     atan:
+        derivative:
     acsc:
+        derivative:
     asec:
+        derivative:
     acot:
+        derivative:
     arcsin:
+        derivative:
     arccos:
+        derivative:
     arctan:
+        derivative:
     arccsc:
+        derivative:
     arcsec:
+        derivative:
     arccot:
+        derivative:
     sinh:
+        derivative:
     cosh:
+        derivative:
     tanh:
+        derivative:
     csch:
+        derivative:
     sech:
+        derivative:
     coth:
+        derivative:
     asinh:
+        derivative:
     acosh:
+        derivative:
     atanh:
+        derivative:
     acsch:
+        derivative:
     asech:
+        derivative:
     acoth:
+        derivative:
     arsinh:
+        derivative:
     arcosh:
+        derivative:
     artanh:
+        derivative:
     arcsch:
+        derivative:
     arsech:
+        derivative:
     arcoth:
+        derivative:
     arcsinh:
+        derivative:
     arccosh:
+        derivative:
     arctanh:
+        derivative:
     arccsch:
+        derivative:
     arcsech:
+        derivative:
     arccoth:
+        derivative:
     # Exponentials
     exp:
+        derivative:
     exp_2:
+        derivative:
     expm1:
+        derivative:
     log:
+        derivative:
     log_2:
+        derivative:
     log1p:
+        derivative:
     ln:
+        derivative:
     ln_2:
+        derivative:
     ln1p:
+        derivative:
     logn:
         nargs: 2
+        derivative:
     # Calculus
+    diff:
+        nargs: -1
+        expression:
     deriv:
-        nargs: 2
+        nargs: -1
     integral:
         nargs: 3
     # Statistics

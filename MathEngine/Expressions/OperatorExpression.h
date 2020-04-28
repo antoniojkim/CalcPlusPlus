@@ -19,5 +19,7 @@ class BinaryOperatorExpression: public Expression {
 
         expression evaluate(const Variables& vars) override;
 
+        inline const BinaryOperatorExpression* binaryOperator() const { return this; }
+
         EXPRESSION_OVERRIDES
 };

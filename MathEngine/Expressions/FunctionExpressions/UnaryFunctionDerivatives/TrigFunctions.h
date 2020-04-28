@@ -9,59 +9,99 @@
 
 
 expression fprime_sin(const expression arg, const std::string& var){
-    return UnaryFunctionExpression::construct("cos", arg->copy());
+    return UnaryFunctionExpression::construct("cos", arg);
 }
 expression fprime_cos(const expression arg, const std::string& var){
-    return -UnaryFunctionExpression::construct("sin", arg->copy());
+    return -UnaryFunctionExpression::construct("sin", arg);
 }
 expression fprime_tan(const expression arg, const std::string& var){
-    return UnaryFunctionExpression::construct("sec", arg->copy()) ^ 2;
+    return UnaryFunctionExpression::construct("sec", arg) ^ 2;
 }
 
 expression fprime_asin(const expression arg, const std::string& var){
-    return 1 / sqrt(1 - (arg->copy() ^ 2));
+    return 1 / sqrt(1 - (arg ^ 2));
 }
+expression fprime_acos(const expression arg, const std::string& var){
+    return -1 / sqrt(1 - (arg ^ 2));
+}
+expression fprime_atan(const expression arg, const std::string& var){
+    return 1 / (1 + (arg ^ 2));
+}
+UnaryFunctionDerivative fprime_arcsin = fprime_asin;
+UnaryFunctionDerivative fprime_arccos = fprime_acos;
+UnaryFunctionDerivative fprime_arctan = fprime_atan;
 
-// UnaryFunction f_acos = std::acos;
-// UnaryFunction f_atan = std::atan;
-// UnaryFunction f_arcsin = std::asin;
-// UnaryFunction f_arccos = std::acos;
-// UnaryFunction f_arctan = std::atan;
-// UnaryFunction f_sinh = std::sinh;
-// UnaryFunction f_cosh = std::cosh;
-// UnaryFunction f_tanh = std::tanh;
-// UnaryFunction f_asinh = std::asinh;
-// UnaryFunction f_acosh = std::acosh;
-// UnaryFunction f_atanh = std::atanh;
-// UnaryFunction f_arsinh = std::asinh;
-// UnaryFunction f_arcosh = std::acosh;
-// UnaryFunction f_artanh = std::atanh;
-// UnaryFunction f_arcsinh = std::asinh;
-// UnaryFunction f_arccosh = std::acosh;
-// UnaryFunction f_arctanh = std::atanh;
+expression fprime_sinh(const expression arg, const std::string& var){
+    return UnaryFunctionExpression::construct("cosh", arg);
+}
+expression fprime_cosh(const expression arg, const std::string& var){
+    return UnaryFunctionExpression::construct("sinh", arg);
+}
+expression fprime_tanh(const expression arg, const std::string& var){
+    return UnaryFunctionExpression::construct("sech", arg) ^ 2;
+}
+expression fprime_asinh(const expression arg, const std::string& var){
+    return 1 / sqrt((arg ^ 2) + 1);
+}
+expression fprime_acosh(const expression arg, const std::string& var){
+    return 1 / sqrt((arg ^ 2) - 1);
+}
+expression fprime_atanh(const expression arg, const std::string& var){
+    return 1 / (1 - (arg ^ 2));
+}
+UnaryFunctionDerivative fprime_arcsinh = fprime_asinh;
+UnaryFunctionDerivative fprime_arccosh = fprime_acosh;
+UnaryFunctionDerivative fprime_arctanh = fprime_atanh;
+UnaryFunctionDerivative fprime_arsinh = fprime_asinh;
+UnaryFunctionDerivative fprime_arcosh = fprime_acosh;
+UnaryFunctionDerivative fprime_artanh = fprime_atanh;
 
-// double f_csc(double x){ return 1.0 / std::sin(x); }
-// double f_sec(double x){ return 1.0 / std::cos(x); }
-// double f_cot(double x){ return 1.0 / std::tan(x); }
-// double f_acsc(double x){ return std::asin(1.0 / x); }
-// double f_asec(double x){ return std::acos(1.0 / x); }
-// double f_acot(double x){ return std::tan(1.0 / x); }
-// UnaryFunction f_arcsc = f_acsc;
-// UnaryFunction f_arsec = f_asec;
-// UnaryFunction f_arcot = f_acot;
-// UnaryFunction f_arccsc = f_acsc;
-// UnaryFunction f_arcsec = f_asec;
-// UnaryFunction f_arccot = f_acot;
+expression fprime_csc(const expression arg, const std::string& var){
+    return -UnaryFunctionExpression::construct("cot", arg) * UnaryFunctionExpression::construct("csc", arg);
+}
+expression fprime_sec(const expression arg, const std::string& var){
+    return -UnaryFunctionExpression::construct("tan", arg) * UnaryFunctionExpression::construct("sec", arg);
+}
+expression fprime_cot(const expression arg, const std::string& var){
+    return -(UnaryFunctionExpression::construct("csc", arg) ^ 2);
+}
+expression fprime_acsc(const expression arg, const std::string& var){
+    return -1 / (abs(arg) * sqrt((arg ^ 2) - 1));
+}
+expression fprime_asec(const expression arg, const std::string& var){
+    return 1 / (abs(arg) * sqrt((arg ^ 2) - 1));
+}
+expression fprime_acot(const expression arg, const std::string& var){
+    return -1 / (1 + (arg ^ 2));
+}
+UnaryFunctionDerivative fprime_arcsc = fprime_acsc;
+UnaryFunctionDerivative fprime_arsec = fprime_asec;
+UnaryFunctionDerivative fprime_arcot = fprime_acot;
+UnaryFunctionDerivative fprime_arccsc = fprime_acsc;
+UnaryFunctionDerivative fprime_arcsec = fprime_asec;
+UnaryFunctionDerivative fprime_arccot = fprime_acot;
 
-// double f_csch(double x){ return 1.0 / std::sinh(x); }
-// double f_sech(double x){ return 1.0 / std::cosh(x); }
-// double f_coth(double x){ return 1.0 / std::tanh(x); }
-// double f_acsch(double x){ return std::asinh(1.0 / x); }
-// double f_asech(double x){ return std::acosh(1.0 / x); }
-// double f_acoth(double x){ return std::tanh(1.0 / x); }
-// UnaryFunction f_arcsch = f_acsch;
-// UnaryFunction f_arsech = f_asech;
-// UnaryFunction f_arcoth = f_acoth;
-// UnaryFunction f_arccsch = f_acsch;
-// UnaryFunction f_arcsech = f_asech;
-// UnaryFunction f_arccoth = f_acoth;
+expression fprime_csch(const expression arg, const std::string& var){
+    return -UnaryFunctionExpression::construct("coth", arg) * UnaryFunctionExpression::construct("csch", arg);
+}
+expression fprime_sech(const expression arg, const std::string& var){
+    return -UnaryFunctionExpression::construct("tanh", arg) * UnaryFunctionExpression::construct("sech", arg);
+}
+expression fprime_coth(const expression arg, const std::string& var){
+    return -(UnaryFunctionExpression::construct("csch", arg) ^ 2);
+}
+expression fprime_acsch(const expression arg, const std::string& var){
+    return -1 / (abs(arg) * sqrt((arg ^ 2) - 1));
+}
+expression fprime_asech(const expression arg, const std::string& var){
+    return -1 / (abs(arg) * sqrt(1 - (arg ^ 2)));
+}
+expression fprime_acoth(const expression arg, const std::string& var){
+    return 1 / (1 - (arg ^ 2));
+}
+UnaryFunctionDerivative fprime_arcsch = fprime_acsch;
+UnaryFunctionDerivative fprime_arsech = fprime_asech;
+UnaryFunctionDerivative fprime_arcoth = fprime_acoth;
+UnaryFunctionDerivative fprime_arccsch = fprime_acsch;
+UnaryFunctionDerivative fprime_arcsech = fprime_asech;
+UnaryFunctionDerivative fprime_arccoth = fprime_acoth;

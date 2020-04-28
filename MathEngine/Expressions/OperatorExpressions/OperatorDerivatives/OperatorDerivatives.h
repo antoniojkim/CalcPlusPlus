@@ -13,19 +13,22 @@ expression fprime_MINUS(const expression lhs, const expression rhs, const std::s
 }
 
 expression fprime_STAR(const expression lhs, const expression rhs, const std::string& var){
-    return lhs->derivative(var) * rhs->copy() + rhs->derivative(var) * lhs->copy();
+    return lhs->derivative(var) * rhs + rhs->derivative(var) * lhs;
 }
 
 expression fprime_SLASH(const expression lhs, const expression rhs, const std::string& var){
-    return (lhs->derivative(var) * rhs->copy() - rhs->derivative(var) * lhs->copy()) / (rhs->copy() ^ 2);
+    return (lhs->derivative(var) * rhs - rhs->derivative(var) * lhs) / (rhs ^ 2);
 }
 
 expression fprime_CARET(const expression lhs, const expression rhs, const std::string& var){
     if (rhs->evaluable()){
-        return (lhs->copy() ^ (rhs->copy() - 1)) * (lhs->derivative(var) * rhs->copy());
+        return (lhs ^ (rhs - 1)) * (lhs->derivative(var) * rhs);
+    }
+    else if (lhs->evaluable()){
+        return (lhs ^ rhs) *  ln(lhs) * rhs->derivative(var);
     }
     else{
-        return (lhs->copy() ^ (rhs->copy() - 1)) * (lhs->derivative(var) * rhs->copy() + lhs->copy() * ln(lhs->copy()) * rhs->derivative(var));
+        return (lhs ^ (rhs - 1)) * (lhs->derivative(var) * rhs + lhs * ln(lhs) * rhs->derivative(var));
     }
 }
 

@@ -62,9 +62,22 @@ bool BinaryOperatorExpression::evaluable() const { return lhs->evaluable() && rh
 bool BinaryOperatorExpression::isComplex() const { return lhs->isComplex() || rhs->isComplex(); }
 
 std::ostream& BinaryOperatorExpression::print(std::ostream& out) const {
-    out << "(";
-    lhs->print(out) << ") " << operators[operatorIndex] << " (";
-    return rhs->print(out) << ")";
+    if (lhs->binaryOperator() &&
+        getPrecedence((Scanner::Type) lhs->binaryOperator()->operatorIndex) < getPrecedence((Scanner::Type) operatorIndex)){
+        out << "("; lhs->print(out) << ")";
+    }
+    else{
+        lhs->print(out);
+    }
+    out << " " << operators[operatorIndex] << " ";
+    if (rhs->binaryOperator() &&
+        getPrecedence((Scanner::Type) rhs->binaryOperator()->operatorIndex) < getPrecedence((Scanner::Type) operatorIndex)){
+        out << "("; rhs->print(out) << ")";
+    }
+    else{
+        rhs->print(out);
+    }
+    return out;
 }
 std::ostream& BinaryOperatorExpression::postfix(std::ostream& out) const {
     lhs->postfix(out) << ' ';

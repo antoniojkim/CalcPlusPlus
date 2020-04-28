@@ -5,19 +5,29 @@
 #include <gsl/gsl_math.h>
 
 #include "../FunctionDirectory.h"
+#include "../../FunctionExpression.h"
+#include "../../ExpressionOperations.h"
+#include "../../ExpressionFunctions.h"
+#include "../../NumericalExpression.h"
 
 
-double f_neg(double x){ return -x; }
-UnaryFunction f_abs = std::abs;
-
-UnaryFunction f_sqr = gsl_pow_2;
-UnaryFunction f_sqrt = std::sqrt;
-UnaryFunction f_cb = gsl_pow_3;
-UnaryFunction f_cbrt = std::cbrt;
-
-double f_rad(double x){
-    return x * 180 / M_PI;
+expression fprime_neg(const expression arg, const std::string& var){
+    return NumExpression::construct(-1);
 }
-double f_deg(double x){
-    return x * M_PI / 180;
+expression fprime_abs(const expression arg, const std::string& var){
+    return arg / abs(arg);
+}
+
+expression fprime_sqr(const expression arg, const std::string& var){
+    return 2 * arg;
+}
+expression fprime_sqrt(const expression arg, const std::string& var){
+    return 0.5 / sqrt(arg);
+}
+
+expression fprime_cb(const expression arg, const std::string& var){
+    return 3 * sqr(arg);
+}
+expression fprime_cbrt(const expression arg, const std::string& var){
+    return (1.0 / 3) / sqr(cbrt(arg));
 }

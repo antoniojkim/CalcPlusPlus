@@ -15,6 +15,7 @@ struct BinExpression;
 struct HexExpression;
 struct InvalidExpression;
 struct MatrixExpression;
+struct BinaryOperatorExpression;
 struct TupleExpression;
 struct VariableExpression;
 
@@ -46,6 +47,7 @@ struct Expression: public std::enable_shared_from_this<Expression> {
     virtual const inline HexExpression* hex() const { return nullptr; }
     virtual const inline InvalidExpression* invalid() const { return nullptr; }
     virtual const inline MatrixExpression* matrix() const { return nullptr; }
+    virtual const inline BinaryOperatorExpression* binaryOperator() const { return nullptr; }
     virtual const inline TupleExpression* tuple() const { return nullptr; }
     virtual const inline VariableExpression* variable() const { return nullptr; }
 

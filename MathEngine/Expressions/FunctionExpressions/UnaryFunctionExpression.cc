@@ -12,29 +12,29 @@
 
 using namespace std;
 
-UnaryFunctionExpression::UnaryFunctionExpression(const char * name, expression arg):
+UnaryFunctionExpression::UnaryFunctionExpression(const char * name, const expression arg):
     functionIndex{getFunctionIndex(name)},
-    arg{std::move(arg)} {
+    arg{arg} {
     if (functionIndex == -1){
         throw Exception("Invalid Unary Function: ", std::string{name});
     }
 
 }
-UnaryFunctionExpression::UnaryFunctionExpression(std::string& name, expression arg):
-    UnaryFunctionExpression{name.c_str(), std::move(arg)} {}
-UnaryFunctionExpression::UnaryFunctionExpression(int functionIndex, expression arg):
+UnaryFunctionExpression::UnaryFunctionExpression(std::string& name, const expression arg):
+    UnaryFunctionExpression{name.c_str(), arg} {}
+UnaryFunctionExpression::UnaryFunctionExpression(int functionIndex, const expression arg):
     functionIndex{functionIndex},
-    arg{std::move(arg)} {}
+    arg{arg} {}
 
 
-expression UnaryFunctionExpression::construct(const char * name, expression arg){
-    return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(name, std::move(arg)));
+expression UnaryFunctionExpression::construct(const char * name, const expression arg){
+    return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(name, arg));
 }
-expression UnaryFunctionExpression::construct(std::string& name, expression arg){
-    return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(name, std::move(arg)));
+expression UnaryFunctionExpression::construct(std::string& name, const expression arg){
+    return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(name, arg));
 }
-expression UnaryFunctionExpression::construct(int functionIndex, expression arg){
-    return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(functionIndex, std::move(arg)));
+expression UnaryFunctionExpression::construct(int functionIndex, const expression arg){
+    return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(functionIndex, arg));
 }
 
 
