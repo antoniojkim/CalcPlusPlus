@@ -7,7 +7,7 @@ includes.linux := -I../.includes/
 includes.win := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
 INCLUDES := ${includes.${BUILD}}
 
-CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla -DDEBUG ${INCLUDES}
+CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla ${INCLUDES}
 TARGET_LIB = libMathEngine.a  # target lib
 
 UTILS = $(wildcard Utils/*.cc)

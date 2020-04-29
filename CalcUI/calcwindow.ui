@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>571</width>
-    <height>102</height>
+    <height>160</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -36,9 +36,15 @@
        <widget class="QTextEdit" name="input1">
         <property name="font">
          <font>
-          <family>DejaVu Math TeX Gyre</family>
+          <family>Cambria</family>
           <pointsize>18</pointsize>
          </font>
+        </property>
+        <property name="lineWrapMode">
+         <enum>QTextEdit::WidgetWidth</enum>
+        </property>
+        <property name="tabStopWidth">
+         <number>80</number>
         </property>
        </widget>
       </item>
@@ -46,7 +52,7 @@
        <widget class="QTextEdit" name="output1">
         <property name="font">
          <font>
-          <family>DejaVu Math TeX Gyre</family>
+          <family>Cambria</family>
           <pointsize>18</pointsize>
          </font>
         </property>

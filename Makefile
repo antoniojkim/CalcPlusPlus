@@ -60,9 +60,9 @@ lc:
 
 
 cleanui:
-	cd CalcUI && make clean
+	cd CalcUI && make -f Makefile clean
 cleanengine:
-	cd MathEngine && make clean
+	cd MathEngine && make -f Makefile clean
 cleantest:
 	rm -f Tests/Tests/EngineTest.o
 cleanall: cleanui cleanengine cleantest

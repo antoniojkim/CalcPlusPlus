@@ -117,6 +117,11 @@ std::string MathEngine::evaluateOutput(const std::string& input, const std::stri
         out << expr;
         return out.str();
     }
+#ifdef DEBUG
+    else{
+        cout << "LOG:  Invalid Expr: " << expr << endl;
+    }
+#endif
 
     if (!output.empty() && output.at(0) != '`'){
         ostringstream out;

@@ -28,6 +28,7 @@ FORMS += \
     calcwindow.ui
 
 INCLUDEPATH += ../MathEngine
+
 LIBS += -L../MathEngine -lMathEngine
 
 win32 {
