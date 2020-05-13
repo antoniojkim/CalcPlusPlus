@@ -1,11 +1,11 @@
-BUILD := linux
-
 CXX := g++
 AR := ar
 
-includes.linux := -I../.includes/
-includes.win := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
-INCLUDES := ${includes.${BUILD}}
+ifeq ($(OS),Windows_NT)
+	INCLUDES := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
+else
+	INCLUDES := -I../.includes/
+endif
 
 CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla ${INCLUDES}
 TARGET_LIB = libMathEngine.a  # target lib
