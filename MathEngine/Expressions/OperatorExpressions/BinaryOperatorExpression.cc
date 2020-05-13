@@ -37,6 +37,9 @@ expression BinaryOperatorExpression::evaluate(const Variables& vars) {
 }
 
 expression BinaryOperatorExpression::simplify() {
+    if (lhs->evaluable() && rhs->evaluable()){
+        return Expression::evaluate();
+    }
     auto fsimplify = getBinaryOperatorSimplify(operatorIndex);
     if (fsimplify){ return fsimplify(lhs, rhs); }
     return this->copy();

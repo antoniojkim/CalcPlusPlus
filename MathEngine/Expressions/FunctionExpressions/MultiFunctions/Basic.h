@@ -2,6 +2,7 @@
 
 #include <list>
 #include <cmath>
+#include <numeric>
 #include <gsl/gsl_math.h>
 
 #include "../../../Utils/exceptions.h"
@@ -56,6 +57,30 @@ double f_fcmp(const std::list<expression>& args, const Variables& vars){
             epsilon = (*arg)->value(vars);
         }
         return gsl_fcmp(x, y, epsilon) == 0;
+    }
+    return GSL_NAN;
+}
+
+double f_gcd(const std::list<expression>& args, const Variables& vars){
+    if (args.size() == 2){
+        auto arg = args.begin();
+        double a = (*(arg++))->value(vars);
+        double b = (*(arg++))->value(vars);
+        if (std::trunc(a) == a && std::trunc(b) == b){
+            return std::gcd((long long) a, (long long) b);
+        }
+    }
+    return GSL_NAN;
+}
+
+double f_lcm(const std::list<expression>& args, const Variables& vars){
+    if (args.size() == 2){
+        auto arg = args.begin();
+        double a = (*(arg++))->value(vars);
+        double b = (*(arg++))->value(vars);
+        if (std::trunc(a) == a && std::trunc(b) == b){
+            return std::lcm((long long) a, (long long) b);
+        }
     }
     return GSL_NAN;
 }

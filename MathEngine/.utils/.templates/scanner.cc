@@ -68,9 +68,9 @@ static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
 
 static bool startsWithFunction(const char* str, size_t size, int& index){
     if (size > 0){
-        for (int i : functionOrderByLength){
-            if (size >= functionNameLengths[i]){
-                if (strncmp(str, functionNames[i], functionNameLengths[i]) == 0){
+        for (int i : Function::orderByLength){
+            if (size >= Function::nameLengths[i]){
+                if (strncmp(str, Function::names[i], Function::nameLengths[i]) == 0){
                     index = i;
                     return true;
                 }
@@ -228,13 +228,13 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             tokens.emplace_back(Token{str.substr(i, index), NUM});
             i += index;
         }
+        else if (startsWithFunction(c_str, size, index)){
+            tokens.emplace_back(Token{Function::names[index], FUNCTION});
+            i += Function::nameLengths[index];
+        }
         else if (startsWithLexeme(c_str, size, index)){
             tokens.emplace_back(Token{lexemes[index], lexemeTypes[index]});
             i += lexemes[index].size();
-        }
-        else if (startsWithFunction(c_str, size, index)){
-            tokens.emplace_back(Token{functionNames[index], FUNCTION});
-            i += functionNameLengths[index];
         }
         else if (startsWithID(c_str, size, index)){
             tokens.emplace_back(Token{str.substr(i, index), ID});

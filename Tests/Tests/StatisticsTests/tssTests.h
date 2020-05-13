@@ -6,9 +6,9 @@
 
 TEST_CASE("Total Sum of Squares Function Evaluation Tests", "[tss]") {
 
-    SECTION("Empty Test"){
-        requireIsEqual("tss()", "Insufficient Number of Arguments for Function: tss");
-    }
+    // SECTION("Empty Test"){
+    //     requireIsEqual("tss()", "Insufficient Number of Arguments for Function: tss");
+    // }
 
     SECTION("`tss` Test 1"){
         requireIsEqual("tss(-7.77, 8.6, 3.45, 1.96, -0.8, 8.84, -2.4, -1.22)", 221.90655);

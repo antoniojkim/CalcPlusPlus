@@ -54,6 +54,12 @@ MatrixExpression::MatrixExpression(gsl_matrix_complex* matrix):
         }
     }
 }
+MatrixExpression::MatrixExpression(gsl_permutation* permutation):
+    numRows{1}, numCols{permutation->size} {
+    for (size_t c = 0; c < numCols; ++c){
+        mat.emplace_back(NumExpression::construct(gsl_permutation_get(permutation, c)));
+    }
+}
 
 
 expression MatrixExpression::construct(){
@@ -74,9 +80,12 @@ expression MatrixExpression::construct(gsl_matrix* matrix){
 expression MatrixExpression::construct(gsl_matrix_complex* matrix){
     return shared_ptr<MatrixExpression>(new MatrixExpression(matrix));
 }
+expression MatrixExpression::construct(gsl_permutation* permutation){
+    return shared_ptr<MatrixExpression>(new MatrixExpression(permutation));
+}
 
 
-std::list<expression>& MatrixExpression::getMatrix(){ return mat; }
+const std::list<expression>& MatrixExpression::getMatrix() const { return mat; }
 size_t MatrixExpression::rows() const { return numRows; }
 size_t MatrixExpression::cols() const { return numCols; }
 

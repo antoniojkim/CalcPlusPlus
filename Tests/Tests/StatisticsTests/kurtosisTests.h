@@ -7,9 +7,9 @@
 
 TEST_CASE("kurtosis Function Evaluation Tests", "[kurtosis]") {
 
-    SECTION("Empty Test"){
-        requireIsEqual("kurtosis()", "Insufficient Number of Arguments for Function: kurtosis");
-    }
+    // SECTION("Empty Test"){
+    //     requireIsEqual("kurtosis()", "Insufficient Number of Arguments for Function: kurtosis");
+    // }
 
     SECTION("`kurtosis` Test 1"){
         requireIsEqual("kurtosis(-9.75, -6.89, 8.71, 9.56)", -2.4054875147);

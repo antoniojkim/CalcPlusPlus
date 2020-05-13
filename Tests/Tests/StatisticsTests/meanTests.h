@@ -4,9 +4,9 @@
 
 TEST_CASE("Mean Function Evaluation Tests", "[mean]") {
 
-    SECTION("`Empty Test"){
-        requireIsEqual("mean()", "Insufficient Number of Arguments for Function: mean");
-    }
+    // SECTION("`Empty Test"){
+    //     requireIsEqual("mean()", "Insufficient Number of Arguments for Function: mean");
+    // }
 
     SECTION("`mean` Test 1"){
         requireIsEqual("mean(3.93, -9.89, 4.34, 3.89, 6.51, 5.45)", 2.3716666667);

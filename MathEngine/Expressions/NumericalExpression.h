@@ -25,6 +25,8 @@ class NumExpression: public Expression {
 
         EXPRESSION_OVERRIDES
 
+        inline const NumExpression* num() const override { return this; }
+
         bool prettyprint(std::ostream&) const override;
 
 };

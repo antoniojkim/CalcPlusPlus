@@ -7,9 +7,9 @@
 
 TEST_CASE("Lag-1 Autocorrelate Function Evaluation Tests", "[lag1]") {
 
-    SECTION("Empty Test"){
-        requireIsEqual("lag1()", "Insufficient Number of Arguments for Function: lag1");
-    }
+    // SECTION("Empty Test"){
+    //     requireIsEqual("lag1()", "Insufficient Number of Arguments for Function: lag1");
+    // }
 
     SECTION("`lag1` Test 1"){
         requireIsEqual("lag1(3.95, 6.81, -3.05, -1.64, -3.5, 4.95, -8.23, 2.92, 6.06)", -0.2164409953);

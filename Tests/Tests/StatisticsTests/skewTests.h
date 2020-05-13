@@ -7,9 +7,9 @@
 
 TEST_CASE("Skew Function Evaluation Tests", "[skew]") {
 
-    SECTION("Empty Test"){
-        requireIsEqual("skew()", "Insufficient Number of Arguments for Function: skew");
-    }
+    // SECTION("Empty Test"){
+    //     requireIsEqual("skew()", "Insufficient Number of Arguments for Function: skew");
+    // }
 
     SECTION("`skew` Test 1"){
         requireIsEqual("skew(-7.48, 1.3, -6.68, 7.61, -3.75)", 0.4478899957);

@@ -13,7 +13,7 @@
 using namespace std;
 
 UnaryFunctionExpression::UnaryFunctionExpression(const char * name, const expression arg):
-    functionIndex{getFunctionIndex(name)},
+    functionIndex{Function::indexOf(name)},
     arg{arg} {
     if (functionIndex == -1){
         throw Exception("Invalid Unary Function: ", std::string{name});
@@ -72,9 +72,9 @@ double UnaryFunctionExpression::value(const Variables& vars) const {
 bool UnaryFunctionExpression::isComplex() const { return arg->isComplex(); }
 
 std::ostream& UnaryFunctionExpression::print(std::ostream& out) const {
-    out << functionNames[functionIndex] << "(";
+    out << Function::names[functionIndex] << "(";
     return arg->print(out) << ")";
 }
 std::ostream& UnaryFunctionExpression::postfix(std::ostream& out) const {
-    return arg->postfix(out) << " " << functionNames[functionIndex];
+    return arg->postfix(out) << " " << Function::names[functionIndex];
 }

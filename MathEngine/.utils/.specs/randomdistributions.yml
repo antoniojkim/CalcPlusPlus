@@ -1,0 +1,10 @@
+distributions:
+    # All random distribution definitions are dictionaries.
+    #   Default values:
+    #       nargs: 1
+    #       expectation: None
+    #       variance: None
+
+    # Random Number Distributions
+    Gauss:
+        nargs: 1

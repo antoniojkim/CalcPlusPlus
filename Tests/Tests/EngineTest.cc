@@ -7,6 +7,7 @@
 #include <gsl/gsl_matrix.h>
 #include <Expressions/TupleExpression.h>
 #include <Expressions/MatrixExpression.h>
+#include <Expressions/NumericalExpression.h>
 
 #include "EngineTest.h"
 
@@ -20,6 +21,11 @@ MathEngine engine;
 int compare(double output, double expected){
     if (gsl_isnan(output) || gsl_isnan(expected)){
         return (gsl_isnan(output) && gsl_isnan(expected)) ? 0 : -1;
+    }
+    if (std::trunc(output) == output &&
+        std::trunc(expected) == expected &&
+        std::trunc(output) == std::trunc(expected)){
+        return 0;
     }
     return gsl_fcmp(output, expected, 1e-8);
 }
@@ -205,6 +211,18 @@ bool printDifference(const std::string& input, const expression expression, cons
     return false;
 }
 
+bool printDifference(const std::string& input, const expression expr, const expression output, const std::string& expected){
+    cout << "Input:      " << input << endl;
+    cout << "Expression: " << expr << endl;
+    cout << "Postfix:    "; expr->postfix(cout) << endl;
+#ifdef DEBUG
+    cout << "Tokens:     "; print(cout, engine.tokens, " ") << endl;
+#endif
+    cout << "Output:     "; output->print(cout) << endl;
+    cout << "Expected:   " << expected << endl;
+    return false;
+}
+
 bool printDifference(const std::string& input, const expression expr, const expression output, const std::vector<double>& expected){
     cout << "Input:      " << input << endl;
     cout << "Expression: " << expr << endl;
@@ -324,4 +342,61 @@ void requireIsEqual(const string& input, const std::vector<std::vector<gsl_compl
         printDifference(input, expr, output, expected);
         REQUIRE( false );
     }
+}
+
+
+bool compare(expression output, expression expected){
+    if (output->matrix() || expected->matrix()){
+        if (output->matrix() && expected->matrix()){
+            const MatrixExpression* outputMatrix = output->matrix();
+            const MatrixExpression* expectedMatrix = expected->matrix();
+            if (outputMatrix->rows() == expectedMatrix->rows() &&
+                outputMatrix->cols() == expectedMatrix->cols()){
+                auto outputIter = outputMatrix->getMatrix().begin();
+                auto outputEnd = outputMatrix->getMatrix().end();
+                auto expectedIter = expectedMatrix->getMatrix().begin();
+                auto expectedEnd = expectedMatrix->getMatrix().end();
+                while (outputIter != outputEnd && expectedIter != expectedEnd){
+                    if (!compare(*outputIter, *expectedIter)){
+                        return false;
+                    }
+                    ++outputIter;
+                    ++expectedIter;
+                }
+                return true;
+            }
+        }
+    }
+    else if (output->tuple() || expected->tuple()){
+        if (output->tuple() && expected->tuple()){
+            const TupleExpression* outputTuple = output->tuple();
+            const TupleExpression* expectedTuple = expected->tuple();
+            if (outputTuple->data().size() == expectedTuple->data().size()){
+                auto outputIter = outputTuple->data().begin();
+                auto outputEnd = outputTuple->data().end();
+                auto expectedIter = expectedTuple->data().begin();
+                auto expectedEnd = expectedTuple->data().end();
+                while (outputIter != outputEnd && expectedIter != expectedEnd){
+                    if (!compare(*outputIter, *expectedIter)){
+                        return false;
+                    }
+                    ++outputIter;
+                    ++expectedIter;
+                }
+                return true;
+            }
+        }
+    }
+    else if (output->evaluable() && expected->evaluable()){
+        return compare(output->complex(), expected->complex()) == 0;
+    }
+    return false;
+}
+
+void requireExprIsEqual(const string& input, const std::string& expected){
+    auto inputExpr = engine.parse(input);
+    auto outputExpr = inputExpr->evaluate();
+    auto expectedExpr = engine.parse(expected)->simplify();
+
+    REQUIRE( (!compare(outputExpr, expectedExpr) ? printDifference(input, inputExpr, outputExpr, expected) : true) );
 }

@@ -125,7 +125,8 @@ std::string MathEngine::evaluateOutput(const std::string& input, const std::stri
 
     if (!output.empty() && output.at(0) != '`'){
         ostringstream out;
-        out << "` " << output << " `";
+        out << "` " << output << " `" << endl;
+        expr->print(out);
         return out.str();
     }
 

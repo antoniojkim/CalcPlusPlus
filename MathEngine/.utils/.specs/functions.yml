@@ -35,6 +35,10 @@ functions:
         expression:
     bin:
         expression:
+    gcd:
+        nargs: 2
+    lcm:
+        nargs: 2
     # Trigonometry
     sin:
         derivative:
@@ -203,6 +207,14 @@ functions:
     # Linear Algebra
     det:
         expression:
+    LU:
+        expression:
+    # LUsolve:
+    #     expression:
+    # QR:
+    #     expression:
+    Cholesky:
+        expression:
     # Special Functions
     gamma:
     lngamma:
@@ -248,8 +260,45 @@ functions:
         nargs: -1
         expression:
     # Random Number Generators
-    # randseed:
-    # rseed:
-    # randu:
-    # rand:
-    # randup:
+    randseed:
+        nargs: -1
+    rseed:
+        nargs: -1
+    randu:
+        nargs: -1
+    rand:
+        nargs: -1
+    randup:
+        nargs: -1
+    randint:
+        nargs: -1
+    # # Random Number Distributions
+    # Gauss:
+    #     nargs: -1
+    # # Random Number Distribution Functions
+    # pdf:
+    #     expression:
+    # cdf:
+    #     expression:
+    # cdfP:
+    #     expression:
+    # cdfQ:
+    #     expression:
+    # icdf:
+    #     expression:
+    # icdfP:
+    #     expression:
+    # icdfQ:
+    #     expression:
+    # cdfinv:
+    #     expression:
+    # cdfPinv:
+    #     expression:
+    # cdfQinv:
+    #     expression:
+    # Exp:
+    #     expression:
+    # Var:
+    #     expression:
+    # Rand:
+    #     expression:

@@ -101,3 +101,16 @@ TEST_CASE("Hex and Bin Conversion Tests", "[hexbin]"){
     requireIsEqual("hex(123) * 0b111001000", "0xdb18", true);
     requireIsEqual("num(hex(123) * 0b111001000)", 56088);
 }
+
+TEST_CASE("GCD/LCM Conversion Tests", "[gcdlcm]"){
+    SECTION("gcd Tests"){
+        requireIsEqual("gcd(345, 456)", 3);
+        requireIsEqual("gcd(11, 4574764567)", 1);
+        requireIsEqual("gcd(346, -6)", 2);
+    }
+    SECTION("lcm Tests"){
+        requireIsEqual("lcm(23, 67)", 1541);
+        requireIsEqual("lcm(12, 16)", 48);
+        requireIsEqual("lcm(346, -6)", 1038);
+    }
+}

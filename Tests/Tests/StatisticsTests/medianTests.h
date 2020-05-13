@@ -4,9 +4,9 @@
 
 TEST_CASE("Median Function Evaluation Tests", "[median]") {
 
-    SECTION("`median` Empty Test"){
-        requireIsEqual("median()", "Insufficient Number of Arguments for Function: median");
-    }
+    // SECTION("`median` Empty Test"){
+    //     requireIsEqual("median()", "Insufficient Number of Arguments for Function: median");
+    // }
 
     SECTION("`median` Test 1"){
         requireIsEqual("median(0.75, 0.32, -3.08, 6.48, -1.99)", 0.32);

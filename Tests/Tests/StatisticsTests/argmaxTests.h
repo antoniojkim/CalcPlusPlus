@@ -5,9 +5,9 @@
 
 TEST_CASE("argmax Function Evaluation Tests", "[argmax]") {
 
-    SECTION("Empty Test"){
-        requireIsEqual("argmax()", "Insufficient Number of Arguments for Function: argmax");
-    }
+    // SECTION("Empty Test"){
+    //     requireIsEqual("argmax()", "Insufficient Number of Arguments for Function: argmax");
+    // }
 
     SECTION("`argmax` Test 1"){
         requireIsEqual("argmax(-2.2, -9.94, 4.02, -7.83)", 2);

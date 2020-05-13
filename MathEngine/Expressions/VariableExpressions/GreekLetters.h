@@ -8,7 +8,7 @@
 
 #include <gsl/gsl_math.h>
 
-constexpr const int numGreekLetters = 54;
+constexpr const int numGreekLetters = 49;
 constexpr const char* greekLetterNames[numGreekLetters] = {
 	"Alpha", "Beta", "Chi", "Delta", "Epsilon", "Eta", "Gamma", "Iota", "Kappa", "Lambda",
 	"Mu", "Nu", "Omega", "Omicron", "Phi", "Pi", "Psi", "Rho", "Sigma", "Tau", "Theta",

@@ -24,6 +24,7 @@ class MatrixExpression: public Expression {
     MatrixExpression(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols);
     MatrixExpression(gsl_matrix* matrix);
     MatrixExpression(gsl_matrix_complex* matrix);
+    MatrixExpression(gsl_permutation* permutation);
 
     public:
 
@@ -33,8 +34,9 @@ class MatrixExpression: public Expression {
         static expression construct(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols);
         static expression construct(gsl_matrix* matrix);
         static expression construct(gsl_matrix_complex* matrix);
+        static expression construct(gsl_permutation* matrix);
 
-        std::list<expression>& getMatrix();
+        const std::list<expression>& getMatrix() const;
         size_t rows() const;
         size_t cols() const;
 

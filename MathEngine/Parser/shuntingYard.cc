@@ -49,14 +49,11 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
         }
 
         if (token->type == FUNCTION){
-            int functionIndex = getFunctionIndex(token->lexeme);
+            int functionIndex = Function::indexOf(token->lexeme);
             if (functionIndex == -1){
                 return InvalidExpression::construct(Exception("Invalid Function: ", token->lexeme));
             }
-            if (expressionStack.empty()){
-                return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
-            }
-            int numArgs = getFunctionNumArgs(functionIndex);
+            const int numArgs = Function::numArgs[functionIndex];
             if (numArgs != -1 && numArgs != (int) argumentQueue.size() + 1){
                 return InvalidExpression::construct(Exception(
                     "Invalid Number of Arguments for Function. Expected: ", numArgs,
@@ -64,13 +61,18 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 ));
             }
             if (numArgs == 1){
+                if (expressionStack.empty()){
+                    return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
+                }
                 auto expr = std::move(expressionStack.back());
                 expressionStack.pop_back();
                 expressionStack.push_back(UnaryFunctionExpression::construct(functionIndex, expr));
             }
             else {
-                argumentQueue.emplace_front(std::move(expressionStack.back()));
-                expressionStack.pop_back();
+                if (!expressionStack.empty()){
+                    argumentQueue.emplace_front(std::move(expressionStack.back()));
+                    expressionStack.pop_back();
+                }
                 expressionStack.push_back(
                     MultiFunctionExpression::construct(functionIndex, std::move(argumentQueue))
                 );

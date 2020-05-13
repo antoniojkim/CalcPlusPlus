@@ -69,6 +69,9 @@ std::ostream& NumExpression::print(std::ostream& out) const {
     if (!evaluable()){
         return out << "NaN";
     }
+    if (real == 0 && imag == 0){
+        return out << "0";
+    }
     if (real != 0){
         out << std::setprecision(16) << real;
         if (imag > 0){ out << "+"; }

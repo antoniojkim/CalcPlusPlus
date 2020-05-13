@@ -6,9 +6,9 @@
 
 TEST_CASE("Standard Deviation (ddof=1) Function Evaluation Tests", "[stdev]") {
 
-    SECTION("Empty Test"){
-        requireIsEqual("sd()", "Insufficient Number of Arguments for Function: sd");
-    }
+    // SECTION("Empty Test"){
+    //     requireIsEqual("sd()", "Insufficient Number of Arguments for Function: sd");
+    // }
 
     SECTION("`std` Test 1"){
         requireIsEqual("std(-2.59, 3.95)", 4.624478349);

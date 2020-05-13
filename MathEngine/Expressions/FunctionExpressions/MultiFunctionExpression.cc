@@ -14,7 +14,7 @@
 using namespace std;
 
 MultiFunctionExpression::MultiFunctionExpression(const char * name, std::list<expression>&& args):
-    MultiFunctionExpression{getFunctionIndex(name), std::move(args)} {
+    MultiFunctionExpression{Function::indexOf(name), std::move(args)} {
     if (functionIndex == -1){
         throw Exception("Invalid Unary Function: ", name);
     }
@@ -83,13 +83,15 @@ bool MultiFunctionExpression::isComplex() const {
 }
 
 std::ostream& MultiFunctionExpression::print(std::ostream& out) const {
-    out << functionNames[functionIndex] << "(";
-    auto arg = args.begin();
-    auto end = args.end();
-    (*(arg++))->print(out);
-    while (arg != end){
-        out << ", ";
+    out << Function::names[functionIndex] << "(";
+    if (args.size() > 0){
+        auto arg = args.begin();
+        auto end = args.end();
         (*(arg++))->print(out);
+        while (arg != end){
+            out << ", ";
+            (*(arg++))->print(out);
+        }
     }
     return out << ")";
 }
@@ -100,5 +102,5 @@ std::ostream& MultiFunctionExpression::postfix(std::ostream& out) const {
     for (unsigned int i = 1; i < args.size(); ++i){
         out << ", ";
     }
-    return out << functionNames[functionIndex];
+    return out << Function::names[functionIndex];
 }
