@@ -11,24 +11,24 @@
 #include "../../TupleExpression.h"
 #include "../FunctionDirectory.h"
 
-expression fe_neg(const expression arg, const Variables& vars){
+expression fe_neg(expression arg, const Variables& vars){
     if (arg->isComplex()){
         return NumExpression::construct(gsl_complex_negative(arg->complex(vars)));
     }
     return NumExpression::construct(-arg->value(vars));
 }
 
-expression fe_frexp(const expression arg, const Variables& vars){
+expression fe_frexp(expression arg, const Variables& vars){
     double x = arg->value(vars);
     int e;
     double f = gsl_frexp(x, &e);
     return TupleExpression::construct({f, (double) e});
 }
 
-expression fe_num(const expression arg, const Variables& vars){
+expression fe_num(expression arg, const Variables& vars){
     return NumExpression::construct(arg->value(vars));
 }
-expression fe_hex(const expression arg, const Variables& vars){
+expression fe_hex(expression arg, const Variables& vars){
     if (!arg->isComplex()){
         double val = arg->value(vars);
         if (std::trunc(val) == val){
@@ -37,7 +37,7 @@ expression fe_hex(const expression arg, const Variables& vars){
     }
     return InvalidExpression::construct(Exception("Unable to convert value to hex: ", arg));
 }
-expression fe_bin(const expression arg, const Variables& vars){
+expression fe_bin(expression arg, const Variables& vars){
     if (!arg->isComplex()){
         double val = arg->value(vars);
         if (std::trunc(val) == val){

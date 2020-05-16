@@ -7,8 +7,8 @@
 #include "../../NumericalExpression.h"
 #include "../../MatrixExpression.h"
 #include "../../UnitExpression.h"
-#include "../BinaryOperatorDirectory.h"
-#include "../OperatorDirectory/BinaryOperators.h"
+#include "../OperatorDirectory.h"
+#include "../Operators/BinaryOperators.h"
 
 inline expression unit_conversion(const BaseUnitExpression* unit1, const BaseUnitExpression* unit2){
     return convert(*unit1, *unit2);

@@ -2,25 +2,25 @@
 
 #include "../../ExpressionFunctions.h"
 #include "../../ExpressionOperations.h"
-#include "../BinaryOperatorDirectory.h"
+#include "../OperatorDirectory.h"
 
-expression fprime_PLUS(const expression lhs, const expression rhs, const std::string& var){
+static expression fprime_PLUS(const expression lhs, const expression rhs, const std::string& var){
     return lhs->derivative(var) + rhs->derivative(var);
 }
 
-expression fprime_MINUS(const expression lhs, const expression rhs, const std::string& var){
+static expression fprime_MINUS(const expression lhs, const expression rhs, const std::string& var){
     return lhs->derivative(var) - rhs->derivative(var);
 }
 
-expression fprime_STAR(const expression lhs, const expression rhs, const std::string& var){
+static expression fprime_STAR(const expression lhs, const expression rhs, const std::string& var){
     return lhs->derivative(var) * rhs + rhs->derivative(var) * lhs;
 }
 
-expression fprime_SLASH(const expression lhs, const expression rhs, const std::string& var){
+static expression fprime_SLASH(const expression lhs, const expression rhs, const std::string& var){
     return (lhs->derivative(var) * rhs - rhs->derivative(var) * lhs) / (rhs ^ 2);
 }
 
-expression fprime_CARET(const expression lhs, const expression rhs, const std::string& var){
+static expression fprime_CARET(const expression lhs, const expression rhs, const std::string& var){
     if (rhs->evaluable()){
         return (lhs ^ (rhs - 1)) * (lhs->derivative(var) * rhs);
     }
@@ -32,4 +32,4 @@ expression fprime_CARET(const expression lhs, const expression rhs, const std::s
     }
 }
 
-BinaryOperatorDerivative fprime_STAR_STAR = fprime_CARET;
+OperatorDerivative fprime_STAR_STAR = fprime_CARET;

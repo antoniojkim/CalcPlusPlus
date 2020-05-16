@@ -27,19 +27,19 @@ UnaryFunctionExpression::UnaryFunctionExpression(int functionIndex, const expres
     arg{arg} {}
 
 
-expression UnaryFunctionExpression::construct(const char * name, const expression arg){
+expression FunctionExpression::construct(const char * name, const expression arg){
     return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(name, arg));
 }
-expression UnaryFunctionExpression::construct(std::string& name, const expression arg){
+expression FunctionExpression::construct(std::string& name, const expression arg){
     return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(name, arg));
 }
-expression UnaryFunctionExpression::construct(int functionIndex, const expression arg){
+expression FunctionExpression::construct(int functionIndex, const expression arg){
     return shared_ptr<UnaryFunctionExpression>(new UnaryFunctionExpression(functionIndex, arg));
 }
 
 
 expression UnaryFunctionExpression::simplify() {
-    return UnaryFunctionExpression::construct(functionIndex, arg->simplify());
+    return FunctionExpression::construct(functionIndex, arg->simplify());
 }
 expression UnaryFunctionExpression::derivative(const std::string& var) {
     auto fprime = get_unary_function_derivative(functionIndex);

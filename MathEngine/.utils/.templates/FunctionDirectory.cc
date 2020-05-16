@@ -6,25 +6,21 @@
 #include "../../Utils/exceptions.h"
 #include "FunctionDirectory.h"
 #include "Functions.h"
-#include "MultiFunctions/Basic.h"
-#include "MultiFunctions/Calculus.h"
-#include "MultiFunctions/ExpLogFunctions.h"
-#include "MultiFunctions/Random.h"
-#include "MultiFunctions/SpecialFunctions.h"
-#include "MultiFunctions/Statistics.h"
-#include "MultiFunctionExprs/calculus.h"
-#include "MultiFunctionExprs/fft.h"
-#include "MultiFunctionExprs/polynomial.h"
-#include "MultiFunctionExprs/tuple.h"
-#include "UnaryFunctions/BasicFunctions.h"
-#include "UnaryFunctions/ExpLogFunctions.h"
-#include "UnaryFunctions/SpecialFunctions.h"
-#include "UnaryFunctions/TrigFunctions.h"
-#include "UnaryFunctionDerivatives/BasicFunctions.h"
-#include "UnaryFunctionDerivatives/ExpLogFunctions.h"
-#include "UnaryFunctionDerivatives/TrigFunctions.h"
-#include "UnaryFunctionExprs/basic.h"
-#include "UnaryFunctionExprs/linalg.h"
+#include "ExprFunctions/basic.h"
+#include "ExprFunctions/calculus.h"
+#include "ExprFunctions/fft.h"
+#include "ExprFunctions/linalg.h"
+#include "ExprFunctions/polynomial.h"
+#include "ValueFunctions/BasicFunctions.h"
+#include "ValueFunctions/Calculus.h"
+#include "ValueFunctions/ExpLogFunctions.h"
+#include "ValueFunctions/Random.h"
+#include "ValueFunctions/SpecialFunctions.h"
+#include "ValueFunctions/Statistics.h"
+#include "ValueFunctions/TrigFunctions.h"
+#include "DerivativeFunctions/BasicFunctions.h"
+#include "DerivativeFunctions/ExpLogFunctions.h"
+#include "DerivativeFunctions/TrigFunctions.h"
 
 using namespace std;
 using Function::numFunctions;
@@ -33,127 +29,69 @@ using Function::numFunctions;
  ***************** Unary Functions *****************
  ***************************************************/
 
-const UnaryFunction unaryFunctions[numFunctions] = {
-    {unaryFunctions}
+const ValueFunction valueFunctions[numFunctions] = {
+    {valueFunctions}
 };
 
-UnaryFunction get_unary_function(const string& name){
+ValueFunction get_function(const string& name){
+    int index = Function::indexOf(name);
+    if (index == -1){
+        throw Exception("Unknown Function: ", name);
+    }
+    return get_function(index);
+}
+ValueFunction get_function(int functionIndex){
+    if (functionIndex < 0 || functionIndex >= numFunctions){
+        throw Exception("Invalid Function Index: ", functionIndex);
+    }
+    return valueFunctions[functionIndex];
+}
+
+
+/***************************************************
+ ***************** Expr Functions ******************
+ ***************************************************/
+
+const ExprFunction exprFunctions[numFunctions] = {
+    {exprFunctions}
+};
+
+ExprFunction get_function_expr(const string& name){
     int index = Function::indexOf(name);
     if (index == -1){
         throw Exception("Unknown Unary Function: ", name);
     }
-    return get_unary_function(index);
+    return get_function_expr(index);
 }
-UnaryFunction get_unary_function(int functionIndex){
+ExprFunction get_function_expr(int functionIndex){
     if (functionIndex < 0 || functionIndex >= numFunctions){
         throw Exception("Invalid Function Index: ", functionIndex);
     }
     if (Function::numArgs[functionIndex] != 1){
         throw Exception("Function is not Unary: ", Function::names[functionIndex]);
     }
-    return unaryFunctions[functionIndex];
+    return exprFunctions[functionIndex];
 }
 
 
 /***************************************************
- ************** Unary Function Exprs ***************
+ ************** Function Derivatives ***************
  ***************************************************/
 
-const UnaryFunctionExpr unaryFunctionExprs[numFunctions] = {
-    {unaryFunctionExprs}
+const DerivativeFunction derivativeFunctions[numFunctions] = {
+    {derivativeFunctions}
 };
 
-UnaryFunctionExpr get_unary_function_expr(const string& name){
+DerivativeFunction get_function_derivative(const string& name){
     int index = Function::indexOf(name);
     if (index == -1){
-        throw Exception("Unknown Unary Function: ", name);
+        throw Exception("Unknown Function: ", name);
     }
-    return get_unary_function_expr(index);
+    return get_function_derivative(index);
 }
-UnaryFunctionExpr get_unary_function_expr(int functionIndex){
+DerivativeFunction get_function_derivative(int functionIndex){
     if (functionIndex < 0 || functionIndex >= numFunctions){
         throw Exception("Invalid Function Index: ", functionIndex);
     }
-    if (Function::numArgs[functionIndex] != 1){
-        throw Exception("Function is not Unary: ", Function::names[functionIndex]);
-    }
-    return unaryFunctionExprs[functionIndex];
-}
-
-
-/***************************************************
- *********** Unary Function Derivatives ************
- ***************************************************/
-
-const UnaryFunctionDerivative unaryFunctionDerivatives[numFunctions] = {
-    {unaryFunctionDerivatives}
-};
-
-UnaryFunctionDerivative get_unary_function_derivative(const string& name){
-    int index = Function::indexOf(name);
-    if (index == -1){
-        throw Exception("Unknown Unary Function: ", name);
-    }
-    return get_unary_function_derivative(index);
-}
-UnaryFunctionDerivative get_unary_function_derivative(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (Function::numArgs[functionIndex] != 1){
-        throw Exception("Function is not Unary: ", Function::names[functionIndex]);
-    }
-    return unaryFunctionDerivatives[functionIndex];
-}
-
-
-/***************************************************
- ***************** Multi Functions *****************
- ***************************************************/
-
-const MultiFunction multiFunctions[numFunctions] = {
-    {multiFunctions}
-};
-
-MultiFunction get_multi_function(const string& name){
-    int index = Function::indexOf(name);
-    if (index == -1){
-        throw Exception("Unknown Multi Function: ", name);
-    }
-    return get_multi_function(index);
-}
-MultiFunction get_multi_function(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (Function::numArgs[functionIndex] < 1 && Function::numArgs[functionIndex] != -1){
-        throw Exception("Function is not Multi Arg: ", Function::names[functionIndex]);
-    }
-    return multiFunctions[functionIndex];
-}
-
-
-/***************************************************
- *************** Multi Expr Functions **************
- ***************************************************/
-
-const MultiFunctionExpr multiFunctionExprs[numFunctions] = {
-    {multiFunctionExprs}
-};
-
-MultiFunctionExpr get_multi_function_expr(const string& name){
-    int index = Function::indexOf(name);
-    if (index == -1){
-        throw Exception("Unknown Multi Function: ", name);
-    }
-    return get_multi_function_expr(index);
-}
-MultiFunctionExpr get_multi_function_expr(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (Function::numArgs[functionIndex] < 1 && Function::numArgs[functionIndex] != -1){
-        throw Exception("Function is not Multi Arg: ", Function::names[functionIndex]);
-    }
-    return multiFunctionExprs[functionIndex];
+    return derivativeFunctions[functionIndex];
 }

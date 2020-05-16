@@ -24,6 +24,23 @@ TupleExpression::TupleExpression(std::initializer_list<gsl_complex> tuple) {
     }
 }
 
+DynamicArray<double> TupleExpression::array(const Variables& vars){
+    DynamicArray<double> a(_data.size());
+    int i = 0;
+    for (auto& e : _data){
+        a[i++] = e->value(vars);
+    }
+    return a;
+}
+void TupleExpression::array(double* a, size_t size, const Variables& vars){
+    if (size <= _data.size()){
+        auto arg = std::begin(_data);
+        for (size_t i = 0; i < size; ++i){
+            a[i] = (*(arg++))->value(vars);
+        }
+    }
+}
+
 expression TupleExpression::construct(){
     return shared_ptr<TupleExpression>(new TupleExpression());
 }

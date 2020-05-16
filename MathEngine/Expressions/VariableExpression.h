@@ -16,7 +16,7 @@ class VariableExpression: public Expression {
 
         expression evaluate(const Variables& vars) override;
 
-        inline const VariableExpression* variable() const override { return this; }
+        inline VariableExpression* variable() override { return this; }
         inline const std::string& getName() const { return name; }
 
         EXPRESSION_OVERRIDES

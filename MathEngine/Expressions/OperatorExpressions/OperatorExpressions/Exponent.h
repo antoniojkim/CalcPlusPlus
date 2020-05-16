@@ -10,8 +10,8 @@
 #include "../../MatrixExpression.h"
 #include "../../UnitExpression.h"
 #include "../../VariableExpression.h"
-#include "../BinaryOperatorDirectory.h"
-#include "../OperatorDirectory/BinaryOperators.h"
+#include "../OperatorDirectory.h"
+#include "../Operators/BinaryOperators.h"
 
 expression matrix_inverse(const MatrixExpression* matrix){
     if (matrix->rows() == matrix->cols()){
@@ -102,4 +102,4 @@ expression fe_CARET(const expression lhs, const expression rhs, const Variables&
     return NumExpression::construct(f_CARET(lexpr->value(vars), rexpr->value(vars)));
 }
 
-BinaryOperatorExpr fe_STAR_STAR = fe_CARET;
+OperatorExpr fe_STAR_STAR = fe_CARET;

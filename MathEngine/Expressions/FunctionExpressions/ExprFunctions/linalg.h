@@ -13,10 +13,11 @@
 #include "../../InvalidExpression.h"
 #include "../../MatrixExpression.h"
 #include "../../NumericalExpression.h"
+#include "../../TupleExpression.h"
 
 using namespace std;
 
-expression fe_det(const expression arg, const Variables& vars){
+expression fe_det(expression arg, const Variables& vars){
     auto evaluated = arg->evaluate(vars);
     auto matrix = evaluated->matrix();
     if (matrix){
@@ -38,7 +39,7 @@ expression fe_det(const expression arg, const Variables& vars){
     return InvalidExpression::construct(Exception("Determinant expects a matrix expression"));
 }
 
-expression fe_LU(const expression arg, const Variables& vars){
+expression fe_LU(expression arg, const Variables& vars){
     auto evaluated = arg->evaluate(vars);
     auto matrix = evaluated->matrix();
     if (matrix){
@@ -68,7 +69,7 @@ expression fe_LU(const expression arg, const Variables& vars){
     return InvalidExpression::construct(Exception("LU factorization expects a matrix expression"));
 }
 
-expression fe_Cholesky(const expression arg, const Variables& vars){
+expression fe_Cholesky(expression arg, const Variables& vars){
     auto evaluated = arg->evaluate(vars);
     auto matrix = evaluated->matrix();
     if (matrix){

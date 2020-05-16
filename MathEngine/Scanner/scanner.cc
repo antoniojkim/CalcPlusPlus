@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "scanner.h"
+#include "../Utils/BinarySearch.h"
 #include "../Utils/exceptions.h"
 #include "../Expressions/FunctionExpressions/Functions.h"
 #include "../Expressions/VariableExpressions/GreekLetters.h"
@@ -15,20 +16,25 @@
 using namespace std;
 using namespace Scanner;
 
-constexpr int numLexemes = 50;
-static const std::string lexemes[numLexemes] = {
-	":=", "<-", "->", "||", "&&", "^|", "==", "!=", "<=", ">=", "<<", ">>", "//", "!!",
-	"**", "\"", "\'", "\\", ",", "=", "|", "&", "<", ">", "~", "+", "-", "*", "/", "%", "!",
-	"C", "P", "^", ":", "(", ")", "[", "]", "{", "}", ".", ";", "?", "#", "$", "`", "_",
-	"C", "P"
-};
-static const Type lexemeTypes[numLexemes] = {
-	COLON_EQUALS, L_ARROW, R_ARROW, PIPE_PIPE, AMP_AMP, CARET_PIPE, EQUALS_EQUALS,
-	NOT_EQUALS, LT_EQ, GT_EQ, LT_LT, GT_GT, SLASH_SLASH, EXCL_EXCL, STAR_STAR, QUOTE,
-	APOSTROPHE, BACKSLASH, COMMA, EQUALS, PIPE, AMP, LT, GT, TILDE, PLUS, MINUS, STAR,
-	SLASH, PCT, EXCL, CHOOSE, PERMUTE, CARET, COLON, LPAREN, RPAREN, LSQUARE, RSQUARE,
-	LBRACE, RBRACE, DOT, SEMICOLON, QUESTION, POUND, DOLLAR, BACKTICK, UNDERSCORE, C, P
-};
+
+namespace Lexeme {
+	constexpr int numLexemes = 48;
+	constexpr const char* lexemes[numLexemes] = {
+		"!", "!!", "!=", "#", "$", "%", "&", "&&", "(", ")", "*", "**", "+", ",", "-", "->",
+		".", "/", "//", ":", ":=", ";", "<", "<-", "<<", "<=", "=", "==", ">", ">=", ">>", "?",
+		"C", "P", "[", "\"", "\'", "\\", "]", "^", "^|", "_", "`", "{", "|", "||", "}", "~"
+	};
+	constexpr const Type types[numLexemes] = {
+		EXCL, EXCL_EXCL, NOT_EQUALS, POUND, DOLLAR, PCT, AMP, AMP_AMP, LPAREN, RPAREN, STAR,
+		STAR_STAR, PLUS, COMMA, MINUS, R_ARROW, DOT, SLASH, SLASH_SLASH, COLON, COLON_EQUALS,
+		SEMICOLON, LT, L_ARROW, LT_LT, LT_EQ, EQUALS, EQUALS_EQUALS, GT, GT_EQ, GT_GT, QUESTION,
+		CHOOSE, PERMUTE, LSQUARE, QUOTE, APOSTROPHE, BACKSLASH, RSQUARE, CARET, CARET_PIPE,
+		UNDERSCORE, BACKTICK, LBRACE, PIPE, PIPE_PIPE, RBRACE, TILDE
+	};
+	constexpr int longestLexeme = 2;
+
+    BINARY_SEARCH_INDEX_OF(lexemes, numLexemes)
+}
 
 bool Scanner::isPreImplicit(Type type){
     switch(type){
@@ -36,8 +42,8 @@ bool Scanner::isPreImplicit(Type type){
         case RPAREN:
         case RSQUARE:
         case RBRACE:
-        case ID:
-        case SPECIALID:
+        // case ID:
+        // case SPECIALID:
             return true;
         default:
             return false;
@@ -61,26 +67,22 @@ bool Scanner::isPostImplicit(Type type){
 
 static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
     if (size > 0){
-        for (int i = 0; i < numLexemes; ++i){
-            if (size >= lexemes[i].size()){
-                if (strncmp(str, lexemes[i].c_str(), lexemes[i].size()) == 0){
-                    lexemeIndex = i;
+        char substr[Lexeme::longestLexeme+1];
+        int index[Lexeme::longestLexeme];
+        for (unsigned int i = 0; i < Lexeme::longestLexeme; ++i){
+            substr[i] = str[i];
+            substr[i+1] = '\0';
+            index[i] = Lexeme::indexOf(substr);
+            if (index[i] == -1){
+                if (i > 0){
+                    lexemeIndex = index[i-1];
                     return true;
                 }
+                return false;
             }
-        }
-    }
-    return false;
-}
-
-static bool startsWithFunction(const char* str, size_t size, int& index){
-    if (size > 0){
-        for (int i : Function::orderByLength){
-            if (size >= Function::nameLengths[i]){
-                if (strncmp(str, Function::names[i], Function::nameLengths[i]) == 0){
-                    index = i;
-                    return true;
-                }
+            else if (i+1 >= size || i+1 >= Lexeme::longestLexeme){
+                lexemeIndex = index[i];
+                return true;
             }
         }
     }
@@ -140,7 +142,7 @@ static bool startsWithNum(const char* str, size_t size, int& index){
                         }
                         return false;
                     case '-':
-                        if (eIndex != -1 && eIndex+1 == i){
+                        if (eIndex != -1 && eIndex+1 == (int) i){
                             break;
                         }
                         if (i > 0){
@@ -163,7 +165,7 @@ static bool startsWithNum(const char* str, size_t size, int& index){
                 }
             }
         }
-        if (decimalIndex != -1 && !(decimalIndex > 0 || decimalIndex+1 < size)){
+        if (decimalIndex != -1 && !(decimalIndex > 0 || decimalIndex+1 < (int) size)){
             return false;
         }
         index = size;
@@ -175,7 +177,7 @@ static bool startsWithNum(const char* str, size_t size, int& index){
 static bool startsWithID(const char* str, size_t size, int& index){
     if (size > 0 && isalpha(str[0])){
         for (unsigned int i = 1; i < size; ++i){
-            if (!(isalnum(str[i]) || str[i] == '_')){
+            if (!(isalpha(str[i]) || str[i] == '_' || (isdigit(str[i]) && (isdigit(str[i-1]) || str[i-1] == '_')))){
                 index = i;
                 return true;
             }
@@ -235,17 +237,17 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             tokens.emplace_back(Token{str.substr(i, index), NUM});
             i += index;
         }
-        else if (startsWithFunction(c_str, size, index)){
-            tokens.emplace_back(Token{Function::names[index], FUNCTION});
-            i += Function::nameLengths[index];
-        }
-        else if (startsWithLexeme(c_str, size, index)){
-            tokens.emplace_back(Token{lexemes[index], lexemeTypes[index]});
-            i += lexemes[index].size();
-        }
+        // else if (startsWithFunction(c_str, size, index)){
+        //     tokens.emplace_back(Token{Function::names[index], FUNCTION});
+        //     i += Function::nameLengths[index];
+        // }
         else if (startsWithID(c_str, size, index)){
             tokens.emplace_back(Token{str.substr(i, index), ID});
             i += index;
+        }
+        else if (startsWithLexeme(c_str, size, index)){
+            tokens.emplace_back(Token{"", Lexeme::types[index]});
+            i += strlen(Lexeme::lexemes[index]);
         }
         else if (startsWithGreekLetter(c_str, size, index)){
             tokens.emplace_back(Token{str.substr(i, index), SPECIALID});

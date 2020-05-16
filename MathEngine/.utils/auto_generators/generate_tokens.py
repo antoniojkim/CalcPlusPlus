@@ -31,11 +31,15 @@ def generate_tokens(args=None):
                 (operator, vals["lexeme"])
                 for operator, vals in specs["operators"].items()
             ] + list(specs["tokens"].items())
-            lexemes.sort(key=lambda l: len(l[1]), reverse=True)
+            lexemes.sort(key=lambda k: k[1])
             template.replace(
                 numLexemes=len(lexemes),
-                lexemes=wrap(map('"{}"'.format, (lexeme for name, lexeme in lexemes))),
-                lexemeTypes=wrap((name for name, lexeme in lexemes)),
+                lexemes=wrap(
+                    map('"{}"'.format, (lexeme for name, lexeme in lexemes)),
+                    indent="\t\t",
+                ),
+                lexemeTypes=wrap((name for name, lexeme in lexemes), indent="\t\t"),
+                longestLexeme=str(max(map(len, lexemes))),
             )
 
         operatorLexemes = [
@@ -85,13 +89,19 @@ def generate_tokens(args=None):
             )
 
         with Template(
-            "BinaryOperatorDirectory.cc",
-            os.path.join(
-                expr_dir, "OperatorExpressions", "BinaryOperatorDirectory.cc",
-            ),
+            "OperatorDirectory.cc",
+            os.path.join(expr_dir, "OperatorExpressions", "OperatorDirectory.cc",),
         ) as template:
             template.verify(specs)
             template.replace(
+                unaryOperators=wrap(
+                    (
+                        f"f_{name}" if lexeme != "" and singleOperator else "nullptr"
+                        for name, lexeme, singleOperator in zip(
+                            keys, operatorLexemes, singleOperators
+                        )
+                    )
+                ),
                 binaryOperators=wrap(
                     (
                         f"f_{name}"
@@ -102,7 +112,7 @@ def generate_tokens(args=None):
                         )
                     )
                 ),
-                binaryOperatorExprs=wrap(
+                operatorExprs=wrap(
                     (
                         f"fe_{name}"
                         if expr and lexeme != "" and not singleOperator
@@ -112,7 +122,7 @@ def generate_tokens(args=None):
                         )
                     )
                 ),
-                binaryOperatorDerivatives=wrap(
+                operatorDerivatives=wrap(
                     (
                         f"fprime_{name}"
                         if derivative and lexeme != "" and not singleOperator
@@ -122,7 +132,7 @@ def generate_tokens(args=None):
                         )
                     )
                 ),
-                binaryOperatorSimplifys=wrap(
+                operatorSimplifys=wrap(
                     (
                         f"fs_{name}"
                         if simplify and lexeme != "" and not singleOperator

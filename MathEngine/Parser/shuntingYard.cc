@@ -12,6 +12,7 @@
 #include "../Expressions/VariableExpression.h"
 #include "../Scanner/scanner.h"
 #include "../Utils/exceptions.h"
+#include "../Utils/FixedStack.h"
 #include "shuntingYard.h"
 
 using namespace std;
@@ -66,7 +67,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 }
                 auto expr = std::move(expressionStack.back());
                 expressionStack.pop_back();
-                expressionStack.push_back(UnaryFunctionExpression::construct(functionIndex, expr));
+                expressionStack.push_back(FunctionExpression::construct(functionIndex, expr));
             }
             else {
                 if (!expressionStack.empty()){
@@ -139,7 +140,7 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                 expression expr2 = std::move(expressionStack.back());
                 expressionStack.pop_back();
                 expressionStack.push_back(
-                    BinaryOperatorExpression::construct(token->type, expr2, expr1)
+                    OperatorExpression::construct(token->type, expr2, expr1)
                 );
             }
         }

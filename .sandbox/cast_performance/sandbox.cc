@@ -1,14 +1,16 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <memory>
 
 using namespace std;
 
 struct B;
 
-struct A {
+struct A: public std::enable_shared_from_this<A> {
     A(){}
     virtual ~A(){}
+    shared_ptr<B> sharedB(){ return dynamic_pointer_cast<B>(shared_from_this()); }
     virtual B* getB(){ return nullptr; }
 };
 
@@ -18,17 +20,17 @@ struct B: public A {
     B* getB() override { return this; }
 };
 
-size_t casting(A** a, size_t size){
+size_t casting(shared_ptr<A>* a, size_t size){
     size_t numB = 0;
     for (size_t i = 0; i < size; ++i){
-        if (dynamic_cast<B*>(a[i])){
+        if (dynamic_cast<B*>(a[i].get())){
             ++numB;
         }
     }
     return numB;
 }
 
-size_t virtualOverride(A** a, size_t size){
+size_t virtualOverride(shared_ptr<A>* a, size_t size){
     size_t numB = 0;
     for (size_t i = 0; i < size; ++i){
         if (a[i]->getB()){
@@ -38,9 +40,19 @@ size_t virtualOverride(A** a, size_t size){
     return numB;
 }
 
-typedef size_t (*func_t)(A** a, size_t size);
+size_t sharedFromThis(shared_ptr<A>* a, size_t size){
+    size_t numB = 0;
+    for (size_t i = 0; i < size; ++i){
+        if (a[i]->sharedB()){
+            ++numB;
+        }
+    }
+    return numB;
+}
 
-void timeit(func_t f, A** a, size_t size){
+typedef size_t (*func_t)(shared_ptr<A>* a, size_t size);
+
+void timeit(func_t f, shared_ptr<A>* a, size_t size){
     std::clock_t start = std::clock();
 
     size_t isum = 0;
@@ -58,20 +70,17 @@ void timeit(func_t f, A** a, size_t size){
 int main(){
     srand(time(NULL));
     const size_t N = 10000;
-    A* a[N];
+    shared_ptr<A> a[N];
     for (size_t i = 0; i < N; ++i){
         if (rand() % 2 == 0){
-            a[i] = new A();
+            a[i] = make_shared<A>();
         }
         else{
-            a[i] = new B();
+            a[i] = make_shared<B>();
         }
     }
 
     timeit(casting, a, N);
     timeit(virtualOverride, a, N);
-
-    for (size_t i = 0; i < N; ++i){
-        delete a[i];
-    }
+    timeit(sharedFromThis, a, N);
 }

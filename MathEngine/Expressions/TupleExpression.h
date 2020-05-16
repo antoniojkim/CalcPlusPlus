@@ -7,6 +7,7 @@
 #include <gsl/gsl_complex.h>
 
 #include "Expression.h"
+#include "../Utils/DynamicArray.h"
 
 class TupleExpression: public Expression {
 
@@ -26,9 +27,19 @@ class TupleExpression: public Expression {
 
         expression evaluate(const Variables& vars) override;
 
-        inline const TupleExpression* tuple() const override { return this; }
+        inline TupleExpression* tuple() override { return this; }
 
         inline const std::list<expression>& data() const { return _data; }
+
+        decltype(std::begin(_data)) begin() { return std::begin(_data); }
+        decltype(std::end(_data)) end() { return std::end(_data); }
+        size_t size() const { return _data.size(); }
+
+        expression front(){ return _data.front(); }
+        expression back(){ return _data.back(); }
+
+        DynamicArray<double> array(const Variables& vars);
+        void array(double* a, size_t size, const Variables& vars);
 
         EXPRESSION_OVERRIDES
 

@@ -48,7 +48,7 @@ TEST_CASE("Basic GSL Math Function Tests", "[basic_function]"){
     requireIsEqual("hypot(3, 4, 5)", 7.071067811865475244);
 
     requireIsEqual("ldexp(.53, 7)", 67.84);
-    requireIsEqual("frexp(67.84)", std::vector<double>{0.53, 7});
+    requireExprIsEqual("frexp(67.84)", "(0.53, 7)");
 
     requireIsEqual("fcmp(3, 3)", 1);
     requireIsEqual("fcmp(3, 3.1)", 0);

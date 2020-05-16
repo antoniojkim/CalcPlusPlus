@@ -16,7 +16,7 @@ struct BinExpression;
 struct HexExpression;
 struct InvalidExpression;
 struct MatrixExpression;
-struct BinaryOperatorExpression;
+struct OperatorExpression;
 struct TupleExpression;
 struct VariableExpression;
 
@@ -43,15 +43,15 @@ struct Expression: public std::enable_shared_from_this<Expression> {
     virtual gsl_complex complex() const;
     virtual gsl_complex complex(const Variables& vars) const;
 
-    virtual const BaseUnitExpression* unit() const { return nullptr; }
-    virtual const NumExpression* num() const { return nullptr; }
-    virtual const BinExpression* bin() const { return nullptr; }
-    virtual const HexExpression* hex() const { return nullptr; }
-    virtual const InvalidExpression* invalid() const { return nullptr; }
-    virtual const MatrixExpression* matrix() const { return nullptr; }
-    virtual const BinaryOperatorExpression* binaryOperator() const { return nullptr; }
-    virtual const TupleExpression* tuple() const { return nullptr; }
-    virtual const VariableExpression* variable() const { return nullptr; }
+    virtual BaseUnitExpression* unit() { return nullptr; }
+    virtual NumExpression* num() { return nullptr; }
+    virtual BinExpression* bin() { return nullptr; }
+    virtual HexExpression* hex() { return nullptr; }
+    virtual InvalidExpression* invalid() { return nullptr; }
+    virtual MatrixExpression* matrix() { return nullptr; }
+    virtual OperatorExpression* operatorExpr() { return nullptr; }
+    virtual TupleExpression* tuple() { return nullptr; }
+    virtual VariableExpression* variable() { return nullptr; }
 
     virtual bool isComplex() const = 0;
 

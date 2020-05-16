@@ -56,45 +56,21 @@ def generate_functions(args=None):
         ) as template:
             template.verify(specs)
             template.replace(
-                unaryFunctions=wrap(
+                valueFunctions=wrap(
                     (
-                        f"f_{name}"
-                        if nargs(name) == 1 and not hasExpression(name)
-                        else "nullptr"
+                        f"f_{name}" if not hasExpression(name) else "nullptr"
                         for name in functionNames
                     )
                 ),
-                unaryFunctionExprs=wrap(
+                exprFunctions=wrap(
                     (
-                        f"fe_{name}"
-                        if hasExpression(name) and nargs(name) == 1
-                        else "nullptr"
+                        f"fe_{name}" if hasExpression(name) else "nullptr"
                         for name in functionNames
                     )
                 ),
-                unaryFunctionDerivatives=wrap(
+                derivativeFunctions=wrap(
                     (
-                        f"fprime_{name}"
-                        if hasDerivative(name) and nargs(name) == 1
-                        else "nullptr"
-                        for name in functionNames
-                    )
-                ),
-            )
-            template.replace(
-                multiFunctions=wrap(
-                    (
-                        f"f_{name}"
-                        if not hasExpression(name) and not (0 <= nargs(name) <= 1)
-                        else "nullptr"
-                        for name in functionNames
-                    )
-                ),
-                multiFunctionExprs=wrap(
-                    (
-                        f"fe_{name}"
-                        if hasExpression(name) and not (0 <= nargs(name) <= 1)
-                        else "nullptr"
+                        f"fprime_{name}" if hasDerivative(name) else "nullptr"
                         for name in functionNames
                     )
                 ),

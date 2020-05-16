@@ -6,25 +6,21 @@
 #include "../../Utils/exceptions.h"
 #include "FunctionDirectory.h"
 #include "Functions.h"
-#include "MultiFunctions/Basic.h"
-#include "MultiFunctions/Calculus.h"
-#include "MultiFunctions/ExpLogFunctions.h"
-#include "MultiFunctions/Random.h"
-#include "MultiFunctions/SpecialFunctions.h"
-#include "MultiFunctions/Statistics.h"
-#include "MultiFunctionExprs/calculus.h"
-#include "MultiFunctionExprs/fft.h"
-#include "MultiFunctionExprs/polynomial.h"
-#include "MultiFunctionExprs/tuple.h"
-#include "UnaryFunctions/BasicFunctions.h"
-#include "UnaryFunctions/ExpLogFunctions.h"
-#include "UnaryFunctions/SpecialFunctions.h"
-#include "UnaryFunctions/TrigFunctions.h"
-#include "UnaryFunctionDerivatives/BasicFunctions.h"
-#include "UnaryFunctionDerivatives/ExpLogFunctions.h"
-#include "UnaryFunctionDerivatives/TrigFunctions.h"
-#include "UnaryFunctionExprs/basic.h"
-#include "UnaryFunctionExprs/linalg.h"
+#include "ExprFunctions/basic.h"
+#include "ExprFunctions/calculus.h"
+#include "ExprFunctions/fft.h"
+#include "ExprFunctions/linalg.h"
+#include "ExprFunctions/polynomial.h"
+#include "ValueFunctions/BasicFunctions.h"
+#include "ValueFunctions/Calculus.h"
+#include "ValueFunctions/ExpLogFunctions.h"
+#include "ValueFunctions/Random.h"
+#include "ValueFunctions/SpecialFunctions.h"
+#include "ValueFunctions/Statistics.h"
+#include "ValueFunctions/TrigFunctions.h"
+#include "DerivativeFunctions/BasicFunctions.h"
+#include "DerivativeFunctions/ExpLogFunctions.h"
+#include "DerivativeFunctions/TrigFunctions.h"
 
 using namespace std;
 using Function::numFunctions;
@@ -33,85 +29,82 @@ using Function::numFunctions;
  ***************** Unary Functions *****************
  ***************************************************/
 
-const UnaryFunction unaryFunctions[numFunctions] = {
-    nullptr, nullptr, f_abs, nullptr, f_acos, f_acosh, f_acot, f_acoth, f_acsc, f_acsch,
+const ValueFunction valueFunctions[numFunctions] = {
+    nullptr, nullptr, f_abs, f_absdev, f_acos, f_acosh, f_acot, f_acoth, f_acsc, f_acsch,
 	f_arccos, f_arccosh, f_arccot, f_arccoth, f_arccsc, f_arccsch, f_arcosh, f_arcoth,
-	f_arcsch, f_arcsec, f_arcsech, f_arcsin, f_arcsinh, f_arctan, f_arctanh, nullptr,
-	nullptr, f_arsech, f_arsinh, f_artanh, f_asec, f_asech, f_asin, f_asinh, f_atan,
-	f_atanh, nullptr, nullptr, nullptr, nullptr, f_cb, f_cbrt, nullptr, f_cos, f_cosh,
-	f_cot, f_coth, f_csc, f_csch, nullptr, nullptr, f_deg, nullptr, nullptr, f_dfact,
-	nullptr, f_exp, f_exp_2, f_expm1, f_fact, nullptr, nullptr, nullptr, f_gamma, nullptr,
-	nullptr, nullptr, f_gammainv, f_gammastar, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, f_ln, f_ln1p, f_ln_2, nullptr, nullptr,
-	f_lndfact, f_lnfact, f_lngamma, nullptr, nullptr, f_log, f_log1p, f_log_2, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, f_rad, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	f_sec, f_sech, f_sin, f_sinh, nullptr, f_sqr, f_sqrt, nullptr, nullptr, f_tan, f_tanh,
-	nullptr, nullptr, nullptr, nullptr
+	f_arcsch, f_arcsec, f_arcsech, f_arcsin, f_arcsinh, f_arctan, f_arctanh, f_argmax,
+	f_argmin, f_arsech, f_arsinh, f_artanh, f_asec, f_asech, f_asin, f_asinh, f_atan,
+	f_atanh, f_autocorr, f_beta, f_betainc, nullptr, f_cb, f_cbrt, f_choose, f_cos, f_cosh,
+	f_cot, f_coth, f_csc, f_csch, nullptr, nullptr, f_deg, f_deriv, nullptr, f_dfact,
+	nullptr, f_exp, f_exp_2, f_expm1, f_fact, f_fcmp, nullptr, nullptr, f_gamma, f_gammainc,
+	f_gammaincp, f_gammaincq, f_gammainv, f_gammastar, f_gcd, nullptr, f_hypot, nullptr,
+	f_integral, f_kurt, f_kurtosis, f_lag1, f_lcm, f_ldexp, f_ln, f_ln1p, f_ln_2, f_lnbeta,
+	f_lnchoose, f_lndfact, f_lnfact, f_lngamma, f_lnpermute, f_lnpoch, f_log, f_log1p,
+	f_log_2, f_logn, f_max, f_mean, f_median, f_min, nullptr, nullptr, f_permute, f_poch,
+	f_pochrel, nullptr, nullptr, f_rad, f_rand, f_randint, f_randseed, f_randu, f_randup,
+	f_rseed, f_sd, f_sec, f_sech, f_sin, f_sinh, f_skew, f_sqr, f_sqrt, f_std, f_stdev,
+	f_tan, f_tanh, f_taylorcoeff, f_tss, f_var, f_variance
 };
 
-UnaryFunction get_unary_function(const string& name){
+ValueFunction get_function(const string& name){
     int index = Function::indexOf(name);
     if (index == -1){
-        throw Exception("Unknown Unary Function: ", name);
+        throw Exception("Unknown Function: ", name);
     }
-    return get_unary_function(index);
+    return get_function(index);
 }
-UnaryFunction get_unary_function(int functionIndex){
+ValueFunction get_function(int functionIndex){
     if (functionIndex < 0 || functionIndex >= numFunctions){
         throw Exception("Invalid Function Index: ", functionIndex);
     }
-    if (Function::numArgs[functionIndex] != 1){
-        throw Exception("Function is not Unary: ", Function::names[functionIndex]);
-    }
-    return unaryFunctions[functionIndex];
+    return valueFunctions[functionIndex];
 }
 
 
 /***************************************************
- ************** Unary Function Exprs ***************
+ ***************** Expr Functions ******************
  ***************************************************/
 
-const UnaryFunctionExpr unaryFunctionExprs[numFunctions] = {
+const ExprFunction exprFunctions[numFunctions] = {
     fe_Cholesky, fe_LU, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, fe_bin, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_det, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_frexp, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, fe_hex, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, fe_cubic, fe_cubicc, nullptr, nullptr, fe_det, nullptr,
+	fe_diff, nullptr, nullptr, nullptr, nullptr, nullptr, fe_fft, fe_frexp, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_hex, nullptr, fe_ifft, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, fe_neg, fe_num, nullptr, nullptr, nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr, nullptr, fe_neg, fe_num, nullptr, nullptr, nullptr,
+	fe_quad, fe_quadc, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 };
 
-UnaryFunctionExpr get_unary_function_expr(const string& name){
+ExprFunction get_function_expr(const string& name){
     int index = Function::indexOf(name);
     if (index == -1){
         throw Exception("Unknown Unary Function: ", name);
     }
-    return get_unary_function_expr(index);
+    return get_function_expr(index);
 }
-UnaryFunctionExpr get_unary_function_expr(int functionIndex){
+ExprFunction get_function_expr(int functionIndex){
     if (functionIndex < 0 || functionIndex >= numFunctions){
         throw Exception("Invalid Function Index: ", functionIndex);
     }
     if (Function::numArgs[functionIndex] != 1){
         throw Exception("Function is not Unary: ", Function::names[functionIndex]);
     }
-    return unaryFunctionExprs[functionIndex];
+    return exprFunctions[functionIndex];
 }
 
 
 /***************************************************
- *********** Unary Function Derivatives ************
+ ************** Function Derivatives ***************
  ***************************************************/
 
-const UnaryFunctionDerivative unaryFunctionDerivatives[numFunctions] = {
+const DerivativeFunction derivativeFunctions[numFunctions] = {
     nullptr, nullptr, fprime_abs, nullptr, fprime_acos, fprime_acosh, fprime_acot,
 	fprime_acoth, fprime_acsc, fprime_acsch, fprime_arccos, fprime_arccosh, fprime_arccot,
 	fprime_arccoth, fprime_arccsc, fprime_arccsch, fprime_arcosh, fprime_arcoth,
@@ -125,104 +118,23 @@ const UnaryFunctionDerivative unaryFunctionDerivatives[numFunctions] = {
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, fprime_ln, fprime_ln1p, fprime_ln_2, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, fprime_log, fprime_log1p, fprime_log_2,
-	nullptr, nullptr, nullptr, nullptr, nullptr, fprime_neg, nullptr, nullptr, nullptr,
+	fprime_logn, nullptr, nullptr, nullptr, nullptr, fprime_neg, nullptr, nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 	nullptr, nullptr, fprime_sec, fprime_sech, fprime_sin, fprime_sinh, nullptr, fprime_sqr,
 	fprime_sqrt, nullptr, nullptr, fprime_tan, fprime_tanh, nullptr, nullptr, nullptr,
 	nullptr
 };
 
-UnaryFunctionDerivative get_unary_function_derivative(const string& name){
+DerivativeFunction get_function_derivative(const string& name){
     int index = Function::indexOf(name);
     if (index == -1){
-        throw Exception("Unknown Unary Function: ", name);
+        throw Exception("Unknown Function: ", name);
     }
-    return get_unary_function_derivative(index);
+    return get_function_derivative(index);
 }
-UnaryFunctionDerivative get_unary_function_derivative(int functionIndex){
+DerivativeFunction get_function_derivative(int functionIndex){
     if (functionIndex < 0 || functionIndex >= numFunctions){
         throw Exception("Invalid Function Index: ", functionIndex);
     }
-    if (Function::numArgs[functionIndex] != 1){
-        throw Exception("Function is not Unary: ", Function::names[functionIndex]);
-    }
-    return unaryFunctionDerivatives[functionIndex];
-}
-
-
-/***************************************************
- ***************** Multi Functions *****************
- ***************************************************/
-
-const MultiFunction multiFunctions[numFunctions] = {
-    nullptr, nullptr, nullptr, f_absdev, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_argmax, f_argmin,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	f_autocorr, f_beta, f_betainc, nullptr, nullptr, nullptr, f_choose, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_deriv, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, f_fcmp, nullptr, nullptr, nullptr,
-	f_gammainc, f_gammaincp, f_gammaincq, nullptr, nullptr, f_gcd, nullptr, f_hypot,
-	nullptr, f_integral, f_kurt, f_kurtosis, f_lag1, f_lcm, f_ldexp, nullptr, nullptr,
-	nullptr, f_lnbeta, f_lnchoose, nullptr, nullptr, nullptr, f_lnpermute, f_lnpoch,
-	nullptr, nullptr, nullptr, f_logn, f_max, f_mean, f_median, f_min, nullptr, nullptr,
-	f_permute, f_poch, f_pochrel, nullptr, nullptr, nullptr, f_rand, f_randint, f_randseed,
-	f_randu, f_randup, f_rseed, f_sd, nullptr, nullptr, nullptr, nullptr, f_skew, nullptr,
-	nullptr, f_std, f_stdev, nullptr, nullptr, f_taylorcoeff, f_tss, f_var, f_variance
-};
-
-MultiFunction get_multi_function(const string& name){
-    int index = Function::indexOf(name);
-    if (index == -1){
-        throw Exception("Unknown Multi Function: ", name);
-    }
-    return get_multi_function(index);
-}
-MultiFunction get_multi_function(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (Function::numArgs[functionIndex] < 1 && Function::numArgs[functionIndex] != -1){
-        throw Exception("Function is not Multi Arg: ", Function::names[functionIndex]);
-    }
-    return multiFunctions[functionIndex];
-}
-
-
-/***************************************************
- *************** Multi Expr Functions **************
- ***************************************************/
-
-const MultiFunctionExpr multiFunctionExprs[numFunctions] = {
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, fe_cubic, fe_cubicc, nullptr, nullptr, nullptr,
-	nullptr, fe_diff, nullptr, nullptr, nullptr, nullptr, nullptr, fe_fft, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, fe_ifft,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, fe_quad, fe_quadc, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
-};
-
-MultiFunctionExpr get_multi_function_expr(const string& name){
-    int index = Function::indexOf(name);
-    if (index == -1){
-        throw Exception("Unknown Multi Function: ", name);
-    }
-    return get_multi_function_expr(index);
-}
-MultiFunctionExpr get_multi_function_expr(int functionIndex){
-    if (functionIndex < 0 || functionIndex >= numFunctions){
-        throw Exception("Invalid Function Index: ", functionIndex);
-    }
-    if (Function::numArgs[functionIndex] < 1 && Function::numArgs[functionIndex] != -1){
-        throw Exception("Function is not Multi Arg: ", Function::names[functionIndex]);
-    }
-    return multiFunctionExprs[functionIndex];
+    return derivativeFunctions[functionIndex];
 }

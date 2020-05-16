@@ -7,24 +7,34 @@ def numpy_to_string(array):
     return (
         np.array2string(
             array,
-            separator=",",
-            formatter={"complexfloat": lambda cf: f"{{{cf.real}, {cf.imag}}}"},
+            separator=", ",
+            formatter={
+                "complexfloat": lambda cf: "".join(
+                    str(cf.real),
+                    "+" if cf.imag > 0 else "",
+                    f"{cf.imag}i" if cf.imag != 0 else "",
+                )
+            },
         )
         .replace("[", "{")
         .replace("]", "}")
+        .replace("\n", " ")
+        .replace("  ", " ")
+        .replace("{ ", "{")
+        .replace(" }", "}")
     )
 
 
 def function(array):
-    result = np.round(np.fft.fft(array), 10)
-    return f"std::vector<std::vector<gsl_complex>>{numpy_to_string(result)}"
+    result = np.round(np.fft.ifft(array), 10)
+    return f'"{numpy_to_string(result)}"'
 
 
 names = ["ifft"]
 
 
 def main():
-    for i in range(1):
+    for i in range(10):
         num = np.random.randint(2, 17)
         array = np.round(
             np.random.uniform(-10, 10, size=num)
@@ -32,8 +42,9 @@ def main():
             2,
         )
         name = names[np.random.randint(len(names))]
-        args = ", ".join(map(str, array))
-        print(f'requireIsEqual("{name}{{{args}}}", {function(array)});')
+        print(
+            f'requireExprIsEqual("{name}{numpy_to_string(array)}", {function(array)});'
+        )
         print()
 
 

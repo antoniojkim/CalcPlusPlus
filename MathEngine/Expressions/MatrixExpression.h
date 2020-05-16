@@ -36,11 +36,11 @@ class MatrixExpression: public Expression {
         static expression construct(gsl_matrix_complex* matrix);
         static expression construct(gsl_permutation* matrix);
 
-        const std::list<expression>& getMatrix() const;
+        std::list<expression>& getMatrix();
         size_t rows() const;
         size_t cols() const;
 
-        inline const MatrixExpression* matrix() const override { return this; }
+        inline MatrixExpression* matrix() override { return this; }
 
         expression evaluate(const Variables& vars) override;
 

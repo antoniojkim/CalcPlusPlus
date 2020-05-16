@@ -7,8 +7,8 @@
 #include "../../NumericalExpression.h"
 #include "../../MatrixExpression.h"
 #include "../../UnitExpression.h"
-#include "../BinaryOperatorDirectory.h"
-#include "../OperatorDirectory/BinaryOperators.h"
+#include "../OperatorDirectory.h"
+#include "../Operators/BinaryOperators.h"
 
 expression matrix_multiplication(const MatrixExpression* lhs, const MatrixExpression* rhs){
     if (lhs->cols() == rhs->rows()){

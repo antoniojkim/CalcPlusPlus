@@ -22,7 +22,7 @@ class BaseUnitExpression: public Expression {
 
         expression evaluate(const Variables& vars) override;
 
-        inline const BaseUnitExpression* unit() const override { return this; }
+        inline BaseUnitExpression* unit() override { return this; }
 
         EXPRESSION_OVERRIDES
 

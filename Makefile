@@ -7,7 +7,7 @@ generate:
 
 test: build cleantest
 	.utils/build Tests
-	gdb -q -ex="run" Tests/run
+	gdb -q -ex="run" --args Tests/run $(name)
 
 bp:  # breakpoints
 	vim Tests/.gdbinit

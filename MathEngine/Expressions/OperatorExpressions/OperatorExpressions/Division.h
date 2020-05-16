@@ -9,8 +9,8 @@
 #include "../../MatrixExpression.h"
 #include "../../NumericalExpression.h"
 #include "../../UnitExpression.h"
-#include "../BinaryOperatorDirectory.h"
-#include "../OperatorDirectory/BinaryOperators.h"
+#include "../OperatorDirectory.h"
+#include "../Operators/BinaryOperators.h"
 
 expression matrix_division(const MatrixExpression* lhs, const MatrixExpression* rhs){
     if (lhs->rows() == rhs->rows() && lhs->cols() == rhs->cols()){

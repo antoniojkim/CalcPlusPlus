@@ -25,7 +25,7 @@ class NumExpression: public Expression {
 
         EXPRESSION_OVERRIDES
 
-        inline const NumExpression* num() const override { return this; }
+        inline NumExpression* num() override { return this; }
 
         bool prettyprint(std::ostream&) const override;
 
@@ -46,7 +46,7 @@ class HexExpression: public Expression {
 
         EXPRESSION_OVERRIDES
 
-        inline const HexExpression* hex() const override { return this; }
+        inline HexExpression* hex() override { return this; }
 
 };
 
@@ -65,6 +65,6 @@ class BinExpression: public Expression {
 
         EXPRESSION_OVERRIDES
 
-        inline const BinExpression* bin() const override { return this; }
+        inline BinExpression* bin() override { return this; }
 
 };

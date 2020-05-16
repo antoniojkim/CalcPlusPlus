@@ -85,7 +85,7 @@ expression MatrixExpression::construct(gsl_permutation* permutation){
 }
 
 
-const std::list<expression>& MatrixExpression::getMatrix() const { return mat; }
+std::list<expression>& MatrixExpression::getMatrix() { return mat; }
 size_t MatrixExpression::rows() const { return numRows; }
 size_t MatrixExpression::cols() const { return numCols; }
 

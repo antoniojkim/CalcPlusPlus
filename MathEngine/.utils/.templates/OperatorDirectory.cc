@@ -5,9 +5,10 @@
 
 #include "../../Utils/exceptions.h"
 #include "Operators.h"
-#include "BinaryOperatorDirectory.h"
+#include "OperatorDirectory.h"
 #include "OperatorDerivatives/OperatorDerivatives.h"
-#include "OperatorDirectory/BinaryOperators.h"
+#include "Operators/BinaryOperators.h"
+#include "Operators/UnaryOperators.h"
 #include "OperatorExpressions/Addition.h"
 #include "OperatorExpressions/Division.h"
 #include "OperatorExpressions/Exponent.h"
@@ -17,6 +18,24 @@
 
 using namespace std;
 using namespace Scanner;
+
+const UnaryOperator unaryOperators[numTokens] = {
+    {unaryOperators}
+};
+
+UnaryOperator getUnaryOperator(const std::string& name) {
+    int index = getOperatorIndex(name);
+    if (index == -1){
+        throw Exception("Unknown Binary Operator: ", name);
+    }
+    return getUnaryOperator(index);
+}
+UnaryOperator getUnaryOperator(int operatorIndex) {
+    if (operatorIndex < 0 || operatorIndex >= numTokens){
+        throw Exception("Invalid Operator Index: ", operatorIndex);
+    }
+    return unaryOperators[operatorIndex];
+}
 
 const BinaryOperator binaryOperators[numTokens] = {
     {binaryOperators}
@@ -33,86 +52,83 @@ BinaryOperator getBinaryOperator(int operatorIndex) {
     if (operatorIndex < 0 || operatorIndex >= numTokens){
         throw Exception("Invalid Operator Index: ", operatorIndex);
     }
-    if (binaryOperators[operatorIndex]){
-        return binaryOperators[operatorIndex];
-    }
-    throw Exception("Operator is not Binary: ", operators[operatorIndex]);
+    return binaryOperators[operatorIndex];
 }
 
 
-const BinaryOperatorExpr binaryOperatorExprs[numTokens] = {
-    {binaryOperatorExprs}
+const OperatorExpr operatorExprs[numTokens] = {
+    {operatorExprs}
 };
 
-BinaryOperatorExpr getBinaryOperatorExpr(const std::string& name) {
+OperatorExpr getOperatorExpr(const std::string& name) {
     int index = getOperatorIndex(name);
     if (index == -1){
         throw Exception("Unknown Binary Operator: ", name);
     }
-    return getBinaryOperatorExpr(index);
+    return getOperatorExpr(index);
 }
-BinaryOperatorExpr getBinaryOperatorExpr(int operatorIndex) {
+OperatorExpr getOperatorExpr(int operatorIndex) {
     if (operatorIndex < 0 || operatorIndex >= numTokens){
         throw Exception("Invalid Operator Index: ", operatorIndex);
     }
-    return binaryOperatorExprs[operatorIndex];
+    return operatorExprs[operatorIndex];
 }
 
 
-const BinaryOperatorDerivative binaryOperatorDerivatives[numTokens] = {
-    {binaryOperatorDerivatives}
+const OperatorDerivative operatorDerivatives[numTokens] = {
+    {operatorDerivatives}
 };
 
-BinaryOperatorDerivative getBinaryOperatorDerivative(const std::string& name) {
+OperatorDerivative getOperatorDerivative(const std::string& name) {
     int index = getOperatorIndex(name);
     if (index == -1){
         throw Exception("Unknown Binary Operator: ", name);
     }
-    return getBinaryOperatorDerivative(index);
+    return getOperatorDerivative(index);
 }
-BinaryOperatorDerivative getBinaryOperatorDerivative(int operatorIndex) {
+OperatorDerivative getOperatorDerivative(int operatorIndex) {
     if (operatorIndex < 0 || operatorIndex >= numTokens){
         throw Exception("Invalid Operator Index: ", operatorIndex);
     }
-    return binaryOperatorDerivatives[operatorIndex];
+    return operatorDerivatives[operatorIndex];
 }
 
 
-// const BinaryOperatorIntegral binaryOperatorIntegrals[numTokens] = {
-//     {binaryOperatorIntegrals}
+// const OperatorIntegral operatorIntegrals[numTokens] = {
+//     {operatorIntegrals}
 // };
 
-BinaryOperatorIntegral getBinaryOperatorIntegral(const std::string& name) {
+OperatorIntegral getOperatorIntegral(const std::string& name) {
     // int index = getOperatorIndex(name);
     // if (index == -1){
     //     throw Exception("Unknown Binary Operator: ", name);
     // }
-    // return getBinaryOperatorIntegral(index);
+    // return getOperatorIntegral(index);
     return nullptr;
 }
-BinaryOperatorIntegral getBinaryOperatorIntegral(int operatorIndex) {
+OperatorIntegral getOperatorIntegral(int operatorIndex) {
     // if (operatorIndex < 0 || operatorIndex >= numTokens){
     //     throw Exception("Invalid Operator Index: ", operatorIndex);
     // }
-    // return binaryOperatorIntegrals[operatorIndex];
+    // return operatorIntegrals[operatorIndex];
     return nullptr;
 }
 
 
-const BinaryOperatorSimplify binaryOperatorSimplifys[numTokens] = {
-    {binaryOperatorSimplifys}
+const OperatorSimplify operatorSimplifys[numTokens] = {
+    {operatorSimplifys}
 };
 
-BinaryOperatorSimplify getBinaryOperatorSimplify(const std::string& name) {
+OperatorSimplify getOperatorSimplify(const std::string& name) {
     int index = getOperatorIndex(name);
     if (index == -1){
         throw Exception("Unknown Binary Operator: ", name);
     }
-    return getBinaryOperatorSimplify(index);
+    return getOperatorSimplify(index);
 }
-BinaryOperatorSimplify getBinaryOperatorSimplify(int operatorIndex) {
+OperatorSimplify getOperatorSimplify(int operatorIndex) {
     if (operatorIndex < 0 || operatorIndex >= numTokens){
         throw Exception("Invalid Operator Index: ", operatorIndex);
     }
-    return binaryOperatorSimplifys[operatorIndex];
+    return operatorSimplifys[operatorIndex];
 }

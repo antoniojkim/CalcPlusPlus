@@ -72,17 +72,18 @@ expression fft(const MatrixExpression* matrix){
     return InvalidExpression::construct(Exception("FFT expected 1D Matrix."));
 }
 
-expression fe_fft(const std::list<expression>& args, const Variables& vars){
-    if (args.size() == 1){
-        auto expr = args.front()->evaluate(vars);
-        return fft(expr->matrix());
-    }
-    else{
+expression fe_fft(expression arg, const Variables& vars){
+    TupleExpression* tuple = arg->tuple();
+    if (tuple){
         std::list<expression> exprs;
-        for (auto& arg : args){
+        for (auto& arg : *tuple){
             exprs.emplace_back(arg->evaluate(vars));
         }
-        auto expr = MatrixExpression::construct(std::move(exprs), 1, args.size());
+        auto expr = MatrixExpression::construct(std::move(exprs), 1, exprs.size());
+        return fft(expr->matrix());
+    }
+    else {
+        auto expr = arg->evaluate(vars);
         return fft(expr->matrix());
     }
 }
@@ -130,17 +131,18 @@ expression ifft(const MatrixExpression* matrix){
     return InvalidExpression::construct(Exception("IFFT expected 1D Matrix."));
 }
 
-expression fe_ifft(const std::list<expression>& args, const Variables& vars){
-    if (args.size() == 1){
-        auto expr = args.front()->evaluate(vars);
-        return ifft(expr->matrix());
-    }
-    else{
+expression fe_ifft(expression arg, const Variables& vars){
+    TupleExpression* tuple = arg->tuple();
+    if (tuple){
         std::list<expression> exprs;
-        for (auto& arg : args){
+        for (auto& arg : *tuple){
             exprs.emplace_back(arg->evaluate(vars));
         }
-        auto expr = MatrixExpression::construct(std::move(exprs), 1, args.size());
+        auto expr = MatrixExpression::construct(std::move(exprs), 1, exprs.size());
+        return ifft(expr->matrix());
+    }
+    else {
+        auto expr = arg->evaluate(vars);
         return ifft(expr->matrix());
     }
 }

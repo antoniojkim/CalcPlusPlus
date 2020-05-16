@@ -4,7 +4,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_gamma.h>
 
-#include "../BinaryOperatorDirectory.h"
+#include "../OperatorDirectory.h"
 
 
 double f_PLUS(double lhs, double rhs){ return lhs + rhs; };

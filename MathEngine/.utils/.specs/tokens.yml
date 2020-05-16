@@ -65,6 +65,7 @@ operators:
         lexeme: "~"
         precedence: 9
         singleOperator:
+        rightAssociative: True
     LT_LT:
         lexeme: "<<"
         precedence: 10
@@ -144,8 +145,6 @@ tokens:
     BACKSLASH: "\\\\"
     BACKTICK: "`"
     UNDERSCORE: "_"
-    C: "C"
-    P: "P"
 constants:
     pi:
         val: M_PI
