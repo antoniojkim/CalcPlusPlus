@@ -151,10 +151,20 @@ std::ostream& MatrixExpression::print(std::ostream& out) const {
     return out << "}";
 }
 std::ostream& MatrixExpression::postfix(std::ostream& out) const {
-    for (auto& expr: mat){
-        expr->postfix(out) << " ";
+    out << "{";
+    if (!mat.empty()){
+        auto expr = mat.begin();
+        for (size_t r = 0; r < numRows; ++r){
+            if (r != 0){ out << ", "; }
+            out << "{";
+            for (size_t c = 0; c < numCols; ++c){
+                if (c != 0){ out << ", "; }
+                (*(expr++))->postfix(out);
+            }
+            out << "}";
+        }
     }
-    return out << "matrix_" << numRows << "x" << numCols;
+    return out << "}";
 }
 
 

@@ -61,24 +61,24 @@ expression postfix_to_expression(list<Scanner::Token*>& outputStack){
                     "  Got: ", argumentQueue.size() + 1
                 ));
             }
-            if (numArgs == 1){
-                if (expressionStack.empty()){
-                    return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
-                }
-                auto expr = std::move(expressionStack.back());
-                expressionStack.pop_back();
-                expressionStack.push_back(FunctionExpression::construct(functionIndex, expr));
-            }
-            else {
-                if (!expressionStack.empty()){
-                    argumentQueue.emplace_front(std::move(expressionStack.back()));
-                    expressionStack.pop_back();
-                }
-                expressionStack.push_back(
-                    MultiFunctionExpression::construct(functionIndex, std::move(argumentQueue))
-                );
-                argumentQueue.clear();
-            }
+            // if (numArgs == 1){
+            //     if (expressionStack.empty()){
+            //         return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Function: ", token->lexeme));
+            //     }
+            //     auto expr = std::move(expressionStack.back());
+            //     expressionStack.pop_back();
+            //     expressionStack.push_back(FunctionExpression::construct(functionIndex, expr));
+            // }
+            // else {
+            //     if (!expressionStack.empty()){
+            //         argumentQueue.emplace_front(std::move(expressionStack.back()));
+            //         expressionStack.pop_back();
+            //     }
+            //     expressionStack.push_back(
+            //         FunctionExpression::construct(functionIndex, std::move(argumentQueue))
+            //     );
+            //     argumentQueue.clear();
+            // }
         }
         else if (token->type == TUPLE){
             istringstream tupleLexeme {token->lexeme};

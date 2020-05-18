@@ -10,6 +10,25 @@
 using namespace std;
 using namespace Scanner;
 
+void addMissingRBrace(list<Token>& tokens){
+    int lbraceCount = 0;
+    for(auto& token : tokens){
+        switch(token.type){
+            case LBRACE:
+                ++lbraceCount;
+                break;
+            case RBRACE:
+                --lbraceCount;
+                break;
+            default:
+                break;
+        }
+    }
+    for (int i = 0; i < lbraceCount; ++i){
+        tokens.emplace_back(Token{typeStrings[RBRACE], RBRACE});
+    }
+}
+
 void addMissingRParens(list<Token>& tokens){
     int lparenCount = 0;
     for(auto& token : tokens){
@@ -49,6 +68,7 @@ void implicitMultiplication(list<Token>& tokens){
 }
 
 void preprocess(list<Token>& tokens){
+    addMissingRBrace(tokens);
     addMissingRParens(tokens);
     replaceGreekLetters(tokens);
     implicitMultiplication(tokens);

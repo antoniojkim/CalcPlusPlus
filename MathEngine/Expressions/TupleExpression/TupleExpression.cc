@@ -111,8 +111,14 @@ std::ostream& TupleExpression::print(std::ostream& out) const {
     return out << ")";
 }
 std::ostream& TupleExpression::postfix(std::ostream& out) const {
-    for (auto& expr : _data){
-        expr->postfix(out) << " ";
+    out << "(";
+    if (!_data.empty()){
+        auto expr = _data.begin();
+        auto end = _data.end();
+        (*(expr++))->postfix(out);
+        while(expr != end){
+            (*(expr++))->postfix(out << ", ");
+        }
     }
-    return out << "tuple_" << _data.size();
+    return out << ")";
 }

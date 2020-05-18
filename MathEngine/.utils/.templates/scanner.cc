@@ -52,7 +52,7 @@ bool Scanner::isPostImplicit(Type type){
         case LBRACE:
         case ID:
         case SPECIALID:
-        case FUNCTION:
+        // case FUNCTION:
             return true;
         default:
             return false;
@@ -240,7 +240,7 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             i += index;
         }
         else if (startsWithLexeme(c_str, size, index)){
-            tokens.emplace_back(Token{"", Lexeme::types[index]});
+            tokens.emplace_back(Token{Lexeme::lexemes[index], Lexeme::types[index]});
             i += strlen(Lexeme::lexemes[index]);
         }
         else if (startsWithGreekLetter(c_str, size, index)){

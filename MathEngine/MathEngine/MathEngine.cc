@@ -7,6 +7,7 @@
 #include "../Expressions/VariableExpressions/GreekLetters.h"
 #include "../MathEngine.h"
 #include "../Parser/recursiveDescent.h"
+#include "../Parser/modifiedShuntingYard.h"
 #include "../Parser/shuntingYard.h"
 #include "../Utils/exceptions.h"
 #include "Preprocessor.h"
@@ -14,7 +15,7 @@
 using namespace std;
 using namespace Scanner;
 
-MathEngine::MathEngine(): parser{make_unique<RecursiveDescent>()} {}
+MathEngine::MathEngine(): parser{make_unique<ModifiedShuntingYard>()} {}
 
 std::list<Token> MathEngine::scan(const std::string& input){
     list<Token> tokens;
