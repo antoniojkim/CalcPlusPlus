@@ -1,6 +1,7 @@
 #pragma once
 
 #include <exception>
+#include <memory>
 #include <iostream>
 
 template<typename T>
@@ -81,12 +82,12 @@ class FixedStack { // Fixed Size Stack
         T* begin(){ return data.get(); }
         T* end(){ return data.get()+tail; }
 
-        friend std::ostream& operator<<(std::ostream& out, FixedStack<T>& fs){
-            out << "[";
-            for (size_t i = 0; i < fs.size(); ++i){
-                if (i != 0){ out << ", "; }
-                out << fs[i];
-            }
-            return out << "]";
-        }
+        // friend std::ostream& operator<<(std::ostream& out, FixedStack<T>& fs){
+        //     out << "[";
+        //     for (size_t i = 0; i < fs.size(); ++i){
+        //         if (i != 0){ out << ", "; }
+        //         out << fs[i];
+        //     }
+        //     return out << "]";
+        // }
 };

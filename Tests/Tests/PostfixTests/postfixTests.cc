@@ -61,25 +61,25 @@ TEST_CASE("Tuple Postfix Tests", "[postfix]") {
 
 TEST_CASE("Matrix Postfix Tests", "[postfix]") {
 
-    postfixTest("{1, 2, 3, 4}", "1 2 3 4 matrix_1x4");
-    postfixTest("{{1, 2, 3}, {4, 5, 6}}", "1 2 3 4 5 6 matrix_2x3");
-    postfixTest("{{1, 2}, {3, 4}, {5, 6}}", "1 2 3 4 5 6 matrix_3x2");
-    postfixTest("{{1, 2, 3, 4}}", "1 2 3 4 matrix_1x4");
-    postfixTest("det({{1, 2, 3, 4}})", "1 2 3 4 matrix_1x4 det");
-    postfixTest("det{{1, 2, 3, 4}}", "1 2 3 4 matrix_1x4 det");
+    postfixTest("{1, 2, 3, 4}", "{1, 2, 3, 4}");
+    postfixTest("{{1, 2, 3}, {4, 5, 6}}", "{{1, 2, 3}, {4, 5, 6}}");
+    postfixTest("{{1, 2}, {3, 4}, {5, 6}}", "{{1, 2}, {3, 4}, {5, 6}}");
+    postfixTest("{{1, 2, 3, 4}}", "{1, 2, 3, 4}");
+    postfixTest("det({{1, 2, 3, 4}})", "{1, 2, 3, 4} det");
+    postfixTest("det{{1, 2, 3, 4}}", "{1, 2, 3, 4} det");
     postfixTest("{{0.11, 0.12, 0.13}, {0.21, 0.22, 0.23}} * {{1011, 1012}, {1021, 1022}, {1031, 1032}}",
-                "0.11 0.12 0.13 0.21 0.22 0.23 matrix_2x3 1011 1012 1021 1022 1031 1032 matrix_3x2 *");
+                "{{0.11, 0.12, 0.13}, {0.21, 0.22, 0.23}} {{1011, 1012}, {1021, 1022}, {1031, 1032}} *");
 
 }
 
 TEST_CASE("Complex Postfix Tests", "[postfix]" ) {
 
     postfixTest("cos(sinh3)+5i-arcsin(x)+6integral(sin(x), 4, 5)^|4+0x3aF",
-                "3 sinh cos 5i + x arcsin - 6 + x sin 4 5 tuple_3 integral * 4 0x3af + ^|");
+                "3 sinh cos 5i + x arcsin - 6 (x sin, 4, 5) integral * + 4 0x3af + ^|");
 
 }
 
 TEST_CASE("Complex Postfix Tests 2", "[postfix]") {
     postfixTest("5 + x * 5 + mean ( 7 * 7 , 8 * ( 8 + x ) , 9 / 9 ) + { { sin ( 3 ) , - 2 } , { 3 ! , cos 4 } } + rand ( )",
-                "5 x 5 * + ( 7 7 * , 8 8 x + * , 9 9 / ) mean + { { 3 sin , 2 - } , { 3 ! , 4 cos } } + ( ) rand +");
+                "5 x 5 * + (7 7 *, 8 8 x + *, 9 9 /) mean + {{3 sin, -2}, {3 fact, 4 cos}} + () rand +");
 }

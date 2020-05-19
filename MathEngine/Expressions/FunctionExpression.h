@@ -25,3 +25,7 @@ class FunctionExpression: public Expression {
         EXPRESSION_OVERRIDES
 
 };
+
+// class VariableFunctionExpression: public FunctionExpression{
+
+// };

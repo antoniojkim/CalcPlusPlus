@@ -4,47 +4,43 @@
 #include <unordered_set>
 
 #include "../Scanner/scanner.h"
+#include "../Utils/FixedStack.h"
 #include "../Expressions/VariableExpressions/GreekLetters.h"
 #include "Preprocessor.h"
 
 using namespace std;
 using namespace Scanner;
 
-void addMissingRBrace(list<Token>& tokens){
-    int lbraceCount = 0;
-    for(auto& token : tokens){
-        switch(token.type){
-            case LBRACE:
-                ++lbraceCount;
-                break;
-            case RBRACE:
-                --lbraceCount;
-                break;
-            default:
-                break;
-        }
-    }
-    for (int i = 0; i < lbraceCount; ++i){
-        tokens.emplace_back(Token{typeStrings[RBRACE], RBRACE});
-    }
-}
-
-void addMissingRParens(list<Token>& tokens){
-    int lparenCount = 0;
-    for(auto& token : tokens){
-        switch(token.type){
+void fixBrackets(list<Token>& tokens){
+    FixedStack<Token*> brackets(tokens.size());
+    for(auto token = tokens.begin(); token != tokens.end(); ++token){
+        switch(token->type){
             case LPAREN:
-                ++lparenCount;
+            case LBRACE:
+            case LSQUARE:
+                brackets.push(&*token);
                 break;
             case RPAREN:
-                --lparenCount;
+                while(!brackets.empty() && brackets.peek()->type != LPAREN){
+                    tokens.insert(token++, *(brackets.pop()));
+                }
+                brackets.pop();
+                break;
+            case RBRACE:
+                while(!brackets.empty() && brackets.peek()->type != LBRACE){
+                    tokens.insert(token++, *(brackets.pop()));
+                }
+                brackets.pop();
+                break;
+            case RSQUARE:
+                while(!brackets.empty() && brackets.peek()->type != LSQUARE){
+                    tokens.insert(token++, *(brackets.pop()));
+                }
+                brackets.pop();
                 break;
             default:
                 break;
         }
-    }
-    for (int i = 0; i < lparenCount; ++i){
-        tokens.emplace_back(Token{typeStrings[RPAREN], RPAREN});
     }
 }
 
@@ -68,8 +64,7 @@ void implicitMultiplication(list<Token>& tokens){
 }
 
 void preprocess(list<Token>& tokens){
-    addMissingRBrace(tokens);
-    addMissingRParens(tokens);
+    fixBrackets(tokens);
     replaceGreekLetters(tokens);
     implicitMultiplication(tokens);
 }

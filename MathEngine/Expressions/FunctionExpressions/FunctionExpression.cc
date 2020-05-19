@@ -23,12 +23,25 @@ FunctionExpression::FunctionExpression(int functionIndex, expression arg):
 
 
 expression FunctionExpression::construct(const char * name, expression arg){
-    return shared_ptr<FunctionExpression>(new FunctionExpression(Function::indexOf(name), arg));
+    auto expr = FunctionExpression::construct(Function::indexOf(name), arg);
+    if (expr->invalid()){
+        cout << "Invalid Function: " << name << endl;
+        return InvalidExpression::construct(Exception("Invalid Function: ", name));
+    }
+    return expr;
 }
 expression FunctionExpression::construct(std::string& name, expression arg){
-    return shared_ptr<FunctionExpression>(new FunctionExpression(Function::indexOf(name), arg));
+    auto expr = FunctionExpression::construct(Function::indexOf(name), arg);
+    if (expr->invalid()){
+        cout << "Invalid Function: " << name << endl;
+        return InvalidExpression::construct(Exception("Invalid Function: ", name));
+    }
+    return expr;
 }
 expression FunctionExpression::construct(int functionIndex, expression arg){
+    if (functionIndex < 0){
+        return InvalidExpression::construct(Exception("Invalid Function"));
+    }
     return shared_ptr<FunctionExpression>(new FunctionExpression(functionIndex, arg));
 }
 

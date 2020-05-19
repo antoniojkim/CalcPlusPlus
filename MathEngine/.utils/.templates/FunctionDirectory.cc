@@ -67,9 +67,6 @@ ExprFunction get_function_expr(int functionIndex){
     if (functionIndex < 0 || functionIndex >= numFunctions){
         throw Exception("Invalid Function Index: ", functionIndex);
     }
-    if (Function::numArgs[functionIndex] != 1){
-        throw Exception("Function is not Unary: ", Function::names[functionIndex]);
-    }
     return exprFunctions[functionIndex];
 }
 

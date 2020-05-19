@@ -7,7 +7,7 @@ else
 	INCLUDES := -I../.includes/
 endif
 
-CXXFLAGS = -Ofast -g -std=c++17 -fPIC -Wall -MMD -Werror=vla ${INCLUDES}
+CXXFLAGS = -g -std=c++17 -fPIC -Wall -MMD -Werror=vla ${INCLUDES}
 TARGET_LIB = libMathEngine.a  # target lib
 
 UTILS = $(wildcard Utils/*.cc)

@@ -135,7 +135,9 @@ bool MatrixExpression::isComplex() const {
 }
 
 std::ostream& MatrixExpression::print(std::ostream& out) const {
-    out << "{";
+    if (numRows > 1){
+        out << "{";
+    }
     if (!mat.empty()){
         auto expr = mat.begin();
         for (size_t r = 0; r < numRows; ++r){
@@ -148,10 +150,15 @@ std::ostream& MatrixExpression::print(std::ostream& out) const {
             out << "}";
         }
     }
-    return out << "}";
+    if (numRows > 1){
+        out << "}";
+    }
+    return out;
 }
 std::ostream& MatrixExpression::postfix(std::ostream& out) const {
-    out << "{";
+    if (numRows > 1){
+        out << "{";
+    }
     if (!mat.empty()){
         auto expr = mat.begin();
         for (size_t r = 0; r < numRows; ++r){
@@ -164,7 +171,10 @@ std::ostream& MatrixExpression::postfix(std::ostream& out) const {
             out << "}";
         }
     }
-    return out << "}";
+    if (numRows > 1){
+        out << "}";
+    }
+    return out;
 }
 
 
