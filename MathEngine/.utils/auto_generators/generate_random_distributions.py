@@ -27,7 +27,6 @@ def generate_random_distributions(args=None):
                 expr_dir, "RandomDistributionExpressions", "RandomDistributions.h"
             ),
         ) as template:
-            template.verify(specs)
             template.replace(
                 numDistributions=len(distributionNames),
                 distributionNames=wrap((f'"{name}"' for name in distributionNames)),
@@ -44,7 +43,6 @@ def generate_random_distributions(args=None):
                 "RandomDistributionDirectory.cc",
             ),
         ) as template:
-            template.verify(specs)
             template.replace(
                 randomDistributions=wrap(
                     (f"rand_{name}" for name in distributionNames)

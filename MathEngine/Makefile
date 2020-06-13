@@ -1,5 +1,4 @@
 CXX := g++
-AR := ar
 
 ifeq ($(OS),Windows_NT)
 	INCLUDES := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
@@ -7,8 +6,8 @@ else
 	INCLUDES := -I../.includes/
 endif
 
-CXXFLAGS = -g -std=c++17 -fPIC -Wall -MMD -Werror=vla ${INCLUDES}
-TARGET_LIB = libMathEngine.a  # target lib
+CXXFLAGS = -g -std=c++17 -fPIC -shared -Wall -MMD -Werror=vla ${INCLUDES}
+TARGET_LIB = libMathEngine.so  # target lib
 
 UTILS = $(wildcard Utils/*.cc)
 MATHENGINE = $(wildcard MathEngine/*.cc)
@@ -21,7 +20,7 @@ OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${TARGET_LIB}: ${OBJECTS}
-	$(AR) rcs ${TARGET_LIB} ${OBJECTS}
+	$(CXX) $(CXXFLAGS) ${OBJECTS} -o ${TARGET_LIB} -L../.libs/ -lgsl -lgslcblas -lm
 
 
 # $(SOURCES:.cc=.d):%.d:%.cc

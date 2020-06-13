@@ -5,9 +5,9 @@ build: generate
 generate:
 	python3 -u MathEngine/.utils/auto_generate.py
 
-test: build cleantest
+test: build
 	.utils/build Tests
-	gdb -q -ex="run" --args Tests/run $(name)
+	.utils/test $(name)
 
 bp:  # breakpoints
 	vim Tests/.gdbinit
@@ -64,8 +64,8 @@ cleanui:
 cleanengine:
 	cd MathEngine && make -f Makefile clean
 cleantest:
-	rm -f Tests/Tests/EngineTest.o
-cleanall: cleanui cleanengine cleantest
+	rm Tests/Tests/EngineTest.o
+cleanall: cleanui cleanengine
 
 clean:
 	rm -f MathEngine/libMathEngine.a Tests/run Tests/Tests/EngineTest.o CalcUI/CalcUI

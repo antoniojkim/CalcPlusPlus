@@ -38,6 +38,13 @@ double HexExpression::value(const Variables& vars) const  { return double(num); 
 
 bool HexExpression::isComplex() const { return false; }
 
+bool HexExpression::isEqual(expression e, double precision) const {
+    if (e->hex()){
+        return num == e->hex()->num;
+    }
+    return false;
+}
+
 std::ostream& HexExpression::print(std::ostream& out) const {
     out << "0x" << std::hex << num;
     return out;

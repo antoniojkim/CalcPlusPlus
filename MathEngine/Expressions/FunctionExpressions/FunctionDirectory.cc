@@ -6,6 +6,9 @@
 #include "../../Utils/exceptions.h"
 #include "FunctionDirectory.h"
 #include "Functions.h"
+#include "DerivativeFunctions/BasicFunctions.h"
+#include "DerivativeFunctions/ExpLogFunctions.h"
+#include "DerivativeFunctions/TrigFunctions.h"
 #include "ExprFunctions/basic.h"
 #include "ExprFunctions/calculus.h"
 #include "ExprFunctions/fft.h"
@@ -18,9 +21,6 @@
 #include "ValueFunctions/SpecialFunctions.h"
 #include "ValueFunctions/Statistics.h"
 #include "ValueFunctions/TrigFunctions.h"
-#include "DerivativeFunctions/BasicFunctions.h"
-#include "DerivativeFunctions/ExpLogFunctions.h"
-#include "DerivativeFunctions/TrigFunctions.h"
 
 using namespace std;
 using Function::numFunctions;
@@ -38,7 +38,7 @@ const ValueFunction valueFunctions[numFunctions] = {
 	f_cot, f_coth, f_csc, f_csch, nullptr, nullptr, f_deg, f_deriv, nullptr, f_dfact,
 	nullptr, f_exp, f_exp_2, f_expm1, f_fact, f_fcmp, nullptr, nullptr, f_gamma, f_gammainc,
 	f_gammaincp, f_gammaincq, f_gammainv, f_gammastar, f_gcd, nullptr, f_hypot, nullptr,
-	f_integral, f_kurt, f_kurtosis, f_lag1, f_lcm, f_ldexp, f_ln, f_ln1p, f_ln_2, f_lnbeta,
+	f_integral, f_kurt, f_kurtosis, f_lag_1, f_lcm, f_ldexp, f_ln, f_ln1p, f_ln_2, f_lnbeta,
 	f_lnchoose, f_lndfact, f_lnfact, f_lngamma, f_lnpermute, f_lnpoch, f_log, f_log1p,
 	f_log_2, f_logn, f_max, f_mean, f_median, f_min, nullptr, nullptr, f_permute, f_poch,
 	f_pochrel, nullptr, nullptr, f_rad, f_rand, f_randint, f_randseed, f_randu, f_randup,

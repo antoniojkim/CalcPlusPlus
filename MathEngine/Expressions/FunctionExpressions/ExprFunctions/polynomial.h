@@ -64,7 +64,7 @@ expression fe_quadc(expression arg, const Variables& vars){
 
 expression fe_cubic(expression arg, const Variables& vars){
     TupleExpression* tuple = arg->tuple();
-    if (tuple && tuple->size() == 3){
+    if (tuple && tuple->size() == 4){
         auto arg = tuple->begin();
         double a = (*(arg++))->value(vars);
         double b = (*(arg++))->value(vars) / a;
@@ -86,7 +86,7 @@ expression fe_cubic(expression arg, const Variables& vars){
 
 expression fe_cubicc(expression arg, const Variables& vars){
     TupleExpression* tuple = arg->tuple();
-    if (tuple && tuple->size() == 3){
+    if (tuple && tuple->size() == 4){
         auto arg = tuple->begin();
         double a = (*(arg++))->value(vars);
         double b = (*(arg++))->value(vars) / a;

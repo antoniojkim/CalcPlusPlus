@@ -81,7 +81,7 @@ double f_kurtosis(expression arg, const Variables& vars){
 }
 ValueFunction f_kurt = f_kurtosis;
 
-double f_lag1(expression arg, const Variables& vars){
+double f_lag_1(expression arg, const Variables& vars){
     TupleExpression* tuple = arg->tuple();
     if(!tuple){
         return GSL_NAN;
@@ -89,7 +89,7 @@ double f_lag1(expression arg, const Variables& vars){
     auto array = tuple->array(vars);
     return gsl_stats_lag1_autocorrelation(array.begin(), 1, array.size());
 }
-ValueFunction f_autocorr = f_lag1;
+ValueFunction f_autocorr = f_lag_1;
 
 double f_max(expression arg, const Variables& vars){
     TupleExpression* tuple = arg->tuple();

@@ -66,6 +66,10 @@ operators:
         precedence: 9
         singleOperator:
         rightAssociative: True
+    APOSTROPHE:
+        lexeme: "'"
+        precedence: 9
+        singleOperator:
     LT_LT:
         lexeme: "<<"
         precedence: 10
@@ -141,7 +145,6 @@ tokens:
     POUND: "#"
     DOLLAR: "$"
     QUOTE: "\\\""
-    APOSTROPHE: "\\'"
     BACKSLASH: "\\\\"
     BACKTICK: "`"
     UNDERSCORE: "_"

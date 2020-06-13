@@ -6,21 +6,7 @@
 #include "../../Utils/exceptions.h"
 #include "FunctionDirectory.h"
 #include "Functions.h"
-#include "ExprFunctions/basic.h"
-#include "ExprFunctions/calculus.h"
-#include "ExprFunctions/fft.h"
-#include "ExprFunctions/linalg.h"
-#include "ExprFunctions/polynomial.h"
-#include "ValueFunctions/BasicFunctions.h"
-#include "ValueFunctions/Calculus.h"
-#include "ValueFunctions/ExpLogFunctions.h"
-#include "ValueFunctions/Random.h"
-#include "ValueFunctions/SpecialFunctions.h"
-#include "ValueFunctions/Statistics.h"
-#include "ValueFunctions/TrigFunctions.h"
-#include "DerivativeFunctions/BasicFunctions.h"
-#include "DerivativeFunctions/ExpLogFunctions.h"
-#include "DerivativeFunctions/TrigFunctions.h"
+{includes}
 
 using namespace std;
 using Function::numFunctions;

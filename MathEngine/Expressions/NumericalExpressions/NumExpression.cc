@@ -7,6 +7,7 @@
 #include "../NumericalExpression.h"
 #include "../../Utils/exceptions.h"
 #include "../../Utils/fraction.h"
+#include "../../Utils/Numeric.h"
 
 using namespace std;
 
@@ -64,6 +65,13 @@ gsl_complex NumExpression::complex() const { return gsl_complex{real, imag}; }
 gsl_complex NumExpression::complex(const Variables& vars) const { return gsl_complex{real, imag}; }
 
 bool NumExpression::isComplex() const { return imag != 0; }
+
+bool NumExpression::isEqual(expression e, double precision) const {
+    if (e->num()){
+        return compare(complex(), e->complex(), precision) == 0;
+    }
+    return false;
+}
 
 std::ostream& NumExpression::print(std::ostream& out) const {
     if (!evaluable()){

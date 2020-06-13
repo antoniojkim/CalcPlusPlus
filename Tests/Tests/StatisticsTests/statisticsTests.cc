@@ -5,7 +5,7 @@
 #include "absdevTests.h"
 #include "skewTests.h"
 #include "kurtosisTests.h"
-#include "lag1Tests.h"
+#include "lag_1Tests.h"
 #include "maxTests.h"
 #include "minTests.h"
 #include "argmaxTests.h"

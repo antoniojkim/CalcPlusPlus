@@ -177,7 +177,7 @@ functions:
         nargs: -1
     kurtosis:
         nargs: -1
-    lag1:
+    lag_1:
         nargs: -1
     autocorr:
         nargs: -1

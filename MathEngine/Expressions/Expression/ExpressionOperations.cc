@@ -1,6 +1,8 @@
 
 #include <utility>
 
+#include <gsl/gsl_complex_math.h>
+
 #include "../ExpressionFunctions.h"
 #include "../ExpressionOperations.h"
 #include "../FunctionExpression.h"
@@ -41,7 +43,7 @@ expression operator+(const expression expr1, const gsl_complex& expr2) {
 
 expression operator-(const expression expr){
     if (expr->evaluable()){
-        return NumExpression::construct(-expr->value());
+        return NumExpression::construct(gsl_complex_negative(expr->complex()));
     }
     return FunctionExpression::construct("neg", expr);
 }
@@ -186,4 +188,11 @@ expression operator^(const gsl_complex& expr1, const expression expr2) {
 }
 expression operator^(const expression expr1, const gsl_complex& expr2) {
     return OperatorExpression::construct(CARET, expr1, NumExpression::construct(expr2));
+}
+
+bool operator==(const expression e1, const expression e2){
+    return e1->isEqual(e2);
+}
+bool operator!=(const expression e1, const expression e2){
+    return !e1->isEqual(e2);
 }

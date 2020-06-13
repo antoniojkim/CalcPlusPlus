@@ -50,6 +50,13 @@ double BaseUnitExpression::value(const Variables& vars) const { return val; }
 
 bool BaseUnitExpression::isComplex() const { return false; }
 
+bool BaseUnitExpression::isEqual(expression e, double precision) const {
+    if (e->unit()){
+        return type == e->unit()->type && val == e->unit()->val;
+    }
+    return false;
+}
+
 std::ostream& BaseUnitExpression::print(std::ostream& out) const {
     return out << abbr;
 }

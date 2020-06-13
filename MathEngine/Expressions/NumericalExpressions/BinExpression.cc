@@ -38,6 +38,13 @@ double BinExpression::value(const Variables& vars) const { return double(num); }
 
 bool BinExpression::isComplex() const { return false; }
 
+bool BinExpression::isEqual(expression e, double precision) const {
+    if (e->bin()){
+        return num == e->bin()->num;
+    }
+    return false;
+}
+
 std::ostream& BinExpression::print(std::ostream& out) const {
     unsigned long long n = num;
     char buffer[128];

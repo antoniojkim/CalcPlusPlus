@@ -171,7 +171,7 @@ static bool startsWithNum(const char* str, size_t size, int& index){
 static bool startsWithID(const char* str, size_t size, int& index){
     if (size > 0 && isalpha(str[0])){
         for (unsigned int i = 1; i < size; ++i){
-            if (!(isalpha(str[i]) || str[i] == '_' || (isdigit(str[i]) && (isdigit(str[i-1]) || str[i-1] == '_')))){
+            if (!(isalpha(str[i]) || str[i] == '_' || isdigit(str[i]))){
                 index = i;
                 return true;
             }

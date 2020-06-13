@@ -20,15 +20,15 @@ using namespace Scanner;
 namespace Lexeme {
 	constexpr int numLexemes = 48;
 	constexpr const char* lexemes[numLexemes] = {
-		"!", "!!", "!=", "#", "$", "%", "&", "&&", "(", ")", "*", "**", "+", ",", "-", "->",
-		".", "/", "//", ":", ":=", ";", "<", "<-", "<<", "<=", "=", "==", ">", ">=", ">>", "?",
-		"C", "P", "[", "\"", "\'", "\\", "]", "^", "^|", "_", "`", "{", "|", "||", "}", "~"
+		"!", "!!", "!=", "#", "$", "%", "&", "&&", "'", "(", ")", "*", "**", "+", ",", "-",
+		"->", ".", "/", "//", ":", ":=", ";", "<", "<-", "<<", "<=", "=", "==", ">", ">=", ">>",
+		"?", "C", "P", "[", "\"", "\\", "]", "^", "^|", "_", "`", "{", "|", "||", "}", "~"
 	};
 	constexpr const Type types[numLexemes] = {
-		EXCL, EXCL_EXCL, NOT_EQUALS, POUND, DOLLAR, PCT, AMP, AMP_AMP, LPAREN, RPAREN, STAR,
-		STAR_STAR, PLUS, COMMA, MINUS, R_ARROW, DOT, SLASH, SLASH_SLASH, COLON, COLON_EQUALS,
-		SEMICOLON, LT, L_ARROW, LT_LT, LT_EQ, EQUALS, EQUALS_EQUALS, GT, GT_EQ, GT_GT, QUESTION,
-		CHOOSE, PERMUTE, LSQUARE, QUOTE, APOSTROPHE, BACKSLASH, RSQUARE, CARET, CARET_PIPE,
+		EXCL, EXCL_EXCL, NOT_EQUALS, POUND, DOLLAR, PCT, AMP, AMP_AMP, APOSTROPHE, LPAREN,
+		RPAREN, STAR, STAR_STAR, PLUS, COMMA, MINUS, R_ARROW, DOT, SLASH, SLASH_SLASH, COLON,
+		COLON_EQUALS, SEMICOLON, LT, L_ARROW, LT_LT, LT_EQ, EQUALS, EQUALS_EQUALS, GT, GT_EQ,
+		GT_GT, QUESTION, CHOOSE, PERMUTE, LSQUARE, QUOTE, BACKSLASH, RSQUARE, CARET, CARET_PIPE,
 		UNDERSCORE, BACKTICK, LBRACE, PIPE, PIPE_PIPE, RBRACE, TILDE
 	};
 	constexpr int longestLexeme = 2;
@@ -177,7 +177,7 @@ static bool startsWithNum(const char* str, size_t size, int& index){
 static bool startsWithID(const char* str, size_t size, int& index){
     if (size > 0 && isalpha(str[0])){
         for (unsigned int i = 1; i < size; ++i){
-            if (!(isalpha(str[i]) || str[i] == '_' || (isdigit(str[i]) && (isdigit(str[i-1]) || str[i-1] == '_')))){
+            if (!(isalpha(str[i]) || str[i] == '_' || isdigit(str[i]))){
                 index = i;
                 return true;
             }

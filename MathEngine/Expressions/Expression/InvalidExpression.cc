@@ -30,6 +30,8 @@ double InvalidExpression::value(const Variables& vars) const { return GSL_NAN; }
 
 bool InvalidExpression::isComplex() const { return false; }
 
+bool InvalidExpression::isEqual(expression e, double precision) const { return false; }
+
 std::ostream& InvalidExpression::print(std::ostream& out) const {
     return out << message;
 }

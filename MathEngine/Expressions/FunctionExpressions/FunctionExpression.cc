@@ -42,6 +42,9 @@ expression FunctionExpression::construct(int functionIndex, expression arg){
     if (functionIndex < 0){
         return InvalidExpression::construct(Exception("Invalid Function"));
     }
+    if (functionIndex == Function::indexOf("neg")){
+        return -arg;
+    }
     return shared_ptr<FunctionExpression>(new FunctionExpression(functionIndex, arg));
 }
 
@@ -76,6 +79,10 @@ double FunctionExpression::value(const Variables& vars) const {
     if (f){
         return f(arg, vars);
     }
+    auto fe = get_function_expr(functionIndex);
+    if (fe){
+        return fe(arg, vars)->value();
+    }
     return GSL_NAN;
 }
 
@@ -83,9 +90,22 @@ bool FunctionExpression::isComplex() const {
     return arg->isComplex();
 }
 
+bool FunctionExpression::isEqual(expression e, double precision) const {
+    if (e->functionExpr()){
+        auto f = e->functionExpr();
+        if (f->functionIndex == this->functionIndex){
+            return arg->isEqual(f->arg, precision);
+        }
+    }
+    return false;
+}
+
 std::ostream& FunctionExpression::print(std::ostream& out) const {
     out << Function::names[functionIndex];
-    return arg->print(out);
+    if (arg->tuple()){
+        return arg->print(out);
+    }
+    return arg->print(out << "(") << ")";
 }
 std::ostream& FunctionExpression::postfix(std::ostream& out) const {
     arg->postfix(out) << " ";

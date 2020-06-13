@@ -6,15 +6,7 @@
 #include "../../Utils/exceptions.h"
 #include "Operators.h"
 #include "OperatorDirectory.h"
-#include "OperatorDerivatives/OperatorDerivatives.h"
-#include "Operators/BinaryOperators.h"
-#include "Operators/UnaryOperators.h"
-#include "OperatorExpressions/Addition.h"
-#include "OperatorExpressions/Division.h"
-#include "OperatorExpressions/Exponent.h"
-#include "OperatorExpressions/Multiplication.h"
-#include "OperatorExpressions/RightArrow.h"
-#include "OperatorExpressions/Subtraction.h"
+{includes}
 
 using namespace std;
 using namespace Scanner;

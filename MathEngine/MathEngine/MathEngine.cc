@@ -6,7 +6,6 @@
 #include "../Expressions/VariableExpressions/Constants.h"
 #include "../Expressions/VariableExpressions/GreekLetters.h"
 #include "../MathEngine.h"
-#include "../Parser/recursiveDescent.h"
 #include "../Parser/modifiedShuntingYard.h"
 #include "../Parser/shuntingYard.h"
 #include "../Utils/exceptions.h"

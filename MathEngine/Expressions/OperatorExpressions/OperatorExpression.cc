@@ -66,6 +66,26 @@ double OperatorExpression::value(const Variables& vars) const {
 bool OperatorExpression::evaluable() const { return lhs->evaluable() && rhs->evaluable(); }
 bool OperatorExpression::isComplex() const { return lhs->isComplex() || rhs->isComplex(); }
 
+bool OperatorExpression::isEqual(expression e, double precision) const {
+    if (e->operatorExpr()){
+        auto o = e->operatorExpr();
+        if (o->operatorIndex == this->operatorIndex){
+            if (isSingleOperator((Scanner::Type) operatorIndex)){
+                return lhs->isEqual(o->lhs, precision);
+            }
+            else{
+                if (lhs->isEqual(o->lhs, precision)){
+                    return rhs->isEqual(o->rhs, precision);
+                }
+                else if (lhs->isEqual(o->rhs, precision)){
+                    return rhs->isEqual(o->lhs, precision);
+                }
+            }
+        }
+    }
+    return false;
+}
+
 std::ostream& OperatorExpression::print(std::ostream& out) const {
     if (isSingleOperator((Scanner::Type) operatorIndex)){
         if (!isRightAssociative((Scanner::Type) operatorIndex)){

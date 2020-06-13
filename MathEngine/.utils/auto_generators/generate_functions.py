@@ -24,7 +24,6 @@ def generate_functions(args=None):
         with Template(
             "Functions.h", os.path.join(expr_dir, "FunctionExpressions", "Functions.h"),
         ) as template:
-            template.verify(specs)
             template.replace(
                 numFunctions=len(functions),
                 functionNames=wrap(
@@ -54,8 +53,22 @@ def generate_functions(args=None):
             "FunctionDirectory.cc",
             os.path.join(expr_dir, "FunctionExpressions", "FunctionDirectory.cc"),
         ) as template:
-            template.verify(specs)
             template.replace(
+                includes=os.linesep.join(
+                    sorted(
+                        f'#include "{os.path.join(dir, header)}"'
+                        for dir in os.listdir(
+                            os.path.join(expr_dir, "FunctionExpressions")
+                        )
+                        if os.path.isdir(
+                            os.path.join(expr_dir, "FunctionExpressions", dir)
+                        )
+                        for header in os.listdir(
+                            os.path.join(expr_dir, "FunctionExpressions", dir)
+                        )
+                        if header.endswith(".h")
+                    )
+                ),
                 valueFunctions=wrap(
                     (
                         f"f_{name}" if not hasExpression(name) else "nullptr"

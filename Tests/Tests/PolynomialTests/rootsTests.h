@@ -23,7 +23,7 @@ TEST_CASE("Quadratic Roots Function Evaluation Tests", "[quad]") {
     }
 
     SECTION("`quad` Test 5"){
-        requireExprIsEqual("quad(0.3844, -9.8208, 62.7264)", "(12.7741935484)");
+        requireExprIsEqual("quad(0.3844, -9.8208, 62.7264)", "(12.7741935483871,)");
     }
 
     SECTION("`quad` Test 6"){
@@ -159,7 +159,7 @@ TEST_CASE("Complex Cubic Root Function Evaluation Test", "[cubicc]"){
     }
 
     SECTION("`cubicc` Test 6"){
-        requireExprIsEqual("cubicc(9.66, -1.63, -3.49, 1.76)", "(-0.7069170893, 0.4378270747-0.2569799433i, 0.4378270747, 0.2569799433i)");
+        requireExprIsEqual("cubicc(9.66, -1.63, -3.49, 1.76)", "(-0.7069170893, 0.4378270747-0.2569799433i, 0.4378270747+0.2569799433i)");
     }
 
     SECTION("`cubicc` Test 7"){

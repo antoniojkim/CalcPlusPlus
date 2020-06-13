@@ -16,7 +16,6 @@ def generate_tokens(args=None):
         with Template(
             "scanner.h", os.path.join(file_dir, "..", "..", "Scanner", "scanner.h"),
         ) as template:
-            template.verify(specs)
             template.replace(
                 types=wrap(keys, indent="\t\t"),
                 numTokens=len(keys),
@@ -26,7 +25,6 @@ def generate_tokens(args=None):
         with Template(
             "scanner.cc", os.path.join(file_dir, "..", "..", "Scanner", "scanner.cc"),
         ) as template:
-            template.verify(specs)
             lexemes = [
                 (operator, vals["lexeme"])
                 for operator, vals in specs["operators"].items()
@@ -64,7 +62,6 @@ def generate_tokens(args=None):
         with Template(
             "Operators.h", os.path.join(expr_dir, "OperatorExpressions", "Operators.h"),
         ) as template:
-            template.verify(specs)
             template.replace(
                 operators=wrap(map('"{}"'.format, operatorLexemes)),
                 precedences=wrap(
@@ -92,8 +89,22 @@ def generate_tokens(args=None):
             "OperatorDirectory.cc",
             os.path.join(expr_dir, "OperatorExpressions", "OperatorDirectory.cc",),
         ) as template:
-            template.verify(specs)
             template.replace(
+                includes=os.linesep.join(
+                    sorted(
+                        f'#include "{os.path.join(dir, header)}"'
+                        for dir in os.listdir(
+                            os.path.join(expr_dir, "OperatorExpressions")
+                        )
+                        if os.path.isdir(
+                            os.path.join(expr_dir, "OperatorExpressions", dir)
+                        )
+                        for header in os.listdir(
+                            os.path.join(expr_dir, "OperatorExpressions", dir)
+                        )
+                        if header.endswith(".h")
+                    )
+                ),
                 unaryOperators=wrap(
                     (
                         f"f_{name}" if lexeme != "" and singleOperator else "nullptr"
@@ -151,7 +162,6 @@ def generate_tokens(args=None):
             "Constants.h",
             os.path.join(expr_dir, "VariableExpressions", "Constants.h",),
         ) as template:
-            template.verify(specs)
             template.replace(
                 numConstants=len(constants),
                 constants=wrap((f'"{name}"' for name, val in constants)),

@@ -36,6 +36,13 @@ double ConvertedUnitExpression::value(const Variables& vars) const { return val;
 
 bool ConvertedUnitExpression::isComplex() const { return false; }
 
+bool ConvertedUnitExpression::isEqual(expression e, double precision) const {
+    // if (e->variable()){
+    //     return name == e->variable()->name && num == e->variable()->num;
+    // }
+    return false;
+}
+
 std::ostream& ConvertedUnitExpression::print(std::ostream& out) const {
     return out << val << abbr;
 }

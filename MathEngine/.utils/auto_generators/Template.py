@@ -56,13 +56,6 @@ class Template:
         self.template_path = os.path.join(self.template_dir, template_file)
         self.write_path = write_path
 
-    def verify(self, specs):
-        if not (
-            is_newer(specs.spec_path, self.write_path)
-            or is_newer(self.template_path, self.write_path)
-        ):
-            raise Exception("Nothing to update")
-
     def __enter__(self):
         with open(self.template_path) as file:
             self.template = file.read()
@@ -71,8 +64,12 @@ class Template:
 
     def __exit__(self, type, value, traceback):
         if type is None and value is None and traceback is None:
-            with open(self.write_path, "w") as file:
-                file.write(self.template)
+            with open(self.write_path) as file:
+                old_template = file.read()
+
+            if old_template != self.template:
+                with open(self.write_path, "w") as file:
+                    file.write(self.template)
 
         return True
 

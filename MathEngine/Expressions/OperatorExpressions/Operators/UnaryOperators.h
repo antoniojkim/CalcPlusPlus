@@ -25,3 +25,8 @@ double f_EXCL_EXCL(double x){
     Variables vars;
     return get_function("dfact")(NumExpression::construct(x), vars);
 }
+
+double f_APOSTROPHE(double x){
+    Variables vars;
+    return get_function("diff")(NumExpression::construct(x), vars);
+}

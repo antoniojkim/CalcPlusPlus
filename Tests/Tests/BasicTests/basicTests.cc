@@ -39,7 +39,8 @@ TEST_CASE("Basic Function Evaluation Tests", "[function]" ) {
         requireIsEqual("sin(cos(3))", -0.83602186153773);
     }
     SECTION("Test Bracketless Expression"){
-        requireIsEqual("sincos3", -0.83602186153773);
+        requireIsEqual("sin cos 3", -0.83602186153773);
+        requireIsEqual("sin cos3", -0.83602186153773);
     }
 }
 
@@ -62,9 +63,9 @@ TEST_CASE("Basic Constants Tests", "[constants]"){
     requireIsEqual("π", M_PI);
     requireIsEqual("pi/2", M_PI_2);
     requireIsEqual("sqrt(pi)", M_SQRTPI);
-    requireIsEqual("sqrtpi", M_SQRTPI);
-    requireIsEqual("sqrtπ", M_SQRTPI);
-    requireIsEqual("sqrte", sqrt(M_E));
+    requireIsEqual("sqrt pi", M_SQRTPI);
+    requireIsEqual("sqrt π", M_SQRTPI);
+    requireIsEqual("sqrt e", sqrt(M_E));
     requireIsEqual("ϕ", 1.6180339887498948482);
     requireIsEqual("vphi", 1.6180339887498948482);
     requireIsEqual("γ", M_EULER);

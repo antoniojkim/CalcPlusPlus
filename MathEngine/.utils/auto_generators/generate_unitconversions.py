@@ -19,7 +19,6 @@ def generate_unitconversions(args=None):
         with Template(
             "Units.h", os.path.join(expr_dir, "UnitConversionExpression", "Units.h"),
         ) as template:
-            template.verify(specs)
             for category, specs in unitconversions["categories"].items():
                 base = specs["base"]
                 abbr = specs["baseabbr"]

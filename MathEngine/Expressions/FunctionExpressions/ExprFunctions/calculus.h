@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <iostream>
 #include <cmath>
 #include <gsl/gsl_deriv.h>
 #include <gsl/gsl_errno.h>
@@ -22,6 +23,7 @@ expression fe_diff(expression arg, const Variables& vars){
             auto var = tuple->back()->variable()->getName();
             return tuple->front()->derivative(var);
         }
+        return InvalidExpression::construct(Exception("Invalid number of arguments for differentiation"));
     }
-    return InvalidExpression::construct(Exception("Invalid number of arguments for differentiation"));
+    return arg->derivative("x");
 }

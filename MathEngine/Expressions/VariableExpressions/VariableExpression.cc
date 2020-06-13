@@ -13,17 +13,22 @@
 
 using namespace std;
 
-VariableExpression::VariableExpression(const std::string& name): name{name}, num{GSL_NAN} {}
-VariableExpression::VariableExpression(const std::string& name, double num): name{name}, num{num} {}
+VariableExpression::VariableExpression(const std::string& name, expression var): name{name}, var{var} {}
 
 expression VariableExpression::construct(const std::string& name){
     return shared_ptr<VariableExpression>(new VariableExpression(name));
 }
 expression VariableExpression::construct(const std::string& name, double num){
-    return shared_ptr<VariableExpression>(new VariableExpression(name, num));
+    return shared_ptr<VariableExpression>(new VariableExpression(name, NumExpression::construct(num)));
+}
+expression VariableExpression::construct(const std::string& name, expression var){
+    return shared_ptr<VariableExpression>(new VariableExpression(name, var));
 }
 
 expression VariableExpression::simplify() {
+    if (var){
+        return VariableExpression::construct(name, var->simplify());
+    }
     return copy();
 }
 expression VariableExpression::derivative(const std::string& var) {
@@ -37,7 +42,7 @@ expression VariableExpression::integrate(const std::string& var) {
 }
 
 bool VariableExpression::evaluable() const {
-    return !gsl_isnan(num) || getConstantIndex(name) != -1;
+    return (var && var->evaluable()) || getConstantIndex(name) != -1;
 }
 
 expression VariableExpression::evaluate(const Variables& vars) {
@@ -50,7 +55,7 @@ expression VariableExpression::evaluate(const Variables& vars) {
         }
         return copy();
     }
-    return vars.at(name)->evaluate();
+    return vars.at(name)->evaluate(vars);
 }
 
 double VariableExpression::value(const Variables& vars) const {
@@ -60,20 +65,27 @@ double VariableExpression::value(const Variables& vars) const {
     if (getConstantIndex(name) != -1){
         return getConstantValue(name);
     }
-    return num;
+    return var->value(vars);
 }
 
 bool VariableExpression::isComplex() const { return false; }
 
+bool VariableExpression::isEqual(expression e, double precision) const {
+    if (e->variable()){
+        return name == e->variable()->name && var->isEqual(e->variable()->var);
+    }
+    return false;
+}
+
 std::ostream& VariableExpression::print(std::ostream& out) const {
-    if (gsl_isnan(num)){
+    if (!var){
         return out << name;
     }
     else if (getConstantIndex(name) != -1){
         return out << std::setprecision(16) << getConstantValue(name);
     }
     else{
-        return out << std::setprecision(16) << num;
+        return out << name << " = " << var;
     }
 }
 std::ostream& VariableExpression::postfix(std::ostream& out) const {

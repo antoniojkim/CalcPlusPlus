@@ -7,11 +7,11 @@
 #include <gsl/gsl_complex.h>
 
 #include "Expression.h"
-#include "../Utils/DynamicArray.h"
+#include "../Utils/HeapArray.h"
 
 class TupleExpression: public Expression {
 
-    std::list<expression> _data;
+    std::list<expression> data;
 
     TupleExpression();
     TupleExpression(std::list<expression>&& tuple);
@@ -29,16 +29,14 @@ class TupleExpression: public Expression {
 
         inline TupleExpression* tuple() override { return this; }
 
-        inline const std::list<expression>& data() const { return _data; }
+        decltype(std::begin(data)) begin() { return std::begin(data); }
+        decltype(std::end(data)) end() { return std::end(data); }
+        size_t size() const { return data.size(); }
 
-        decltype(std::begin(_data)) begin() { return std::begin(_data); }
-        decltype(std::end(_data)) end() { return std::end(_data); }
-        size_t size() const { return _data.size(); }
+        expression front(){ return data.front(); }
+        expression back(){ return data.back(); }
 
-        expression front(){ return _data.front(); }
-        expression back(){ return _data.back(); }
-
-        DynamicArray<double> array(const Variables& vars);
+        HeapArray<double> array(const Variables& vars);
         void array(double* a, size_t size, const Variables& vars);
 
         EXPRESSION_OVERRIDES

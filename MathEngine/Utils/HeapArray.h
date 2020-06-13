@@ -4,12 +4,12 @@
 #include <memory>
 
 template<typename T>
-class DynamicArray { // Fixed Size Stack
+class HeapArray { // Fixed Size Heap allocated array.
     const int capacity;
     std::unique_ptr<T[]> data;
 
     public:
-        DynamicArray(const int size): capacity{size}, data{new T[size]} {}
+        HeapArray(const int size): capacity{size}, data{new T[size]} {}
 
         T& operator[](const int index){
             if (index < 0){
@@ -20,7 +20,7 @@ class DynamicArray { // Fixed Size Stack
             else if (index < capacity){
                 return data[index];
             }
-            throw std::out_of_range("DynamicArray::operator[] out of range");
+            throw std::out_of_range("HeapArray::operator[] out of range");
         }
         const T& operator[](const int index) const {
             if (index < 0){
@@ -31,7 +31,7 @@ class DynamicArray { // Fixed Size Stack
             else if (index < capacity){
                 return data[index];
             }
-            throw std::out_of_range("DynamicArray::operator[] out of range");
+            throw std::out_of_range("HeapArray::operator[] out of range");
         }
 
         size_t size() const { return capacity; }

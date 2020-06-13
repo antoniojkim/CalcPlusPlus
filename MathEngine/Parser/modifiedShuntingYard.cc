@@ -11,11 +11,12 @@
 #include "../Expressions/OperatorExpressions/Operators.h"
 #include "../Expressions/TupleExpression.h"
 #include "../Expressions/VariableExpression.h"
-#include "../Expressions/ExpressionOperations.h"
 #include "../Scanner/scanner.h"
 #include "../Utils/exceptions.h"
 #include "../Utils/FixedStack.h"
 #include "modifiedShuntingYard.h"
+
+// #define PRINT_POSTFIX
 
 using namespace std;
 using namespace Scanner;
@@ -28,9 +29,12 @@ ostream& operator<<(ostream& out, FixedStack<expression>& fs){
     }
     return out;
 }
-ostream& operator<<(ostream& out, list<expression>& fs){
-    for (auto expr : fs){
-        cout << "    "; expr->print(cout) << endl;
+ostream& operator<<(ostream& out, list<FixedStack<expression>>& fs){
+    for (auto& stack : fs){
+        cout << "---------------------------" << endl;
+        for (auto expr : stack){
+            cout << "    "; expr->print(cout) << endl;
+        }
     }
     return out;
 }
@@ -42,7 +46,7 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
     expressionStacks.emplace_back(FixedStack<expression>(stackSize));
     list<list<expression>> expressionLists;
 
-    for (int i = 0; i < outputStack.size(); ++i, --stackSize){
+    for (unsigned int i = 0; i < outputStack.size(); ++i, --stackSize){
         auto token = outputStack[i];
         switch(token->type){
             case NUM:
@@ -70,6 +74,7 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
             case COMMA:
                 expressionLists.back().emplace_back(expressionStacks.back().pop());
                 if (!expressionStacks.back().empty()){
+                    cout << "Top Expression Stack: " << expressionStacks.back() << endl;
                     return InvalidExpression::construct(Exception("Top Expression Stack left with more than one expression: ','"));
                 }
                 continue;
@@ -92,7 +97,7 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 expressionStacks.pop_back();
 
                 list<expression> matrixElements;
-                int numCols = 0;
+                size_t numCols = 0;
                 for (auto expr : expressionLists.back()){
                     auto matrix = expr->matrix();
                     if (matrix){
@@ -138,24 +143,20 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 else if (token->type == EXCL_EXCL){
                     expressionStacks.back().push(FunctionExpression::construct("dfact", expressionStacks.back().pop()));
                 }
+                else if (token->type == APOSTROPHE){
+                    expressionStacks.back().push(FunctionExpression::construct("diff", expressionStacks.back().pop()));
+                }
                 else {
                     return InvalidExpression::construct(Exception("Unsupported Unary Operator: ", token->lexeme));
                 }
             }
             else{
                 if (expressionStacks.back().size() < 2){
-                    if (token->type == MINUS){
-                        expressionStacks.back().push(-(expressionStacks.back().pop()));
-                    }
-                    else{
-                        return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Binary Operator: ", token->lexeme));
-                    }
+                    return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Binary Operator: ", token->lexeme));
                 }
-                else{
-                    expression rhs = expressionStacks.back().pop();
-                    expression lhs = expressionStacks.back().pop();
-                    expressionStacks.back().push(OperatorExpression::construct(token->type, lhs, rhs));
-                }
+                expression rhs = expressionStacks.back().pop();
+                expression lhs = expressionStacks.back().pop();
+                expressionStacks.back().push(OperatorExpression::construct(token->type, lhs, rhs));
             }
         }
         else{
@@ -167,7 +168,7 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
         return expressionStacks.back().pop();
     }
 
-    // cout << "Expression Stack: " << endl << expressionStack << endl;
+    // cout << "Expression Stack: " << expressionStacks.size() << endl << expressionStacks << endl;
 
     return InvalidExpression::construct(Exception("Expression Stack left with more than one expression"));
 }
@@ -285,7 +286,11 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) {
         }
 
         if (isOperator(token.type)){
-            if (!operatorStack.empty()){
+            if (token.type == MINUS && (current == tokens.begin() || !isPreImplicit(std::prev(current)->type))){
+                token.lexeme = "neg";
+                token.type = FUNCTION;
+            }
+            else if (!operatorStack.empty()){
                 auto type = operatorStack.peek()->type;
                 while((type == FUNCTION
                     || (isOperator(type) && getPrecedence(type) > getPrecedence(token.type))
@@ -311,13 +316,13 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) {
         outputStacks.back().push(operatorStack.pop());
     }
 
-#ifdef DEBUG
+#ifdef PRINT_POSTFIX
     cout << "Postfix:  ";
     for (auto t : outputStacks.back()){
         cout << t->lexeme << " ";
     }
     cout << endl;
-#endif
+#endif  // PRINT_POSTFIX
 
     return postfix_to_expression(outputStacks.back());
 }

@@ -90,7 +90,13 @@ size_t MatrixExpression::rows() const { return numRows; }
 size_t MatrixExpression::cols() const { return numCols; }
 
 
-expression MatrixExpression::simplify() { return copy(); }
+expression MatrixExpression::simplify() {
+    list<expression> simplified;
+    for (auto& expr : mat){
+        simplified.emplace_back(expr->simplify());
+    }
+    return MatrixExpression::construct(std::move(simplified), numRows, numCols);
+ }
 expression MatrixExpression::derivative(const std::string& var) {
     list<expression> derivatives;
     for (auto& expr : mat){
@@ -128,6 +134,27 @@ double MatrixExpression::value(const Variables& vars) const { return GSL_NAN; }
 bool MatrixExpression::isComplex() const {
     for(auto& expr: mat){
         if (expr->isComplex()){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool MatrixExpression::isEqual(expression e, double precision) const {
+    if (e->matrix()){
+        auto m = e->matrix();
+        if (m->numRows == this->numRows && m->numCols == this->numCols){
+            auto b1 = mat.begin();
+            auto e1 = mat.end();
+            auto b2 = m->mat.begin();
+            auto e2 = m->mat.end();
+            while (b1 != e1 && b2 != e2){
+                if (!(*b1)->isEqual(*b2, precision)){
+                    return false;
+                }
+                ++b1;
+                ++b2;
+            }
             return true;
         }
     }

@@ -22,8 +22,8 @@ gsl_dir=$include_dir/$(ls | grep "gsl-")
 cd $gsl_dir
 ./configure && make
 ln -s $gsl_dir/gsl $include_dir/gsl
-ln -s $gsl_dir/.libs/libgsl.a $libs_dir/libgsl.a
-ln -s $gsl_dir/cblas/.libs/libgslcblas.a $libs_dir/libgslcblas.a
+ln -s $gsl_dir/.libs/libgsl.so.25.0.0 $libs_dir/libgsl.so.25
+ln -s $gsl_dir/cblas/.libs/libgslcblas.so.0.0.0 $libs_dir/libgslcblas.so.0
 
 # Install QT5
 sudo apt-get install qt5-default

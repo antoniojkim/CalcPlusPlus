@@ -11,6 +11,18 @@
 using namespace std;
 using namespace Scanner;
 
+Type correspondingBracket(Type bracket){
+    switch(bracket){
+        case LPAREN: return RPAREN;
+        case RPAREN: return LPAREN;
+        case LBRACE: return RBRACE;
+        case RBRACE: return LBRACE;
+        case LSQUARE: return RSQUARE;
+        case RSQUARE: return LSQUARE;
+        default: throw;
+    }
+}
+
 void fixBrackets(list<Token>& tokens){
     FixedStack<Token*> brackets(tokens.size());
     for(auto token = tokens.begin(); token != tokens.end(); ++token){
@@ -21,26 +33,21 @@ void fixBrackets(list<Token>& tokens){
                 brackets.push(&*token);
                 break;
             case RPAREN:
-                while(!brackets.empty() && brackets.peek()->type != LPAREN){
-                    tokens.insert(token++, *(brackets.pop()));
-                }
-                brackets.pop();
-                break;
             case RBRACE:
-                while(!brackets.empty() && brackets.peek()->type != LBRACE){
+            case RSQUARE: {
+                Type L = correspondingBracket(token->type);
+                while(!brackets.empty() && brackets.peek()->type != L){
                     tokens.insert(token++, *(brackets.pop()));
                 }
                 brackets.pop();
-                break;
-            case RSQUARE:
-                while(!brackets.empty() && brackets.peek()->type != LSQUARE){
-                    tokens.insert(token++, *(brackets.pop()));
-                }
-                brackets.pop();
-                break;
+            }
             default:
                 break;
         }
+    }
+    while(!brackets.empty()){
+        Type R = correspondingBracket(brackets.peek()->type);
+        tokens.insert(tokens.end(), Token{typeStrings[R], R});
     }
 }
 
