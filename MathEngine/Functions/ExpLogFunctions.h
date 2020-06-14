@@ -8,9 +8,8 @@
 #include "../Expressions/ExpressionFunctions.h"
 #include "../Expressions/ExpressionOperations.h"
 #include "../Expressions/InvalidExpression.h"
+#include "../Utils/Argparse.h"
 #include "AbstractFunction.h"
-#include "Argparse.h"
-#include "Math.h"
 
 namespace Function {
     // @Function exp

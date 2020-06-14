@@ -14,6 +14,7 @@
 #include "../Expressions/MatrixExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/TupleExpression.h"
+#include "../Utils/Argparse.h"
 
 namespace Functions {
     // @Function det

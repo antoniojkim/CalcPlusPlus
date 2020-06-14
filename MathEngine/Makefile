@@ -14,8 +14,9 @@ MATHENGINE = $(wildcard MathEngine/*.cc)
 SCANNER = $(wildcard Scanner/*.cc)
 PARSER = $(wildcard Parser/*.cc)
 EXPRESSIONS = $(wildcard Expressions/*/*.cc)
+FUNCTIONS = $(wildcard Functions/*.cc)
 
-SOURCES = ${UTILS} ${SCANNER} ${PARSER} ${EXPRESSIONS} ${MATHENGINE}
+SOURCES = ${UTILS} ${SCANNER} ${PARSER} ${EXPRESSIONS} ${FUNCTIONS} ${MATHENGINE}
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = ${OBJECTS:.o=.d}
 

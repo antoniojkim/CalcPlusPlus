@@ -10,6 +10,7 @@
 
 #include "../Expressions/Expression.h"
 #include "../Expressions/TupleExpression.h"
+#include "../Utils/Argparse.h"
 #include "AbstractFunction.h"
 
 namespace Functions {

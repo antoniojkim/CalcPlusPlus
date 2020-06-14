@@ -6,12 +6,10 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_integration.h>
 
-#include "../../../Utils/exceptions.h"
 #include "../Expressions/Expression.h"
-#include "../FunctionDirectory.h"
+#include "../Utils/Argparse.h"
+#include "../Utils/exceptions.h"
 #include "AbstractFunction.h"
-#include "Argparse.h"
-#include "Math.h"
 
 namespace Functions {
     // @Function deriv

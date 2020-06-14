@@ -12,7 +12,8 @@
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/MatrixExpression.h"
 #include "../Expressions/TupleExpression.h"
-#include "AbstactFunction.h"
+#include "../Utils/Argparse.h"
+#include "AbstractFunction.h"
 
 #define MAKE_UNIQUE_GSL(F) \
     typedef std::unique_ptr<gsl_##F, decltype(&gsl_##F##_free)> unique_##F; \

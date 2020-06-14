@@ -92,5 +92,49 @@ def generate_functions(args=None):
     return locals()
 
 
+def gather_functions():
+    headers = []
+    decorators = []
+    for header in os.listdir(os.path.join(expr_dir, "..", "Functions")):
+        if header.endswith(".h") and header not in (
+            "AbstractFunction.h",
+            "FunctionDispatch.h",
+        ):
+            headers.append(header)
+            with open(os.path.join(expr_dir, "..", "Functions", header)) as file:
+                for row in file:
+                    if row.strip().startswith("// @Function"):
+                        decorators.append(row.strip())
+
+    functions = []
+    for decorator in decorators:
+        decorator = decorator.split()
+        functions.extend((name, decorator[2]) for name in decorator[2:])
+
+    headers.sort()
+    functions.sort()
+
+    with Template(
+        "FunctionDispatch.h",
+        os.path.join(expr_dir, "..", "Functions", "FunctionDispatch.h"),
+    ) as template:
+        template.replace(
+            numFunctions=len(functions),
+            names=wrap((f'"{name}"' for name, pointer in functions), indent="        "),
+        )
+
+    with Template(
+        "FunctionDispatch.cc",
+        os.path.join(expr_dir, "..", "Functions", "FunctionDispatch.cc"),
+    ) as template:
+        template.replace(
+            includes=os.linesep.join(f'#include "{header}"' for header in headers),
+            functions=wrap(
+                (f"&{pointer}" for name, pointer in functions), indent="    "
+            ),
+        )
+
+
 if __name__ == "__main__":
-    generate_functions()
+    gather_functions()
+    # generate_functions()

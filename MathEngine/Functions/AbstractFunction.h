@@ -7,7 +7,7 @@
 #include "../Expressions/Expression.h"
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/NumericalExpression.h"
-#include "../Utils/Exception.h"
+#include "../Utils/exceptions.h"
 #include "FunctionDispatch.h"
 
 struct AbstractFunction {
@@ -31,12 +31,12 @@ struct AbstractFunction {
 
 struct NamedFunction: public AbstractFunction {
     const int index;
-    constexpr NamedFunction(const char* name): index{Function::indexof(name)} {}
+    constexpr NamedFunction(const char* name): index{Functions::indexOf(name)} {}
 
-    virtual value(double x) override { return evaluate(NumExpression::construct(x))->value(); }
+    virtual double value(double x) override { return evaluate(NumExpression::construct(x))->value(); }
 
     virtual std::ostream& print(std::ostream& out, expression arg) override {
-        out << Function::names[index];
+        out << Functions::names[index];
         if (arg->tuple()){
             return out << arg;
         }

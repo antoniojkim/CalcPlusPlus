@@ -7,8 +7,8 @@
 
 #include "../Expressions/Expression.h"
 #include "../Expressions/InvalidExpression.h"
+#include "../Utils/Argparse.h"
 #include "AbstractFunction.h"
-#include "Argparse.h"
 
 namespace Function {
     // @Function gamma

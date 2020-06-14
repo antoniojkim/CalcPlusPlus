@@ -11,23 +11,22 @@
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/TupleExpression.h"
+#include "../Utils/Argparse.h"
 #include "AbstractFunction.h"
-#include "Argparse.h"
-#include "Math.h"
 
 namespace Functions {
     // @Function neg
-    const struct: public ValueFunction<math::neg> {
+    const struct: public ValueFunction {
         expression evaluate(expression arg) override {
             if (arg->isComplex()){
-                return NumExpression::construct(gsl_complex_negative(arg->complex(vars)));
+                return NumExpression::construct(gsl_complex_negative(arg->complex()));
             }
             return NumExpression::construct(-arg->value());
         }
         expression derivative(expression e, const std::string& var) override {
             return NumExpression::construct(-1);
         }
-    } neg ("neg");
+    } neg ("neg", [](double x) -> double { return -x; });
 
     // @Function frexp
     const struct: public NamedFunction {

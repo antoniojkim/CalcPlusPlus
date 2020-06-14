@@ -12,8 +12,8 @@
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/TupleExpression.h"
+#include "../Utils/Argparse.h"
 #include "AbstractFunction.h"
-#include "Argparse.h"
 
 typedef double(*ArrayFunction)(double*, size_t, size_t);
 

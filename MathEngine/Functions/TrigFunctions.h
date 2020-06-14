@@ -10,8 +10,8 @@
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/TupleExpression.h"
+#include "../Utils/Argparse.h"
 #include "AbstractFunction.h"
-#include "Argparse.h"
 
 namespace Function {
     // @Function sin
