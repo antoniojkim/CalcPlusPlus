@@ -7,7 +7,7 @@
 #include <gsl/gsl_integration.h>
 
 #include "../../../Utils/exceptions.h"
-#include "../../Expression.h"
+#include "../Expressions/Expression.h"
 #include "../FunctionDirectory.h"
 #include "AbstractFunction.h"
 #include "Argparse.h"
@@ -40,6 +40,23 @@ namespace Functions {
             return InvalidExpression::construct(Exception("Invalid Number of Arguments: deriv. Expected 2. Got ", args.size()));
         }
     } deriv ("deriv");
+
+    // @Function diff
+    const struct: public NamedFunction {
+        expression evaluate(expression e) override {
+            ParsedArgs args(e);
+            switch(args.size()){
+                case 1:
+                    return tuple->front()->derivative("x");
+                case 2: {
+                    auto var = tuple->back()->variable()->getName();
+                    return tuple->front()->derivative(var);
+                }
+                default:
+                    return InvalidExpression::construct(Exception("Invalid number of arguments for differentiation"));
+            }
+        }
+    } diff ("diff");
 
     // @Function integral
     const struct: public NamedFunction {

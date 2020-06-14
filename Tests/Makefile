@@ -11,7 +11,7 @@ EXEC = run
 
 TESTS = $(wildcard Tests/*/*.cc)
 
-SOURCES = ${TESTS} Tests/EngineTest.cc Tests/test.cc
+SOURCES = Tests/EngineTest.cc Tests/test.cc ${TESTS}
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = ${OBJECTS:.o=.d}
 

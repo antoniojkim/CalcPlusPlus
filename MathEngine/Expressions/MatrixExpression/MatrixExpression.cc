@@ -228,3 +228,25 @@ unique_gsl_matrix_complex MatrixExpression::to_gsl_matrix_complex() const {
 unique_gsl_permutation MatrixExpression::to_gsl_permutation() const {
     return make_gsl_permutation(numRows);
 }
+unique_gsl_vector MatrixExpression::to_gsl_vector() const {
+    auto gsl_vec = make_gsl_vector(numRows * numCols);
+    auto expr = mat.begin();
+    int i = 0;
+    for (size_t r = 0; r < numRows; ++r){
+        for (size_t c = 0; c < numCols; ++c){
+            gsl_vector_set(gsl_vec.get(), i++, (*(expr++))->value());
+        }
+    }
+    return gsl_vec;
+}
+unique_gsl_vector_complex MatrixExpression::to_gsl_vector_complex() const {
+    auto gsl_vec = make_gsl_vector_complex(numRows * numCols);
+    auto expr = mat.begin();
+    int i = 0;
+    for (size_t r = 0; r < numRows; ++r){
+        for (size_t c = 0; c < numCols; ++c){
+            gsl_vector_complex_set(gsl_vec.get(), i++, (*(expr++))->complex());
+        }
+    }
+    return gsl_vec;
+}

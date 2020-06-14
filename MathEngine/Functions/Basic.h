@@ -6,6 +6,8 @@
 #include <gsl/gsl_complex_math.h>
 
 #include "../Expressions/Expression.h"
+#include "../Expressions/ExpressionFunctions.h"
+#include "../Expressions/ExpressionOperations.h"
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/TupleExpression.h"
@@ -22,15 +24,22 @@ namespace Functions {
             }
             return NumExpression::construct(-arg->value());
         }
+        expression derivative(expression e, const std::string& var) override {
+            return NumExpression::construct(-1);
+        }
     } neg ("neg");
 
     // @Function frexp
     const struct: public NamedFunction {
-        expression evaluate(expression arg) override {
-            double x = arg->value(vars);
-            int e;
-            double f = gsl_frexp(x, &e);
-            return TupleExpression::construct({f, (double) e});
+        expression evaluate(expression e) override {
+            ParsedArgs args(e);
+            if (args.size() == 1){
+                double x = args[0]->value();
+                int e;
+                double f = gsl_frexp(x, &e);
+                return TupleExpression::construct({f, (double) e});
+            }
+            return InvalidExpression::construct(Exception("Invalid Number of Arguments: frexp. Expected 1. Got ", args.size()));
         }
     } frexp ("frexp");
 
@@ -57,31 +66,54 @@ namespace Functions {
 
     // @Function bin
     const struct: public NamedFunction {
-        expression evaluate(expression arg) override {
-            if (!arg->isComplex()){
-                double val = arg->value(vars);
-                if (std::trunc(val) == val){
-                    return BinExpression::construct((unsigned long long) std::trunc(val));
+        expression evaluate(expression e) override {
+            ParsedArgs args(e);
+            if (args.size() == 1){
+                if (!args[0]->isComplex()){
+                    double val = args[0]->value();
+                    if (std::trunc(val) == val){
+                        return BinExpression::construct((unsigned long long) std::trunc(val));
+                    }
                 }
             }
-            return InvalidExpression::construct(Exception("Unable to convert value to bin: ", arg));
+            return InvalidExpression::construct(Exception("Unable to convert value to bin: ", e));
         }
     } bin ("bin");
 
     // @Function abs
-    const ValueFunction abs ("abs", std::abs);
+    const struct: public ValueFunction {
+        expression derivative(expression e, const std::string& var) override {
+            return e / abs(e);
+        }
+    } abs ("abs", std::abs);
 
     // @Function sqr
-    const ValueFunction sqr ("sqr", gsl_pow_2);
+    const struct: public ValueFunction {
+        expression derivative(expression e, const std::string& var) override {
+            return 2 * e;
+        }
+    } sqr ("sqr", gsl_pow_2);
 
     // @Function sqrt
-    const ValueFunction sqrt ("sqrt", std::sqrt);
+    const struct: public ValueFunction {
+        expression derivative(expression e, const std::string& var) override {
+            return 0.5 / sqrt(arg);
+        }
+    } sqrt ("sqrt", std::sqrt);
 
     // @Function cb
-    const ValueFunction cb ("cb", gsl_pow_3);
+    const struct: public ValueFunction {
+        expression derivative(expression e, const std::string& var) override {
+            return 3 * sqr(arg);
+        }
+    } cb ("cb", gsl_pow_3);
 
     // @Function cbrt
-    const ValueFunction cbrt ("cbrt", std::cbrt);
+    const struct: public ValueFunction {
+        expression derivative(expression e, const std::string& var) override {
+            return (1.0 / 3) / sqr(cbrt(arg));
+        }
+    } cbrt ("cbrt", std::cbrt);
 
     // @Function rad
     const ValueFunction rad ("rad", [](double x) -> double { return x * M_PI / 180; });

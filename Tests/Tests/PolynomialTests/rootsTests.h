@@ -95,7 +95,7 @@ TEST_CASE("Complex Quadratic Roots Function Evaluation Tests", "[quadc]") {
 TEST_CASE("Cubic Root Function Evaluation Test", "[cubic]"){
 
     SECTION("`cubic` Test 1"){
-        requireExprIsEqual("cubic(-5.86, 8.97, -3.8, 4.45)", "(1.4455355285)");
+        requireExprIsEqual("cubic(-5.86, 8.97, -3.8, 4.45)", "(1.4455355285,)");
     }
 
     SECTION("`cubic` Test 2"){
@@ -107,7 +107,7 @@ TEST_CASE("Cubic Root Function Evaluation Test", "[cubic]"){
     }
 
     SECTION("`cubic` Test 4"){
-        requireExprIsEqual("cubic(2.35, 4.19, 6.4, -4.07)", "(0.4609066714)");
+        requireExprIsEqual("cubic(2.35, 4.19, 6.4, -4.07)", "(0.4609066714,)");
     }
 
     SECTION("`cubic` Test 5"){
@@ -123,7 +123,7 @@ TEST_CASE("Cubic Root Function Evaluation Test", "[cubic]"){
     }
 
     SECTION("`cubic` Test 8"){
-        requireExprIsEqual("cubic(3.97, -5.2, -3.22, -6.34)", "(2.0728094429)");
+        requireExprIsEqual("cubic(3.97, -5.2, -3.22, -6.34)", "(2.0728094429,)");
     }
 
     SECTION("`cubic` Test 9"){

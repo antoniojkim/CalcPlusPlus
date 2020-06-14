@@ -59,13 +59,16 @@ expression VariableExpression::evaluate(const Variables& vars) {
 }
 
 double VariableExpression::value(const Variables& vars) const {
+    if (var){
+        return var->value(vars);
+    }
     if (vars.count(name) > 0){
         return vars.at(name)->value();
     }
     if (getConstantIndex(name) != -1){
         return getConstantValue(name);
     }
-    return var->value(vars);
+    return GSL_NAN;
 }
 
 bool VariableExpression::isComplex() const { return false; }
