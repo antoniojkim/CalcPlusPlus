@@ -13,66 +13,73 @@
 
 namespace Function {
     // @Function exp
-    const struct: public ValueFunction {
+    const struct exp: public Function::ValueFunction {
+        exp(): ValueFunction("exp", std::exp) {}
         expression derivative(expression e, const std::string& var) override {
             return FunctionExpression::construct("exp", e);
         }
-    } exp ("exp", std::exp);
+    } __exp__;
 
     // @Function exp2
-    const struct: public ValueFunction {
+    const struct exp2: public Function::ValueFunction {
+        exp2(): ValueFunction("exp", std::exp2) {}
         expression derivative(expression e, const std::string& var) override {
             return FunctionExpression::construct("exp2", e) * M_LN2;
         }
-    } exp2 ("exp2", std::exp2);
+    } __exp2__;
 
     // @Function expm1
-    const struct: public ValueFunction {
+    const struct expm1: public Function::ValueFunction {
+        expm1(): ValueFunction("expm1", std::expm1) {}
         expression derivative(expression e, const std::string& var) override {
             return FunctionExpression::construct("expm1", e);
         }
-    } expm1 ("expm1", std::expm1);
+    } __expm1__;
 
     // @Function ln
-    const struct: public ValueFunction {
+    const struct ln: public Function::ValueFunction {
+        ln(): ValueFunction("ln", std::log) {}
         expression derivative(expression e, const std::string& var) override {
             return 1 / e;
         }
-    } ln ("ln", std::log);
+    } __ln__;
 
     // @Function ln2 log2
-    const struct: public ValueFunction {
+    const struct ln2: public Function::ValueFunction {
+        ln2(): ValueFunction("ln2", std::log2) {}
         expression derivative(expression e, const std::string& var) override {
             return 1 / (e * M_LN2);
         }
-    } ln2 ("ln2", std::log2);
+    } __ln2__;
 
     // @Function ln1p log1p
-    const struct: public ValueFunction {
+    const struct ln1p: public Function::ValueFunction {
+        ln1p(): ValueFunction("ln1p", std::log1p) {}
         expression derivative(expression e, const std::string& var) override {
             return 1 / (e + 1);
         }
-    } ln1p ("ln1p", std::log1p);
+    } __ln1p__;
 
     // @Function log log10
-    const struct: public ValueFunction {
+    const struct log: public Function::ValueFunction {
+        log(): ValueFunction("log", std::log10) {}
         expression derivative(expression e, const std::string& var) override {
             return 1 / (e * M_LN10);
         }
-    } log ("log", std::log10);
+    } __log__;
 
     // @Function log1pm
-    const ValueFunction log1pm ("log1pm", gsl_sf_log_1plusx_mx);
+    const Function::ValueFunction log1pm ("log1pm", gsl_sf_log_1plusx_mx);
 
     // @Function logabs
-    const ValueFunction logabs ("logabs", gsl_sf_log_abs);
+    const Function::ValueFunction logabs ("logabs", gsl_sf_log_abs);
 
     // @Function logn
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct logn: public Function::NamedFunction {
+        logn(): NamedFunction("logn") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 2){
-                return std::log(args[0]->value()) / std::log(args[1]->value());
+                return NumExpression::construct(std::log(args[0]->value()) / std::log(args[1]->value()));
             }
             return InvalidExpression::construct(Exception("Invalid Number of Arguments: logn. Expected 2. Got ", args.size()));
         }
@@ -83,5 +90,5 @@ namespace Function {
         //     }
         //     return InvalidExpression::construct(Exception("Invalid number of arguments for fprime_logn"));
         // }
-    } logn ("logn");
+    } __logn__;
 }

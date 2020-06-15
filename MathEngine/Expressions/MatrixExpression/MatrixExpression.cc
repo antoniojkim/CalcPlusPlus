@@ -60,6 +60,20 @@ MatrixExpression::MatrixExpression(gsl_permutation* permutation):
         mat.emplace_back(NumExpression::construct(gsl_permutation_get(permutation, c)));
     }
 }
+MatrixExpression::MatrixExpression(gsl_vector* vec):
+    numRows{vec->size}, numCols{1} {
+
+    for (size_t r = 0; r < numRows; ++r){
+        mat.emplace_back(NumExpression::construct(gsl_vector_get(vec, r)));
+    }
+}
+MatrixExpression::MatrixExpression(gsl_vector_complex* vec):
+    numRows{vec->size}, numCols{1} {
+
+    for (size_t r = 0; r < numRows; ++r){
+        mat.emplace_back(NumExpression::construct(gsl_vector_complex_get(vec, r)));
+    }
+}
 
 
 expression MatrixExpression::construct(){
@@ -82,6 +96,12 @@ expression MatrixExpression::construct(gsl_matrix_complex* matrix){
 }
 expression MatrixExpression::construct(gsl_permutation* permutation){
     return shared_ptr<MatrixExpression>(new MatrixExpression(permutation));
+}
+expression MatrixExpression::construct(gsl_vector_complex* vec){
+    return shared_ptr<MatrixExpression>(new MatrixExpression(vec));
+}
+expression MatrixExpression::construct(gsl_vector* vec){
+    return shared_ptr<MatrixExpression>(new MatrixExpression(vec));
 }
 
 

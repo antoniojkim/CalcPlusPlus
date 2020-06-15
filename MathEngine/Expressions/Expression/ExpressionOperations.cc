@@ -12,6 +12,7 @@
 
 using namespace std;
 using namespace Scanner;
+using namespace ExpressionMath;
 
 expression operator+(const expression expr1, const expression expr2) {
     if (expr1->evaluable()){

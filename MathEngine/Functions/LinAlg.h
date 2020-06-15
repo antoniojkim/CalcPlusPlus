@@ -18,9 +18,9 @@
 
 namespace Functions {
     // @Function det
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct det: public Function::NamedFunction {
+        det(): NamedFunction("det") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 1){
                 auto matrix = args[0]->matrix();
                 if (matrix){
@@ -40,14 +40,14 @@ namespace Functions {
                     }
                 }
             }
-            return InvalidExpression::construct(Exception("Determinant expects a matrix expression. Got: ", e));
+            return InvalidExpression::construct(Exception("Determinant expects a matrix expression. Args: ", args));
         }
-    } det ("det");
+    } __det__;
 
     // @Function lndet
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct lndet: public Function::NamedFunction {
+        lndet(): NamedFunction("lndet") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 1){
                 auto matrix = args[0]->matrix();
                 if (matrix){
@@ -56,25 +56,25 @@ namespace Functions {
                         auto gsl_perm = matrix->to_gsl_permutation();
                         int signum;
                         gsl_linalg_complex_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
-                        return NumExpression::construct(gsl_linalg_complex_LU_lndet(gsl_mat.get(), signum));
+                        return NumExpression::construct(gsl_linalg_complex_LU_lndet(gsl_mat.get()));
                     }
                     else{
                         auto gsl_mat = matrix->to_gsl_matrix();
                         auto gsl_perm = matrix->to_gsl_permutation();
                         int signum;
                         gsl_linalg_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
-                        return NumExpression::construct(gsl_linalg_LU_lndet(gsl_mat.get(), signum));
+                        return NumExpression::construct(gsl_linalg_LU_lndet(gsl_mat.get()));
                     }
                 }
             }
-            return InvalidExpression::construct(Exception("Determinant expects a matrix expression. Got: ", e));
+            return InvalidExpression::construct(Exception("Determinant expects a matrix expression. Args: ", args));
         }
-    } lndet ("lndet");
+    } __lndet__;
 
     // @Function LU
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct LU: public Function::NamedFunction {
+        LU(): NamedFunction("LU") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 1){
                 auto matrix = args[0]->matrix();
                 if (matrix){
@@ -102,14 +102,14 @@ namespace Functions {
                     }
                 }
             }
-            return InvalidExpression::construct(Exception("LU Factorization expects a matrix expression. Got: ", e));
+            return InvalidExpression::construct(Exception("LU Factorization expects a matrix expression. Args: ", args));
         }
-    } LU ("LU");
+    } __LU__;
 
     // @Function LUsolve solve
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct LUsolve: public Function::NamedFunction {
+        LUsolve(): NamedFunction("LUsolve") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 2){
                 auto A = args[0]->matrix();
                 auto b = args[1]->matrix();
@@ -120,7 +120,7 @@ namespace Functions {
                         auto x = b->to_gsl_vector_complex();
                         int signum;
                         gsl_linalg_complex_LU_decomp(LU.get(), perm.get(), &signum);
-                        gsl_linalg_complex_LU_svx(LU.get(), perm.get(), x.get())
+                        gsl_linalg_complex_LU_svx(LU.get(), perm.get(), x.get());
                         return MatrixExpression::construct(x.get());
                     }
                     else{
@@ -129,19 +129,19 @@ namespace Functions {
                         auto x = b->to_gsl_vector();
                         int signum;
                         gsl_linalg_LU_decomp(LU.get(), perm.get(), &signum);
-                        gsl_linalg_LU_svx(LU.get(), perm.get(), x.get())
+                        gsl_linalg_LU_svx(LU.get(), perm.get(), x.get());
                         return MatrixExpression::construct(x.get());
                     }
                 }
             }
-            return InvalidExpression::construct(Exception("LU Solve expects a (m, n) matrix expression and a (n) vector expression. Got: ", e));
+            return InvalidExpression::construct(Exception("LU Solve expects a (m, n) matrix expression and a (n) vector expression. Args: ", args));
         }
-    } LUsolve ("LUsolve");
+    } __LUsolve__;
 
     // @Function Cholesky
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct Cholesky: public Function::NamedFunction {
+        Cholesky(): NamedFunction("Cholesky") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 1){
                 auto matrix = args[0]->matrix();
                 if (matrix){
@@ -163,7 +163,7 @@ namespace Functions {
                     }
                 }
             }
-            return InvalidExpression::construct(Exception("Cholesky decomposition expects a matrix expression. Got: ", e));
+            return InvalidExpression::construct(Exception("Cholesky decomposition expects a matrix expression. Args: ", args));
         }
-    } Cholesky ("Cholesky");
+    } __Cholesky__;
 }

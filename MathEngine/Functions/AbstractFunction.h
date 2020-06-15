@@ -5,51 +5,74 @@
 #include <gsl/gsl_math.h>
 
 #include "../Expressions/Expression.h"
+#include "../Expressions/FunctionExpression.h"
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/NumericalExpression.h"
+#include "../Utils/Argparse.h"
 #include "../Utils/exceptions.h"
 #include "FunctionDispatch.h"
 
-struct AbstractFunction {
-    virtual expression evaluate(expression arg) = 0;
-    virtual double value(double x) = 0;
+namespace Function {
+    struct AbstractFunction {
+        expression evaluate(expression e){
+            Function::Args args(e->evaluate());
+            return evaluate(args);
+        }
+        expression evaluate(expression e, const Variables& vars){
+            Function::Args args(e->evaluate(vars));
+            return evaluate(args);
+        }
+        virtual expression evaluate(Function::Args& args) = 0;
+        virtual double value(double x) = 0;
 
-    virtual expression simplify(expression e){ return e; }
+        inline expression operator()(expression e){ return evaluate(e); }
+        inline double operator()(double x){ return value(x); }
 
-    virtual expression derivative(expression e, const std::string& var){
-        return InvalidExpression::construct(Exception("Not Differentiable: ", e));
-    }
+        virtual expression simplify(expression e){ return e; }
 
-    virtual expression integral(expression e, const std::string& var){
-        return InvalidExpression::construct(Exception("Not Integrable: ", e));
-    }
+        virtual expression derivative(expression e, const std::string& var){
+            return InvalidExpression::construct(Exception("Not Differentiable: ", e));
+        }
 
-    virtual std::ostream& print(std::ostream& out, expression arg){
-        return out << arg;
-    }
-};
+        virtual expression integral(expression e, const std::string& var){
+            return InvalidExpression::construct(Exception("Not Integrable: ", e));
+        }
 
-struct NamedFunction: public AbstractFunction {
-    const int index;
-    constexpr NamedFunction(const char* name): index{Functions::indexOf(name)} {}
-
-    virtual double value(double x) override { return evaluate(NumExpression::construct(x))->value(); }
-
-    virtual std::ostream& print(std::ostream& out, expression arg) override {
-        out << Functions::names[index];
-        if (arg->tuple()){
+        virtual std::ostream& print(std::ostream& out, expression arg){
             return out << arg;
         }
-        return out << "(" << arg << ")";
-    }
-};
+    };
 
-typedef double(*DoubleFunction)(double);
+    struct NamedFunction: public AbstractFunction {
+        const int index;
+        constexpr NamedFunction(const char* name): index{Functions::indexOf(name)} {}
 
-struct ValueFunction: public NamedFunction {
-    const DoubleFunction f;
-    constexpr ValueFunction(const char* name, const DoubleFunction f): NamedFunction{name}, f{f} {}
+        virtual double value(double x) override { return evaluate(NumExpression::construct(x))->value(); }
 
-    expression evaluate(expression arg) override { return NumExpression::construct(value(arg->value())); }
-    inline double value(double x) override { return f(x); }
-};
+        virtual std::ostream& print(std::ostream& out, expression arg) override {
+            out << Functions::names[index];
+            if (arg->tuple()){
+                return out << arg;
+            }
+            return out << "(" << arg << ")";
+        }
+    };
+
+    typedef double(*DoubleFunction)(double);
+
+    struct ValueFunction: public NamedFunction {
+        const DoubleFunction f;
+        constexpr ValueFunction(const char* name, const DoubleFunction f): NamedFunction{name}, f{f} {}
+
+        expression evaluate(Function::Args& args) override {
+            if (args.size() == 1){
+                if (args[0]->variable()){
+                    return FunctionExpression::construct(index, args[0]);
+                }
+                return NumExpression::construct(value(args[0]->value()));
+            }
+            return InvalidExpression::construct(Exception("Invalid Number of Arguments. Expected 1. Got: ", args));
+        }
+        inline double value(double x) override { return f(x); }
+    };
+}

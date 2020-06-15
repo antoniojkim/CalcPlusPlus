@@ -10,6 +10,7 @@
 #include "../../ExpressionFunctions.h"
 #include "../../NumericalExpression.h"
 
+using namespace ExpressionMath;
 
 expression fprime_neg(const expression arg, const std::string& var){
     return NumExpression::construct(-1);

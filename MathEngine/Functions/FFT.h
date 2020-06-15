@@ -31,10 +31,11 @@ inline std::unique_ptr<double[]> make_complex_packed_array(size_t n){
     return std::make_unique<double[]>(n * 2);
 }
 
-namespace Functions {
+namespace Function {
     // @Function fft
-    const struct: public NamedFunction {
-        expression fft(const MatrixExpression* matrix){
+    const struct fft: public Function::NamedFunction {
+        fft(): NamedFunction("fft") {}
+        expression compute(const MatrixExpression* matrix){
             if (matrix && (matrix->rows() == 1 || matrix->cols() == 1)){
                 size_t N = matrix->rows() * matrix->cols();
                 auto work = make_unique_fft_real_workspace(N);
@@ -77,24 +78,24 @@ namespace Functions {
             return InvalidExpression::construct(Exception("FFT expected 1D Matrix."));
         }
 
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
-
+        expression evaluate(Function::Args& args) override {
             if (args.size() > 1){
                 std::list<expression> exprs;
-                for (auto& arg : *tuple){
+                for (auto arg : args){
                     exprs.emplace_back(arg->evaluate());
                 }
                 auto expr = MatrixExpression::construct(std::move(exprs), 1, exprs.size());
-                return this->fft(expr->matrix());
+                return this->compute(expr->matrix());
             }
-            return this->fft(args[0]->matrix());
+            return this->compute(args[0]->matrix());
         }
-    } fft ("fft");
+    } __fft__;
 
     // @Function ifft
-    const struct: public NamedFunction {
-        expression ifft(const MatrixExpression* matrix){
+    const struct ifft: public Function::NamedFunction {
+        ifft(): NamedFunction("ifft") {}
+
+        expression compute(const MatrixExpression* matrix){
             if (matrix && (matrix->rows() == 1 || matrix->cols() == 1)){
                 size_t N = matrix->rows() * matrix->cols();
                 auto work = make_unique_fft_real_workspace(N);
@@ -137,18 +138,16 @@ namespace Functions {
             return InvalidExpression::construct(Exception("IFFT expected 1D Matrix."));
         }
 
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
-
+        expression evaluate(Function::Args& args) override {
             if (args.size() > 1){
                 std::list<expression> exprs;
-                for (auto& arg : *tuple){
+                for (auto& arg : args){
                     exprs.emplace_back(arg->evaluate());
                 }
                 auto expr = MatrixExpression::construct(std::move(exprs), 1, exprs.size());
-                return this->ifft(expr->matrix());
+                return this->compute(expr->matrix());
             }
-            return this->ifft(args[0]->matrix());
+            return this->compute(args[0]->matrix());
         }
-    } ifft ("ifft");
+    } __ifft__;
 }

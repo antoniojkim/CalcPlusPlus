@@ -4,6 +4,8 @@
 #include "../../ExpressionOperations.h"
 #include "../OperatorDirectory.h"
 
+using namespace ExpressionMath;
+
 static expression fprime_PLUS(const expression lhs, const expression rhs, const std::string& var){
     return lhs->derivative(var) + rhs->derivative(var);
 }

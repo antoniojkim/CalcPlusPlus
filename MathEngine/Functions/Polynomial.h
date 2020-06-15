@@ -15,9 +15,9 @@
 
 namespace Functions {
     // @Function quad
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct quad: public Function::NamedFunction {
+        quad(): NamedFunction("quad") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 3){
                 double a = args[0]->value();
                 double b = args[1]->value();
@@ -40,12 +40,12 @@ namespace Functions {
             }
             return InvalidExpression::construct(Exception("Invalid number of arguments for quad. Expected 3. Got: ", args.size()));
         }
-    } quad ("quad");
+    } __quad__;
 
     // @Function quadc
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct quadc: public Function::NamedFunction {
+        quadc(): NamedFunction("quadc") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 3){
                 double a = args[0]->value();
                 double b = args[1]->value();
@@ -53,8 +53,6 @@ namespace Functions {
                 gsl_complex z0, z1;
                 int num_roots = gsl_poly_complex_solve_quadratic(a, b, c, &z0, &z1);
                 switch(num_roots){
-                    case 0:
-                        return TupleExpression::construct();
                     case 1:
                         return TupleExpression::construct({z0});
                     case 2:
@@ -65,12 +63,12 @@ namespace Functions {
             }
             return InvalidExpression::construct(Exception("Invalid number of arguments for quadc. Expected 3. Got: ", args.size()));
         }
-    } quadc ("quadc");
+    } __quadc__;
 
     // @Function cubic
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct cubic: public Function::NamedFunction {
+        cubic(): NamedFunction("cubic") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 4){
                 double a = args[0]->value();
                 double b = args[1]->value() / a;
@@ -89,12 +87,12 @@ namespace Functions {
             }
             return InvalidExpression::construct(Exception("Invalid number of arguments for cubic. Expected 4. Got: ", args.size()));
         }
-    } cubic ("cubic");
+    } __cubic__;
 
     // @Function cubicc
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct cubicc: public Function::NamedFunction {
+        cubicc(): NamedFunction("cubicc") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 4){
                 double a = args[0]->value();
                 double b = args[1]->value() / a;
@@ -106,5 +104,5 @@ namespace Functions {
             }
             return InvalidExpression::construct(Exception("Invalid number of arguments for cubicc. Expected 4. Got: ", args.size()));
         }
-    } cubicc ("cubicc");
+    } __cubicc__;
 }

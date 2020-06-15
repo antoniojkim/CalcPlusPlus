@@ -1,31 +1,41 @@
 #pragma once
 
-#include <list>
 #include <cmath>
+#include <list>
+#include <string>
+
 #include <gsl/gsl_deriv.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_integration.h>
 
-#include "../Expressions/Expression.h"
-#include "../Utils/Argparse.h"
-#include "../Utils/exceptions.h"
+#include "../Expressions/VariableExpression.h"
 #include "AbstractFunction.h"
 
-namespace Functions {
+namespace Function {
     // @Function deriv
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct deriv: public Function::NamedFunction {
+        deriv(): NamedFunction("deriv") {}
+        expression evaluate(Function::Args& args) override {
             if (args.size() == 2){
-                auto derivative = args[0]->derivative("x");
-                if (!derivative->invalid()){
-                    Variables xvars;
-                    xvars["x"] = args[1]->evaluate(vars);
-                    return derivative->value(xvars);
+                std::string var = "x";
+                expression val = args[1];
+                if (val->variable()){
+                    var = val->variable()->getName();
+                    val = val->variable()->getVar();
+                    if (!val){
+                        return InvalidExpression::construct(Exception("deriv expected value. Got: ", args[1]));
+                    }
                 }
 
-                gsl_function F = args[0]->function();
-                double x = args[1]->value(vars);
+                auto derivative = args[0]->derivative(var);
+                if (!derivative->invalid()){
+                    Variables vars;
+                    vars[var] = val;
+                    return derivative->evaluate(vars);
+                }
+
+                gsl_function F = args[0]->function(var);
+                double x = val->value();
 
                 double result, abserr;
                 gsl_set_error_handler_off();
@@ -35,49 +45,67 @@ namespace Functions {
                     return NumExpression::construct(result);
                 }
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments: deriv. Expected 2. Got ", args.size()));
+            return InvalidExpression::construct(Exception("Invalid Number of Arguments: deriv. Expected 2. Args: ", args));
         }
-    } deriv ("deriv");
+    } __deriv__;
 
     // @Function diff
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
+    const struct diff: public Function::NamedFunction {
+        diff(): NamedFunction("diff") {}
+        expression evaluate(Function::Args& args) override {
+            std::string var = "x";
             switch(args.size()){
-                case 1:
-                    return tuple->front()->derivative("x");
                 case 2: {
-                    auto var = tuple->back()->variable()->getName();
-                    return tuple->front()->derivative(var);
+                    if (args[1]->variable()){
+                        var = args[1]->variable()->getName();
+                    }
+                    else{
+                        return InvalidExpression::construct(Exception("diff expected variable. Got: ", args[1]));
+                    }
                 }
+                case 1:
+                    return args[0]->derivative(var);
                 default:
-                    return InvalidExpression::construct(Exception("Invalid number of arguments for differentiation"));
+                    return InvalidExpression::construct(Exception("Invalid number of arguments for differentiation(f, var=x). Got: ", args));
             }
         }
-    } diff ("diff");
+    } __diff__;
 
     // @Function integral
-    const struct: public NamedFunction {
-        expression evaluate(expression e) override {
-            ParsedArgs args(e);
-            if (args.size() == 3){
-                gsl_function F = args[0]->function();
-                double a = args[1]->value(vars);
-                double b = args[2]->value(vars);
-
-                double result, abserr;
-
-                gsl_set_error_handler_off();
-                gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
-                int status = gsl_integration_qags(&F, a, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
-                gsl_integration_workspace_free (w);
-
-                if (status != GSL_FAILURE){
-                    return NumExpression::construct(result);
+    const struct integral: public Function::NamedFunction {
+        integral(): NamedFunction("integral") {}
+        expression evaluate(Function::Args& args) override {
+            std::string var = "x";
+            switch (args.size()){
+                case 4: {
+                    if (args[3]->variable()){
+                        var = args[3]->variable()->getName();
+                    }
+                    else{
+                        return InvalidExpression::construct(Exception("integral expected variable. Got: ", args[3]));
+                    }
                 }
+                case 3: {
+                    gsl_function F = args[0]->function(var);
+                    double a = args[1]->value();
+                    double b = args[2]->value();
+
+                    double result, abserr;
+
+                    gsl_set_error_handler_off();
+                    gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
+                    int status = gsl_integration_qags(&F, a, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
+                    gsl_integration_workspace_free (w);
+
+                    if (status != GSL_FAILURE){
+                        return NumExpression::construct(result);
+                    }
+                    return InvalidExpression::construct(Exception("Unable to compute integral. Args: ", args));
+                }
+                default:
+                    return InvalidExpression::construct(Exception("Invalid Number of Arguments: integral. Expected 3. Got ", args.size()));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments: integral. Expected 3. Got ", args.size()));
         }
-    } integral ("integral");
+    } __integral__;
 
 }
