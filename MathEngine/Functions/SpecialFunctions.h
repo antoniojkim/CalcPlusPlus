@@ -12,19 +12,19 @@
 
 namespace Function {
     // @Function gamma
-    const Function::ValueFunction gamma ("gamma", gsl_sf_gamma);
+    const Function::ValueFunction __gamma__ ("gamma", gsl_sf_gamma);
 
     // @Function lngamma
-    const Function::ValueFunction lngamma ("lngamma", gsl_sf_lngamma);
+    const Function::ValueFunction __lngamma__ ("lngamma", gsl_sf_lngamma);
 
     // @Function gammastar
-    const Function::ValueFunction gammastar ("gammastar", gsl_sf_gammastar);
+    const Function::ValueFunction __gammastar__ ("gammastar", gsl_sf_gammastar);
 
     // @Function gammainv
-    const Function::ValueFunction gammainv ("gammainv", gsl_sf_gammainv);
+    const Function::ValueFunction __gammainv__ ("gammainv", gsl_sf_gammainv);
 
     // @Function fact
-    const Function::ValueFunction fact ("fact", [](double x) -> double {
+    const Function::ValueFunction __fact__ ("fact", [](double x) -> double {
         if (x > GSL_SF_FACT_NMAX){
             return GSL_POSINF;
         }
@@ -35,7 +35,7 @@ namespace Function {
     });
 
     // @Function dfact
-    const Function::ValueFunction dfact ("dfact", [](double x) -> double {
+    const Function::ValueFunction __dfact__ ("dfact", [](double x) -> double {
         if (x > GSL_SF_DOUBLEFACT_NMAX){
             return GSL_POSINF;
         }
@@ -46,7 +46,7 @@ namespace Function {
     });
 
     // @Function lnfact
-    const Function::ValueFunction lnfact ("lnfact", [](double x) -> double {
+    const Function::ValueFunction __lnfact__ ("lnfact", [](double x) -> double {
         if (x >= 0 && std::trunc(x) == x) {
             return gsl_sf_lnfact((unsigned int) x);
         }
@@ -54,7 +54,7 @@ namespace Function {
     });
 
     // @Function lndfact
-    const Function::ValueFunction lndfact ("lndfact", [](double x) -> double {
+    const Function::ValueFunction __lndfact__ ("lndfact", [](double x) -> double {
         if (x >= 0 && std::trunc(x) == x) {
             return gsl_sf_lndoublefact((unsigned int) x);
         }

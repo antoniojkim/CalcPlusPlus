@@ -13,7 +13,7 @@
 #include "../Utils/Argparse.h"
 #include "AbstractFunction.h"
 
-namespace Functions {
+namespace Function {
     // @Function quad
     const struct quad: public Function::NamedFunction {
         quad(): NamedFunction("quad") {}

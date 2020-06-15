@@ -130,7 +130,7 @@ def gather_functions():
         template.replace(
             includes=os.linesep.join(f'#include "{header}"' for header in headers),
             functions=wrap(
-                (f"&{pointer}" for name, pointer in functions), indent="    "
+                (f"&__{pointer}__" for name, pointer in functions), indent="    "
             ),
         )
 

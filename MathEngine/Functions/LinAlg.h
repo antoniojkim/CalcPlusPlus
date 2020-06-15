@@ -16,7 +16,7 @@
 #include "../Expressions/TupleExpression.h"
 #include "../Utils/Argparse.h"
 
-namespace Functions {
+namespace Function {
     // @Function det
     const struct det: public Function::NamedFunction {
         det(): NamedFunction("det") {}

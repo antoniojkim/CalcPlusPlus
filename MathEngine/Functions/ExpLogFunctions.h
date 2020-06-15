@@ -69,10 +69,10 @@ namespace Function {
     } __log__;
 
     // @Function log1pm
-    const Function::ValueFunction log1pm ("log1pm", gsl_sf_log_1plusx_mx);
+    const Function::ValueFunction __log1pm__ ("log1pm", gsl_sf_log_1plusx_mx);
 
     // @Function logabs
-    const Function::ValueFunction logabs ("logabs", gsl_sf_log_abs);
+    const Function::ValueFunction __logabs__ ("logabs", gsl_sf_log_abs);
 
     // @Function logn
     const struct logn: public Function::NamedFunction {

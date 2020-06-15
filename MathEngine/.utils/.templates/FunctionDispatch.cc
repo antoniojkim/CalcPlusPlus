@@ -13,13 +13,13 @@
 using namespace std;
 using namespace Function;
 
-const AbstractFunction* functions[Functions::numFunctions] = {
+const Function::AbstractFunction* functions[Functions::numFunctions] = {
     {functions}
 };
 
-const AbstractFunction* getFunction(const char* name){
+const Function::AbstractFunction* getFunction(const char* name){
     return functions[Functions::indexOf(name)];
 }
-const AbstractFunction* getFunction(const int index){
+const Function::AbstractFunction* getFunction(const int index){
     return functions[index];
 }

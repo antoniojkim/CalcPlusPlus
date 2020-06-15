@@ -62,7 +62,7 @@ namespace Function {
 
     struct ValueFunction: public NamedFunction {
         const DoubleFunction f;
-        constexpr ValueFunction(const char* name, const DoubleFunction f): NamedFunction{name}, f{f} {}
+        constexpr ValueFunction(const char* name, const DoubleFunction f = nullptr): NamedFunction{name}, f{f} {}
 
         expression evaluate(Function::Args& args) override {
             if (args.size() == 1){
