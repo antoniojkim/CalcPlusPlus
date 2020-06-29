@@ -4,11 +4,10 @@
 
 #include "../Expressions/FunctionExpression.h"
 #include "../Expressions/FunctionExpressions/Functions.h"
-#include "../Expressions/InvalidExpression.h"
 #include "../Expressions/MatrixExpression.h"
 #include "../Expressions/NumericalExpression.h"
-#include "../Expressions/OperatorExpression.h"
-#include "../Expressions/OperatorExpressions/Operators.h"
+// #include "../Expressions/OperatorExpression.h"
+// #include "../Expressions/OperatorExpressions/Operators.h"
 #include "../Expressions/TupleExpression.h"
 #include "../Expressions/VariableExpression.h"
 #include "../Scanner/scanner.h"
@@ -75,55 +74,58 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 expressionLists.back().emplace_back(expressionStacks.back().pop());
                 if (!expressionStacks.back().empty()){
                     cout << "Top Expression Stack: " << expressionStacks.back() << endl;
-                    return InvalidExpression::construct(Exception("Top Expression Stack left with more than one expression: ','"));
+                    throw Exception("Top Expression Stack left with more than one expression: ','");
                 }
                 continue;
             case RPAREN:
                 if (!expressionStacks.back().empty()){
                     expressionLists.back().emplace_back(expressionStacks.back().pop());
                     if (!expressionStacks.back().empty()){
-                        return InvalidExpression::construct(Exception("Top Expression Stack left with more than one expression: ')'"));
+                        throw Exception("Top Expression Stack left with more than one expression: ')'");
                     }
                 }
                 expressionStacks.pop_back();
-                expressionStacks.back().push(TupleExpression::construct(std::move(expressionLists.back())));
+                expressionStacks.back().push(TupleExpression::construct(expressionLists.back()));
                 expressionLists.pop_back();
                 continue;
             case RBRACE: {
                 expressionLists.back().emplace_back(expressionStacks.back().pop());
                 if (!expressionStacks.back().empty()){
-                    return InvalidExpression::construct(Exception("Top Expression Stack left with more than one expression: '}'"));
+                    throw Exception("Top Expression Stack left with more than one expression: '}'");
                 }
                 expressionStacks.pop_back();
 
-                list<expression> matrixElements;
+                vector<expression> matrixElements;
+                matrixElements.reserve(expressionLists.size());
                 size_t numCols = 0;
-                for (auto expr : expressionLists.back()){
-                    auto matrix = expr->matrix();
-                    if (matrix){
-                        if (matrix->rows() != 1){
-                            return InvalidExpression::construct(Exception("Matrix must be two dimensional"));
+                for (auto matrix : expressionLists.back()){
+                    if (matrix == MATRIX){
+                        if (matrix->shape(0) != 1){
+                            throw Exception("Matrix must be two dimensional");
                         }
                         else if (numCols == 0){
-                            numCols = matrix->cols();
+                            numCols = matrix->shape(1);
+                            matrixElements.reserve(expressionLists.size() * numCols);
                         }
-                        else if (matrix->cols() != numCols){
-                            return InvalidExpression::construct(Exception("Matrix expected ", numCols, " columns. Got ", matrix->cols()));
+                        else if (matrix->shape(1) != numCols){
+                            throw Exception("Matrix expected ", numCols, " columns. Got ", matrix->shape(1));
                         }
-                        matrixElements.splice(matrixElements.end(), matrix->getMatrix());
+                        for (auto e : *matrix){ matrixElements.emplace_back(e); }
                     }
                     else if (numCols == 0){
                         numCols = 1;
+                        for (auto e : *matrix){ matrixElements.emplace_back(e); }
+                        break;
                     }
                     else if (numCols != 1){
-                        return InvalidExpression::construct(Exception("Matrix expected ", numCols, " columns. Got 1"));
+                        throw Exception("Matrix expected ", numCols, " columns. Got 1");
                     }
                 }
                 if (numCols == 1){
-                    expressionStacks.back().push(MatrixExpression::construct(std::move(expressionLists.back()), 1, expressionLists.back().size()));
+                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), 1, matrixElements.size()));
                 }
                 else {
-                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), expressionLists.back().size(), numCols));
+                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), matrixElements.size(), numCols));
                 }
                 expressionLists.pop_back();
                 continue;
@@ -134,33 +136,38 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
 
         if (isOperator(token->type)){
             if (expressionStacks.back().empty()){
-                return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Unary Operator: ", token->lexeme));
+                throw Exception("Insufficient Number of Arguments for Unary Operator: ", token->lexeme);
             }
             if (isSingleOperator(token->type)){
-                if (token->type == EXCL){
-                    expressionStacks.back().push(FunctionExpression::construct("fact", expressionStacks.back().pop()));
-                }
-                else if (token->type == EXCL_EXCL){
-                    expressionStacks.back().push(FunctionExpression::construct("dfact", expressionStacks.back().pop()));
-                }
-                else if (token->type == APOSTROPHE){
-                    expressionStacks.back().push(FunctionExpression::construct("diff", expressionStacks.back().pop()));
-                }
-                else {
-                    return InvalidExpression::construct(Exception("Unsupported Unary Operator: ", token->lexeme));
+                switch(token->type){
+                    case EXCL:
+                        expressionStacks.back().push(FunctionExpression::construct("fact", expressionStacks.back().pop()));
+                        break;
+                    case EXCL_EXCL:
+                        expressionStacks.back().push(FunctionExpression::construct("dfact", expressionStacks.back().pop()));
+                        break;
+                    case APOSTROPHE:
+                        expressionStacks.back().push(FunctionExpression::construct("diff", expressionStacks.back().pop()));
+                        break;
+                    case ELLIPSIS:
+                        expressionStacks.back().push(VarArgsExpression::construct(expressionStacks.back().pop()));
+                        break;
+                    default:
+                        throw Exception("Unsupported Unary Operator: ", token->lexeme);
                 }
             }
             else{
                 if (expressionStacks.back().size() < 2){
-                    return InvalidExpression::construct(Exception("Insufficient Number of Arguments for Binary Operator: ", token->lexeme));
+                     throw Exception("Insufficient Number of Arguments for Binary Operator: ", token->lexeme);
                 }
+
                 expression rhs = expressionStacks.back().pop();
                 expression lhs = expressionStacks.back().pop();
-                expressionStacks.back().push(OperatorExpression::construct(token->type, lhs, rhs));
+                expressionStacks.back().push(FunctionExpression::construct(token->lexeme, lhs, rhs));
             }
         }
         else{
-            return InvalidExpression::construct(Exception("Unsupported Token type found: ", typeStrings[token->type]));
+            throw Exception("Unsupported Token type found: ", typeStrings[token->type]);
         }
     }
 
@@ -170,10 +177,10 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
 
     // cout << "Expression Stack: " << expressionStacks.size() << endl << expressionStacks << endl;
 
-    return InvalidExpression::construct(Exception("Expression Stack left with more than one expression"));
+    throw Exception("Expression Stack left with more than one expression");
 }
 
-expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) {
+expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const {
     int stackSize = tokens.size();
 
     FixedStack<Token*> operatorStack(stackSize);
@@ -211,7 +218,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             case COMMA: {
                 while (true) {
                     if (operatorStack.size() == 0){
-                        return InvalidExpression::construct(Exception("Mismatched Comma."));
+                        throw Exception("Mismatched Comma.");
                     }
                     if (operatorStack.peek()->type == LPAREN ||
                         operatorStack.peek()->type == LBRACE ||
@@ -231,7 +238,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             case RPAREN: {
                 while (true) {
                     if (operatorStack.size() == 0){
-                        return InvalidExpression::construct(Exception("Mismatched Parentheses: ')'"));
+                        throw Exception("Mismatched Parentheses: ')'");
                     }
                     if (operatorStack.peek()->type == COMMA ||
                         outputStacks.back().empty()){
@@ -261,7 +268,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             case RBRACE: {
                 while (true) {
                     if (operatorStack.size() == 0){
-                        return InvalidExpression::construct(Exception("Mismatched Parentheses: '}'"));
+                        throw Exception("Mismatched Parentheses: '}'");
                     }
                     if (operatorStack.peek()->type == COMMA ||
                         operatorStack.peek()->type == LBRACE){
@@ -290,6 +297,10 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) {
                 token.lexeme = "neg";
                 token.type = FUNCTION;
             }
+            else if (token.type == STAR && (current == tokens.begin() || !isPreImplicit(std::prev(current)->type))){
+                token.lexeme = "varargs";
+                token.type = FUNCTION;
+            }
             else if (!operatorStack.empty()){
                 auto type = operatorStack.peek()->type;
                 while((type == FUNCTION
@@ -304,7 +315,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) {
             operatorStack.push(&token);
         }
         else{
-            return InvalidExpression::construct(Exception("Unsupported Token: '", token.lexeme, "'"));
+            throw Exception("Unsupported Token: '", token.lexeme, "'");
         }
     }
     while(outputStacks.size() > 1){

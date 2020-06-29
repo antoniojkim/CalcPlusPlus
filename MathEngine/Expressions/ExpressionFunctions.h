@@ -12,6 +12,9 @@ namespace ExpressionMath {
     EXPR_MATH(cb)
     EXPR_MATH(cbrt)
 
+    EXPR_MATH(exp)
+    EXPR_MATH(exp2)
+    EXPR_MATH(expm1)
     EXPR_MATH(ln)
 
     // Trig Functions

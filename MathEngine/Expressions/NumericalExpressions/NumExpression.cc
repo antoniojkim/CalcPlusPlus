@@ -3,16 +3,21 @@
 #include <memory>
 #include <sstream>
 
-#include "../InvalidExpression.h"
-#include "../NumericalExpression.h"
+#include "../../Scanner/scanner.h"
 #include "../../Utils/exceptions.h"
 #include "../../Utils/fraction.h"
 #include "../../Utils/Numeric.h"
+#include "../ExpressionOperations.h"
+#include "../NumericalExpression.h"
+#include "../VariableExpression.h"
 
 using namespace std;
+using namespace Scanner;
 
-NumExpression::NumExpression(double real, double imag): real{real}, imag{imag} {}
-NumExpression::NumExpression(const std::string& num): real{0}, imag{0} {
+NumExpression::NumExpression(double real, double imag):
+    Expression{NUM}, real{real}, imag{imag} {}
+NumExpression::NumExpression(const std::string& num):
+    Expression{NUM}, real{0}, imag{0} {
     switch(num.at(0)){
         case 'i':
         case 'j':
@@ -42,38 +47,27 @@ expression NumExpression::construct(const std::string& num){
     return shared_ptr<NumExpression>(new NumExpression(num));
 }
 
-expression NumExpression::simplify() {
-    return copy();
-}
-expression NumExpression::derivative(const std::string& var) {
-    return construct(0);
-}
-expression NumExpression::integrate(const std::string& var) {
-    return InvalidExpression::construct(Exception("Unimplemented Error: NumExpression::integrate"));
-}
-
-bool NumExpression::evaluable() const { return !gsl_isnan(real) && !gsl_isnan(imag); }
-
-expression NumExpression::evaluate(const Variables& vars) {
-    if (evaluable()){ return copy(); }
-    return InvalidExpression::construct(Exception("Invalid Number."));
-}
-
-double NumExpression::value(const Variables& vars) const { return real; }
-
-gsl_complex NumExpression::complex() const { return gsl_complex{real, imag}; }
-gsl_complex NumExpression::complex(const Variables& vars) const { return gsl_complex{real, imag}; }
 
 bool NumExpression::isComplex() const { return imag != 0; }
+bool NumExpression::isEvaluable(const Variables& vars) const {
+    return !gsl_isnan(real) && !gsl_isnan(imag);
+}
 
-bool NumExpression::isEqual(expression e, double precision) const {
+expression NumExpression::eval(const Variables& vars) {
+    if (isEvaluable()){ return copy(); }
+    throw Exception("Invalid Number: ", copy());
+}
+double NumExpression::value(const Variables& vars) const { return real; }
+gsl_complex NumExpression::complex(const Variables& vars) const { return gsl_complex{real, imag}; }
+
+bool NumExpression::equals(expression e, double precision) const {
     if (e->num()){
         return compare(complex(), e->complex(), precision) == 0;
     }
     return false;
 }
 
-std::ostream& NumExpression::print(std::ostream& out) const {
+std::ostream& NumExpression::print(std::ostream& out, const bool pretty) const {
     if (!evaluable()){
         return out << "NaN";
     }
@@ -81,10 +75,29 @@ std::ostream& NumExpression::print(std::ostream& out) const {
         return out << "0";
     }
     if (real != 0){
-        out << std::setprecision(16) << real;
+        if (pretty){
+            long numerator, denominator;
+            if (to_fraction(real, numerator, denominator) && denominator != 1 &&
+                std::abs(numerator) < 1e6 && std::abs(denominator) < 1e6){
+                out << numerator << "/" << denominator;
+            }
+            else {
+                out << std::setprecision(16) << real;
+            }
+        }
+        else {
+            out << std::setprecision(16) << real;
+        }
         if (imag > 0){ out << "+"; }
     }
     if (imag != 0){
+        if (pretty){
+            long numerator, denominator;
+            if (to_fraction(imag, numerator, denominator) && denominator != 1 &&
+                std::abs(numerator) < 1e6 && std::abs(denominator) < 1e6){
+                return out << numerator << "/" << denominator << "i";
+            }
+        }
         out << std::setprecision(16) << imag << "i";
     }
     return out;
@@ -113,19 +126,4 @@ std::ostream& NumExpression::postfix(std::ostream& out) const {
         out << 0;
     }
     return out;
-}
-
-bool NumExpression::prettyprint(std::ostream& out) const {
-    if (!evaluable()){
-        return false;
-    }
-    if (imag == 0){
-        long numerator, denominator;
-        if (to_fraction(real, numerator, denominator) && denominator != 1 &&
-            std::abs(numerator) < 1e6 && std::abs(denominator) < 1e6){
-            out << numerator << "/" << denominator;
-            return true;
-        }
-    }
-    return false;
 }

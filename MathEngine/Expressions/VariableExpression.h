@@ -4,21 +4,40 @@
 
 class VariableExpression: public Expression {
 
-    const std::string name;
-    expression var;
+    protected:
+        const std::string name;
+        expression var;
 
-    VariableExpression(const std::string& name, expression var = nullptr);
+        VariableExpression(const std::string& name, expression var = nullptr);
 
     public:
         static expression construct(const std::string& name);
         static expression construct(const std::string& name, double var);
         static expression construct(const std::string& name, expression var);
 
-        expression evaluate(const Variables& vars) override;
+        expression simplify() override;
+        expression derivative(const std::string& var) override;
+        expression integrate(const std::string& var) override;
 
-        inline VariableExpression* variable() override { return this; }
-        inline const std::string& getName() const { return name; }
-        inline expression getVar() const { return var; }
+        expression at(const int index) override;
+
+        std::string repr() const override { return name; }
+
+        EXPRESSION_OVERRIDES
+
+};
+
+class VarArgsExpression: public Expression {
+
+    expression e;
+
+    VarArgsExpression(expression e);
+
+    public:
+        static expression construct(expression e);
+
+        expression at(const int index) override;
+        std::string repr() const override;
 
         EXPRESSION_OVERRIDES
 

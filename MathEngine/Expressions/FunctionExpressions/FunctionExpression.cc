@@ -9,21 +9,19 @@
 #include "../FunctionExpression.h"
 #include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
-#include "Functions.h"
-#include "FunctionDirectory.h"
 
 using namespace std;
 
 
 FunctionExpression::FunctionExpression(int functionIndex, expression arg):
-    functionIndex{functionIndex},
+    f{Function::getFunction(functionIndex)},
     arg{arg} {
 
 }
 
 
 expression FunctionExpression::construct(const char * name, expression arg){
-    auto expr = FunctionExpression::construct(Function::indexOf(name), arg);
+    auto expr = FunctionExpression::construct(Functions::indexOf(name), arg);
     if (expr->invalid()){
         cout << "Invalid Function: " << name << endl;
         return InvalidExpression::construct(Exception("Invalid Function: ", name));
@@ -31,7 +29,7 @@ expression FunctionExpression::construct(const char * name, expression arg){
     return expr;
 }
 expression FunctionExpression::construct(std::string& name, expression arg){
-    auto expr = FunctionExpression::construct(Function::indexOf(name), arg);
+    auto expr = FunctionExpression::construct(Functions::indexOf(name), arg);
     if (expr->invalid()){
         cout << "Invalid Function: " << name << endl;
         return InvalidExpression::construct(Exception("Invalid Function: ", name));
@@ -42,7 +40,7 @@ expression FunctionExpression::construct(int functionIndex, expression arg){
     if (functionIndex < 0){
         return InvalidExpression::construct(Exception("Invalid Function"));
     }
-    if (functionIndex == Function::indexOf("neg")){
+    if (functionIndex == Functions::indexOf("neg")){
         return -arg;
     }
     return shared_ptr<FunctionExpression>(new FunctionExpression(functionIndex, arg));
@@ -61,8 +59,8 @@ expression FunctionExpression::integrate(const std::string& var) {
     return InvalidExpression::construct(Exception("Unimplemented Error: FunctionExpression::integrate"));
 }
 
-bool FunctionExpression::evaluable() const {
-    return arg->evaluable();
+bool FunctionExpression::isEvaluable() const {
+    return arg->isEvaluable();
 }
 
 

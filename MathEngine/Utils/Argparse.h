@@ -2,29 +2,43 @@
 
 #include <map>
 #include <vector>
+#include <string>
+#include <utility>
 
 #include "../Expressions/Expression.h"
-#include "../Utils/HeapArray.h"
 
 namespace Function {
-    class Args {
-        std::vector<expression> args;
-        // std::map<std::string, expression> kwargs;
 
-        bool insert(expression e);
+    class Args {
+        std::map<std::string, expression> kwargs;
 
         public:
-            Args(expression args);
+            inline expression operator[](const std::string name){ return kwargs.at(name); }
+            inline double get(const std::string name){ return kwargs.at(name)->value(); }
+            inline double get(const std::string name, double defaultArg){
+                if (kwargs.count(name) == 0){
+                    return defaultArg;
+                }
+                return kwargs.at(name)->value();
+            }
 
-            inline expression operator[](const int index){ return args.at(index); }
-            // inline expression operator[](const std::string index){ return kwargs.at(index); }
-            // inline bool contains(const std::string index){ return kwargs.count(index) > 0; }
+            inline size_t size() { return kwargs.size(); }
 
-            inline size_t size() { return args.size(); }
+            decltype(kwargs.begin()) begin(){ return kwargs.begin(); }
+            decltype(kwargs.end()) end(){ return kwargs.end(); }
 
-            decltype(args.begin()) begin(){ return args.begin(); }
-            decltype(args.end()) end(){ return args.end(); }
-
-            HeapArray<double> array();
+            friend std::ostream& operator<<(std::ostream& out, Args& args);
+            friend class Signature;
     };
+
+    class Signature {
+        const std::string signature;
+        std::vector<expression> argnames;
+
+        public:
+            Signature(const std::string& signature);
+
+            std::unique_ptr<Args> parse(expression args);
+    };
+
 }

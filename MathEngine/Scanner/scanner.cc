@@ -18,18 +18,19 @@ using namespace Scanner;
 
 
 namespace Lexeme {
-	constexpr int numLexemes = 48;
+	constexpr int numLexemes = 49;
 	constexpr const char* lexemes[numLexemes] = {
 		"!", "!!", "!=", "#", "$", "%", "&", "&&", "'", "(", ")", "*", "**", "+", ",", "-",
-		"->", ".", "/", "//", ":", ":=", ";", "<", "<-", "<<", "<=", "=", "==", ">", ">=", ">>",
-		"?", "C", "P", "[", "\"", "\\", "]", "^", "^|", "_", "`", "{", "|", "||", "}", "~"
+		"->", ".", "...", "/", "//", ":", ":=", ";", "<", "<-", "<<", "<=", "=", "==", ">",
+		">=", ">>", "?", "C", "P", "[", "\"", "\\", "]", "^", "^|", "_", "`", "{", "|", "||",
+		"}", "~"
 	};
 	constexpr const Type types[numLexemes] = {
 		EXCL, EXCL_EXCL, NOT_EQUALS, POUND, DOLLAR, PCT, AMP, AMP_AMP, APOSTROPHE, LPAREN,
-		RPAREN, STAR, STAR_STAR, PLUS, COMMA, MINUS, R_ARROW, DOT, SLASH, SLASH_SLASH, COLON,
-		COLON_EQUALS, SEMICOLON, LT, L_ARROW, LT_LT, LT_EQ, EQUALS, EQUALS_EQUALS, GT, GT_EQ,
-		GT_GT, QUESTION, CHOOSE, PERMUTE, LSQUARE, QUOTE, BACKSLASH, RSQUARE, CARET, CARET_PIPE,
-		UNDERSCORE, BACKTICK, LBRACE, PIPE, PIPE_PIPE, RBRACE, TILDE
+		RPAREN, STAR, STAR_STAR, PLUS, COMMA, MINUS, R_ARROW, DOT, ELLIPSIS, SLASH, SLASH_SLASH,
+		COLON, COLON_EQUALS, SEMICOLON, LT, L_ARROW, LT_LT, LT_EQ, EQUALS, EQUALS_EQUALS, GT,
+		GT_EQ, GT_GT, QUESTION, CHOOSE, PERMUTE, LSQUARE, QUOTE, BACKSLASH, RSQUARE, CARET,
+		CARET_PIPE, UNDERSCORE, BACKTICK, LBRACE, PIPE, PIPE_PIPE, RBRACE, TILDE
 	};
 	constexpr int longestLexeme = 2;
 

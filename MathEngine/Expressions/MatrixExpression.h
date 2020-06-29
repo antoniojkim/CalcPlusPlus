@@ -11,67 +11,63 @@
 
 #include "Expression.h"
 
-typedef std::unique_ptr<gsl_matrix, decltype(&gsl_matrix_free)> unique_gsl_matrix;
-typedef std::unique_ptr<gsl_matrix_complex, decltype(&gsl_matrix_complex_free)> unique_gsl_matrix_complex;
-typedef std::unique_ptr<gsl_permutation, decltype(&gsl_permutation_free)> unique_gsl_permutation;
-typedef std::unique_ptr<gsl_vector, decltype(&gsl_vector_free)> unique_gsl_vector;
-typedef std::unique_ptr<gsl_vector_complex, decltype(&gsl_vector_complex_free)> unique_gsl_vector_complex;
+#define UNIQUE_GSL(M)                                           \
+    typedef std::unique_ptr<M, decltype(&M##_free)> unique_##M; \
+    inline unique_##M make_##M(size_t rows, size_t cols){       \
+        return unique_##M(M##_alloc(rows, cols), M##_free);     \
+    }                                                           \
+    unique_##M to_##M(expression e);
+
+UNIQUE_GSL(gsl_matrix)
+UNIQUE_GSL(gsl_matrix_complex)
+
+#undef UNIQUE_GSL
+
+#define UNIQUE_GSL(M)                                           \
+    typedef std::unique_ptr<M, decltype(&M##_free)> unique_##M; \
+    inline unique_##M make_##M(size_t size){                    \
+        return unique_##M(M##_alloc(size), M##_free);           \
+    }                                                           \
+    unique_##M to_##M(expression e);
+
+UNIQUE_GSL(gsl_permutation)
+UNIQUE_GSL(gsl_vector)
+UNIQUE_GSL(gsl_vector_complex)
+
+#undef UNIQUE_GSL
+
 
 class MatrixExpression: public Expression {
-    std::list<expression> mat;
-    size_t numRows, numCols;
+    std::vector<expression> mat;
+    size_t rows, cols;
 
     MatrixExpression();
-    MatrixExpression(std::list<expression>&& matrix, size_t numRows, size_t numCols);
+    MatrixExpression(std::vector<expression>&& matrix, size_t numRows, size_t numCols);
+    MatrixExpression(std::list<expression>& matrix, size_t numRows, size_t numCols);
     MatrixExpression(std::initializer_list<double> matrix, size_t numRows, size_t numCols);
     MatrixExpression(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols);
-    MatrixExpression(gsl_matrix* matrix);
-    MatrixExpression(gsl_matrix_complex* matrix);
-    MatrixExpression(gsl_permutation* permutation);
-    MatrixExpression(gsl_vector* vec);
-    MatrixExpression(gsl_vector_complex* vec);
+    MatrixExpression(unique_gsl_matrix& matrix);
+    MatrixExpression(unique_gsl_matrix_complex& matrix);
+    MatrixExpression(unique_gsl_permutation& permutation);
+    MatrixExpression(unique_gsl_vector& vec);
+    MatrixExpression(unique_gsl_vector_complex& vec);
 
     public:
 
         static expression construct();
-        static expression construct(std::list<expression>&& matrix, size_t numRows, size_t numCols);
+        static expression construct(std::vector<expression>&& matrix, size_t numRows, size_t numCols);
+        static expression construct(std::list<expression>& matrix, size_t numRows, size_t numCols);
         static expression construct(std::initializer_list<double> matrix, size_t numRows, size_t numCols);
         static expression construct(std::initializer_list<gsl_complex> matrix, size_t numRows, size_t numCols);
-        static expression construct(gsl_matrix* matrix);
-        static expression construct(gsl_matrix_complex* matrix);
-        static expression construct(gsl_permutation* matrix);
-        static expression construct(gsl_vector* vec);
-        static expression construct(gsl_vector_complex* vec);
+        static expression construct(unique_gsl_matrix& matrix);
+        static expression construct(unique_gsl_matrix_complex& matrix);
+        static expression construct(unique_gsl_permutation& matrix);
+        static expression construct(unique_gsl_vector& vec);
+        static expression construct(unique_gsl_vector_complex& vec);
 
-        std::list<expression>& getMatrix();
-        size_t rows() const;
-        size_t cols() const;
-
-        inline MatrixExpression* matrix() override { return this; }
-
-        expression evaluate(const Variables& vars) override;
+        expression at(const int index);
+        size_t shape(const int axis) const;
+        size_t size() const;
 
         EXPRESSION_OVERRIDES
-
-        unique_gsl_matrix to_gsl_matrix() const;
-        unique_gsl_matrix_complex to_gsl_matrix_complex() const;
-        unique_gsl_permutation to_gsl_permutation() const;
-        unique_gsl_vector to_gsl_vector() const;
-        unique_gsl_vector_complex to_gsl_vector_complex() const;
 };
-
-inline unique_gsl_matrix make_gsl_matrix(size_t rows, size_t cols){
-    return unique_gsl_matrix(gsl_matrix_alloc(rows, cols), gsl_matrix_free);
-}
-inline unique_gsl_matrix_complex make_gsl_matrix_complex(size_t rows, size_t cols){
-    return unique_gsl_matrix_complex(gsl_matrix_complex_alloc(rows, cols), gsl_matrix_complex_free);
-}
-inline unique_gsl_permutation make_gsl_permutation(size_t rows){
-    return unique_gsl_permutation(gsl_permutation_alloc(rows), gsl_permutation_free);
-}
-inline unique_gsl_vector make_gsl_vector(size_t size){
-    return unique_gsl_vector(gsl_vector_alloc(size), gsl_vector_free);
-}
-inline unique_gsl_vector_complex make_gsl_vector_complex(size_t size){
-    return unique_gsl_vector_complex(gsl_vector_complex_alloc(size), gsl_vector_complex_free);
-}

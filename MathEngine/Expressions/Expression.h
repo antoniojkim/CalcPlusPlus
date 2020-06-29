@@ -1,91 +1,109 @@
 #pragma once
 
 #include <iostream>
+#include <map>
 #include <memory>
 #include <string>
-#include <unordered_map>
+#include <vector>
 
 #include <gsl/gsl_complex.h>
 #include <gsl/gsl_math.h>
 
+#include "../Scanner/scanner.h"
+
 struct Expression;
 
-struct BaseUnitExpression;
-struct BinExpression;
-struct FunctionExpression;
-struct HexExpression;
-struct InvalidExpression;
-struct MatrixExpression;
-struct NumExpression;
-struct OperatorExpression;
-struct TupleExpression;
-struct VariableExpression;
-
 typedef std::shared_ptr<Expression> expression;
-typedef std::unordered_map<std::string, expression> Variables;
+typedef std::map<std::string, expression> Variables;
 
-class Expression : public std::enable_shared_from_this<Expression> {
+extern const Variables emptyVars;
 
-    struct gsl_expression_struct {
-        Expression* e;
-        const std::string var;
-        Variables vars;
-
-        gsl_expression_struct(Expression*, const std::string var = "x");
-    };
-    static double gsl_expression_function(double x, void* p);
-    std::unique_ptr<gsl_expression_struct> gsl_params;
+class Expression: public std::enable_shared_from_this<Expression> {
 
     public:
+        const Scanner::Type kind;
+
+        Expression(Scanner::Type kind);
         virtual ~Expression();
 
-        virtual expression simplify() = 0;
-        virtual expression derivative(const std::string& var) = 0;
-        virtual expression integrate(const std::string& var) = 0;
-
-        virtual bool evaluable() const = 0;
-        virtual expression evaluate();
-        virtual expression evaluate(const Variables& vars);
-
-        virtual gsl_function function(const std::string& var = "x");
-
-        virtual double value() const;
-        virtual double value(const Variables& vars) const = 0;
-
-        virtual gsl_complex complex() const;
-        virtual gsl_complex complex(const Variables& vars) const;
-
-        virtual BaseUnitExpression* unit() { return nullptr; }
-        virtual BinExpression* bin() { return nullptr; }
-        virtual FunctionExpression* functionExpr() { return nullptr; }
-        virtual HexExpression* hex() { return nullptr; }
-        virtual InvalidExpression* invalid() { return nullptr; }
-        virtual MatrixExpression* matrix() { return nullptr; }
-        virtual NumExpression* num() { return nullptr; }
-        virtual OperatorExpression* operatorExpr() { return nullptr; }
-        virtual TupleExpression* tuple() { return nullptr; }
-        virtual VariableExpression* variable() { return nullptr; }
+        virtual expression simplify();
+        virtual expression derivative(const std::string& var);
+        virtual expression integrate(const std::string& var);
 
         virtual bool isComplex() const = 0;
+        virtual bool isEvaluable(const Variables& vars = emptyVars) const = 0;
 
-        virtual bool isEqual(expression, double precision=1e-15) const = 0;
+        virtual expression eval(const Variables& vars = emptyVars) = 0;
+        virtual double value(const Variables& vars = emptyVars) const = 0;
+        virtual gsl_complex complex(const Variables& vars = emptyVars) const;
+
+        virtual bool equals(expression, double precision=1e-15) const = 0;
+
+        std::vector<double> array();
+        virtual expression at(const int index);
+        virtual double get(const int index);
+        virtual size_t shape(const int) const;
+        virtual size_t size() const;
+
+        virtual expression call(expression e);
+        inline expression operator()(expression e){ return call(e); }
+
+        inline bool is(Scanner::Type kind) const { return this->kind == kind; }
+        virtual std::string repr() const;
 
         expression copy();
 
-        virtual std::ostream& print(std::ostream&) const = 0;
+        virtual std::ostream& print(std::ostream&, const bool pretty=false) const = 0;
         virtual std::ostream& postfix(std::ostream&) const = 0;
-        virtual bool prettyprint(std::ostream&) const;
+
+    private:
+        struct gsl_expression_struct {
+            Expression* e;
+            const std::string var;
+            Variables vars;
+
+            gsl_expression_struct(Expression*, const std::string var = "x");
+        };
+        static double gsl_expression_function(double x, void* p);
+        std::unique_ptr<gsl_expression_struct> gsl_params;
+
+    public:
+        virtual gsl_function function(const std::string& var = "x");
+
+    private:
+        struct ExpressionIterator {
+            expression e;
+            size_t index;
+
+            ExpressionIterator(expression e, size_t index);
+
+            expression operator*();
+
+            bool operator==(const ExpressionIterator& other) const;
+            bool operator!=(const ExpressionIterator& other) const;
+            bool operator<(const ExpressionIterator& other) const;
+            bool operator<=(const ExpressionIterator& other) const;
+            bool operator>(const ExpressionIterator& other) const;
+            bool operator>=(const ExpressionIterator& other) const;
+
+            ExpressionIterator& operator++();
+            ExpressionIterator& operator--();
+        };
+    public:
+        ExpressionIterator begin();
+        ExpressionIterator end();
 };
 
 std::ostream& operator<<(std::ostream&, const expression);
+bool operator==(const expression, const expression);
+bool operator==(const expression, Scanner::Type kind);
+bool operator!=(const expression, Scanner::Type kind);
 
-#define EXPRESSION_OVERRIDES                                       \
-    expression simplify() override;                                \
-    expression derivative(const std::string& var = "x") override;  \
-    expression integrate(const std::string& var = "x") override;   \
-    bool evaluable() const override;                               \
-    double value(const Variables& vars) const override;            \
-    bool isEqual(expression, double precision) const override;     \
-    bool isComplex() const override;                               \
-    std::ostream& print(std::ostream&) const override;             \
+#define EXPRESSION_OVERRIDES                                              \
+    bool isComplex() const override;                                      \
+    bool isEvaluable(const Variables& vars) const override;               \
+    expression eval(const Variables& vars) override;                      \
+    double value(const Variables& vars) const override;                   \
+    bool equals(expression, double precision) const override;             \
+    std::ostream& print(std::ostream&, const bool pretty) const override; \
     std::ostream& postfix(std::ostream&) const override;

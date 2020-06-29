@@ -6,8 +6,12 @@
 
 #include "Expression.h"
 
-class NumExpression: public Expression {
+struct NumericalExpression: public Expression {
+    expression derivative(const std::string& var) override;
+    expression integrate(const std::string& var) override;
+};
 
+class NumExpression: public NumericalExpression {
     double real, imag;
 
     NumExpression(double real, double imag);
@@ -18,21 +22,13 @@ class NumExpression: public Expression {
         static expression construct(const gsl_complex& z);
         static expression construct(const std::string&);
 
-        expression evaluate(const Variables&) override;
-
-        gsl_complex complex() const override;
         gsl_complex complex(const Variables& vars) const override;
 
         EXPRESSION_OVERRIDES
 
-        inline NumExpression* num() override { return this; }
-
-        bool prettyprint(std::ostream&) const override;
-
 };
 
-class HexExpression: public Expression {
-
+class HexExpression: public NumericalExpression {
     unsigned long long num;
 
     HexExpression(unsigned long long num);
@@ -42,16 +38,11 @@ class HexExpression: public Expression {
         static expression construct(unsigned long long num);
         static expression construct(const std::string&);
 
-        expression evaluate(const Variables&) override;
-
         EXPRESSION_OVERRIDES
-
-        inline HexExpression* hex() override { return this; }
 
 };
 
-class BinExpression: public Expression {
-
+class BinExpression: public NumericalExpression {
     unsigned long long num;
 
     BinExpression(unsigned long long num);
@@ -61,10 +52,6 @@ class BinExpression: public Expression {
         static expression construct(unsigned long long num);
         static expression construct(const std::string&);
 
-        expression evaluate(const Variables&) override;
-
         EXPRESSION_OVERRIDES
-
-        inline BinExpression* bin() override { return this; }
 
 };

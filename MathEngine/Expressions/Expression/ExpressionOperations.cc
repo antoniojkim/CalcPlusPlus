@@ -15,10 +15,10 @@ using namespace Scanner;
 using namespace ExpressionMath;
 
 expression operator+(const expression expr1, const expression expr2) {
-    if (expr1->evaluable()){
+    if (expr1->isEvaluable()){
         return expr2 + expr1->value();
     }
-    if (expr2->evaluable()){
+    if (expr2->isEvaluable()){
         return expr1 + expr2->value();
     }
     return OperatorExpression::construct(PLUS, expr1, expr2);
@@ -27,7 +27,7 @@ expression operator+(double expr1, const expression expr2) {
     return expr2 + expr1;
 }
 expression operator+(const expression expr1, double expr2) {
-    if (expr1->evaluable()){
+    if (expr1->isEvaluable()){
         return NumExpression::construct(expr1->value() + expr2);
     }
     if (expr2 == 0){
@@ -43,25 +43,25 @@ expression operator+(const expression expr1, const gsl_complex& expr2) {
 }
 
 expression operator-(const expression expr){
-    if (expr->evaluable()){
+    if (expr->isEvaluable()){
         return NumExpression::construct(gsl_complex_negative(expr->complex()));
     }
     return FunctionExpression::construct("neg", expr);
 }
 expression operator-(const expression expr1, const expression expr2) {
-    if (expr1->evaluable() && expr2->evaluable()){
+    if (expr1->isEvaluable() && expr2->isEvaluable()){
         return NumExpression::construct(expr1->value() - expr2->value());
     }
     return OperatorExpression::construct(MINUS, expr1, expr2);
 }
 expression operator-(double expr1, const expression expr2) {
-    if (expr2->evaluable()){
+    if (expr2->isEvaluable()){
         return NumExpression::construct(expr1 - expr2->value());
     }
     return OperatorExpression::construct(MINUS, NumExpression::construct(expr1), expr2);
 }
 expression operator-(const expression expr1, double expr2) {
-    if (expr1->evaluable()){
+    if (expr1->isEvaluable()){
         return NumExpression::construct(expr1->value() - expr2);
     }
     return OperatorExpression::construct(MINUS, expr1, NumExpression::construct(expr2));
@@ -74,16 +74,16 @@ expression operator-(const expression expr1, const gsl_complex& expr2) {
 }
 
 expression operator*(const expression expr1, const expression expr2) {
-    if (expr1->evaluable()){
+    if (expr1->isEvaluable()){
         return expr1->value() * expr2;
     }
-    if (expr2->evaluable()){
+    if (expr2->isEvaluable()){
         return expr2->value() * expr1;
     }
     return OperatorExpression::construct(STAR, expr1, expr2);
 }
 expression operator*(double expr1, const expression expr2) {
-    if (expr2->evaluable()){
+    if (expr2->isEvaluable()){
         return NumExpression::construct(expr1 * expr2->value());
     }
     if (expr1 == 1){
@@ -121,19 +121,19 @@ expression operator*(const expression expr1, const gsl_complex& expr2) {
 }
 
 expression operator/(const expression expr1, const expression expr2) {
-    if (expr1->evaluable() && expr2->evaluable()){
+    if (expr1->isEvaluable() && expr2->isEvaluable()){
         return NumExpression::construct(expr1->value() / expr2->value());
     }
     return OperatorExpression::construct(SLASH, expr1, expr2);
 }
 expression operator/(double expr1, const expression expr2) {
-    if (expr2->evaluable()){
+    if (expr2->isEvaluable()){
         return NumExpression::construct(expr1 / expr2->value());
     }
     return OperatorExpression::construct(SLASH, NumExpression::construct(expr1), expr2);
 }
 expression operator/(const expression expr1, double expr2) {
-    if (expr1->evaluable()){
+    if (expr1->isEvaluable()){
         return NumExpression::construct(expr1->value() / expr2);
     }
     return OperatorExpression::construct(SLASH, expr1, NumExpression::construct(expr2));
@@ -146,16 +146,16 @@ expression operator/(const expression expr1, const gsl_complex& expr2) {
 }
 
 expression operator^(const expression expr1, const expression expr2) {
-    if (expr1->evaluable()){
+    if (expr1->isEvaluable()){
         return expr1->value() ^ expr2;
     }
-    else if (expr2->evaluable()){
+    else if (expr2->isEvaluable()){
         return expr1 ^ expr2->value();
     }
     return OperatorExpression::construct(CARET, expr1, expr2);
 }
 expression operator^(double expr1, const expression expr2) {
-    if (expr2->evaluable()){
+    if (expr2->isEvaluable()){
         return NumExpression::construct(pow(expr1, expr2->value()));
     }
     if (expr1 == 1){
@@ -167,7 +167,7 @@ expression operator^(double expr1, const expression expr2) {
     return OperatorExpression::construct(CARET, NumExpression::construct(expr1), expr2);
 }
 expression operator^(const expression expr1, double expr2) {
-    if (expr1->evaluable()){
+    if (expr1->isEvaluable()){
         return NumExpression::construct(pow(expr1->value(), expr2));
     }
     if (expr2 == 0){

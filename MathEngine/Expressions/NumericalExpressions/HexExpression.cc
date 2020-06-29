@@ -9,8 +9,8 @@
 
 using namespace std;
 
-HexExpression::HexExpression(unsigned long long num): num{num} {}
-HexExpression::HexExpression(const std::string& num) {
+HexExpression::HexExpression(unsigned long long num): Expression{HEX}, num{num} {}
+HexExpression::HexExpression(const std::string& num): Expression{HEX} {
     char* endptr;
     this->num = strtoull(num.c_str()+2, &endptr, 16);
 }
@@ -22,30 +22,21 @@ expression HexExpression::construct(const std::string& num){
     return shared_ptr<HexExpression>(new HexExpression(num));
 }
 
-expression HexExpression::simplify() { return copy(); }
-expression HexExpression::derivative(const std::string& var) {
-    return HexExpression::construct(0);
-}
-expression HexExpression::integrate(const std::string& var) {
-    return InvalidExpression::construct(Exception("Unimplemented Error: HexExpression::integrate"));
-}
-
-bool HexExpression::evaluable() const { return true; }
-
-expression HexExpression::evaluate(const Variables&) { return copy(); }
-
-double HexExpression::value(const Variables& vars) const  { return double(num); }
 
 bool HexExpression::isComplex() const { return false; }
+bool HexExpression::isEvaluable() const { return true; }
 
-bool HexExpression::isEqual(expression e, double precision) const {
+expression HexExpression::eval(const Variables&) { return copy(); }
+double HexExpression::value(const Variables& vars) const  { return double(num); }
+
+bool HexExpression::equals(expression e, double precision) const {
     if (e->hex()){
         return num == e->hex()->num;
     }
     return false;
 }
 
-std::ostream& HexExpression::print(std::ostream& out) const {
+std::ostream& HexExpression::print(std::ostream& out, const bool pretty) const {
     out << "0x" << std::hex << num;
     return out;
 }

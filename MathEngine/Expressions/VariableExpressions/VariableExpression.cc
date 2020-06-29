@@ -4,6 +4,7 @@
 
 #include <gsl/gsl_math.h>
 
+#include "../../Scanner/scanner.h"
 #include "../../Utils/exceptions.h"
 #include "../NumericalExpression.h"
 #include "../UnitConversionExpression/Units.h"
@@ -12,8 +13,9 @@
 #include "Constants.h"
 
 using namespace std;
+using namespace Scanner;
 
-VariableExpression::VariableExpression(const std::string& name, expression var): name{name}, var{var} {}
+VariableExpression::VariableExpression(const std::string& name, expression var): Expression{VAR}, name{name}, var{var} {}
 
 expression VariableExpression::construct(const std::string& name){
     return shared_ptr<VariableExpression>(new VariableExpression(name));
@@ -41,11 +43,15 @@ expression VariableExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: VariableExpression::integrate");
 }
 
-bool VariableExpression::evaluable() const {
-    return (var && var->evaluable()) || getConstantIndex(name) != -1;
+
+bool VariableExpression::isEvaluable(const Variables& vars) const {
+    return vars.count(name) != 0 || (var && var->isEvaluable(vars)) || getConstantIndex(name) != -1;
 }
 
-expression VariableExpression::evaluate(const Variables& vars) {
+expression VariableExpression::eval(const Variables& vars) {
+    if (var){
+        return var->eval(vars);
+    }
     if (vars.count(name) == 0){
         if (getConstantIndex(name) != -1){
             return copy();
@@ -55,7 +61,7 @@ expression VariableExpression::evaluate(const Variables& vars) {
         }
         return copy();
     }
-    return vars.at(name)->evaluate(vars);
+    return vars.at(name)->eval(vars);
 }
 
 double VariableExpression::value(const Variables& vars) const {
@@ -73,14 +79,21 @@ double VariableExpression::value(const Variables& vars) const {
 
 bool VariableExpression::isComplex() const { return false; }
 
-bool VariableExpression::isEqual(expression e, double precision) const {
-    if (e->variable()){
-        return name == e->variable()->name && var->isEqual(e->variable()->var);
+bool VariableExpression::equals(expression e, double precision) const {
+    if (e == VAR){
+        return name == e->repr() && ((!var && !e->at(0)) || (var && e->at(0) && var->equals(e->at(0), precision)));
     }
     return false;
 }
 
-std::ostream& VariableExpression::print(std::ostream& out) const {
+expression VariableExpression::at(const int index) {
+    if (index == 0){
+        return var;
+    }
+    return nullptr;
+}
+
+std::ostream& VariableExpression::print(std::ostream& out, const bool pretty) const {
     if (!var){
         return out << name;
     }
@@ -88,7 +101,8 @@ std::ostream& VariableExpression::print(std::ostream& out) const {
         return out << std::setprecision(16) << getConstantValue(name);
     }
     else{
-        return out << name << " = " << var;
+        out << name << " = ";
+        return var->print(out, pretty);
     }
 }
 std::ostream& VariableExpression::postfix(std::ostream& out) const {

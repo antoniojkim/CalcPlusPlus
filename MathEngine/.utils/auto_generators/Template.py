@@ -14,6 +14,7 @@ except ImportError:
 
 file_dir = pathlib.Path(__file__).parent.absolute()
 expr_dir = os.path.join(file_dir, "..", "..", "Expressions")
+func_dir = os.path.join(file_dir, "..", "..", "Functions")
 
 
 def wrap(text, width=88, indent="\t", delimiter=", "):
@@ -64,8 +65,11 @@ class Template:
 
     def __exit__(self, type, value, traceback):
         if type is None and value is None and traceback is None:
-            with open(self.write_path) as file:
-                old_template = file.read()
+            if os.path.isfile(self.write_path):
+                with open(self.write_path) as file:
+                    old_template = file.read()
+            else:
+                old_template = ""
 
             if old_template != self.template:
                 with open(self.write_path, "w") as file:

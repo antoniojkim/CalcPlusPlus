@@ -3,14 +3,18 @@
 #include <cstdlib>
 #include <sstream>
 
+#include "../../Scanner/scanner.h"
+#include "../../Utils/exceptions.h"
+#include "../ExpressionOperations.h"
 #include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
-#include "../../Utils/exceptions.h"
+#include "../VariableExpression.h"
 
 using namespace std;
+using namespace Scanner;
 
-BinExpression::BinExpression(unsigned long long num): num{num} {}
-BinExpression::BinExpression(const std::string& num) {
+BinExpression::BinExpression(unsigned long long num): Expression{BIN}, num{num} {}
+BinExpression::BinExpression(const std::string& num): Expression{BIN} {
     char* endptr;
     this->num = strtoull(num.c_str()+2, &endptr, 2);
 }
@@ -22,30 +26,21 @@ expression BinExpression::construct(const std::string& num){
     return shared_ptr<BinExpression>(new BinExpression(num));
 }
 
-expression BinExpression::simplify() { return copy(); }
-expression BinExpression::derivative(const std::string& var) {
-    return BinExpression::construct(0);
-}
-expression BinExpression::integrate(const std::string& var) {
-    return InvalidExpression::construct(Exception("Unimplemented Error: BinExpression::integrate"));
-}
-
-bool BinExpression::evaluable() const { return true; }
-
-expression BinExpression::evaluate(const Variables&) { return copy(); }
-
-double BinExpression::value(const Variables& vars) const { return double(num); }
 
 bool BinExpression::isComplex() const { return false; }
+bool BinExpression::isEvaluable() const { return true; }
 
-bool BinExpression::isEqual(expression e, double precision) const {
+expression BinExpression::eval(const Variables& vars) { return copy(); }
+double BinExpression::value(const Variables& vars) const { return double(num); }
+
+bool BinExpression::equals(expression e, double precision) const {
     if (e->bin()){
         return num == e->bin()->num;
     }
     return false;
 }
 
-std::ostream& BinExpression::print(std::ostream& out) const {
+std::ostream& BinExpression::print(std::ostream& out, const bool pretty) const {
     unsigned long long n = num;
     char buffer[128];
     int i = 0;
