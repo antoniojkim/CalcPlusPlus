@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <sstream>
 
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
 #include "../InvalidExpression.h"
 #include "../UnitExpression.h"
 #include "Units.h"

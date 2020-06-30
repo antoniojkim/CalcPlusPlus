@@ -18,8 +18,8 @@ namespace Function {
     // @Operator pow ^ **
     const struct __pow__: public OperatorFunction {
         __pow__(): OperatorFunction("^") {}
-        expression evaluate(Function::Args& args) override {
-            using Scanner::MATRIX;
+        expression eval(Function::Args& args) const override {
+            using Scanner::MATRIX, Scanner::HEX, Scanner::BIN, Scanner::VAR;
             auto l = args["l"];
             auto r = args["r"];
             if (l == MATRIX){
@@ -42,7 +42,7 @@ namespace Function {
             }
             return NumExpression::construct(std::pow(l->value(), r->value()));
         }
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             using ExpressionMath::ln;
             auto l = args["l"];
             auto r = args["r"];
@@ -58,7 +58,7 @@ namespace Function {
         }
 
 
-        expression matrix_inverse(expression matrix){
+        expression matrix_inverse(expression matrix) const {
             if (matrix->shape(0) == matrix->shape(1)){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -80,7 +80,7 @@ namespace Function {
             throw Exception("Expected (m, m) matrix. Got: (", matrix->shape(0), ", ", matrix->shape(1), ")");
         }
 
-        expression matrix_transpose(expression matrix){
+        expression matrix_transpose(expression matrix) const {
             if (matrix->shape(0) == matrix->shape(1)){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);

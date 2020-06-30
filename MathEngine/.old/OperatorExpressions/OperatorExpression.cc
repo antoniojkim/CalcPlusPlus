@@ -4,7 +4,7 @@
 
 #include <gsl/gsl_math.h>
 
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
 #include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
 #include "../OperatorExpression.h"
@@ -63,7 +63,7 @@ double OperatorExpression::value(const Variables& vars) const {
     return GSL_NAN;
 }
 
-bool OperatorExpression::isEvaluable() const { return lhs->isEvaluable() && rhs->isEvaluable(); }
+bool OperatorExpression::isEvaluable(const Variables& vars) const { return lhs->isEvaluable() && rhs->isEvaluable(); }
 bool OperatorExpression::isComplex() const { return lhs->isComplex() || rhs->isComplex(); }
 
 bool OperatorExpression::isEqual(expression e, double precision) const {

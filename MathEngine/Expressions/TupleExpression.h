@@ -15,6 +15,7 @@ class TupleExpression: public Expression {
     TupleExpression();
     TupleExpression(std::vector<expression>&& tuple);
     TupleExpression(std::list<expression>& tuple);
+    TupleExpression(std::initializer_list<expression> tuple);
     TupleExpression(std::initializer_list<double> tuple);
     TupleExpression(std::initializer_list<gsl_complex> tuple);
 
@@ -22,6 +23,7 @@ class TupleExpression: public Expression {
         static expression construct();
         static expression construct(std::vector<expression>&& tuple);
         static expression construct(std::list<expression>& tuple);
+        static expression construct(std::initializer_list<expression> tuple);
         static expression construct(std::initializer_list<double> tuple);
         static expression construct(std::initializer_list<gsl_complex> tuple);
 

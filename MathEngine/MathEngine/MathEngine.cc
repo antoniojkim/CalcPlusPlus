@@ -7,8 +7,7 @@
 #include "../Expressions/VariableExpressions/GreekLetters.h"
 #include "../MathEngine.h"
 #include "../Parser/modifiedShuntingYard.h"
-#include "../Parser/shuntingYard.h"
-#include "../Utils/exceptions.h"
+#include "../Utils/Exception.h"
 #include "Preprocessor.h"
 
 using namespace std;
@@ -32,43 +31,21 @@ expression MathEngine::parse(const std::string& input){
 #endif
     if (Scanner::scan(input, tokens)) {
         preprocess(tokens);
-
-        if (tokens.size() >= 3 && (tokens.front().type == ID || tokens.front().type == SPECIALID)){
-            auto& second = *std::next(tokens.begin());
-            if (second.type == EQUALS || second.type == COLON_EQUALS || second.type == L_ARROW){
-                string name = tokens.front().lexeme;
-                tokens.pop_front(); tokens.pop_front();
-                variables[name] = parser->parse(tokens);
-                return variables[name];
-            }
-        }
-        else if (tokens.size() == 2 && tokens.front().type == POUND){
-            auto& second = *std::next(tokens.begin());
-            if (second.type == ID || second.type == SPECIALID){
-                if (variables.count(second.lexeme) > 0){
-                    variables.erase(second.lexeme);
-                    return InvalidExpression::construct(Exception("Deleted Variable: ", second.lexeme));
-                }
-                else{
-                    return InvalidExpression::construct(Exception("Variable does not exist: ", second.lexeme));
-                }
-            }
-        }
-
         return parser->parse(tokens);
     }
-    return InvalidExpression::construct(Exception("Unable to scan input: ", input));
+    throw Exception("Unable to scan input: ", input);
 }
 expression MathEngine::operator()(const std::string& input){
     return parse(input);
 }
 
 expression MathEngine::evaluate(const std::string& input){
-    auto expr = parse(input);
-    if (expr->invalid()){
-        return expr;
+    try {
+        auto expr = parse(input);
+        return expr->eval(variables);
+    } catch(const Exception& e){
+        return InvalidExpression::construct(e);
     }
-    return expr->evaluate(variables);
 }
 
 
@@ -108,27 +85,50 @@ std::string MathEngine::evaluateOutput(const std::string& input, const std::stri
         }
     }
 
-    auto expr = evaluate(input);
-    if (!expr->invalid()){
-        ostringstream out;
-        out << "= ";
-        if (expr->prettyprint(out)){
-            out << " = ";
-        }
-        out << expr;
-        return out.str();
-    }
-#ifdef DEBUG
-    else{
-        cout << "LOG:  Invalid Expr: " << expr << endl;
-    }
-#endif
+    try {
+        auto expr = evaluate(input);
 
-    if (!output.empty() && output.at(0) != '`'){
+        // if (expr == VAR){
+        //     auto& second = *std::next(tokens.begin());
+        //     if (second.type == EQUALS || second.type == COLON_EQUALS || second.type == L_ARROW){
+        //         string name = tokens.front().lexeme;
+        //         tokens.pop_front(); tokens.pop_front();
+        //         variables[name] = parser->parse(tokens);
+        //         return variables[name];
+        //     }
+        // }
+        // else if (tokens.size() == 2 && tokens.front().type == POUND){
+        //     auto& second = *std::next(tokens.begin());
+        //     if (second.type == ID || second.type == SPECIALID){
+        //         if (variables.count(second.lexeme) > 0){
+        //             variables.erase(second.lexeme);
+        //             throw Exception("Deleted Variable: ", second.lexeme);
+        //         }
+        //         else{
+        //             throw Exception("Variable does not exist: ", second.lexeme);
+        //         }
+        //     }
+        // }
+
         ostringstream out;
-        out << "` " << output << " `" << endl;
-        expr->print(out);
+
+        ostringstream pretty;
+        expr->print(pretty, true);
+        ostringstream normal;
+        expr->print(normal, false);
+
+        if (pretty.str() != normal.str()){
+            out << "= " << pretty.str() << " ";
+        }
+        out << "= " << normal.str();
         return out.str();
+    } catch(const Exception& e){
+        if (!output.empty() && output.at(0) != '`'){
+            ostringstream out;
+            out << "` " << output << " `" << endl;
+            out << e;
+            return out.str();
+        }
     }
 
     return output;

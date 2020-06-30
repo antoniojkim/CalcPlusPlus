@@ -18,8 +18,8 @@ namespace Function {
     // @Operator sub -
     const struct __sub__: public OperatorFunction {
         __sub__(): OperatorFunction("-") {}
-        expression evaluate(Function::Args& args) override {
-            using Scanner::MATRIX;
+        expression eval(Function::Args& args) const override {
+            using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
             auto l = args["l"];
             auto r = args["r"];
             if (l == MATRIX || r == MATRIX){
@@ -36,7 +36,7 @@ namespace Function {
             }
             return NumExpression::construct(l->value() - r->value());
         }
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             return args["l"]->derivative(var) - args["r"]->derivative(var);
         }
 
@@ -82,7 +82,7 @@ namespace Function {
                 else{
                     auto gsl_mat = to_gsl_matrix(rhs);
                     gsl_matrix_scale(gsl_mat.get(), -1);
-                    gsl_matrix_add_constant(gsl_mat.get(), lhs->value(vars));
+                    gsl_matrix_add_constant(gsl_mat.get(), lhs->value());
                     return MatrixExpression::construct(gsl_mat);
                 }
             }

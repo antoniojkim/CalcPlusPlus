@@ -42,7 +42,7 @@ class Expression: public std::enable_shared_from_this<Expression> {
         std::vector<double> array();
         virtual expression at(const int index);
         virtual double get(const int index);
-        virtual size_t shape(const int) const;
+        virtual size_t shape(const int axis) const;
         virtual size_t size() const;
 
         virtual expression call(expression e);
@@ -50,6 +50,7 @@ class Expression: public std::enable_shared_from_this<Expression> {
 
         inline bool is(Scanner::Type kind) const { return this->kind == kind; }
         virtual std::string repr() const;
+        virtual int id() const;
 
         expression copy();
 
@@ -95,15 +96,12 @@ class Expression: public std::enable_shared_from_this<Expression> {
 };
 
 std::ostream& operator<<(std::ostream&, const expression);
-bool operator==(const expression, const expression);
-bool operator==(const expression, Scanner::Type kind);
-bool operator!=(const expression, Scanner::Type kind);
 
-#define EXPRESSION_OVERRIDES                                              \
-    bool isComplex() const override;                                      \
-    bool isEvaluable(const Variables& vars) const override;               \
-    expression eval(const Variables& vars) override;                      \
-    double value(const Variables& vars) const override;                   \
-    bool equals(expression, double precision) const override;             \
-    std::ostream& print(std::ostream&, const bool pretty) const override; \
+#define EXPRESSION_OVERRIDES                                                        \
+    bool isComplex() const override;                                                \
+    bool isEvaluable(const Variables& vars = emptyVars) const override;             \
+    expression eval(const Variables& vars = emptyVars) override;                    \
+    double value(const Variables& vars = emptyVars) const override;                 \
+    bool equals(expression, double precision) const override;                       \
+    std::ostream& print(std::ostream&, const bool pretty = false) const override;   \
     std::ostream& postfix(std::ostream&) const override;

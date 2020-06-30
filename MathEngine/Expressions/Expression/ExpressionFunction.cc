@@ -1,4 +1,7 @@
 #include "../Expression.h"
+#include "../NumericalExpression.h"
+
+using namespace std;
 
 Expression::gsl_expression_struct::gsl_expression_struct(Expression* e, const std::string var):
     e{e}, var{var} {}

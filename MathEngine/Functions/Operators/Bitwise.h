@@ -19,7 +19,7 @@ namespace Function {
     // @Operator lshift <<
     const struct __lshift__: public OperatorFunction {
         __lshift__(): OperatorFunction("<<") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
             double r = args["r"]->value();
             double intpartl, intpartr;
@@ -34,7 +34,7 @@ namespace Function {
     // @Operator rshift >>
     const struct __rshift__: public OperatorFunction {
         __rshift__(): OperatorFunction(">>") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
             double r = args["r"]->value();
             double intpartl, intpartr;
@@ -46,10 +46,10 @@ namespace Function {
     } rshift;
 
 
-    // @Operator and &
+    // @Operator bitwise_and &
     const struct __and__: public OperatorFunction {
         __and__(): OperatorFunction("&") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
             double r = args["r"]->value();
             double intpartl, intpartr;
@@ -58,13 +58,13 @@ namespace Function {
             }
             throw Exception("l & r expects integers. Got: ", args);
         }
-    } and;
+    } bitwise_and;
 
 
-    // @Operator or |
+    // @Operator bitwise_or |
     const struct __or__: public OperatorFunction {
         __or__(): OperatorFunction("|") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
             double r = args["r"]->value();
             double intpartl, intpartr;
@@ -73,13 +73,13 @@ namespace Function {
             }
             throw Exception("l | r expects integers. Got: ", args);
         }
-    } or;
+    } bitwise_or;
 
 
-    // @Operator xor ^|
+    // @Operator bitwise_xor ^|
     const struct __xor__: public OperatorFunction {
         __xor__(): OperatorFunction("^|") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
             double r = args["r"]->value();
             double intpartl, intpartr;
@@ -88,6 +88,6 @@ namespace Function {
             }
             throw Exception("l ^| r expects integers. Got: ", args);
         }
-    } xor;
+    } bitwise_xor;
 
 }

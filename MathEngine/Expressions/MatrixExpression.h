@@ -65,6 +65,10 @@ class MatrixExpression: public Expression {
         static expression construct(unique_gsl_vector& vec);
         static expression construct(unique_gsl_vector_complex& vec);
 
+        expression simplify() override;
+        expression derivative(const std::string& var) override;
+        expression integrate(const std::string& var) override;
+
         expression at(const int index);
         size_t shape(const int axis) const;
         size_t size() const;

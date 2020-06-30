@@ -4,7 +4,7 @@
 #include <sstream>
 
 #include "../../Scanner/scanner.h"
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
 #include "../../Utils/fraction.h"
 #include "../../Utils/Numeric.h"
 #include "../ExpressionOperations.h"
@@ -15,9 +15,9 @@ using namespace std;
 using namespace Scanner;
 
 NumExpression::NumExpression(double real, double imag):
-    Expression{NUM}, real{real}, imag{imag} {}
+    NumericalExpression{NUM}, real{real}, imag{imag} {}
 NumExpression::NumExpression(const std::string& num):
-    Expression{NUM}, real{0}, imag{0} {
+    NumericalExpression{NUM}, real{0}, imag{0} {
     switch(num.at(0)){
         case 'i':
         case 'j':
@@ -54,21 +54,21 @@ bool NumExpression::isEvaluable(const Variables& vars) const {
 }
 
 expression NumExpression::eval(const Variables& vars) {
-    if (isEvaluable()){ return copy(); }
+    if (isEvaluable(vars)){ return copy(); }
     throw Exception("Invalid Number: ", copy());
 }
 double NumExpression::value(const Variables& vars) const { return real; }
 gsl_complex NumExpression::complex(const Variables& vars) const { return gsl_complex{real, imag}; }
 
 bool NumExpression::equals(expression e, double precision) const {
-    if (e->num()){
+    if (e == NUM){
         return compare(complex(), e->complex(), precision) == 0;
     }
     return false;
 }
 
 std::ostream& NumExpression::print(std::ostream& out, const bool pretty) const {
-    if (!evaluable()){
+    if (!isEvaluable()){
         return out << "NaN";
     }
     if (real == 0 && imag == 0){
@@ -104,7 +104,7 @@ std::ostream& NumExpression::print(std::ostream& out, const bool pretty) const {
 }
 
 std::ostream& NumExpression::postfix(std::ostream& out) const {
-    if (!evaluable()){
+    if (!isEvaluable()){
         return out << "NaN";
     }
     if (real != 0){

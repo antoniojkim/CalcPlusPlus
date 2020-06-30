@@ -6,24 +6,25 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_complex_math.h>
 
-#include "../Expressions/ExpressionFunctions.h"
-#include "../Expressions/ExpressionOperations.h"
-#include "../Expressions/TupleExpression.h"
+#include "../../Expressions/ExpressionFunctions.h"
+#include "../../Expressions/ExpressionOperations.h"
+#include "../../Expressions/TupleExpression.h"
+#include "../../Utils/Exception.h"
 #include "../AbstractFunction.h"
 
 namespace Function {
     // @Function neg
     const struct __neg__: public Function::AbstractFunction {
         __neg__(): Function::AbstractFunction("neg", "(x,)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             auto x = args["x"];
             if (x->isComplex()){
                 return NumExpression::construct(gsl_complex_negative(x->complex()));
             }
             return NumExpression::construct(-x->value());
         }
-        double value(double x) override { return -x; }
-        expression derivative(Function::Args& args, const std::string& var) override {
+        double value(double x) const override { return -x; }
+        expression derivative(Function::Args& args, const std::string& var) const override {
             return -args["x"]->derivative(var);
         }
     } neg;
@@ -31,7 +32,7 @@ namespace Function {
     // @Function frexp
     const struct __frexp__: public Function::AbstractFunction {
         __frexp__(): AbstractFunction("frexp", "(x,)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double x = args["x"]->value();
             int e;
             double f = gsl_frexp(x, &e);
@@ -42,16 +43,16 @@ namespace Function {
     // @Function num
     const struct __num__: public Function::AbstractFunction {
         __num__(): AbstractFunction("num", "(x,)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             return NumExpression::construct(args["x"]->value());
         }
-        double value(double x) override { return x; }
+        double value(double x) const override { return x; }
     } num;
 
     // @Function hex
     const struct __hex__: public Function::AbstractFunction {
         __hex__(): AbstractFunction("hex", "(x,)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             auto x = args["x"];
             if (x->isComplex()){
                 double val = x->value();
@@ -66,7 +67,7 @@ namespace Function {
     // @Function bin
     const struct __bin__: public Function::AbstractFunction {
         __bin__(): AbstractFunction("bin", "(x,)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             auto x = args["x"];
             if (x->isComplex()){
                 double val = x->value();
@@ -81,7 +82,7 @@ namespace Function {
     // @Function abs
     const struct __abs__: public Function::ValueFunction {
         __abs__(): ValueFunction("abs", std::abs) {}
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             using ExpressionMath::abs;
             auto x = args["x"];
             return x / abs(x) * x->derivative(var);
@@ -91,11 +92,11 @@ namespace Function {
     // @Function sqr
     const struct __sqr__: public Function::ValueFunction {
         __sqr__(): ValueFunction("sqr", gsl_pow_2) {}
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             auto x = args["x"];
             return 2 * x * x->derivative(var);
         }
-        std::ostream& print(std::ostream& out, Function::Args& args) override {
+        std::ostream& print(std::ostream& out, Function::Args& args) const override {
             return out << "(" << args["x"] << ")^2";
         }
     } sqr;
@@ -103,12 +104,12 @@ namespace Function {
     // @Function sqrt
     const struct __sqrt__: public Function::ValueFunction {
         __sqrt__(): ValueFunction("sqrt", std::sqrt) {}
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             using ExpressionMath::sqrt;
             auto x = args["x"];
             return 0.5 / sqrt(x) * x->derivative(var);
         }
-        std::ostream& print(std::ostream& out, Function::Args& args) override {
+        std::ostream& print(std::ostream& out, Function::Args& args) const override {
             return out << "(" << args["x"] << ")^3";
         }
     } sqrt;
@@ -116,12 +117,12 @@ namespace Function {
     // @Function cb
     const struct __cb__: public Function::ValueFunction {
         __cb__(): ValueFunction("cb", gsl_pow_3) {}
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             using ExpressionMath::sqr;
             auto x = args["x"];
             return 3 / sqr(x) * x->derivative(var);
         }
-        std::ostream& print(std::ostream& out, Function::Args& args) override {
+        std::ostream& print(std::ostream& out, Function::Args& args) const override {
             return out << "(" << args["x"] << ")^3";
         }
     } cb;
@@ -129,7 +130,7 @@ namespace Function {
     // @Function cbrt
     const struct __cbrt__: public Function::ValueFunction {
         __cbrt__(): ValueFunction("cbrt", std::cbrt) {}
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             using ExpressionMath::sqr, ExpressionMath::cbrt;
             auto x = args["x"];
             return (1.0 / 3) / sqr(cbrt(x)) * x->derivative(var);
@@ -139,19 +140,19 @@ namespace Function {
     // @Function rad
     const struct __rad__: public Function::ValueFunction {
         __rad__(): ValueFunction("rad", nullptr) {}
-        double value(double x) override { return x * M_PI / 180; }
+        double value(double x) const override { return x * M_PI / 180; }
     } rad;
 
     // @Function deg
     const struct __deg__: public Function::ValueFunction {
         __deg__(): ValueFunction("deg", nullptr) {}
-        double value(double x) override { return x * M_PI / 180; }
+        double value(double x) const override { return x * M_PI / 180; }
     } deg;
 
     // @Function hypot
     const struct __hypot__: public Function::AbstractFunction {
         __hypot__(): AbstractFunction("hypot", "(a...,)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             auto a = args["a"];
             switch(a->size()){
                 case 2:
@@ -160,7 +161,7 @@ namespace Function {
                     return NumExpression::construct(gsl_hypot3(a->get(0), a->get(1), a->get(2)));
                 default: {
                     double sum = 0;
-                    for (auto e : a){
+                    for (auto e : *a){
                         sum += gsl_pow_2(e->value());
                     }
                     return NumExpression::construct(std::sqrt(sum));
@@ -172,7 +173,7 @@ namespace Function {
     // @Function ldexp
     const struct __ldexp__: public Function::AbstractFunction {
         __ldexp__(): AbstractFunction("ldexp", "(x, e)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double x = args["x"]->value();
             double e = args["e"]->value();
             if (std::trunc(e) == e){
@@ -185,7 +186,7 @@ namespace Function {
     // @Function fcmp
     const struct __fcmp__: public Function::AbstractFunction {
         __fcmp__(): AbstractFunction("fcmp", "(x, y, tol=1e-8)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             return NumExpression::construct(gsl_fcmp(
                 args["x"]->value(),
                 args["y"]->value(),
@@ -197,16 +198,16 @@ namespace Function {
     // @Function gcd
     const struct __gcd__: public Function::AbstractFunction {
         __gcd__(): AbstractFunction("gcd", "(a...,)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             auto a = args["a"];
             long long g = 0;
-            for (auto e : a){
-                double v = arg->value();
+            for (auto e : *a){
+                double v = e->value();
                 if (std::trunc(v) == v){
                     g = g == 0 ? v : std::gcd(g, (long long) v);
                 }
                 else{
-                    return InvalidExpression::construct(Exception("gcd expected integer arguments. Got: ", args));
+                    throw Exception("gcd expected integer arguments. Got: ", args);
                 }
             }
             return NumExpression::construct(g);
@@ -216,16 +217,16 @@ namespace Function {
     // @Function lcm
     const struct __lcm__: public Function::AbstractFunction {
         __lcm__(): AbstractFunction("lcm", "(a...,)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             auto a = args["a"];
             long long l = 0;
-            for (auto e : a){
-                double v = arg->value();
+            for (auto e : *a){
+                double v = e->value();
                 if (std::trunc(v) == v){
                     l = l == 0 ? v : std::lcm(l, (long long) v);
                 }
                 else{
-                    return InvalidExpression::construct(Exception("lcm expected integer arguments. Got: ", args));
+                    throw Exception("lcm expected integer arguments. Got: ", args);
                 }
             }
             return NumExpression::construct(l);

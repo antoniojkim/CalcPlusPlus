@@ -43,7 +43,7 @@ expression Expression::at(const int index){
 double Expression::get(const int index){
     return at(index)->value();
 }
-size_t Expression::shape(const int index) const {
+size_t Expression::shape(const int axis) const {
     if (axis == 0){
         return size();
     }
@@ -55,23 +55,15 @@ expression Expression::call(expression e){
     throw Exception("Expression is not callable: ", copy());
 }
 
-virtual std::string repr() const {
+std::string Expression::repr() const {
     ostringstream oss;
     oss << this;
     return oss.str();
 }
+int Expression::id() const { return (int) kind; }
 
 expression Expression::copy(){ return shared_from_this(); }
 
 std::ostream& operator<<(std::ostream& out, const expression e){
     return e->print(out);
-}
-bool operator==(const expression e1, const expression e2){
-    return e1->equals(e2);
-}
-bool operator==(const expression e1, Type kind){
-    return e1->is(kind);
-}
-bool operator!=(const expression e1, Type kind){
-    return !e1->is(kind);
 }

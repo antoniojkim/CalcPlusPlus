@@ -16,11 +16,11 @@ expression InvalidExpression::construct(const Exception& e) {
     return shared_ptr<InvalidExpression>(new InvalidExpression(e.msg));
 }
 
-expression InvalidExpression::eval(const Variables& vars) override { return copy(); }
+expression InvalidExpression::eval(const Variables& vars) { return copy(); }
 double InvalidExpression::value(const Variables& vars) const { return GSL_NAN; }
 
 bool InvalidExpression::isComplex() const { return false; }
-bool InvalidExpression::isEvaluable() const { return false; }
+bool InvalidExpression::isEvaluable(const Variables& vars) const { return false; }
 bool InvalidExpression::equals(expression e, double precision) const { return false; }
 
 std::ostream& InvalidExpression::print(std::ostream& out, const bool pretty) const {

@@ -6,22 +6,24 @@ else
 	INCLUDES := -I../.includes/
 endif
 
-CXXFLAGS = -g -std=c++17 -fPIC -shared -Wall -MMD -Werror=vla ${INCLUDES}
-TARGET_LIB = libMathEngine.so  # target lib
+CXXFLAGS := -Ofast -g -std=c++17 -fPIC -shared -Wall -MMD -Werror=vla ${INCLUDES}
+CPPFLAGS := -DDEBUG
+TARGET_LIB := libMathEngine.so  # target lib
 
-UTILS = $(wildcard Utils/*.cc)
-MATHENGINE = $(wildcard MathEngine/*.cc)
-SCANNER = $(wildcard Scanner/*.cc)
-PARSER = $(wildcard Parser/*.cc)
-EXPRESSIONS = $(wildcard Expressions/*/*.cc)
-FUNCTIONS = $(wildcard Functions/*.cc)
+UTILS := $(wildcard Utils/*.cc)
+MATHENGINE := $(wildcard MathEngine/*.cc)
+SCANNER := $(wildcard Scanner/*.cc)
+PARSER := $(wildcard Parser/*.cc)
+EXPRESSIONS := $(wildcard Expressions/*/*.cc)
+FUNCTIONS := $(wildcard Functions/*.cc)
+FUNCTIONIMPL := $(wildcard Functions/*/*.cc)
 
-SOURCES = ${UTILS} ${SCANNER} ${PARSER} ${EXPRESSIONS} ${FUNCTIONS} ${MATHENGINE}
-OBJECTS = $(SOURCES:.cc=.o)
-DEPENDS = ${OBJECTS:.o=.d}
+SOURCES := ${UTILS} ${SCANNER} ${PARSER} ${EXPRESSIONS} ${FUNCTIONS} ${FUNCTIONIMPL} ${MATHENGINE}
+OBJECTS := ${SOURCES:.cc=.o}
+DEPENDS := ${OBJECTS:.o=.d}
 
 ${TARGET_LIB}: ${OBJECTS}
-	$(CXX) $(CXXFLAGS) ${OBJECTS} -o ${TARGET_LIB} -L../.libs/ -lgsl -lgslcblas -lm
+	${CXX} ${CXXFLAGS} ${OBJECTS} -o ${TARGET_LIB} -L../.libs/ -lgsl -lgslcblas -lm
 
 
 # $(SOURCES:.cc=.d):%.d:%.cc

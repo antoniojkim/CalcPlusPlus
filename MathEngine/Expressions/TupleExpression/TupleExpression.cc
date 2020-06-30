@@ -5,7 +5,8 @@
 #include <gsl/gsl_math.h>
 
 #include "../../Scanner/scanner.h"
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
+#include "../ExpressionOperations.h"
 #include "../NumericalExpression.h"
 #include "../TupleExpression.h"
 
@@ -15,6 +16,12 @@ using namespace Scanner;
 TupleExpression::TupleExpression(): Expression(TUPLE) {}
 TupleExpression::TupleExpression(std::vector<expression>&& tuple): Expression(TUPLE), data(std::move(tuple)) {}
 TupleExpression::TupleExpression(std::list<expression>& tuple): Expression(TUPLE) {
+    data.reserve(tuple.size());
+    for (auto e : tuple){
+        this->data.emplace_back(e);
+    }
+}
+TupleExpression::TupleExpression(std::initializer_list<expression> tuple): Expression(TUPLE) {
     data.reserve(tuple.size());
     for (auto e : tuple){
         this->data.emplace_back(e);
@@ -41,6 +48,9 @@ expression TupleExpression::construct(std::vector<expression>&& tuple){
 }
 expression TupleExpression::construct(std::list<expression>& tuple){
     return shared_ptr<TupleExpression>(new TupleExpression(tuple));
+}
+expression TupleExpression::construct(std::initializer_list<expression> tuple){
+    return shared_ptr<TupleExpression>(new TupleExpression(std::forward<std::initializer_list<expression>>(tuple)));
 }
 expression TupleExpression::construct(std::initializer_list<double> tuple){
     return shared_ptr<TupleExpression>(new TupleExpression(std::forward<std::initializer_list<double>>(tuple)));

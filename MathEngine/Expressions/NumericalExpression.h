@@ -7,6 +7,9 @@
 #include "Expression.h"
 
 struct NumericalExpression: public Expression {
+
+    NumericalExpression(Scanner::Type kind);
+
     expression derivative(const std::string& var) override;
     expression integrate(const std::string& var) override;
 };
@@ -22,7 +25,7 @@ class NumExpression: public NumericalExpression {
         static expression construct(const gsl_complex& z);
         static expression construct(const std::string&);
 
-        gsl_complex complex(const Variables& vars) const override;
+        gsl_complex complex(const Variables& vars = emptyVars) const override;
 
         EXPRESSION_OVERRIDES
 

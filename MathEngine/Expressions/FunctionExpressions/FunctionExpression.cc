@@ -4,39 +4,29 @@
 
 #include <gsl/gsl_math.h>
 
-#include "../../Utils/exceptions.h"
+#include "../../Scanner/scanner.h"
+#include "../../Utils/Exception.h"
 #include "../ExpressionOperations.h"
 #include "../FunctionExpression.h"
 #include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
+#include "../TupleExpression.h"
 
 using namespace std;
+using namespace Scanner;
 
 
-FunctionExpression::FunctionExpression(int functionIndex, expression arg):
-    f{Function::getFunction(functionIndex)},
-    arg{arg} {
+FunctionExpression::FunctionExpression(int functionIndex, const expression arg):
+    Expression(FUNCTION), functionIndex(functionIndex), arg(arg) {}
 
+
+expression FunctionExpression::construct(const char * name, const expression arg){
+    return FunctionExpression::construct(Functions::indexOf(name), arg);
 }
-
-
-expression FunctionExpression::construct(const char * name, expression arg){
-    auto expr = FunctionExpression::construct(Functions::indexOf(name), arg);
-    if (expr->invalid()){
-        cout << "Invalid Function: " << name << endl;
-        return InvalidExpression::construct(Exception("Invalid Function: ", name));
-    }
-    return expr;
+expression FunctionExpression::construct(std::string& name, const expression arg){
+    return FunctionExpression::construct(Functions::indexOf(name), arg);
 }
-expression FunctionExpression::construct(std::string& name, expression arg){
-    auto expr = FunctionExpression::construct(Functions::indexOf(name), arg);
-    if (expr->invalid()){
-        cout << "Invalid Function: " << name << endl;
-        return InvalidExpression::construct(Exception("Invalid Function: ", name));
-    }
-    return expr;
-}
-expression FunctionExpression::construct(int functionIndex, expression arg){
+expression FunctionExpression::construct(int functionIndex, const expression arg){
     if (functionIndex < 0){
         return InvalidExpression::construct(Exception("Invalid Function"));
     }
@@ -45,67 +35,79 @@ expression FunctionExpression::construct(int functionIndex, expression arg){
     }
     return shared_ptr<FunctionExpression>(new FunctionExpression(functionIndex, arg));
 }
+expression FunctionExpression::construct(const char * name, std::initializer_list<expression> args){
+    return FunctionExpression::construct(
+        Functions::indexOf(name),
+        TupleExpression::construct(std::forward<std::initializer_list<expression>>(args))
+    );
+}
+expression FunctionExpression::construct(std::string& name, std::initializer_list<expression> args){
+    return FunctionExpression::construct(
+        Functions::indexOf(name),
+        TupleExpression::construct(std::forward<std::initializer_list<expression>>(args))
+    );
+}
+expression FunctionExpression::construct(int functionIndex, std::initializer_list<expression> args){
+    return construct(
+        functionIndex,
+        TupleExpression::construct(std::forward<std::initializer_list<expression>>(args))
+    );
+}
 
 
 expression FunctionExpression::simplify() {
-    return InvalidExpression::construct(Exception("Unimplemented Error: FunctionExpression::simplify"));
+    return Functions::getFunction(functionIndex)->simplify(arg);
 }
 expression FunctionExpression::derivative(const std::string& var) {
-    auto fprime = get_function_derivative(functionIndex);
-    if (fprime){ return fprime(arg, var) * arg->derivative(var); }
-    return InvalidExpression::construct(Exception("Unimplemented Error: FunctionExpression::derivative"));
+    return Functions::getFunction(functionIndex)->derivative(arg, var);
 }
 expression FunctionExpression::integrate(const std::string& var) {
-    return InvalidExpression::construct(Exception("Unimplemented Error: FunctionExpression::integrate"));
-}
-
-bool FunctionExpression::isEvaluable() const {
-    return arg->isEvaluable();
-}
-
-
-expression FunctionExpression::evaluate(const Variables& vars) {
-    auto fe = get_function_expr(functionIndex);
-    if (fe){
-        return fe(arg, vars);
-    }
-    return NumExpression::construct(value(vars));
-}
-
-double FunctionExpression::value(const Variables& vars) const {
-    auto f = get_function(functionIndex);
-    if (f){
-        return f(arg, vars);
-    }
-    auto fe = get_function_expr(functionIndex);
-    if (fe){
-        return fe(arg, vars)->value();
-    }
-    return GSL_NAN;
+    return Functions::getFunction(functionIndex)->integrate(arg, var);
 }
 
 bool FunctionExpression::isComplex() const {
     return arg->isComplex();
 }
+bool FunctionExpression::isEvaluable(const Variables& vars) const {
+    return arg->isEvaluable(vars);
+}
 
-bool FunctionExpression::isEqual(expression e, double precision) const {
-    if (e->functionExpr()){
-        auto f = e->functionExpr();
-        if (f->functionIndex == this->functionIndex){
-            return arg->isEqual(f->arg, precision);
-        }
+expression FunctionExpression::eval(const Variables& vars) {
+    return Functions::getFunction(functionIndex)->eval(arg, vars);
+}
+double FunctionExpression::value(const Variables& vars) const {
+    return Functions::getFunction(functionIndex)->value(arg, vars);
+}
+
+bool FunctionExpression::equals(expression e, double precision) const {
+    if (e == FUNCTION && functionIndex == e->id()){
+        return arg->equals(e->at(0), precision);
     }
     return false;
 }
 
-std::ostream& FunctionExpression::print(std::ostream& out) const {
-    out << Function::names[functionIndex];
-    if (arg->tuple()){
-        return arg->print(out);
+expression FunctionExpression::at(const int index) {
+    if (index == 0){
+        return arg;
     }
-    return arg->print(out << "(") << ")";
+    throw Exception("Array Index Out of Bounds (index: ", index, "): ", copy());
+}
+
+std::string FunctionExpression::repr() const {
+    return Functions::names[functionIndex];
+}
+int FunctionExpression::id() const {
+    return functionIndex;
+}
+
+std::ostream& FunctionExpression::print(std::ostream& out, const bool pretty) const {
+    out << Functions::names[functionIndex];
+    if (arg == TUPLE){
+        return arg->print(out, pretty);
+    }
+    return arg->print(out << "(", pretty) << ")";
 }
 std::ostream& FunctionExpression::postfix(std::ostream& out) const {
     arg->postfix(out) << " ";
-    return out << Function::names[functionIndex];
+    return out << Functions::names[functionIndex];
 }

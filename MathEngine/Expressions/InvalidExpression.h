@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Expression.h"
-#include "../Utils/exceptions.h"
+#include "../Utils/Exception.h"
 
 class InvalidExpression: public Expression {
     std::string message;

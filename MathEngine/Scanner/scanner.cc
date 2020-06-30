@@ -9,8 +9,7 @@
 
 #include "scanner.h"
 #include "../Utils/BinarySearch.h"
-#include "../Utils/exceptions.h"
-#include "../Expressions/FunctionExpressions/Functions.h"
+#include "../Utils/Exception.h"
 #include "../Expressions/VariableExpressions/GreekLetters.h"
 
 using namespace std;
@@ -238,12 +237,13 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             tokens.emplace_back(Token{str.substr(i, index), NUM});
             i += index;
         }
-        // else if (startsWithFunction(c_str, size, index)){
-        //     tokens.emplace_back(Token{Function::names[index], FUNCTION});
-        //     i += Function::nameLengths[index];
-        // }
         else if (startsWithID(c_str, size, index)){
-            tokens.emplace_back(Token{str.substr(i, index), ID});
+            if (std::strncmp(c_str, "None", index-i) || std::strncmp(c_str, "null", index-i)){
+                tokens.emplace_back(Token{"", NONE});
+            }
+            else{
+                tokens.emplace_back(Token{str.substr(i, index), ID});
+            }
             i += index;
         }
         else if (startsWithLexeme(c_str, size, index)){

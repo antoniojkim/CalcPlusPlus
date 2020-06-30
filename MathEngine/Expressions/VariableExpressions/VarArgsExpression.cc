@@ -5,7 +5,7 @@
 #include <gsl/gsl_math.h>
 
 #include "../../Scanner/scanner.h"
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
 #include "../NumericalExpression.h"
 #include "../UnitConversionExpression/Units.h"
 #include "../UnitExpression.h"

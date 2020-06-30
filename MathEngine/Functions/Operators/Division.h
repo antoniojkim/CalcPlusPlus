@@ -18,8 +18,8 @@ namespace Function {
     // @Operator div /
     const struct __div__: public OperatorFunction {
         __div__(): OperatorFunction("/") {}
-        expression evaluate(Function::Args& args) override {
-            using Scanner::MATRIX;
+        expression eval(Function::Args& args) const override {
+            using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
             auto l = args["l"];
             auto r = args["r"];
             if (l == MATRIX || r == MATRIX){
@@ -36,7 +36,7 @@ namespace Function {
             }
             return NumExpression::construct(l->value() / r->value());
         }
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             auto l = args["l"];
             auto r = args["r"];
             return (l->derivative(var) * r - l * r->derivative(var)) / (r ^ 2);
@@ -45,7 +45,7 @@ namespace Function {
         static expression matrix_div(expression lhs, expression rhs){
             using Scanner::MATRIX;
             if (lhs == MATRIX && rhs == MATRIX){
-                if (lhs->rows() == rhs->rows() && lhs->cols() == rhs->cols()){
+                if (lhs->shape(0) == rhs->shape(0) && lhs->shape(1) == rhs->shape(1)){
                     if (lhs->isComplex() || rhs->isComplex()){
                         auto lmat = to_gsl_matrix_complex(lhs);
                         auto rmat = to_gsl_matrix_complex(rhs);
@@ -102,7 +102,8 @@ namespace Function {
     // @Operator mod %
     const struct __mod__: public OperatorFunction {
         __mod__(): OperatorFunction("%") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
+            using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
             auto l = args["l"];
             auto r = args["r"];
             if (l->isComplex() || r->isComplex()){
@@ -122,7 +123,8 @@ namespace Function {
     // @Operator floordiv //
     const struct __floordiv__: public OperatorFunction {
         __floordiv__(): OperatorFunction("//") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
+            using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
             auto l = args["l"];
             auto r = args["r"];
             if (l->isComplex() || r->isComplex()){

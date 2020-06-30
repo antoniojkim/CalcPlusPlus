@@ -8,16 +8,15 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_poly.h>
 
-#include "../Expressions/Expression.h"
-#include "../Expressions/TupleExpression.h"
-#include "../Utils/Argparse.h"
+#include "../../Expressions/Expression.h"
+#include "../../Expressions/TupleExpression.h"
 #include "../AbstractFunction.h"
 
 namespace Function {
     // @Function quad
     const struct __quad__: public Function::AbstractFunction {
         __quad__(): AbstractFunction("quad", "(a, b, c)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double b = args["b"]->value();
             double c = args["c"]->value();
@@ -42,7 +41,7 @@ namespace Function {
     // @Function quadc
     const struct __quadc__: public Function::AbstractFunction {
         __quadc__(): AbstractFunction("quadc", "(a, b, c)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double b = args["b"]->value();
             double c = args["c"]->value();
@@ -62,7 +61,7 @@ namespace Function {
     // @Function cubic
     const struct __cubic__: public Function::AbstractFunction {
         __cubic__(): AbstractFunction("cubic", "(a, b, c, d)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double b = args["b"]->value() / a;
             double c = args["c"]->value() / a;
@@ -83,7 +82,7 @@ namespace Function {
     // @Function cubicc
     const struct __cubicc__: public Function::AbstractFunction {
         __cubicc__(): AbstractFunction("cubicc", "(a, b, c, d)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double b = args["b"]->value() / a;
             double c = args["c"]->value() / a;

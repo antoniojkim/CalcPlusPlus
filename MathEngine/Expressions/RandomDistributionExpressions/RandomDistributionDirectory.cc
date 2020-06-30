@@ -3,7 +3,7 @@
  *************** Auto-Generated File ***************
  ***************************************************/
 
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
 #include "RandomDistributionDirectory.h"
 #include "RandomDistributions.h"
 #include "Distributions/Gauss.h"

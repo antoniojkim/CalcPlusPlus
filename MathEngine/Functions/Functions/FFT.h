@@ -8,11 +8,11 @@
 #include <gsl/gsl_fft_halfcomplex.h>
 #include <gsl/gsl_fft_complex.h>
 
-#include "../Expressions/Expression.h"
-#include "../Expressions/InvalidExpression.h"
-#include "../Expressions/MatrixExpression.h"
-#include "../Expressions/TupleExpression.h"
-#include "../Utils/Argparse.h"
+#include "../../Expressions/Expression.h"
+#include "../../Expressions/InvalidExpression.h"
+#include "../../Expressions/MatrixExpression.h"
+#include "../../Expressions/TupleExpression.h"
+#include "../../Utils/Argparse.h"
 #include "../AbstractFunction.h"
 
 #define MAKE_UNIQUE_GSL(F) \
@@ -35,8 +35,10 @@ namespace Function {
     // @Function fft
     const struct __fft__: public Function::AbstractFunction {
         __fft__(): AbstractFunction("fft", "(m,)") {}
-        static expression compute(expression matrix){
+
+        expression eval(Function::Args& args) const override {
             using Scanner::MATRIX;
+            auto matrix = args["m"];
             if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
                 size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
@@ -78,18 +80,15 @@ namespace Function {
             }
             throw Exception("FFT expected 1D Matrix. Got: ", matrix);
         }
-
-        expression evaluate(Function::Args& args) override {
-            return this->compute(args["m"]);
-        }
     } fft;
 
     // @Function ifft
     const struct __ifft__: public Function::AbstractFunction {
         __ifft__(): AbstractFunction("ifft", "(m,)") {}
 
-        expression compute(expression matrix){
+        expression eval(Function::Args& args) const override {
             using Scanner::MATRIX;
+            auto matrix = args["m"];
             if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
                 size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
@@ -130,10 +129,6 @@ namespace Function {
                 }
             }
             throw Exception("IFFT expected 1D Matrix. Got: ", matrix);
-        }
-
-        expression evaluate(Function::Args& args) override {
-            return this->compute(args["m"]);
         }
     } ifft;
 }

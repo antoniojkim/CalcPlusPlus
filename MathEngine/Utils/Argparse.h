@@ -38,7 +38,7 @@ namespace Function {
         public:
             Signature(const std::string& signature);
 
-            std::unique_ptr<Args> parse(expression args);
+            std::unique_ptr<Args> parse(expression args) const ;
     };
 
 }

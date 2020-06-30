@@ -2,22 +2,23 @@
 #include <iterator>
 #include <list>
 
+#include "../Expressions/ExpressionOperations.h"
 #include "../Expressions/FunctionExpression.h"
-#include "../Expressions/FunctionExpressions/Functions.h"
 #include "../Expressions/MatrixExpression.h"
 #include "../Expressions/NumericalExpression.h"
-// #include "../Expressions/OperatorExpression.h"
-// #include "../Expressions/OperatorExpressions/Operators.h"
 #include "../Expressions/TupleExpression.h"
 #include "../Expressions/VariableExpression.h"
+#include "../Functions/Functions.h"
+#include "../Functions/Operators.h"
 #include "../Scanner/scanner.h"
-#include "../Utils/exceptions.h"
+#include "../Utils/Exception.h"
 #include "../Utils/FixedStack.h"
 #include "modifiedShuntingYard.h"
 
 // #define PRINT_POSTFIX
 
 using namespace std;
+using namespace Operators;
 using namespace Scanner;
 
 ModifiedShuntingYard::ModifiedShuntingYard(){}
@@ -163,7 +164,7 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
 
                 expression rhs = expressionStacks.back().pop();
                 expression lhs = expressionStacks.back().pop();
-                expressionStacks.back().push(FunctionExpression::construct(token->lexeme, lhs, rhs));
+                expressionStacks.back().push(FunctionExpression::construct(token->lexeme, {lhs, rhs}));
             }
         }
         else{

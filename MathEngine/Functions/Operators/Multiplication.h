@@ -18,8 +18,8 @@ namespace Function {
     // @Operator mul *
     const struct __mul__: public OperatorFunction {
         __mul__(): OperatorFunction("*") {}
-        expression evaluate(Function::Args& args) override {
-            using Scanner::MATRIX;
+        expression eval(Function::Args& args) const override {
+            using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
             auto l = args["l"];
             auto r = args["r"];
             if (l == MATRIX || r == MATRIX){
@@ -36,7 +36,7 @@ namespace Function {
             }
             return NumExpression::construct(l->value() * r->value());
         }
-        expression derivative(Function::Args& args, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) const override {
             auto l = args["l"];
             auto r = args["r"];
             return l->derivative(var) * r + l * r->derivative(var);
@@ -83,20 +83,20 @@ namespace Function {
                     "Matrix multiplication expected (m, n)*(n, p) matrix or (m, n)*(m, n) matrix. Got: (",
                     lhs->shape(0), ", ", lhs->shape(1), ")*(",
                     rhs->shape(0), ", ", rhs->shape(1), ")"
-                ));
+                );
             }
             if (lhs == MATRIX || rhs == MATRIX){
                 auto scalar = lhs == MATRIX ? rhs : lhs;
                 auto matrix = lhs == MATRIX ? lhs : rhs;
-                if (scalar->isComplex() || mat->isComplex()){
-                    auto gsl_mat = mat->to_gsl_matrix_complex();
+                if (scalar->isComplex() || matrix->isComplex()){
+                    auto gsl_mat = to_gsl_matrix_complex(matrix);
                     gsl_matrix_complex_scale(gsl_mat.get(), scalar->complex());
-                    return MatrixExpression::construct(gsl_mat.get());
+                    return MatrixExpression::construct(gsl_mat);
                 }
                 else{
-                    auto gsl_mat = mat->to_gsl_matrix();
+                    auto gsl_mat = to_gsl_matrix(matrix);
                     gsl_matrix_scale(gsl_mat.get(), scalar->value());
-                    return MatrixExpression::construct(gsl_mat.get());
+                    return MatrixExpression::construct(gsl_mat);
                 }
             }
             throw Exception("Matrix multiplication requires at least one matrix operand.");

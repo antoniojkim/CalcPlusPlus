@@ -7,7 +7,7 @@
 #include <cmath>
 #include <cstring>
 
-#include "../../Scanner/scanner.h"
+#include "../Scanner/scanner.h"
 
 namespace Operators {
     constexpr const int size = {numOperators};
@@ -22,7 +22,7 @@ namespace Operators {
         {singleOperators}
     };
 
-    constexpr int getOperatorIndex(const char * lexeme){
+    constexpr int indexOf(const char * lexeme){
         for (int i = 0; i < size; ++i){
             if (std::strcmp(lexeme, operators[i]) == 0){
                 return i;
@@ -30,8 +30,8 @@ namespace Operators {
         }
         return -1;
     }
-    inline int getOperatorIndex(const std::string& lexeme){
-        return getOperatorIndex(lexeme.c_str());
+    inline int indexOf(const std::string& lexeme){
+        return indexOf(lexeme.c_str());
     }
     constexpr bool isOperator(Scanner::Type type){ return (int(type) - offset) >= 0; }
     constexpr int getPrecedence(Scanner::Type type){ return std::abs(precedences[int(type) - offset]); }

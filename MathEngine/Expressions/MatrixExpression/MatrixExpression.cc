@@ -6,7 +6,8 @@
 #include <gsl/gsl_math.h>
 
 #include "../../Scanner/scanner.h"
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
+#include "../ExpressionOperations.h"
 #include "../NumericalExpression.h"
 #include "../MatrixExpression.h"
 
@@ -125,32 +126,35 @@ expression MatrixExpression::construct(unique_gsl_vector& vec){
 expression MatrixExpression::at(const int index) {
     return mat.at(index);
 }
-size_t shape(const int axis) const override {
+size_t MatrixExpression::shape(const int axis) const {
     switch(axis){
         case 0: return rows;
         case 1: return cols;
         default: throw Exception("Axis out of bounds: ", axis);
     }
 }
-size_t size() const override { return rows*cols; }
+size_t MatrixExpression::size() const { return rows*cols; }
 
 
 expression MatrixExpression::simplify() {
-    list<expression> simplified;
+    vector<expression> simplified;
+    simplified.reserve(mat.size());
     for (auto expr : mat){
         simplified.emplace_back(expr->simplify());
     }
     return MatrixExpression::construct(std::move(simplified), rows, cols);
  }
 expression MatrixExpression::derivative(const std::string& var) {
-    list<expression> derivatives;
+    vector<expression> derivatives;
+    derivatives.reserve(mat.size());
     for (auto expr : mat){
         derivatives.emplace_back(expr->derivative(var));
     }
     return MatrixExpression::construct(std::move(derivatives), rows, cols);
 }
 expression MatrixExpression::integrate(const std::string& var) {
-    list<expression> integrals;
+    vector<expression> integrals;
+    integrals.reserve(mat.size());
     for (auto expr : mat){
         integrals.emplace_back(expr->integrate(var));
     }
@@ -248,8 +252,8 @@ std::ostream& MatrixExpression::postfix(std::ostream& out) const {
 }
 
 
-unique_gsl_matrix to_gsl_matrix(expression e) const {
-    if (e->is(MATRIX)){
+unique_gsl_matrix to_gsl_matrix(expression e) {
+    if (e == MATRIX){
         auto gsl_mat = make_gsl_matrix(e->shape(0), e->shape(1));
         size_t i = 0;
         for (size_t r = 0; r < e->shape(0); ++r){
@@ -259,10 +263,10 @@ unique_gsl_matrix to_gsl_matrix(expression e) const {
         }
         return gsl_mat;
     }
-    return nullptr;
+    throw Exception("to_gsl_matrix expects a matrix. Got: ", e);
 }
-unique_gsl_matrix_complex to_gsl_matrix_complex(expression e) const {
-    if (e->is(MATRIX)){
+unique_gsl_matrix_complex to_gsl_matrix_complex(expression e) {
+    if (e == MATRIX){
         auto gsl_mat = make_gsl_matrix_complex(e->shape(0), e->shape(1));
         size_t i = 0;
         for (size_t r = 0; r < e->shape(0); ++r){
@@ -272,31 +276,31 @@ unique_gsl_matrix_complex to_gsl_matrix_complex(expression e) const {
         }
         return gsl_mat;
     }
-    return nullptr;
+    throw Exception("to_gsl_matrix_complex expects a matrix. Got: ", e);
 }
-unique_gsl_permutation to_gsl_permutation(expression e) const {
-    if (e->is(MATRIX)){
+unique_gsl_permutation to_gsl_permutation(expression e) {
+    if (e == MATRIX){
         return make_gsl_permutation(e->shape(0));
     }
-    return nullptr;
+    throw Exception("to_gsl_permutation expects a matrix. Got: ", e);
 }
-unique_gsl_vector to_gsl_vector(expression e) const {
-    if (e->is(MATRIX)){
+unique_gsl_vector to_gsl_vector(expression e) {
+    if (e == MATRIX){
         auto gsl_vec = make_gsl_vector(e->size());
         for (size_t i = 0; i < e->size(); ++i){
-            gsl_vector_set(gsl_mat.get(), i, e->at(i)->value());
+            gsl_vector_set(gsl_vec.get(), i, e->at(i)->value());
         }
         return gsl_vec;
     }
-    return nullptr;
+    throw Exception("to_gsl_vector expects a matrix. Got: ", e);
 }
-unique_gsl_vector_complex to_gsl_vector_complex(expression e) const {
-    if (e->is(MATRIX)){
+unique_gsl_vector_complex to_gsl_vector_complex(expression e) {
+    if (e == MATRIX){
         auto gsl_vec = make_gsl_vector_complex(e->size());
         for (size_t i = 0; i < e->size(); ++i){
-            gsl_vector_complex_set(gsl_mat.get(), i, e->at(i)->complex());
+            gsl_vector_complex_set(gsl_vec.get(), i, e->at(i)->complex());
         }
         return gsl_vec;
     }
-    return nullptr;
+    throw Exception("to_gsl_vector_complex expects a matrix. Got: ", e);
 }

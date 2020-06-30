@@ -11,8 +11,7 @@
 #include <string>
 
 #include "../Utils/BinarySearch.h"
-
-class AbstractFunction;
+#include "AbstractFunction.h"
 
 namespace Functions {
     constexpr const int numFunctions = 157;
@@ -38,8 +37,8 @@ namespace Functions {
 
     BINARY_SEARCH_INDEX_OF(names, numFunctions)
 
-    const AbstractFunction* getFunction(const char* name);
-    const AbstractFunction* getFunction(const int index);
+    const Function::AbstractFunction* getFunction(const char* name);
+    const Function::AbstractFunction* getFunction(const int index);
 }
 
 #endif // __FUNCTION_DIRECTORY_H__

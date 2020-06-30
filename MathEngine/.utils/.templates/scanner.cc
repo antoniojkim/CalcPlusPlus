@@ -9,8 +9,7 @@
 
 #include "scanner.h"
 #include "../Utils/BinarySearch.h"
-#include "../Utils/exceptions.h"
-#include "../Expressions/FunctionExpressions/Functions.h"
+#include "../Utils/Exception.h"
 #include "../Expressions/VariableExpressions/GreekLetters.h"
 
 using namespace std;

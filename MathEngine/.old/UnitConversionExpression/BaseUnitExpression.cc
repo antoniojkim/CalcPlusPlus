@@ -4,7 +4,7 @@
 #include <sstream>
 
 #include "../../Scanner/scanner.h"
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
 #include "../InvalidExpression.h"
 #include "../UnitExpression.h"
 #include "Units.h"
@@ -34,7 +34,7 @@ expression BaseUnitExpression::construct(UnitType type, const std::string& unit,
 
 
 bool BaseUnitExpression::isComplex() const { return false; }
-bool BaseUnitExpression::isEvaluable() const { return false; }
+bool BaseUnitExpression::isEvaluable(const Variables& vars) const { return false; }
 
 expression BaseUnitExpression::eval(const Variables& vars) {
     return copy();

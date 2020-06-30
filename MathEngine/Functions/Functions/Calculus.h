@@ -8,14 +8,16 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_integration.h>
 
-#include "../Expressions/VariableExpression.h"
+#include "../../Expressions/VariableExpression.h"
+#include "../../Scanner/scanner.h"
 #include "../AbstractFunction.h"
 
 namespace Function {
     // @Function deriv
     const struct __deriv__: public Function::AbstractFunction {
         __deriv__(): AbstractFunction("deriv", "(f, x, x1=None)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
+            using Scanner::NONE, Scanner::VAR;
             auto f = args["f"];
             auto x = args["x"];
             auto x1 = args["x1"];
@@ -53,7 +55,8 @@ namespace Function {
     // @Function diff
     const struct __diff__: public Function::AbstractFunction {
         __diff__(): AbstractFunction("diff", "(f, x=None)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
+            using Scanner::NONE, Scanner::VAR;
             auto f = args["f"];
             auto x = args["x"];
 
@@ -71,7 +74,8 @@ namespace Function {
     // @Function integral
     const struct __integral__: public Function::AbstractFunction {
         __integral__(): AbstractFunction("integral", "(f, a, b, x=None)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
+            using Scanner::NONE, Scanner::VAR;
             auto f = args["f"];
             auto a = args["a"];
             auto b = args["b"];

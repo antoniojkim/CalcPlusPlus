@@ -5,9 +5,8 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_gamma.h>
 
-#include "../Expressions/Expression.h"
-#include "../Expressions/InvalidExpression.h"
-#include "../Utils/Argparse.h"
+#include "../../Expressions/Expression.h"
+#include "../../Expressions/InvalidExpression.h"
 #include "../AbstractFunction.h"
 
 namespace Function {
@@ -64,25 +63,25 @@ namespace Function {
     // @Function choose comb
     const struct __choose__: public Function::AbstractFunction {
         __choose__(): AbstractFunction("choose", "(n, r)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double n = args["n"]->value();
-            double m = args["r"]->value();
+            double r = args["r"]->value();
             if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
                 return NumExpression::construct(gsl_sf_choose((unsigned int) n, (unsigned int) r));
             }
             throw Exception("nCr expects integers n >= r. Got: ", args);
         }
-        virtual std::ostream& print(std::ostream& out, expression e){
+        std::ostream& print(std::ostream& out, Function::Args& args) const override {
             return out << "(" << args["n"] << ")C(" << args["r"] << ")";
         }
     } choose;
 
     // @Function lnchoose lncomb
     const struct __lnchoose__: public Function::AbstractFunction {
-        __lnchoose__(): AbstractFunction("lnchoose") {}
-        expression evaluate(Function::Args& args) override {
+        __lnchoose__(): AbstractFunction("lnchoose", "(n, r)") {}
+        expression eval(Function::Args& args) const override {
             double n = args["n"]->value();
-            double m = args["r"]->value();
+            double r = args["r"]->value();
             if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
                 return NumExpression::construct(gsl_sf_lnchoose((unsigned int) n, (unsigned int) r));
             }
@@ -93,15 +92,15 @@ namespace Function {
     // @Function permute perm
     const struct __permute__: public Function::AbstractFunction {
         __permute__(): AbstractFunction("permute", "(n, r)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double n = args["n"]->value();
-            double m = args["r"]->value();
+            double r = args["r"]->value();
             if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
                 return NumExpression::construct(gsl_sf_choose((unsigned int) n, (unsigned int) r) * gsl_sf_fact((unsigned int) r));
             }
             throw Exception("nPr expects integers n >= r. Got: ", args);
         }
-        virtual std::ostream& print(std::ostream& out, expression e){
+        std::ostream& print(std::ostream& out, Function::Args& args) const override {
             return out << "(" << args["n"] << ")P(" << args["r"] << ")";
         }
     } permute;
@@ -109,9 +108,9 @@ namespace Function {
     // @Function lnpermute lnperm
     const struct __lnpermute__: public Function::AbstractFunction {
         __lnpermute__(): AbstractFunction("lnpermute", "(n, r)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double n = args["n"]->value();
-            double m = args["r"]->value();
+            double r = args["r"]->value();
             if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
                 return NumExpression::construct(gsl_sf_lnchoose((unsigned int) n, (unsigned int) r) + gsl_sf_lnfact((unsigned int) r));
             }
@@ -122,7 +121,7 @@ namespace Function {
     // @Function taylorcoeff
     const struct __taylorcoeff__: public Function::AbstractFunction {
         __taylorcoeff__(): AbstractFunction("taylorcoeff", "(n, x)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double n = args["n"]->value();
             double x = args["x"]->value();
             if (x >= 0 && n >= 0 && std::trunc(n) == n){
@@ -135,7 +134,7 @@ namespace Function {
     // @Function poch
     const struct __poch__: public Function::AbstractFunction {
         __poch__(): AbstractFunction("poch", "(a, x)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double x = args["x"]->value();
             return NumExpression::construct(gsl_sf_poch(a, x));
@@ -145,7 +144,7 @@ namespace Function {
     // @Function lnpoch
     const struct __lnpoch__: public Function::AbstractFunction {
         __lnpoch__(): AbstractFunction("lnpoch", "(a, x)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double x = args["x"]->value();
             return NumExpression::construct(gsl_sf_lnpoch(a, x));
@@ -155,7 +154,7 @@ namespace Function {
     // @Function pochrel
     const struct __pochrel__: public Function::AbstractFunction {
         __pochrel__(): AbstractFunction("pochrel", "(a, x)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double x = args["x"]->value();
             return NumExpression::construct(gsl_sf_pochrel(a, x));
@@ -165,7 +164,7 @@ namespace Function {
     // @Function gamma_inc gammainc
     const struct __gamma_inc__: public Function::AbstractFunction {
         __gamma_inc__(): AbstractFunction("gamma_inc", "(a, x)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double x = args["x"]->value();
             return NumExpression::construct(gsl_sf_gamma_inc(a, x));
@@ -175,7 +174,7 @@ namespace Function {
     // @Function gamma_inc_Q gammaincq
     const struct __gamma_inc_Q__: public Function::AbstractFunction {
         __gamma_inc_Q__(): AbstractFunction("gamma_inc_Q", "(a, x)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double x = args["x"]->value();
             return NumExpression::construct(gsl_sf_gamma_inc_Q(a, x));
@@ -185,7 +184,7 @@ namespace Function {
     // @Function gamma_inc_P gammaincp
     const struct __gamma_inc_P__: public Function::AbstractFunction {
         __gamma_inc_P__(): AbstractFunction("gamma_inc_P", "(a, x)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double x = args["x"]->value();
             return NumExpression::construct(gsl_sf_gamma_inc_P(a, x));
@@ -195,7 +194,7 @@ namespace Function {
     // @Function Beta
     const struct __Beta__: public Function::AbstractFunction {
         __Beta__(): AbstractFunction("Beta", "(a, b)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double b = args["b"]->value();
             if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
@@ -208,7 +207,7 @@ namespace Function {
     // @Function lnBeta
     const struct __lnBeta__: public Function::AbstractFunction {
         __lnBeta__(): AbstractFunction("lnBeta", "(a, b)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double b = args["b"]->value();
             if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
@@ -221,7 +220,7 @@ namespace Function {
     // @Function Betainc
     const struct __Betainc__: public Function::AbstractFunction {
         __Betainc__(): AbstractFunction("Betainc", "(a, b, x)") {}
-        expression evaluate(Function::Args& args) override {
+        expression eval(Function::Args& args) const override {
             double a = args["a"]->value();
             double b = args["b"]->value();
             double x = args["x"]->value();

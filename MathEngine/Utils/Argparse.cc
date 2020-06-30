@@ -3,11 +3,12 @@
 #include <map>
 
 #include "../Expressions/Expression.h"
+#include "../Expressions/ExpressionOperations.h"
 #include "../Expressions/TupleExpression.h"
 #include "../Expressions/VariableExpression.h"
 #include "../Parser/modifiedShuntingYard.h"
 #include "../Scanner/scanner.h"
-#include "../Utils/exceptions.h"
+#include "../Utils/Exception.h"
 #include "Argparse.h"
 
 using namespace std;
@@ -69,7 +70,7 @@ Signature::Signature(const std::string& signature): signature{signature} {
     }
 }
 
-std::unique_ptr<Args> Signature::parse(expression e){
+std::unique_ptr<Args> Signature::parse(expression e) const {
     auto args = std::make_unique<Args>();
     for (auto argname : argnames){
         args->kwargs[argname->repr()] = argname->at(0);

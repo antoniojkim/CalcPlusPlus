@@ -9,7 +9,7 @@
 #include "Expressions/Expression.h"
 #include "Scanner/scanner.h"
 #include "Parser/parser.h"
-#include "Utils/exceptions.h"
+#include "Utils/Exception.h"
 
 class MathEngine {
 

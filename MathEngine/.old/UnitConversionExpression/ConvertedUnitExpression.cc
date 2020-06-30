@@ -3,7 +3,7 @@
 #include <memory>
 #include <sstream>
 
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
 #include "../InvalidExpression.h"
 #include "../UnitExpression.h"
 #include "Units.h"
@@ -30,7 +30,7 @@ expression ConvertedUnitExpression::integrate(const std::string& var) {
     throw Exception("Unimplemented Error: ConvertedUnitExpression::integrate");
 }
 
-bool ConvertedUnitExpression::isEvaluable() const { return true; }
+bool ConvertedUnitExpression::isEvaluable(const Variables& vars) const { return true; }
 
 double ConvertedUnitExpression::value(const Variables& vars) const { return val; }
 

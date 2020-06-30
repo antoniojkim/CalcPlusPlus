@@ -8,7 +8,7 @@
 
 {includes}
 #include "AbstractFunction.h"
-#include "FunctionDispatch.h"
+#include "Functions.h"
 
 using namespace std;
 using namespace Function;

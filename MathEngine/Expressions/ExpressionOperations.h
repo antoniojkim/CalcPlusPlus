@@ -35,3 +35,6 @@ expression operator^(const expression expr1, const gsl_complex& expr2);
 
 bool operator==(const expression, const expression);
 bool operator!=(const expression, const expression);
+
+bool operator==(const expression, Scanner::Type kind);
+bool operator!=(const expression, Scanner::Type kind);

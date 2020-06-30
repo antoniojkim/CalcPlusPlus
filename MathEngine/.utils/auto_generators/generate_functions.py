@@ -50,7 +50,7 @@ def generate_functions(args=None):
         template.replace(
             includes=os.linesep.join(f'#include "{header}"' for header in headers),
             functions=wrap(
-                (f"&{pointer}" for name, pointer in functions), indent="    "
+                (f"&Function::{pointer}" for name, pointer in functions), indent="    "
             ),
         )
 

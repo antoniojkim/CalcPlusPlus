@@ -4,7 +4,7 @@
 #include <sstream>
 
 #include "../../Scanner/scanner.h"
-#include "../../Utils/exceptions.h"
+#include "../../Utils/Exception.h"
 #include "../ExpressionOperations.h"
 #include "../InvalidExpression.h"
 #include "../NumericalExpression.h"
@@ -13,8 +13,8 @@
 using namespace std;
 using namespace Scanner;
 
-BinExpression::BinExpression(unsigned long long num): Expression{BIN}, num{num} {}
-BinExpression::BinExpression(const std::string& num): Expression{BIN} {
+BinExpression::BinExpression(unsigned long long num): NumericalExpression{BIN}, num{num} {}
+BinExpression::BinExpression(const std::string& num): NumericalExpression{BIN} {
     char* endptr;
     this->num = strtoull(num.c_str()+2, &endptr, 2);
 }
@@ -28,14 +28,14 @@ expression BinExpression::construct(const std::string& num){
 
 
 bool BinExpression::isComplex() const { return false; }
-bool BinExpression::isEvaluable() const { return true; }
+bool BinExpression::isEvaluable(const Variables& vars) const { return true; }
 
 expression BinExpression::eval(const Variables& vars) { return copy(); }
 double BinExpression::value(const Variables& vars) const { return double(num); }
 
 bool BinExpression::equals(expression e, double precision) const {
-    if (e->bin()){
-        return num == e->bin()->num;
+    if (e == BIN){
+        return num == e->value();
     }
     return false;
 }
@@ -58,5 +58,5 @@ std::ostream& BinExpression::print(std::ostream& out, const bool pretty) const {
     return out;
 }
 std::ostream& BinExpression::postfix(std::ostream& out) const {
-    return print(out);
+    return print(out, false);
 }
