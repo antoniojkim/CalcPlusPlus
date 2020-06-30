@@ -10,16 +10,20 @@
 #include "../../Scanner/scanner.h"
 
 namespace Operators {
-    constexpr const int size = {numOperators};
-    constexpr const int offset = {operatorOffset};
+    constexpr const int size = 34;
+    constexpr const int offset = 27;
     constexpr const char* operators[size] = {
-        {operators}
+        ",", "=", ":=", "<-", "->", "...", "||", "&&", "|", "^|", "&", "==", "!=", "<", ">",
+		"<=", ">=", "~", "'", "<<", ">>", "+", "-", "*", "/", "%", "//", "!", "!!", "C", "P",
+		"^", "**", ":"
     };
     constexpr const int precedences[size] = {
-        {precedences}
+        -1, 2, 2, 2, 2, -3, -4, -5, -6, -7, -8, -9, -9, -10, -10, -10, -10, 10, -11, -12, -12,
+		-13, -13, -14, -14, -14, -14, -14, -14, -14, -14, 15, 15, 16
     };
     constexpr const bool singleOperators[size] = {
-        {singleOperators}
+        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+		0, 0, 0, 0, 0
     };
 
     constexpr int getOperatorIndex(const char * lexeme){

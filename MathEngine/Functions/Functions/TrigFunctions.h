@@ -16,227 +16,255 @@
 namespace Function {
 
     // @Function sin
-    const struct sin: public Function::ValueFunction {
-        sin(): ValueFunction("sin", std::sin) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __sin__: public Function::ValueFunction {
+        __sin__(): ValueFunction("sin", std::sin) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::cos;
-            return cos(e);
+            auto x = args["x"];
+            return cos(x);
         }
-    } __sin__;
+    } sin;
 
     // @Function cos
-    const struct cos: public Function::ValueFunction {
-        cos(): ValueFunction("cos", std::cos) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __cos__: public Function::ValueFunction {
+        __cos__(): ValueFunction("cos", std::cos) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::cos;
-            return -cos(e);
+            auto x = args["x"];
+            return -cos(x);
         }
-    } __cos__;
+    } cos;
 
     // @Function tan
-    const struct tan: public Function::ValueFunction {
-        tan(): ValueFunction("tan", std::tan) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __tan__: public Function::ValueFunction {
+        __tan__(): ValueFunction("tan", std::tan) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::sec;
-            return sec(e) ^ 2;
+            auto x = args["x"];
+            return sec(x) ^ 2;
         }
-    } __tan__;
+    } tan;
 
     // @Function asin arcsin arsin
-    const struct asin: public Function::ValueFunction {
-        asin(): ValueFunction("asin", std::asin) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __asin__: public Function::ValueFunction {
+        __asin__(): ValueFunction("asin", std::asin) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::sqrt;
-            return 1 / sqrt(1 - (e ^ 2));
+            auto x = args["x"];
+            return 1 / sqrt(1 - (x ^ 2));
         }
-    } __asin__;
+    } asin;
 
     // @Function acos arccos arcos
-    const struct acos: public Function::ValueFunction {
-        acos(): ValueFunction("acos", std::acos) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __acos__: public Function::ValueFunction {
+        __acos__(): ValueFunction("acos", std::acos) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::sqrt;
-            return -1 / sqrt(1 - (e ^ 2));
+            auto x = args["x"];
+            return -1 / sqrt(1 - (x ^ 2));
         }
-    } __acos__;
+    } acos;
 
     // @Function atan arctan artan
-    const struct atan: public Function::ValueFunction {
-        atan(): ValueFunction("atan", std::atan) {}
-        expression derivative(expression e, const std::string& var) override { return 1 / (1 + (e ^ 2)); }
-    } __atan__;
+    const struct __atan__: public Function::ValueFunction {
+        __atan__(): ValueFunction("atan", std::atan) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
+            auto x = args["x"];
+            return 1 / (1 + (x ^ 2));
+        }
+    } atan;
 
     // @Function sinh
-    const struct sinh: public Function::ValueFunction {
-        sinh(): ValueFunction("sinh", std::sinh) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __sinh__: public Function::ValueFunction {
+        __sinh__(): ValueFunction("sinh", std::sinh) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::cosh;
-            return cosh(e);
+            auto x = args["x"];
+            return cosh(x);
         }
-    } __sinh__;
+    } sinh;
 
     // @Function cosh
-    const struct cosh: public Function::ValueFunction {
-        cosh(): ValueFunction("cosh", std::cosh) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __cosh__: public Function::ValueFunction {
+        __cosh__(): ValueFunction("cosh", std::cosh) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::sinh;
-            return sinh(e);
+            auto x = args["x"];
+            return sinh(x);
         }
-    } __cosh__;
+    } cosh;
 
     // @Function tanh
-    const struct tanh: public Function::ValueFunction {
-        tanh(): ValueFunction("tanh", std::tanh) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __tanh__: public Function::ValueFunction {
+        __tanh__(): ValueFunction("tanh", std::tanh) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::sech;
-            return sech(e) ^ 2;
+            auto x = args["x"];
+            return sech(x) ^ 2;
         }
-    } __tanh__;
+    } tanh;
 
     // @Function asinh arcsinh arsinh
-    const struct asinh: public Function::ValueFunction {
-        asinh(): ValueFunction("asinh", std::asinh) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __asinh__: public Function::ValueFunction {
+        __asinh__(): ValueFunction("asinh", std::asinh) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::sqrt;
-            return 1 / sqrt((e ^ 2) + 1);
+            auto x = args["x"];
+            return 1 / sqrt((x ^ 2) + 1);
         }
-    } __asinh__;
+    } asinh;
 
     // @Function acosh arccosh arcosh
-    const struct acosh: public Function::ValueFunction {
-        acosh(): ValueFunction("acosh", std::acosh) {}
-        expression derivative(expression e, const std::string& var) override {
+    const struct __acosh__: public Function::ValueFunction {
+        __acosh__(): ValueFunction("acosh", std::acosh) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::sqrt;
-            return 1 / sqrt((e ^ 2) - 1);
+            auto x = args["x"];
+            return 1 / sqrt((x ^ 2) - 1);
         }
-    } __acosh__;
+    } acosh;
 
     // @Function atanh arctanh artanh
-    const struct atanh: public Function::ValueFunction {
-        atanh(): ValueFunction("atanh", std::atanh) {}
-        expression derivative(expression e, const std::string& var) override { return 1 / (1 - (e ^ 2)); }
-    } __atanh__;
+    const struct __atanh__: public Function::ValueFunction {
+        __atanh__(): ValueFunction("atanh", std::atanh) {}
+        expression derivative(Function::Args& args, const std::string& var) override {
+            auto x = args["x"];
+            return 1 / (1 - (x ^ 2));
+        }
+    } atanh;
 
     // @Function csc
-    const struct csc: public Function::ValueFunction {
-        csc(): ValueFunction("csc") {}
+    const struct __csc__: public Function::ValueFunction {
+        __csc__(): ValueFunction("csc") {}
         double value(double x) override { return 1.0 / std::sin(x); }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::cot, ExpressionMath::csc;
-            return -cot(e) * csc(e);
+            auto x = args["x"];
+            return -cot(x) * csc(x);
         }
-    } __csc__;
+    } csc;
 
     // @Function sec
-    const struct sec: public Function::ValueFunction {
-        sec(): ValueFunction("sec") {}
+    const struct __sec__: public Function::ValueFunction {
+        __sec__(): ValueFunction("sec") {}
         double value(double x) override { return 1.0 / std::cos(x); }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::tan, ExpressionMath::sec;
-            return -tan(e) * sec(e);
+            auto x = args["x"];
+            return -tan(x) * sec(x);
         }
-    } __sec__;
+    } sec;
 
     // @Function cot
-    const struct cot: public Function::ValueFunction {
-        cot(): ValueFunction("cot") {}
+    const struct __cot__: public Function::ValueFunction {
+        __cot__(): ValueFunction("cot") {}
         double value(double x) override { return 1.0 / std::tan(x); }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::csc;
-            return -(csc(e) ^ 2); }
-    } __cot__;
+            auto x = args["x"];
+            return -(csc(x) ^ 2); }
+    } cot;
 
     // @Function acsc arccsc arcsc
-    const struct acsc: public Function::ValueFunction {
-        acsc(): ValueFunction("acsc") {}
+    const struct __acsc__: public Function::ValueFunction {
+        __acsc__(): ValueFunction("acsc") {}
         double value(double x) override { return std::asin(1.0 / x); }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::abs, ExpressionMath::sqrt;
-            return -1 / (abs(e) * sqrt((e ^ 2) - 1)); }
-    } __acsc__;
+            auto x = args["x"];
+            return -1 / (abs(x) * sqrt((x ^ 2) - 1)); }
+    } acsc;
 
     // @Function asec arcsec arsec
-    const struct asec: public Function::ValueFunction {
-        asec(): ValueFunction("asec") {}
+    const struct __asec__: public Function::ValueFunction {
+        __asec__(): ValueFunction("asec") {}
         double value(double x) override { return std::acos(1.0 / x); }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::abs, ExpressionMath::sqrt;
-            return 1 / (abs(e) * sqrt((e ^ 2) - 1));
+            auto x = args["x"];
+            return 1 / (abs(x) * sqrt((x ^ 2) - 1));
         }
-    } __asec__;
+    } asec;
 
     // @Function acot arccot arcot
-    const struct acot: public Function::ValueFunction {
-        acot(): ValueFunction("acot") {}
+    const struct __acot__: public Function::ValueFunction {
+        __acot__(): ValueFunction("acot") {}
         double value(double x) override { return (x > 0 ? M_PI_2 : -M_PI_2) - std::atan(x); }
-        expression derivative(expression e, const std::string& var) override {
-            return -1 / (1 + (e ^ 2));
+        expression derivative(Function::Args& args, const std::string& var) override {
+            auto x = args["x"];
+            return -1 / (1 + (x ^ 2));
         }
-    } __acot__;
+    } acot;
 
     // @Function csch
-    const struct csch: public Function::ValueFunction {
-        csch(): ValueFunction("csch") {}
+    const struct __csch__: public Function::ValueFunction {
+        __csch__(): ValueFunction("csch") {}
         double value(double x) override { return 1.0 / std::sinh(x); }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::coth, ExpressionMath::csch;
-            return -coth(e) * csch(e);
+            auto x = args["x"];
+            return -coth(x) * csch(x);
         }
-    } __csch__;
+    } csch;
 
     // @Function sech
-    const struct sech: public Function::ValueFunction {
-        sech(): ValueFunction("sech") {}
+    const struct __sech__: public Function::ValueFunction {
+        __sech__(): ValueFunction("sech") {}
         double value(double x) override { return 1.0 / std::cosh(x); }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::tanh, ExpressionMath::sech;
-            return -tanh(e) * sech(e);
+            auto x = args["x"];
+            return -tanh(x) * sech(x);
         }
-    } __sech__;
+    } sech;
 
     // @Function coth
-    const struct coth: public Function::ValueFunction {
-        coth(): ValueFunction("coth") {}
+    const struct __coth__: public Function::ValueFunction {
+        __coth__(): ValueFunction("coth") {}
         double value(double x) override { return 1.0 / std::tanh(x); }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::csch;
-            return -(csch(e) ^ 2);
+            auto x = args["x"];
+            return -(csch(x) ^ 2);
         }
-    } __coth__;
+    } coth;
 
     // @Function acsch arccsch arcsch
-    const struct acsch: public Function::ValueFunction {
-        acsch(): ValueFunction("acsch") {}
+    const struct __acsch__: public Function::ValueFunction {
+        __acsch__(): ValueFunction("acsch") {}
         double value(double x) override {
             if (x == 0){ return GSL_NAN; }
             return std::log(1 / x + std::sqrt(1 / (x * x) + 1));
         }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::abs, ExpressionMath::sqrt;
-            return -1 / (abs(e) * sqrt((e ^ 2) - 1)); }
-    } __acsch__;
+            auto x = args["x"];
+            return -1 / (abs(x) * sqrt((x ^ 2) - 1)); }
+    } acsch;
 
     // @Function asech arcsech arsech
-    const struct asech: public Function::ValueFunction {
-        asech(): ValueFunction("asech") {}
+    const struct __asech__: public Function::ValueFunction {
+        __asech__(): ValueFunction("asech") {}
         double value(double x) override {
             if (x <= 0 || x > 1){ return GSL_NAN; }
             return std::log(1 / x + std::sqrt(1 / (x * x) - 1));
         }
-        expression derivative(expression e, const std::string& var) override {
+        expression derivative(Function::Args& args, const std::string& var) override {
             using ExpressionMath::abs, ExpressionMath::sqrt;
-            return -1 / (abs(e) * sqrt(1 - (e ^ 2))); }
-    } __asech__;
+            auto x = args["x"];
+            return -1 / (abs(x) * sqrt(1 - (x ^ 2))); }
+    } asech;
 
     // @Function acoth arccoth arcoth
-    const struct acoth: public Function::ValueFunction {
-        acoth(): ValueFunction("acoth") {}
+    const struct __acoth__: public Function::ValueFunction {
+        __acoth__(): ValueFunction("acoth") {}
         double value(double x) override {
             if (x >= -1 && x <= 1){ return GSL_NAN; }
             return std::log((x + 1) / (x - 1)) / 2;
         }
-        expression derivative(expression e, const std::string& var) override {
-            return 1 / (1 - (e ^ 2));
+        expression derivative(Function::Args& args, const std::string& var) override {
+            auto x = args["x"];
+            return 1 / (1 - (x ^ 2));
         }
-    } __acoth__;
+    } acoth;
 }

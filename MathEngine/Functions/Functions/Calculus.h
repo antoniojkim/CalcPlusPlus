@@ -13,99 +13,93 @@
 
 namespace Function {
     // @Function deriv
-    const struct deriv: public Function::NamedFunction {
-        deriv(): NamedFunction("deriv") {}
+    const struct __deriv__: public Function::AbstractFunction {
+        __deriv__(): AbstractFunction("deriv", "(f, x, x1=None)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                std::string var = "x";
-                expression val = args[1];
-                if (val->variable()){
-                    var = val->variable()->getName();
-                    val = val->variable()->getVar();
-                    if (!val){
-                        return InvalidExpression::construct(Exception("deriv expected value. Got: ", args[1]));
-                    }
+            auto f = args["f"];
+            auto x = args["x"];
+            auto x1 = args["x1"];
+
+            std::string var = "x";
+            if (x1 != NONE){
+                if (x != VAR){
+                    throw Exception("deriv expected second argument to be a variable. Got: ", x);
                 }
-
-                auto derivative = args[0]->derivative(var);
-                if (!derivative->invalid()){
-                    Variables vars;
-                    vars[var] = val;
-                    return derivative->evaluate(vars);
-                }
-
-                gsl_function F = args[0]->function(var);
-                double x = val->value();
-
-                double result, abserr;
-                gsl_set_error_handler_off();
-                int status = gsl_deriv_central(&F, x, 1e-8, &result, &abserr);
-
-                if (status != GSL_FAILURE){
-                    return NumExpression::construct(result);
-                }
+                var = x->repr();
+                x = x1;
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments: deriv. Expected 2. Args: ", args));
+
+            try{
+                auto derivative = f->derivative(var);
+                Variables vars;
+                vars[var] = x;
+                return derivative->eval(vars);
+            } catch(const Exception& e){}
+
+
+            gsl_function F = f->function(var);
+
+            double result, abserr;
+            gsl_set_error_handler_off();
+            int status = gsl_deriv_central(&F, x->value(), 1e-8, &result, &abserr);
+
+            if (status != GSL_FAILURE){
+                return NumExpression::construct(result);
+            }
+            throw Exception("Error encountered when computing numerical derivative. Args: ", args);
         }
-    } __deriv__;
+    } deriv;
 
     // @Function diff
-    const struct diff: public Function::NamedFunction {
-        diff(): NamedFunction("diff") {}
+    const struct __diff__: public Function::AbstractFunction {
+        __diff__(): AbstractFunction("diff", "(f, x=None)") {}
         expression evaluate(Function::Args& args) override {
+            auto f = args["f"];
+            auto x = args["x"];
+
             std::string var = "x";
-            switch(args.size()){
-                case 2: {
-                    if (args[1]->variable()){
-                        var = args[1]->variable()->getName();
-                    }
-                    else{
-                        return InvalidExpression::construct(Exception("diff expected variable. Got: ", args[1]));
-                    }
+            if (x != NONE){
+                if (x != VAR){
+                    throw Exception("diff expected second argument to be a variable. Got: ", x);
                 }
-                case 1:
-                    return args[0]->derivative(var);
-                default:
-                    return InvalidExpression::construct(Exception("Invalid number of arguments for differentiation(f, var=x). Got: ", args));
+                var = x->repr();
             }
+            return f->derivative(var);
         }
-    } __diff__;
+    } diff;
 
     // @Function integral
-    const struct integral: public Function::NamedFunction {
-        integral(): NamedFunction("integral") {}
+    const struct __integral__: public Function::AbstractFunction {
+        __integral__(): AbstractFunction("integral", "(f, a, b, x=None)") {}
         expression evaluate(Function::Args& args) override {
+            auto f = args["f"];
+            auto a = args["a"];
+            auto b = args["b"];
+            auto x = args["x"];
+
             std::string var = "x";
-            switch (args.size()){
-                case 4: {
-                    if (args[3]->variable()){
-                        var = args[3]->variable()->getName();
-                    }
-                    else{
-                        return InvalidExpression::construct(Exception("integral expected variable. Got: ", args[3]));
-                    }
+            if (x != NONE){
+                if (a != VAR){
+                    throw Exception("diff expected second argument to be a variable. Got: ", a);
                 }
-                case 3: {
-                    gsl_function F = args[0]->function(var);
-                    double a = args[1]->value();
-                    double b = args[2]->value();
-
-                    double result, abserr;
-
-                    gsl_set_error_handler_off();
-                    gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
-                    int status = gsl_integration_qags(&F, a, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
-                    gsl_integration_workspace_free (w);
-
-                    if (status != GSL_FAILURE){
-                        return NumExpression::construct(result);
-                    }
-                    return InvalidExpression::construct(Exception("Unable to compute integral. Args: ", args));
-                }
-                default:
-                    return InvalidExpression::construct(Exception("Invalid Number of Arguments: integral. Expected 3. Got ", args.size()));
+                var = a->repr();
+                a = b;
+                b = x;
             }
+
+            gsl_function F = f->function(var);
+
+            double result, abserr;
+            gsl_set_error_handler_off();
+            gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
+            int status = gsl_integration_qags(&F, a->value(), b->value(), 1e-8, 1e-8, 1000, w, &result, &abserr);
+            gsl_integration_workspace_free (w);
+
+            if (status != GSL_FAILURE){
+                return NumExpression::construct(result);
+            }
+            throw Exception("Error encountered when computing numerical integral. Args: ", args);
         }
-    } __integral__;
+    } integral;
 
 }

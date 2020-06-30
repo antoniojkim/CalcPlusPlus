@@ -33,14 +33,15 @@ inline std::unique_ptr<double[]> make_complex_packed_array(size_t n){
 
 namespace Function {
     // @Function fft
-    const struct fft: public Function::NamedFunction {
-        fft(): NamedFunction("fft") {}
-        expression compute(const MatrixExpression* matrix){
-            if (matrix && (matrix->rows() == 1 || matrix->cols() == 1)){
-                size_t N = matrix->rows() * matrix->cols();
+    const struct __fft__: public Function::AbstractFunction {
+        __fft__(): AbstractFunction("fft", "(m,)") {}
+        static expression compute(expression matrix){
+            using Scanner::MATRIX;
+            if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
+                size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
                 if (matrix->isComplex()){
-                    auto gsl_mat = matrix->to_gsl_matrix_complex();
+                    auto gsl_mat = to_gsl_matrix_complex(matrix);
                     auto data = make_complex_packed_array(N);
                     for (size_t i = 0; i < N; ++i){
                         data.get()[2*i] = GSL_REAL(gsl_matrix_complex_get(gsl_mat.get(), 0, i));
@@ -56,10 +57,10 @@ namespace Function {
                         gsl_matrix_complex_set(result.get(), 0, i,
                                                gsl_complex{data.get()[2*i], data.get()[2*i+1]});
                     }
-                    return MatrixExpression::construct(result.get());
+                    return MatrixExpression::construct(result);
                 }
                 else{
-                    auto gsl_mat = matrix->to_gsl_matrix();
+                    auto gsl_mat = to_gsl_matrix(matrix);
 
                     auto real = make_unique_fft_real_wavetable(N);
                     gsl_fft_real_transform(gsl_mat->data, 1, N, real.get(), work.get());
@@ -72,35 +73,28 @@ namespace Function {
                         gsl_matrix_complex_set(result.get(), 0, i,
                                                gsl_complex{data.get()[2*i], data.get()[2*i+1]});
                     }
-                    return MatrixExpression::construct(result.get());
+                    return MatrixExpression::construct(result);
                 }
             }
-            return InvalidExpression::construct(Exception("FFT expected 1D Matrix."));
+            throw Exception("FFT expected 1D Matrix. Got: ", matrix);
         }
 
         expression evaluate(Function::Args& args) override {
-            if (args.size() > 1){
-                std::list<expression> exprs;
-                for (auto arg : args){
-                    exprs.emplace_back(arg->evaluate());
-                }
-                auto expr = MatrixExpression::construct(std::move(exprs), 1, exprs.size());
-                return this->compute(expr->matrix());
-            }
-            return this->compute(args[0]->matrix());
+            return this->compute(args["m"]);
         }
-    } __fft__;
+    } fft;
 
     // @Function ifft
-    const struct ifft: public Function::NamedFunction {
-        ifft(): NamedFunction("ifft") {}
+    const struct __ifft__: public Function::AbstractFunction {
+        __ifft__(): AbstractFunction("ifft", "(m,)") {}
 
-        expression compute(const MatrixExpression* matrix){
-            if (matrix && (matrix->rows() == 1 || matrix->cols() == 1)){
-                size_t N = matrix->rows() * matrix->cols();
+        expression compute(expression matrix){
+            using Scanner::MATRIX;
+            if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
+                size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
                 if (matrix->isComplex()){
-                    auto gsl_mat = matrix->to_gsl_matrix_complex();
+                    auto gsl_mat = to_gsl_matrix_complex(matrix);
                     auto data = make_complex_packed_array(N);
                     for (size_t i = 0; i < N; ++i){
                         data.get()[2*i] = GSL_REAL(gsl_matrix_complex_get(gsl_mat.get(), 0, i));
@@ -116,10 +110,10 @@ namespace Function {
                         gsl_matrix_complex_set(result.get(), 0, i,
                                                 gsl_complex{data.get()[2*i], data.get()[2*i+1]});
                     }
-                    return MatrixExpression::construct(result.get());
+                    return MatrixExpression::construct(result);
                 }
                 else{
-                    auto gsl_mat = matrix->to_gsl_matrix();
+                    auto gsl_mat = to_gsl_matrix(matrix);
 
                     auto data = make_complex_packed_array(N);
                     gsl_fft_real_unpack(gsl_mat->data, data.get(), 1, N);
@@ -132,22 +126,14 @@ namespace Function {
                         gsl_matrix_complex_set(result.get(), 0, i,
                                                 gsl_complex{data.get()[2*i], data.get()[2*i+1]});
                     }
-                    return MatrixExpression::construct(result.get());
+                    return MatrixExpression::construct(result);
                 }
             }
-            return InvalidExpression::construct(Exception("IFFT expected 1D Matrix."));
+            throw Exception("IFFT expected 1D Matrix. Got: ", matrix);
         }
 
         expression evaluate(Function::Args& args) override {
-            if (args.size() > 1){
-                std::list<expression> exprs;
-                for (auto& arg : args){
-                    exprs.emplace_back(arg->evaluate());
-                }
-                auto expr = MatrixExpression::construct(std::move(exprs), 1, exprs.size());
-                return this->compute(expr->matrix());
-            }
-            return this->compute(args[0]->matrix());
+            return this->compute(args["m"]);
         }
-    } __ifft__;
+    } ifft;
 }

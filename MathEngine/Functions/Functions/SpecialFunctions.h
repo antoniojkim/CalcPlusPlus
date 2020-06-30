@@ -12,19 +12,19 @@
 
 namespace Function {
     // @Function gamma
-    const Function::ValueFunction __gamma__ ("gamma", gsl_sf_gamma);
+    const Function::ValueFunction gamma ("gamma", gsl_sf_gamma);
 
     // @Function lngamma
-    const Function::ValueFunction __lngamma__ ("lngamma", gsl_sf_lngamma);
+    const Function::ValueFunction lngamma ("lngamma", gsl_sf_lngamma);
 
     // @Function gammastar
-    const Function::ValueFunction __gammastar__ ("gammastar", gsl_sf_gammastar);
+    const Function::ValueFunction gammastar ("gammastar", gsl_sf_gammastar);
 
     // @Function gammainv
-    const Function::ValueFunction __gammainv__ ("gammainv", gsl_sf_gammainv);
+    const Function::ValueFunction gammainv ("gammainv", gsl_sf_gammainv);
 
     // @Function fact
-    const Function::ValueFunction __fact__ ("fact", [](double x) -> double {
+    const Function::ValueFunction fact ("fact", [](double x) -> double {
         if (x > GSL_SF_FACT_NMAX){
             return GSL_POSINF;
         }
@@ -35,7 +35,7 @@ namespace Function {
     });
 
     // @Function dfact
-    const Function::ValueFunction __dfact__ ("dfact", [](double x) -> double {
+    const Function::ValueFunction dfact ("dfact", [](double x) -> double {
         if (x > GSL_SF_DOUBLEFACT_NMAX){
             return GSL_POSINF;
         }
@@ -46,7 +46,7 @@ namespace Function {
     });
 
     // @Function lnfact
-    const Function::ValueFunction __lnfact__ ("lnfact", [](double x) -> double {
+    const Function::ValueFunction lnfact ("lnfact", [](double x) -> double {
         if (x >= 0 && std::trunc(x) == x) {
             return gsl_sf_lnfact((unsigned int) x);
         }
@@ -54,7 +54,7 @@ namespace Function {
     });
 
     // @Function lndfact
-    const Function::ValueFunction __lndfact__ ("lndfact", [](double x) -> double {
+    const Function::ValueFunction lndfact ("lndfact", [](double x) -> double {
         if (x >= 0 && std::trunc(x) == x) {
             return gsl_sf_lndoublefact((unsigned int) x);
         }
@@ -62,215 +62,173 @@ namespace Function {
     });
 
     // @Function choose comb
-    const struct choose: public Function::NamedFunction {
-        choose(): NamedFunction("choose") {}
+    const struct __choose__: public Function::AbstractFunction {
+        __choose__(): AbstractFunction("choose", "(n, r)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double n = args[0]->value();
-                double m = args[1]->value();
-                if (m >= 0 && n >= m && std::trunc(n) == n && std::trunc(m) == m){
-                    return NumExpression::construct(gsl_sf_choose((unsigned int) n, (unsigned int) m));
-                }
+            double n = args["n"]->value();
+            double m = args["r"]->value();
+            if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
+                return NumExpression::construct(gsl_sf_choose((unsigned int) n, (unsigned int) r));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for choose. Expected 2. Got ", args.size()));
+            throw Exception("nCr expects integers n >= r. Got: ", args);
         }
         virtual std::ostream& print(std::ostream& out, expression e){
-            Function::Args args(e);
-            if (args.size() == 2){
-                return out << "(" << args[0] << ")C(" << args[1] << ")";
-            }
-            return out << "Invalid Number of Arguments for choose. Expected 2. Got " << args.size();
+            return out << "(" << args["n"] << ")C(" << args["r"] << ")";
         }
-    } __choose__;
+    } choose;
 
     // @Function lnchoose lncomb
-    const struct lnchoose: public Function::NamedFunction {
-        lnchoose(): NamedFunction("lnchoose") {}
+    const struct __lnchoose__: public Function::AbstractFunction {
+        __lnchoose__(): AbstractFunction("lnchoose") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double n = args[0]->value();
-                double m = args[1]->value();
-                if (m >= 0 && n >= m && std::trunc(n) == n && std::trunc(m) == m){
-                    return NumExpression::construct(gsl_sf_lnchoose((unsigned int) n, (unsigned int) m));
-                }
+            double n = args["n"]->value();
+            double m = args["r"]->value();
+            if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
+                return NumExpression::construct(gsl_sf_lnchoose((unsigned int) n, (unsigned int) r));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for lnchoose. Expected 2. Got ", args.size()));
+            throw Exception("lnchoose expects integers n >= r. Got: ", args);
         }
-    } __lnchoose__;
+    } lnchoose;
 
     // @Function permute perm
-    const struct permute: public Function::NamedFunction {
-        permute(): NamedFunction("permute") {}
+    const struct __permute__: public Function::AbstractFunction {
+        __permute__(): AbstractFunction("permute", "(n, r)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double n = args[0]->value();
-                double m = args[1]->value();
-                if (m >= 0 && n >= m && std::trunc(n) == n && std::trunc(m) == m){
-                    return NumExpression::construct(gsl_sf_choose((unsigned int) n, (unsigned int) m) * gsl_sf_fact((unsigned int) m));
-                }
+            double n = args["n"]->value();
+            double m = args["r"]->value();
+            if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
+                return NumExpression::construct(gsl_sf_choose((unsigned int) n, (unsigned int) r) * gsl_sf_fact((unsigned int) r));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for permute. Expected 2. Got ", args.size()));
+            throw Exception("nPr expects integers n >= r. Got: ", args);
         }
         virtual std::ostream& print(std::ostream& out, expression e){
-            Function::Args args(e);
-            if (args.size() == 2){
-                return out << "(" << args[0] << ")P(" << args[1] << ")";
-            }
-            return out << "Invalid Number of Arguments for permute. Expected 2. Got " << args.size();
+            return out << "(" << args["n"] << ")P(" << args["r"] << ")";
         }
-    } __permute__;
+    } permute;
 
     // @Function lnpermute lnperm
-    const struct lnpermute: public Function::NamedFunction {
-        lnpermute(): NamedFunction("lnpermute") {}
+    const struct __lnpermute__: public Function::AbstractFunction {
+        __lnpermute__(): AbstractFunction("lnpermute", "(n, r)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double n = args[0]->value();
-                double m = args[1]->value();
-                if (m >= 0 && n >= m && std::trunc(n) == n && std::trunc(m) == m){
-                    return NumExpression::construct(gsl_sf_lnchoose((unsigned int) n, (unsigned int) m) + gsl_sf_lnfact((unsigned int) m));
-                }
+            double n = args["n"]->value();
+            double m = args["r"]->value();
+            if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
+                return NumExpression::construct(gsl_sf_lnchoose((unsigned int) n, (unsigned int) r) + gsl_sf_lnfact((unsigned int) r));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for lnpermute. Expected 2. Got ", args.size()));
+            throw Exception("lnpermute expects integers n >= r. Got: ", args);
         }
-    } __lnpermute__;
+    } lnpermute;
 
     // @Function taylorcoeff
-    const struct taylorcoeff: public Function::NamedFunction {
-        taylorcoeff(): NamedFunction("taylorcoeff") {}
+    const struct __taylorcoeff__: public Function::AbstractFunction {
+        __taylorcoeff__(): AbstractFunction("taylorcoeff", "(n, x)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double n = args[0]->value();
-                double x = args[1]->value();
-                if (x >= 0 && n >= 0 && std::trunc(n) == n){
-                    return NumExpression::construct(gsl_sf_taylorcoeff((int) n, x));
-                }
+            double n = args["n"]->value();
+            double x = args["x"]->value();
+            if (x >= 0 && n >= 0 && std::trunc(n) == n){
+                return NumExpression::construct(gsl_sf_taylorcoeff((int) n, x));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for taylorcoeff. Expected 2. Got ", args.size()));
+            throw Exception("taylorcoeff expects an integer n and double x. Got ", args);
         }
-    } __taylorcoeff__;
+    } taylorcoeff;
 
     // @Function poch
-    const struct poch: public Function::NamedFunction {
-        poch(): NamedFunction("poch") {}
+    const struct __poch__: public Function::AbstractFunction {
+        __poch__(): AbstractFunction("poch", "(a, x)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double a = args[0]->value();
-                double x = args[1]->value();
-                return NumExpression::construct(gsl_sf_poch(a, x));
-            }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for poch. Expected 2. Got ", args.size()));
+            double a = args["a"]->value();
+            double x = args["x"]->value();
+            return NumExpression::construct(gsl_sf_poch(a, x));
         }
-    } __poch__;
+    } poch;
 
     // @Function lnpoch
-    const struct lnpoch: public Function::NamedFunction {
-        lnpoch(): NamedFunction("lnpoch") {}
+    const struct __lnpoch__: public Function::AbstractFunction {
+        __lnpoch__(): AbstractFunction("lnpoch", "(a, x)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double a = args[0]->value();
-                double x = args[1]->value();
-                return NumExpression::construct(gsl_sf_lnpoch(a, x));
-            }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for lnpoch. Expected 2. Got ", args.size()));
+            double a = args["a"]->value();
+            double x = args["x"]->value();
+            return NumExpression::construct(gsl_sf_lnpoch(a, x));
         }
-    } __lnpoch__;
+    } lnpoch;
 
     // @Function pochrel
-    const struct pochrel: public Function::NamedFunction {
-        pochrel(): NamedFunction("pochrel") {}
+    const struct __pochrel__: public Function::AbstractFunction {
+        __pochrel__(): AbstractFunction("pochrel", "(a, x)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double a = args[0]->value();
-                double x = args[1]->value();
-                return NumExpression::construct(gsl_sf_pochrel(a, x));
-            }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for pochrel. Expected 2. Got ", args.size()));
+            double a = args["a"]->value();
+            double x = args["x"]->value();
+            return NumExpression::construct(gsl_sf_pochrel(a, x));
         }
-    } __pochrel__;
+    } pochrel;
 
     // @Function gamma_inc gammainc
-    const struct gamma_inc: public Function::NamedFunction {
-        gamma_inc(): NamedFunction("gamma_inc") {}
+    const struct __gamma_inc__: public Function::AbstractFunction {
+        __gamma_inc__(): AbstractFunction("gamma_inc", "(a, x)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double a = args[0]->value();
-                double x = args[1]->value();
-                return NumExpression::construct(gsl_sf_gamma_inc(a, x));
-            }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for gamma_inc. Expected 2. Got ", args.size()));
+            double a = args["a"]->value();
+            double x = args["x"]->value();
+            return NumExpression::construct(gsl_sf_gamma_inc(a, x));
         }
-    } __gamma_inc__;
+    } gamma_inc;
 
     // @Function gamma_inc_Q gammaincq
-    const struct gamma_inc_Q: public Function::NamedFunction {
-        gamma_inc_Q(): NamedFunction("gamma_inc_Q") {}
+    const struct __gamma_inc_Q__: public Function::AbstractFunction {
+        __gamma_inc_Q__(): AbstractFunction("gamma_inc_Q", "(a, x)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double a = args[0]->value();
-                double x = args[1]->value();
-                return NumExpression::construct(gsl_sf_gamma_inc_Q(a, x));
-            }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for gamma_inc_Q. Expected 2. Got ", args.size()));
+            double a = args["a"]->value();
+            double x = args["x"]->value();
+            return NumExpression::construct(gsl_sf_gamma_inc_Q(a, x));
         }
-    } __gamma_inc_Q__;
+    } gamma_inc_Q;
 
     // @Function gamma_inc_P gammaincp
-    const struct gamma_inc_P: public Function::NamedFunction {
-        gamma_inc_P(): NamedFunction("gamma_inc_P") {}
+    const struct __gamma_inc_P__: public Function::AbstractFunction {
+        __gamma_inc_P__(): AbstractFunction("gamma_inc_P", "(a, x)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double a = args[0]->value();
-                double x = args[1]->value();
-                return NumExpression::construct(gsl_sf_gamma_inc_P(a, x));
-            }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for gammaincp. Expected 2. Got ", args.size()));
+            double a = args["a"]->value();
+            double x = args["x"]->value();
+            return NumExpression::construct(gsl_sf_gamma_inc_P(a, x));
         }
-    } __gamma_inc_P__;
+    } gamma_inc_P;
 
     // @Function Beta
-    const struct Beta: public Function::NamedFunction {
-        Beta(): NamedFunction("Beta") {}
+    const struct __Beta__: public Function::AbstractFunction {
+        __Beta__(): AbstractFunction("Beta", "(a, b)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double a = args[0]->value();
-                double b = args[1]->value();
-                if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
-                    return NumExpression::construct(gsl_sf_beta(a, b));
-                }
+            double a = args["a"]->value();
+            double b = args["b"]->value();
+            if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
+                return NumExpression::construct(gsl_sf_beta(a, b));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for Beta. Expected 2. Got ", args.size()));
+            throw Exception("Beta function expected positive integers a and b. Got ", args.size());
         }
-    } __Beta__;
+    } Beta;
 
     // @Function lnBeta
-    const struct lnBeta: public Function::NamedFunction {
-        lnBeta(): NamedFunction("lnBeta") {}
+    const struct __lnBeta__: public Function::AbstractFunction {
+        __lnBeta__(): AbstractFunction("lnBeta", "(a, b)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 2){
-                double a = args[0]->value();
-                double b = args[1]->value();
-                if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
-                    return NumExpression::construct(gsl_sf_lnbeta(a, b));
-                }
+            double a = args["a"]->value();
+            double b = args["b"]->value();
+            if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
+                return NumExpression::construct(gsl_sf_lnbeta(a, b));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for lnBeta. Expected 2. Got ", args.size()));
+            throw Exception("lnBeta function expected positive integers a and b. Got ", args.size());
         }
-    } __lnBeta__;
+    } lnBeta;
 
     // @Function Betainc
-    const struct Betainc: public Function::NamedFunction {
-        Betainc(): NamedFunction("Betainc") {}
+    const struct __Betainc__: public Function::AbstractFunction {
+        __Betainc__(): AbstractFunction("Betainc", "(a, b, x)") {}
         expression evaluate(Function::Args& args) override {
-            if (args.size() == 3){
-                double a = args[0]->value();
-                double b = args[1]->value();
-                double x = args[2]->value();
-                if (x >= 0 && x <= 1){
-                    return NumExpression::construct(gsl_sf_beta_inc(a, b, x));
-                }
+            double a = args["a"]->value();
+            double b = args["b"]->value();
+            double x = args["x"]->value();
+            if (x >= 0 && x <= 1){
+                return NumExpression::construct(gsl_sf_beta_inc(a, b, x));
             }
-            return InvalidExpression::construct(Exception("Invalid Number of Arguments for Betainc. Expected 3. Got ", args.size()));
+            throw Exception("Betainc expected doubles a, b, and x between 0 and 1. Got ", args.size());
         }
-    } __Betainc__;
+    } Betainc;
 }

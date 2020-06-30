@@ -11,6 +11,7 @@ tokens:
     UNIT:
     VAR:
     VARARGS:
+    NONE:
     LPAREN: "("
     RPAREN: ")"
     LSQUARE: "["
@@ -29,7 +30,6 @@ tokens:
 operators:
     -   COMMA:
             lexeme: ","
-            precedence:
     -   EQUALS:
             lexeme: "="
             rightAssociative:
