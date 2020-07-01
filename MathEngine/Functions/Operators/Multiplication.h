@@ -16,7 +16,7 @@
 namespace Function {
 
     // @Operator mul *
-    const struct __mul__: public OperatorFunction {
+    const struct __mul__: public Function::OperatorFunction {
         __mul__(): OperatorFunction("*") {}
         expression eval(Function::Args& args) const override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;

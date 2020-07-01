@@ -17,7 +17,7 @@
 namespace Function {
 
     // @Operator lshift <<
-    const struct __lshift__: public OperatorFunction {
+    const struct __lshift__: public Function::OperatorFunction {
         __lshift__(): OperatorFunction("<<") {}
         expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
@@ -32,7 +32,7 @@ namespace Function {
 
 
     // @Operator rshift >>
-    const struct __rshift__: public OperatorFunction {
+    const struct __rshift__: public Function::OperatorFunction {
         __rshift__(): OperatorFunction(">>") {}
         expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
@@ -47,7 +47,7 @@ namespace Function {
 
 
     // @Operator bitwise_and &
-    const struct __and__: public OperatorFunction {
+    const struct __and__: public Function::OperatorFunction {
         __and__(): OperatorFunction("&") {}
         expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
@@ -62,7 +62,7 @@ namespace Function {
 
 
     // @Operator bitwise_or |
-    const struct __or__: public OperatorFunction {
+    const struct __or__: public Function::OperatorFunction {
         __or__(): OperatorFunction("|") {}
         expression eval(Function::Args& args) const override {
             double l = args["l"]->value();
@@ -77,7 +77,7 @@ namespace Function {
 
 
     // @Operator bitwise_xor ^|
-    const struct __xor__: public OperatorFunction {
+    const struct __xor__: public Function::OperatorFunction {
         __xor__(): OperatorFunction("^|") {}
         expression eval(Function::Args& args) const override {
             double l = args["l"]->value();

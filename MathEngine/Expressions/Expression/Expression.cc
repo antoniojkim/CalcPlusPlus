@@ -10,6 +10,8 @@ using namespace std;
 
 const Variables emptyVars;
 
+
+Expression::Expression(Scanner::Type kind): kind{kind} {}
 Expression::~Expression() = default;
 
 expression Expression::simplify(){ return copy(); }

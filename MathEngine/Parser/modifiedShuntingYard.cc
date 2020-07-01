@@ -316,7 +316,12 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
             operatorStack.push(&token);
         }
         else{
-            throw Exception("Unsupported Token: '", token.lexeme, "'");
+            cout << "TOKENS:  ";
+            for (auto& t : tokens){
+                cout << t.lexeme << " ";
+            }
+            cout << endl;
+            throw Exception("Unsupported Token: '", token.lexeme, "' of type ", Scanner::typeStrings[token.type]);
         }
     }
     while(outputStacks.size() > 1){

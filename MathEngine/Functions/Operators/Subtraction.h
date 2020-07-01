@@ -16,7 +16,7 @@
 namespace Function {
 
     // @Operator sub -
-    const struct __sub__: public OperatorFunction {
+    const struct __sub__: public Function::OperatorFunction {
         __sub__(): OperatorFunction("-") {}
         expression eval(Function::Args& args) const override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;

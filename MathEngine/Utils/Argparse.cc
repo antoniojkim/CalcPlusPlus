@@ -15,15 +15,27 @@ using namespace std;
 using namespace Function;
 using namespace Scanner;
 
-std::ostream& operator<<(std::ostream& out, Args& args){
-    out << "(";
-    bool first = true;
-    for (auto arg : args){
-        if (first){ first = false; }
-        else      { out << ", ";   }
-        out << arg.first << "=" << arg.second;
+namespace Function {
+    std::ostream& operator<<(std::ostream& out, Args& args){
+        out << "(";
+        bool first = true;
+        for (auto arg : args){
+            if (first){ first = false; }
+            else      { out << ", ";   }
+            out << arg.first << "=" << arg.second;
+        }
+        return out << ")";
     }
-    return out << ")";
+    std::ostream& operator<<(std::ostream& out, Signature& signature){
+        out << "(";
+        bool first = true;
+        for (auto arg : signature.argnames){
+            if (first){ first = false; }
+            else      { out << ", ";   }
+            out << arg;
+        }
+        return out << ")";
+    }
 }
 
 const ModifiedShuntingYard parser;
@@ -34,38 +46,42 @@ Signature::Signature(const std::string& signature): signature{signature} {
     scan(signature, tokens);
     auto signatureExpr = parser.parse(tokens);
     if (signatureExpr != TUPLE){
-        throw Exception("Function Signature must be a tuple. Got: " + signature);
+        throw Exception("Function Signature must be a tuple. Got: ", signature);
     }
     this->argnames.reserve(signatureExpr->size());
     // Loop through the parsed signature verifying its validity.
     size_t i = 0;
     for(; i < signatureExpr->size(); ++i){
-        if (signatureExpr->at(i) == VAR){
-            this->argnames.emplace_back(signatureExpr->at(i));
-            if (signatureExpr->at(i)->at(0)){  // implies first named argument
+        auto var = signatureExpr->at(i)->eval();
+        if (var == VAR){
+            this->argnames.emplace_back(var);
+            if (var->at(0)){  // implies first named argument
+                ++i;
                 break;
             }
         }
-        else if (signatureExpr->at(i) == VARARGS){  // implies varargs
-            this->argnames.emplace_back(signatureExpr->at(i));
+        else if (var == VARARGS){  // implies varargs
+            this->argnames.emplace_back(var);
+            ++i;
             break;
         }
         else{
-            throw Exception("Function Signature must contain only variables and default arguments. Got: ", signature);
+            throw Exception("Function Signature must contain only variables and default arguments. Got: ", signatureExpr);
         }
     }
     for(; i < signatureExpr->size(); ++i){
-        if (signatureExpr->at(i) == VAR){
-            if (!signatureExpr->at(i)->at(0)){
+        auto var = signatureExpr->at(i)->eval();
+        if (var == VAR){
+            if (!var->at(0)){
                 throw Exception("Positional argument cannot follow named argument in function signature. Got: ", signature);
             }
-            this->argnames.emplace_back(signatureExpr->at(i));
+            this->argnames.emplace_back(var);
         }
-        else if (signatureExpr->at(i) == VARARGS){
+        else if (var == VARARGS){
             throw Exception("varargs cannot follow named argument in function signature. Got: ", signature);
         }
         else{
-            throw Exception("Function Signature must contain only variables and default arguments. Got: ", signature);
+            throw Exception("Function Signature must contain only variables and default arguments. Got: ", signatureExpr);
         }
     }
 }
@@ -78,7 +94,10 @@ std::unique_ptr<Args> Signature::parse(expression e) const {
     size_t arg_i = 0;  // represents index for argname
     size_t e_i = 0;  // represents index for expression
     for (; e_i < e->size(); ++e_i){
-        if (argnames[arg_i] == VARARGS){
+        if (arg_i >= argnames.size()){
+            throw Exception("Too many arguments given. Signature: ", *this, ". Got: ", e);
+        }
+        if (argnames.at(arg_i) == VARARGS){
             // Avoid using flag variable by entering new state handling the var args case
             std::vector<expression> varargs;
             varargs.reserve(e->size() - e_i);
@@ -88,7 +107,7 @@ std::unique_ptr<Args> Signature::parse(expression e) const {
                 }
                 varargs.emplace_back(e->at(e_i));
             }
-            args->kwargs[argnames[arg_i++]->repr()] = TupleExpression::construct(std::move(varargs));
+            args->kwargs[argnames.at(arg_i++)->at(0)->repr()] = TupleExpression::construct(std::move(varargs));
             break;
         }
         else if (e->at(e_i) == VAR){  // implies that it is named argument
@@ -98,7 +117,7 @@ std::unique_ptr<Args> Signature::parse(expression e) const {
             throw Exception("Tuple Expansion not yet supported.");
         }
         else {
-            auto argname = argnames[arg_i++]->repr();
+            auto argname = argnames.at(arg_i++)->repr();
             if (!args->kwargs[argname]){
                 args->kwargs[argname] = e->at(e_i);
             }

@@ -16,7 +16,7 @@
 namespace Function {
 
     // @Operator div /
-    const struct __div__: public OperatorFunction {
+    const struct __div__: public Function::OperatorFunction {
         __div__(): OperatorFunction("/") {}
         expression eval(Function::Args& args) const override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
@@ -100,7 +100,7 @@ namespace Function {
 
 
     // @Operator mod %
-    const struct __mod__: public OperatorFunction {
+    const struct __mod__: public Function::OperatorFunction {
         __mod__(): OperatorFunction("%") {}
         expression eval(Function::Args& args) const override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
@@ -121,7 +121,7 @@ namespace Function {
 
 
     // @Operator floordiv //
-    const struct __floordiv__: public OperatorFunction {
+    const struct __floordiv__: public Function::OperatorFunction {
         __floordiv__(): OperatorFunction("//") {}
         expression eval(Function::Args& args) const override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;

@@ -61,8 +61,8 @@ void requireIsEqual(const string& input, const std::string& expected, bool evalu
 
 void requireExprIsEqual(const string& input, const std::string& expected){
     auto inputExpr = engine.parse(input);
-    auto outputExpr = inputExpr->evaluate();
+    auto outputExpr = inputExpr->eval();
     auto expectedExpr = engine.parse(expected)->simplify();
 
-    REQUIRE( ((!outputExpr->isEqual(expectedExpr, 1e-8)) ? printDifference(input, inputExpr, outputExpr, expectedExpr, expected) : true) );
+    REQUIRE( ((!outputExpr->equals(expectedExpr, 1e-8)) ? printDifference(input, inputExpr, outputExpr, expectedExpr, expected) : true) );
 }

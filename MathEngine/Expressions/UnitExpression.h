@@ -20,6 +20,9 @@ class BaseUnitExpression: public Expression {
         static expression construct(const std::string& unit, double val = 1);
         static expression construct(UnitType type, const std::string& unit, double val);
 
+        std::string repr() const override;
+        int id() const override;
+
         EXPRESSION_OVERRIDES
 
         friend expression operator*(const BaseUnitExpression& unit1, const BaseUnitExpression& unit2);
@@ -41,6 +44,9 @@ class ConvertedUnitExpression: public Expression {
 
     public:
         static expression construct(UnitType type, const std::string& unit, double val);
+
+        std::string repr() const override;
+        int id() const override;
 
         EXPRESSION_OVERRIDES
 };

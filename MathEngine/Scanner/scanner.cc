@@ -31,7 +31,7 @@ namespace Lexeme {
 		GT_EQ, GT_GT, QUESTION, CHOOSE, PERMUTE, LSQUARE, QUOTE, BACKSLASH, RSQUARE, CARET,
 		CARET_PIPE, UNDERSCORE, BACKTICK, LBRACE, PIPE, PIPE_PIPE, RBRACE, TILDE
 	};
-	constexpr int longestLexeme = 2;
+	constexpr int longestLexeme = 3;
 
     BINARY_SEARCH_INDEX_OF(lexemes, numLexemes)
 }
@@ -68,20 +68,16 @@ bool Scanner::isPostImplicit(Type type){
 static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
     if (size > 0){
         char substr[Lexeme::longestLexeme+1];
-        int index[Lexeme::longestLexeme];
+        int lastIndex = -1;
         for (unsigned int i = 0; i < Lexeme::longestLexeme; ++i){
             substr[i] = str[i];
             substr[i+1] = '\0';
-            index[i] = Lexeme::indexOf(substr);
-            if (index[i] == -1){
-                if (i > 0){
-                    lexemeIndex = index[i-1];
-                    return true;
-                }
-                return false;
+            int index = Lexeme::indexOf(substr);
+            if (index != -1){
+                lastIndex = index;
             }
-            else if (i+1 >= size || i+1 >= Lexeme::longestLexeme){
-                lexemeIndex = index[i];
+            if (i+1 >= size || i+1 >= Lexeme::longestLexeme){
+                lexemeIndex = lastIndex;
                 return true;
             }
         }
@@ -238,7 +234,7 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             i += index;
         }
         else if (startsWithID(c_str, size, index)){
-            if (std::strncmp(c_str, "None", index-i) || std::strncmp(c_str, "null", index-i)){
+            if (std::strcmp(c_str, "None") == 0 || std::strcmp(c_str, "null") == 0){
                 tokens.emplace_back(Token{"", NONE});
             }
             else{

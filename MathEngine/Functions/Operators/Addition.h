@@ -16,7 +16,7 @@
 namespace Function {
 
     // @Operator add +
-    const struct __add__: public OperatorFunction {
+    const struct __add__: public Function::OperatorFunction {
         __add__(): OperatorFunction("+") {}
         expression eval(Function::Args& args) const override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;

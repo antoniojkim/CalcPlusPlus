@@ -28,16 +28,14 @@ class VariableExpression: public Expression {
 };
 
 class VarArgsExpression: public Expression {
+    expression var;
 
-    expression e;
-
-    VarArgsExpression(expression e);
+    VarArgsExpression(expression var);
 
     public:
-        static expression construct(expression e);
+        static expression construct(expression var);
 
         expression at(const int index) override;
-        std::string repr() const override;
 
         EXPRESSION_OVERRIDES
 

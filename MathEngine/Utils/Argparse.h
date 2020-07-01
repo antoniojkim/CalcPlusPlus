@@ -39,6 +39,8 @@ namespace Function {
             Signature(const std::string& signature);
 
             std::unique_ptr<Args> parse(expression args) const ;
+
+            friend std::ostream& operator<<(std::ostream& out, Signature& signature);
     };
 
 }

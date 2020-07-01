@@ -43,7 +43,7 @@ def generate_tokens(args=None):
                     indent="\t\t",
                 ),
                 lexemeTypes=wrap((name for name, lexeme in lexemes), indent="\t\t"),
-                longestLexeme=str(max(map(len, lexemes))),
+                longestLexeme=str(max(len(lexeme) for name, lexeme in lexemes)),
             )
 
         operators = [

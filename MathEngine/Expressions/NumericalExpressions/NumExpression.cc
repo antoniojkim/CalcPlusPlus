@@ -5,7 +5,7 @@
 
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
-#include "../../Utils/fraction.h"
+#include "../../Utils/Fraction.h"
 #include "../../Utils/Numeric.h"
 #include "../ExpressionOperations.h"
 #include "../NumericalExpression.h"

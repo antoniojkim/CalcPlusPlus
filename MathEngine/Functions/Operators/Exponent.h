@@ -16,7 +16,7 @@
 namespace Function {
 
     // @Operator pow ^ **
-    const struct __pow__: public OperatorFunction {
+    const struct __pow__: public Function::OperatorFunction {
         __pow__(): OperatorFunction("^") {}
         expression eval(Function::Args& args) const override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN, Scanner::VAR;

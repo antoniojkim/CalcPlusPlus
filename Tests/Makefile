@@ -4,9 +4,10 @@ CXX = g++
 
 includes.linux := -I../.includes/
 includes.win := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
-INCLUDES := ${includes.${BUILD}}
+INCLUDES := ${includes.${BUILD}} -I../MathEngine
 
-CXXFLAGS = -O2 -g -std=c++17 -MMD -Werror=vla -Wall ${INCLUDES} -I../MathEngine
+CXXFLAGS = -g -std=c++17 -MMD -Werror=vla -Wall ${INCLUDES}
+CPPFLAGS = -DDEBUG
 EXEC = run
 
 TESTS = $(wildcard Tests/*/*.cc)

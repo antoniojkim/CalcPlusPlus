@@ -6,6 +6,7 @@
 
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
+#include "../ExpressionOperations.h"
 #include "../NumericalExpression.h"
 #include "../UnitConversionExpression/Units.h"
 #include "../UnitExpression.h"
@@ -44,6 +45,12 @@ expression VariableExpression::integrate(const std::string& var) {
 }
 
 
+bool VariableExpression::isComplex() const {
+    if (var){
+        return var->isComplex();
+    }
+    return false;
+}
 bool VariableExpression::isEvaluable(const Variables& vars) const {
     return vars.count(name) != 0 || (var && var->isEvaluable(vars)) || getConstantIndex(name) != -1;
 }
@@ -77,7 +84,6 @@ double VariableExpression::value(const Variables& vars) const {
     return GSL_NAN;
 }
 
-bool VariableExpression::isComplex() const { return false; }
 
 bool VariableExpression::equals(expression e, double precision) const {
     if (e == VAR){
