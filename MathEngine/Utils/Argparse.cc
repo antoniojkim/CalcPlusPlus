@@ -44,44 +44,56 @@ Signature::Signature(const std::string& signature): signature{signature} {
     // Parse the signature. It should be a valid expression containing only variables.
     list<Token> tokens;
     scan(signature, tokens);
-    auto signatureExpr = parser.parse(tokens);
-    if (signatureExpr != TUPLE){
-        throw Exception("Function Signature must be a tuple. Got: ", signature);
+    argnames.reserve(tokens.size());
+
+    if (tokens.front().type != LPAREN){
+        throw Exception("Invalid Signature: ", signature);
     }
-    this->argnames.reserve(signatureExpr->size());
-    // Loop through the parsed signature verifying its validity.
-    size_t i = 0;
-    for(; i < signatureExpr->size(); ++i){
-        auto var = signatureExpr->at(i)->eval();
-        if (var == VAR){
-            this->argnames.emplace_back(var);
-            if (var->at(0)){  // implies first named argument
-                ++i;
+    tokens.pop_front();
+
+    while (!tokens.empty()){
+        auto& var = tokens.front();
+        switch(var.type){
+            case COMMA:
+            case RPAREN:
+                tokens.pop_front();
+                continue;
+            case ID:
+                break;
+            default:
+                throw Exception("Function Signature must contain only positional and named variables. Got: ", signature);
+        }
+        tokens.pop_front();
+
+        auto& next = tokens.front();
+        switch(next.type){
+            case COMMA:
+            case RPAREN:
+                if (!argnames.empty() && argnames.back().second){
+                    throw Exception("Positional Argument cannot follow named argument. Signature: ", signature);
+                }
+                argnames.emplace_back(var.lexeme, nullptr);
+                tokens.pop_front();
+                break;
+            case EQUALS: { // Implied first named argument
+                tokens.pop_front();
+                list<Token> val;
+                while(tokens.front().type != COMMA && tokens.front().type != RPAREN){
+                    val.emplace_back(std::move(tokens.front()));
+                    tokens.pop_front();
+                }
+                argnames.emplace_back(var.lexeme, parser.parse(val));
                 break;
             }
-        }
-        else if (var == VARARGS){  // implies varargs
-            this->argnames.emplace_back(var);
-            ++i;
-            break;
-        }
-        else{
-            throw Exception("Function Signature must contain only variables and default arguments. Got: ", signatureExpr);
-        }
-    }
-    for(; i < signatureExpr->size(); ++i){
-        auto var = signatureExpr->at(i)->eval();
-        if (var == VAR){
-            if (!var->at(0)){
-                throw Exception("Positional argument cannot follow named argument in function signature. Got: ", signature);
-            }
-            this->argnames.emplace_back(var);
-        }
-        else if (var == VARARGS){
-            throw Exception("varargs cannot follow named argument in function signature. Got: ", signature);
-        }
-        else{
-            throw Exception("Function Signature must contain only variables and default arguments. Got: ", signatureExpr);
+            case ELLIPSIS:
+                if (!argnames.empty() && argnames.back().second){
+                    throw Exception("VarArg cannot follow named argument. Signature: ", signature);
+                }
+                argnames.emplace_back(var.lexeme, VarArgsExpression::construct());
+                tokens.pop_front();
+                break;
+            default:
+                throw Exception("Unexpected token ", next.lexeme, " encountered when parsing signature: ", signature);
         }
     }
 }
@@ -89,7 +101,7 @@ Signature::Signature(const std::string& signature): signature{signature} {
 std::unique_ptr<Args> Signature::parse(expression e) const {
     auto args = std::make_unique<Args>();
     for (auto argname : argnames){
-        args->kwargs[argname->repr()] = argname->at(0);
+        args->kwargs[argname.first] = argname.second;
     }
     size_t arg_i = 0;  // represents index for argname
     size_t e_i = 0;  // represents index for expression
@@ -97,7 +109,7 @@ std::unique_ptr<Args> Signature::parse(expression e) const {
         if (arg_i >= argnames.size()){
             throw Exception("Too many arguments given. Signature: ", *this, ". Got: ", e);
         }
-        if (argnames.at(arg_i) == VARARGS){
+        if (argnames.at(arg_i).second == VARARGS){
             // Avoid using flag variable by entering new state handling the var args case
             std::vector<expression> varargs;
             varargs.reserve(e->size() - e_i);
@@ -107,7 +119,7 @@ std::unique_ptr<Args> Signature::parse(expression e) const {
                 }
                 varargs.emplace_back(e->at(e_i));
             }
-            args->kwargs[argnames.at(arg_i++)->at(0)->repr()] = TupleExpression::construct(std::move(varargs));
+            args->kwargs[argnames.at(arg_i++).first] = TupleExpression::construct(std::move(varargs));
             break;
         }
         else if (e->at(e_i) == VAR){  // implies that it is named argument
@@ -117,7 +129,7 @@ std::unique_ptr<Args> Signature::parse(expression e) const {
             throw Exception("Tuple Expansion not yet supported.");
         }
         else {
-            auto argname = argnames.at(arg_i++)->repr();
+            auto argname = argnames.at(arg_i++).first;
             if (!args->kwargs[argname]){
                 args->kwargs[argname] = e->at(e_i);
             }

@@ -33,7 +33,7 @@ namespace Function {
 
     class Signature {
         const std::string signature;
-        std::vector<expression> argnames;
+        std::vector<std::pair<std::string, expression>> argnames;
 
         public:
             Signature(const std::string& signature);

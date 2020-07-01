@@ -30,9 +30,11 @@ class VariableExpression: public Expression {
 class VarArgsExpression: public Expression {
     expression var;
 
+    VarArgsExpression();
     VarArgsExpression(expression var);
 
     public:
+        static expression construct();
         static expression construct(expression var);
 
         expression at(const int index) override;

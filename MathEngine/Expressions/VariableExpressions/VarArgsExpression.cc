@@ -16,7 +16,12 @@
 using namespace std;
 using namespace Scanner;
 
+VarArgsExpression::VarArgsExpression(): Expression{VARARGS}{}
 VarArgsExpression::VarArgsExpression(expression var): Expression{VARARGS}, var{var} {}
+
+expression VarArgsExpression::construct(){
+    return shared_ptr<VarArgsExpression>(new VarArgsExpression());
+}
 
 expression VarArgsExpression::construct(expression var){
     if (var != VAR){

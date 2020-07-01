@@ -205,8 +205,8 @@ bool operator!=(const expression e1, const expression e2){
 }
 
 bool operator==(const expression e, Type kind){
-    return e->is(kind);
+    return e && e->is(kind);
 }
 bool operator!=(const expression e, Type kind){
-    return !e->is(kind);
+    return !(e && e->is(kind));
 }
