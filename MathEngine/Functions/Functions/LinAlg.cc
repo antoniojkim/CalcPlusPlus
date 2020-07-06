@@ -1,5 +1,3 @@
-#pragma once
-
 #include <initializer_list>
 #include <list>
 #include <utility>
@@ -10,19 +8,20 @@
 #include <gsl/gsl_permutation.h>
 
 #include "../../Expressions/Expression.h"
-#include "../../Expressions/InvalidExpression.h"
+#include "../../Expressions/ExpressionOperations.h"
 #include "../../Expressions/MatrixExpression.h"
 #include "../../Expressions/NumericalExpression.h"
 #include "../../Expressions/TupleExpression.h"
-#include "../AbstractFunction.h"
+#include "../../Utils/Argparse.h"
+#include "../../Utils/Exception.h"
+#include "../Functions.h"
 
 namespace Function {
-    // @Function det
-    const struct __det__: public Function::AbstractFunction {
-        __det__(): AbstractFunction("det", "(m,)") {}
-        expression eval(Function::Args& args) const override {
+    // @Function det(m)
+    namespace det {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX;
-            auto matrix = args["m"];
+            auto matrix = args.next();
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -41,14 +40,13 @@ namespace Function {
             }
             throw Exception("det expected matrix. Got: ", matrix);
         }
-    } det;
+    }
 
-    // @Function lndet
-    const struct __lndet__: public Function::AbstractFunction {
-        __lndet__(): AbstractFunction("lndet", "(m,)") {}
-        expression eval(Function::Args& args) const override {
+    // @Function lndet(m)
+    namespace lndet {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX;
-            auto matrix = args["m"];
+            auto matrix = args.next();
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -67,14 +65,13 @@ namespace Function {
             }
             throw Exception("lndet expected matrix. Got: ", matrix);
         }
-    } lndet;
+    }
 
-    // @Function LU
-    const struct __LU__: public Function::AbstractFunction {
-        __LU__(): AbstractFunction("LU", "(m,)") {}
-        expression eval(Function::Args& args) const override {
+    // @Function LU(m)
+    namespace LU {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX;
-            auto matrix = args["m"];
+            auto matrix = args.next();
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -101,15 +98,14 @@ namespace Function {
             }
             throw Exception("LU Factorization expects a matrix. Got: ", matrix);
         }
-    } LU;
+    }
 
-    // @Function LUsolve solve
-    const struct __LUsolve__: public Function::AbstractFunction {
-        __LUsolve__(): AbstractFunction("LUsolve", "(A, b)") {}
-        expression eval(Function::Args& args) const override {
+    // @Function LUsolve(A, b): solve
+    namespace LUsolve {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX;
-            auto A = args["A"];
-            auto b = args["b"];
+            auto A = args.next();
+            auto b = args.next();
             if (A == MATRIX && b == MATRIX && (A->shape(0) == b->size())){
                 if (A->isComplex() || b->isComplex()){
                     auto LU = to_gsl_matrix_complex(A);
@@ -132,20 +128,19 @@ namespace Function {
             }
             throw Exception("LU Solve expects a (m, n) matrix and a (n) vector. Got: ", args);
         }
-    } LUsolve;
+    }
 
-    // @Function Cholesky
-    const struct __Cholesky__: public Function::AbstractFunction {
-        __Cholesky__(): AbstractFunction("Cholesky", "(m,)") {}
-        expression eval(Function::Args& args) const override {
+    // @Function Cholesky(m)
+    namespace Cholesky {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX;
-            auto matrix = args["m"];
+            auto matrix = args.next();
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
                     int code = gsl_linalg_complex_cholesky_decomp(gsl_mat.get());
                     if (code != 0){
-                        return InvalidExpression::construct(Exception("Cholesky decomposition expects a positive definite matrix"));
+                        throw Exception("Cholesky decomposition expects a positive definite matrix");
                     }
                     return MatrixExpression::construct(gsl_mat);
                 }
@@ -153,12 +148,12 @@ namespace Function {
                     auto gsl_mat = to_gsl_matrix(matrix);
                     int code = gsl_linalg_cholesky_decomp1(gsl_mat.get());
                     if (code != 0){
-                        return InvalidExpression::construct(Exception("Cholesky decomposition expects a positive definite matrix"));
+                        throw Exception("Cholesky decomposition expects a positive definite matrix");
                     }
                     return MatrixExpression::construct(gsl_mat);
                 }
             }
             throw Exception("Cholesky decomposition expects a matrix. Got: ", matrix);
         }
-    } Cholesky;
+    }
 }

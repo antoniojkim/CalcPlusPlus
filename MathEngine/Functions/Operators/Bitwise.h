@@ -12,7 +12,7 @@
 #include "../../Expressions/MatrixExpression.h"
 #include "../../Expressions/TupleExpression.h"
 #include "../../Scanner/scanner.h"
-#include "../AbstractFunction.h"
+#include "../Functions.h"
 
 namespace Function {
 

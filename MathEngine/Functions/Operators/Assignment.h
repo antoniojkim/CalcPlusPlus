@@ -11,7 +11,7 @@
 #include "../../Expressions/ExpressionOperations.h"
 #include "../../Expressions/VariableExpression.h"
 #include "../../Scanner/scanner.h"
-#include "../AbstractFunction.h"
+#include "../Functions.h"
 
 namespace Function {
 

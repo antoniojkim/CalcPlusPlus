@@ -1,5 +1,3 @@
-#pragma once
-
 #include <initializer_list>
 #include <list>
 #include <utility>
@@ -10,16 +8,15 @@
 
 #include "../../Expressions/Expression.h"
 #include "../../Expressions/TupleExpression.h"
-#include "../AbstractFunction.h"
+#include "../Functions.h"
 
 namespace Function {
-    // @Function quad
-    const struct __quad__: public Function::AbstractFunction {
-        __quad__(): AbstractFunction("quad", "(a, b, c)") {}
-        expression eval(Function::Args& args) const override {
-            double a = args["a"]->value();
-            double b = args["b"]->value();
-            double c = args["c"]->value();
+    // @Function quad(a, b, c)
+    namespace quad {
+        expression eval(Function::Args& args) {
+            double a = args.nextValue();
+            double b = args.nextValue();
+            double c = args.nextValue();
             double x0, x1;
             int num_roots = gsl_poly_solve_quadratic(a, b, c, &x0, &x1);
             switch(num_roots){
@@ -36,15 +33,14 @@ namespace Function {
                     throw; // Should never throw;
             }
         }
-    } quad;
+    }
 
-    // @Function quadc
-    const struct __quadc__: public Function::AbstractFunction {
-        __quadc__(): AbstractFunction("quadc", "(a, b, c)") {}
-        expression eval(Function::Args& args) const override {
-            double a = args["a"]->value();
-            double b = args["b"]->value();
-            double c = args["c"]->value();
+    // @Function quadc(a, b, c)
+    namespace quadc {
+        expression eval(Function::Args& args) {
+            double a = args.nextValue();
+            double b = args.nextValue();
+            double c = args.nextValue();
             gsl_complex z0, z1;
             int num_roots = gsl_poly_complex_solve_quadratic(a, b, c, &z0, &z1);
             switch(num_roots){
@@ -56,16 +52,15 @@ namespace Function {
                     throw; // Should never throw;
             }
         }
-    } quadc;
+    }
 
-    // @Function cubic
-    const struct __cubic__: public Function::AbstractFunction {
-        __cubic__(): AbstractFunction("cubic", "(a, b, c, d)") {}
-        expression eval(Function::Args& args) const override {
-            double a = args["a"]->value();
-            double b = args["b"]->value() / a;
-            double c = args["c"]->value() / a;
-            double d = args["d"]->value() / a;
+    // @Function cubic(a, b, c, d)
+    namespace cubic {
+        expression eval(Function::Args& args) {
+            double a = args.nextValue();
+            double b = args.nextValue() / a;
+            double c = args.nextValue() / a;
+            double d = args.nextValue() / a;
             double x0, x1, x2;
             int num_roots = gsl_poly_solve_cubic(b, c, d, &x0, &x1, &x2);
             switch(num_roots){
@@ -77,19 +72,18 @@ namespace Function {
                     throw; // Should never throw;
             }
         }
-    } cubic;
+    }
 
-    // @Function cubicc
-    const struct __cubicc__: public Function::AbstractFunction {
-        __cubicc__(): AbstractFunction("cubicc", "(a, b, c, d)") {}
-        expression eval(Function::Args& args) const override {
-            double a = args["a"]->value();
-            double b = args["b"]->value() / a;
-            double c = args["c"]->value() / a;
-            double d = args["d"]->value() / a;
+    // @Function cubicc(a, b, c, d)
+    namespace cubicc {
+        expression eval(Function::Args& args) {
+            double a = args.nextValue();
+            double b = args.nextValue() / a;
+            double c = args.nextValue() / a;
+            double d = args.nextValue() / a;
             gsl_complex z0, z1, z2;
             gsl_poly_complex_solve_cubic(b, c, d, &z0, &z1, &z2);
             return TupleExpression::construct({z0, z1, z2});
         }
-    } cubicc;
+    }
 }

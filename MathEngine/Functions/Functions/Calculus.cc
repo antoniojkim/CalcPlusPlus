@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cmath>
 #include <list>
 #include <string>
@@ -8,19 +6,21 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_integration.h>
 
+#include "../../Expressions/ExpressionOperations.h"
+#include "../../Expressions/NumericalExpression.h"
 #include "../../Expressions/VariableExpression.h"
 #include "../../Scanner/scanner.h"
-#include "../AbstractFunction.h"
+#include "../../Utils/Exception.h"
+#include "../Functions.h"
 
 namespace Function {
-    // @Function deriv
-    const struct __deriv__: public Function::AbstractFunction {
-        __deriv__(): AbstractFunction("deriv", "(f, x, x1=None)") {}
-        expression eval(Function::Args& args) const override {
+    // @Function deriv(f, x, x1=None)
+    namespace deriv {
+        expression eval(Function::Args& args) {
             using Scanner::NONE, Scanner::VAR;
-            auto f = args["f"];
-            auto x = args["x"];
-            auto x1 = args["x1"];
+            auto f = args.next();
+            auto x = args.next();
+            auto x1 = args.next();
 
             std::string var = "x";
             if (x1 != NONE){
@@ -50,15 +50,14 @@ namespace Function {
             }
             throw Exception("Error encountered when computing numerical derivative. Args: ", args);
         }
-    } deriv;
+    }
 
-    // @Function diff
-    const struct __diff__: public Function::AbstractFunction {
-        __diff__(): AbstractFunction("diff", "(f, x=None)") {}
-        expression eval(Function::Args& args) const override {
+    // @Function diff(f, x=None)
+    namespace diff {
+        expression eval(Function::Args& args) {
             using Scanner::NONE, Scanner::VAR;
-            auto f = args["f"];
-            auto x = args["x"];
+            auto f = args.next();
+            auto x = args.next();
 
             std::string var = "x";
             if (x != NONE){
@@ -69,17 +68,16 @@ namespace Function {
             }
             return f->derivative(var);
         }
-    } diff;
+    }
 
-    // @Function integral
-    const struct __integral__: public Function::AbstractFunction {
-        __integral__(): AbstractFunction("integral", "(f, a, b, x=None)") {}
-        expression eval(Function::Args& args) const override {
+    // @Function integral(f, a, b, x=None)
+    namespace integral {
+        expression eval(Function::Args& args) {
             using Scanner::NONE, Scanner::VAR;
-            auto f = args["f"];
-            auto a = args["a"];
-            auto b = args["b"];
-            auto x = args["x"];
+            auto f = args.next();
+            auto a = args.next();
+            auto b = args.next();
+            auto x = args.next();
 
             std::string var = "x";
             if (x != NONE){
@@ -104,6 +102,6 @@ namespace Function {
             }
             throw Exception("Error encountered when computing numerical integral. Args: ", args);
         }
-    } integral;
+    }
 
 }

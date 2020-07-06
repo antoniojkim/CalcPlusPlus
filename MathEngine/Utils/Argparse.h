@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <utility>
@@ -9,38 +9,36 @@
 
 namespace Function {
 
+    /*
+    An iterator-like class that returns the next argument
+    */
     class Args {
-        std::map<std::string, expression> kwargs;
+        int numPositional;
+        bool hasVarArgs;
+        const std::vector<double>& defaultArgs;
+        expression e;
+        size_t argIndex, eIndex;
 
         public:
-            inline expression operator[](const std::string name){ return kwargs.at(name); }
-            inline double get(const std::string name){ return kwargs.at(name)->value(); }
-            inline double get(const std::string name, double defaultArg){
-                if (kwargs.count(name) == 0){
-                    return defaultArg;
-                }
-                return kwargs.at(name)->value();
+            Args(int numPositional, bool hasVarArgs, const std::vector<double>& defaultArgs, expression e);
+
+            expression next();
+            double nextValue();
+
+            friend std::ostream& operator<<(std::ostream& out, Args& args){
+                return out << args.e << std::endl;
             }
-
-            inline size_t size() { return kwargs.size(); }
-
-            decltype(kwargs.begin()) begin(){ return kwargs.begin(); }
-            decltype(kwargs.end()) end(){ return kwargs.end(); }
-
-            friend std::ostream& operator<<(std::ostream& out, Args& args);
-            friend class Signature;
     };
 
     class Signature {
-        const std::string signature;
-        std::vector<std::pair<std::string, expression>> argnames;
+        int numPositional;
+        bool hasVarArgs;
+        std::vector<double> defaultArgs;
 
         public:
-            Signature(const std::string& signature);
+            Signature(int numPositional, bool hasVarArgs, std::initializer_list<double> defaultArgs);
 
-            std::unique_ptr<Args> parse(expression args) const ;
-
-            friend std::ostream& operator<<(std::ostream& out, Signature& signature);
+            Function::Args parse(expression e) const;
     };
 
 }

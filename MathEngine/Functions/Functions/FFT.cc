@@ -1,5 +1,3 @@
-#pragma once
-
 #include <list>
 #include <vector>
 
@@ -9,11 +7,13 @@
 #include <gsl/gsl_fft_complex.h>
 
 #include "../../Expressions/Expression.h"
+#include "../../Expressions/ExpressionOperations.h"
 #include "../../Expressions/InvalidExpression.h"
 #include "../../Expressions/MatrixExpression.h"
 #include "../../Expressions/TupleExpression.h"
 #include "../../Utils/Argparse.h"
-#include "../AbstractFunction.h"
+#include "../../Utils/Exception.h"
+#include "../Functions.h"
 
 #define MAKE_UNIQUE_GSL(F) \
     typedef std::unique_ptr<gsl_##F, decltype(&gsl_##F##_free)> unique_##F; \
@@ -32,13 +32,11 @@ inline std::unique_ptr<double[]> make_complex_packed_array(size_t n){
 }
 
 namespace Function {
-    // @Function fft
-    const struct __fft__: public Function::AbstractFunction {
-        __fft__(): AbstractFunction("fft", "(m,)") {}
-
-        expression eval(Function::Args& args) const override {
+    // @Function fft(m)
+    namespace fft {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX;
-            auto matrix = args["m"];
+            auto matrix = args.next();
             if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
                 size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
@@ -80,15 +78,13 @@ namespace Function {
             }
             throw Exception("FFT expected 1D Matrix. Got: ", matrix);
         }
-    } fft;
+    }
 
-    // @Function ifft
-    const struct __ifft__: public Function::AbstractFunction {
-        __ifft__(): AbstractFunction("ifft", "(m,)") {}
-
-        expression eval(Function::Args& args) const override {
+    // @Function ifft(m)
+    namespace ifft {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX;
-            auto matrix = args["m"];
+            auto matrix = args.next();
             if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
                 size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
@@ -130,5 +126,5 @@ namespace Function {
             }
             throw Exception("IFFT expected 1D Matrix. Got: ", matrix);
         }
-    } ifft;
+    }
 }

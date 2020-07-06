@@ -2,7 +2,6 @@
 
 #include <list>
 
-#include "../Functions/AbstractFunction.h"
 #include "../Functions/Functions.h"
 #include "Expression.h"
 
