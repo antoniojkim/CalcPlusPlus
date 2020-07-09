@@ -15,6 +15,12 @@ def main():
             ),
         )
     )
+    op_signature = re.compile(
+        r"// @Operator {name}{aliases}".format(
+            name=r"(?P<name>[a-zA-Z_][a-zA-Z0-9_]*)",
+            aliases=r"(:(?P<aliases>( *\S+)+))?",
+        )
+    )
 
     for case in (
         "// @Function neg(x)",
@@ -28,42 +34,50 @@ def main():
         match = func_signature.match(case)
         assert match, f"{case} was not matched"
 
-    with open("../../MathEngine/Functions/Functions/Trigonometry.cc") as file:
-        content = file.read()
+    for case in (
+        "// @Operator add: +",
+        "// @Operator pow: ^ **",
+    ):
+        match = op_signature.match(case)
+        assert match, f"{case} was not matched"
+        print(match.group("name"), match.group("aliases"))
 
-    curly_braces = []
-    depth = 0
-    for i, c in enumerate(content):
-        if c == "{":
-            depth += 1
-            curly_braces.append((i, c, depth))
-        elif c == "}":
-            curly_braces.append((i, c, depth))
-            depth -= 1
+    # with open("../../MathEngine/Functions/Functions/Trigonometry.cc") as file:
+    #     content = file.read()
 
-    decorator_matches = []
-    for i in range(1, len(curly_braces)):
-        index1, char1, depth1 = curly_braces[i - 1]
-        index2, char2, depth2 = curly_braces[i]
-        match = func_signature.search(content, index1, index2)
+    # curly_braces = []
+    # depth = 0
+    # for i, c in enumerate(content):
+    #     if c == "{":
+    #         depth += 1
+    #         curly_braces.append((i, c, depth))
+    #     elif c == "}":
+    #         curly_braces.append((i, c, depth))
+    #         depth -= 1
 
-        if match:
-            namespace_re = re.compile(f"namespace {match.group('name')}")
-            if namespace_re.search(content, index1, index2):
-                for j, (index3, char3, depth3) in enumerate(
-                    curly_braces[i + 1 :], i + 1
-                ):
-                    if depth2 == depth3 and char2 != char3:
-                        decorator_matches.append((match, i, j))
-                        break
+    # decorator_matches = []
+    # for i in range(1, len(curly_braces)):
+    #     index1, char1, depth1 = curly_braces[i - 1]
+    #     index2, char2, depth2 = curly_braces[i]
+    #     match = func_signature.search(content, index1, index2)
 
-    for match, i, j in decorator_matches:
-        print(match, i, j)
+    #     if match:
+    #         namespace_re = re.compile(f"namespace {match.group('name')}")
+    #         if namespace_re.search(content, index1, index2):
+    #             for j, (index3, char3, depth3) in enumerate(
+    #                 curly_braces[i + 1 :], i + 1
+    #             ):
+    #                 if depth2 == depth3 and char2 != char3:
+    #                     decorator_matches.append((match, i, j))
+    #                     break
 
-        index1, char1, depth1 = curly_braces[i]
-        index2, char2, depth2 = curly_braces[j]
+    # for match, i, j in decorator_matches:
+    #     print(match, i, j)
 
-        print(content[index1 : index2 + 1])
+    #     index1, char1, depth1 = curly_braces[i]
+    #     index2, char2, depth2 = curly_braces[j]
+
+    #     print(content[index1 : index2 + 1])
 
 
 if __name__ == "__main__":

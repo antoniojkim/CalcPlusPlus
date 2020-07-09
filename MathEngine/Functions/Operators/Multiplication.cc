@@ -1,27 +1,28 @@
-#pragma once
-
 #include <cmath>
 #include <numeric>
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_complex_math.h>
+#include <gsl/gsl_blas.h>
 
 #include "../../Expressions/ExpressionFunctions.h"
 #include "../../Expressions/ExpressionOperations.h"
 #include "../../Expressions/MatrixExpression.h"
-#include "../../Expressions/TupleExpression.h"
+#include "../../Expressions/NumericalExpression.h"
 #include "../../Scanner/scanner.h"
+#include "../../Utils/Exception.h"
 #include "../Functions.h"
 
 namespace Function {
 
-    // @Operator mul *
-    const struct __mul__: public Function::OperatorFunction {
-        __mul__(): OperatorFunction("*") {}
-        expression eval(Function::Args& args) const override {
+    // @Operator mul: *
+    namespace mul {
+        expression matrix_mul(expression lhs, expression rhs);
+
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args["l"];
-            auto r = args["r"];
+            auto l = args.next();
+            auto r = args.next();
             if (l == MATRIX || r == MATRIX){
                 return matrix_mul(l, r);
             }
@@ -36,13 +37,13 @@ namespace Function {
             }
             return NumExpression::construct(l->value() * r->value());
         }
-        expression derivative(Function::Args& args, const std::string& var) const override {
-            auto l = args["l"];
-            auto r = args["r"];
+        expression derivative(Function::Args& args, const std::string& var) {
+            auto l = args.next();
+            auto r = args.next();
             return l->derivative(var) * r + l * r->derivative(var);
         }
 
-        static expression matrix_mul(expression lhs, expression rhs){
+        expression matrix_mul(expression lhs, expression rhs){
             using Scanner::MATRIX;
             if (lhs == MATRIX && rhs == MATRIX){
                 if (lhs->shape(1) == rhs->shape(0)){
@@ -101,6 +102,6 @@ namespace Function {
             }
             throw Exception("Matrix multiplication requires at least one matrix operand.");
         }
-    } mul;
+    }
 
 }

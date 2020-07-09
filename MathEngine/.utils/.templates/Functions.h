@@ -61,7 +61,8 @@ namespace Function {
     #define DERIVATIVE_DECLARATION() expression derivative(Function::Args& args, const std::string& var);
     #define INTEGRAL_DECLARATION() expression integral(Function::Args& args, const std::string& var);
     #define PRINT_DECLARATION() std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty);
-    #define POSTFIX_DECLARATION() std::ostream& postfix(std::ostream& out, Function::Args& args);
+    #define POSTFIX_DECLARATION_1() std::ostream& postfix(std::ostream& out, Function::Args& args);
+    #define POSTFIX_DECLARATION_2() std::ostream& (*postfix)(std::ostream&, Function::Args&);
 
 {declarations}
 
@@ -72,7 +73,8 @@ namespace Function {
     #undef DERIVATIVE_DECLARATION
     #undef INTEGRAL_DECLARATION
     #undef PRINT_DECLARATION
-    #undef POSTFIX_DECLARATION
+    #undef POSTFIX_DECLARATION_1
+    #undef POSTFIX_DECLARATION_2
 }
 
 #endif // __FUNCTION_DIRECTORY_H__

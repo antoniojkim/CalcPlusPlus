@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cmath>
 #include <numeric>
 
@@ -8,20 +6,23 @@
 
 #include "../../Expressions/ExpressionFunctions.h"
 #include "../../Expressions/ExpressionOperations.h"
+#include "../../Expressions/NumericalExpression.h"
 #include "../../Expressions/MatrixExpression.h"
 #include "../../Expressions/TupleExpression.h"
 #include "../../Scanner/scanner.h"
+#include "../../Utils/Exception.h"
 #include "../Functions.h"
 
 namespace Function {
 
-    // @Operator div /
-    const struct __div__: public Function::OperatorFunction {
-        __div__(): OperatorFunction("/") {}
-        expression eval(Function::Args& args) const override {
+    // @Operator div: /
+    namespace div {
+        expression matrix_div(expression lhs, expression rhs);
+
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args["l"];
-            auto r = args["r"];
+            auto l = args.next();
+            auto r = args.next();
             if (l == MATRIX || r == MATRIX){
                 return matrix_div(l, r);
             }
@@ -36,13 +37,13 @@ namespace Function {
             }
             return NumExpression::construct(l->value() / r->value());
         }
-        expression derivative(Function::Args& args, const std::string& var) const override {
-            auto l = args["l"];
-            auto r = args["r"];
+        expression derivative(Function::Args& args, const std::string& var) {
+            auto l = args.next();
+            auto r = args.next();
             return (l->derivative(var) * r - l * r->derivative(var)) / (r ^ 2);
         }
 
-        static expression matrix_div(expression lhs, expression rhs){
+        expression matrix_div(expression lhs, expression rhs){
             using Scanner::MATRIX;
             if (lhs == MATRIX && rhs == MATRIX){
                 if (lhs->shape(0) == rhs->shape(0) && lhs->shape(1) == rhs->shape(1)){
@@ -96,16 +97,15 @@ namespace Function {
             }
             throw Exception("Matrix division requires at least one matrix operand.");
         }
-    } div;
+    }
 
 
-    // @Operator mod %
-    const struct __mod__: public Function::OperatorFunction {
-        __mod__(): OperatorFunction("%") {}
-        expression eval(Function::Args& args) const override {
+    // @Operator mod: %
+    namespace mod {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args["l"];
-            auto r = args["r"];
+            auto l = args.next();
+            auto r = args.next();
             if (l->isComplex() || r->isComplex()){
                 throw Exception("Arithmetic Error: cannot modulo divide complex numbers.");
             }
@@ -117,16 +117,15 @@ namespace Function {
             }
             return NumExpression::construct(std::fmod(l->value(), r->value()));
         }
-    } mod;
+    }
 
 
-    // @Operator floordiv //
-    const struct __floordiv__: public Function::OperatorFunction {
-        __floordiv__(): OperatorFunction("//") {}
-        expression eval(Function::Args& args) const override {
+    // @Operator floordiv: //
+    namespace floordiv {
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args["l"];
-            auto r = args["r"];
+            auto l = args.next();
+            auto r = args.next();
             if (l->isComplex() || r->isComplex()){
                 throw Exception("Arithmetic Error: cannot floor divide complex numbers.");
             }
@@ -140,6 +139,6 @@ namespace Function {
             }
             return NumExpression::construct(intpart);
         }
-    } floordiv;
+    }
 
 }

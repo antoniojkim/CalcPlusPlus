@@ -77,7 +77,7 @@ namespace Function {
         }
     }
 
-    // @Function choose(x): comb(n, r)
+    // @Function choose(n, r): comb C
     namespace choose {
         expression eval(Function::Args& args) {
             double n = args.nextValue();
@@ -106,7 +106,7 @@ namespace Function {
         }
     }
 
-    // @Function permute(n, r): perm
+    // @Function permute(n, r): perm P
     namespace permute {
         expression eval(Function::Args& args) {
             double n = args.nextValue();

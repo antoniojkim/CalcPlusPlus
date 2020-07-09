@@ -13,15 +13,15 @@ using namespace Scanner;
 
 void scannerTest(const string& input, const string& expected){
     auto tokens = engine.scan(input);
-    auto joined = join(tokens, " ");
-    if (joined != expected){
-        cout << "Tokens: ";
+    auto output = join(tokens, " ");
+    if (output != expected){
+        UNSCOPED_INFO("scan(" << input << ") == '" << output << "' != '" << expected << "'");
+        UNSCOPED_INFO("Tokens: ");
         for (auto& token : tokens){
-            cout << typeStrings[token.type] << " ";
+            UNSCOPED_INFO("    " << token.type << " " << typeStrings[token.type] << " '" << token.lexeme << "'");
         }
-        cout << endl;
     }
-    REQUIRE( joined == expected );
+    CHECK( output == expected );
 }
 
 TEST_CASE("Basic Number Scanner Tests", "[scanner]" ) {

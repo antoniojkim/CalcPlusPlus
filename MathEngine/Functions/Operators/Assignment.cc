@@ -11,22 +11,22 @@
 #include "../../Expressions/ExpressionOperations.h"
 #include "../../Expressions/VariableExpression.h"
 #include "../../Scanner/scanner.h"
+#include "../../Utils/Exception.h"
 #include "../Functions.h"
 
 namespace Function {
 
-    // @Operator eq = := <-
-    const struct __eq__: public Function::OperatorFunction {
-        __eq__(): OperatorFunction("=") {}
-        expression eval(Function::Args& args) const override {
+    // @Operator eq: = := <-
+    namespace eq {
+        expression eval(Function::Args& args) {
             using Scanner::VAR;
-            auto l = args["l"];
-            auto r = args["r"];
+            auto l = args.next();
+            auto r = args.next();
             if (l != VAR){
                 throw Exception("Assignment operator expects variable. Got: ", l);
             }
             return VariableExpression::construct(l->repr(), r);
         }
-    } eq;
+    };
 
 }

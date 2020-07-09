@@ -1,4 +1,5 @@
 tokens:
+    NONE:
     HEX:
     BIN:
     NUM:
@@ -11,7 +12,6 @@ tokens:
     UNIT:
     VAR:
     VARARGS:
-    NONE:
     LPAREN: "("
     RPAREN: ")"
     LSQUARE: "["

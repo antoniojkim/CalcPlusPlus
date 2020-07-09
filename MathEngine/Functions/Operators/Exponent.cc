@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cmath>
 #include <numeric>
 
@@ -10,19 +8,22 @@
 #include "../../Expressions/ExpressionFunctions.h"
 #include "../../Expressions/ExpressionOperations.h"
 #include "../../Expressions/MatrixExpression.h"
-#include "../../Expressions/TupleExpression.h"
+#include "../../Expressions/NumericalExpression.h"
 #include "../../Scanner/scanner.h"
+#include "../../Utils/Exception.h"
 #include "../Functions.h"
 
 namespace Function {
 
-    // @Operator pow ^ **
-    const struct __pow__: public Function::OperatorFunction {
-        __pow__(): OperatorFunction("^") {}
-        expression eval(Function::Args& args) const override {
+    // @Operator pow: ^ **
+    namespace pow {
+        expression matrix_inverse(expression matrix);
+        expression matrix_transpose(expression matrix);
+
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN, Scanner::VAR;
-            auto l = args["l"];
-            auto r = args["r"];
+            auto l = args.next();
+            auto r = args.next();
             if (l == MATRIX){
                 if (r == VAR && r->repr() == "T"){
                     return matrix_transpose(l);
@@ -43,10 +44,10 @@ namespace Function {
             }
             return NumExpression::construct(std::pow(l->value(), r->value()));
         }
-        expression derivative(Function::Args& args, const std::string& var) const override {
+        expression derivative(Function::Args& args, const std::string& var) {
             using ExpressionMath::ln;
-            auto l = args["l"];
-            auto r = args["r"];
+            auto l = args.next();
+            auto r = args.next();
             if (r->isEvaluable()){
                 return (l ^ (r - 1)) * (l->derivative(var) * r);
             }
@@ -59,7 +60,7 @@ namespace Function {
         }
 
 
-        expression matrix_inverse(expression matrix) const {
+        expression matrix_inverse(expression matrix) {
             if (matrix->shape(0) == matrix->shape(1)){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -81,7 +82,7 @@ namespace Function {
             throw Exception("Expected (m, m) matrix. Got: (", matrix->shape(0), ", ", matrix->shape(1), ")");
         }
 
-        expression matrix_transpose(expression matrix) const {
+        expression matrix_transpose(expression matrix) {
             if (matrix->shape(0) == matrix->shape(1)){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -109,6 +110,6 @@ namespace Function {
                 }
             }
         }
-    } pow;
+    }
 
 }

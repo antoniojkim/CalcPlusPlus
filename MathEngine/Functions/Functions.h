@@ -15,24 +15,26 @@
 #include "../Utils/BinarySearch.h"
 
 namespace Functions {
-    constexpr const int numFunctions = 142;
+    constexpr const int numFunctions = 173;
     constexpr const char* names[numFunctions] = {
-        "Beta", "Betainc", "Cholesky", "LU", "LUsolve", "abs", "absdev", "acos", "acosh",
-		"acot", "acoth", "acsc", "acsch", "arccos", "arccosh", "arccot", "arccoth", "arccsc",
-		"arccsch", "arcos", "arcosh", "arcot", "arcoth", "arcsc", "arcsch", "arcsec", "arcsech",
-		"arcsin", "arcsinh", "arctan", "arctanh", "argmax", "argmin", "arsec", "arsech",
-		"arsin", "arsinh", "artan", "artanh", "asec", "asech", "asin", "asinh", "atan", "atanh",
-		"autocorr", "bin", "cb", "cbrt", "choose", "comb", "cos", "cosh", "cot", "coth", "csc",
-		"csch", "cubic", "cubicc", "deg", "deriv", "det", "dfact", "diff", "exp", "exp2",
-		"expm1", "fact", "fcmp", "fft", "frexp", "gamma", "gamma_inc", "gamma_inc_P",
+        "%", "&", "*", "**", "+", "-", "/", "//", ":=", "<-", "<<", "=", ">>", "Beta",
+		"Betainc", "C", "Cholesky", "LU", "LUsolve", "P", "^", "^|", "abs", "absdev", "acos",
+		"acosh", "acot", "acoth", "acsc", "acsch", "add", "arccos", "arccosh", "arccot",
+		"arccoth", "arccsc", "arccsch", "arcos", "arcosh", "arcot", "arcoth", "arcsc", "arcsch",
+		"arcsec", "arcsech", "arcsin", "arcsinh", "arctan", "arctanh", "argmax", "argmin",
+		"arsec", "arsech", "arsin", "arsinh", "artan", "artanh", "asec", "asech", "asin",
+		"asinh", "atan", "atanh", "autocorr", "bin", "bitwise_and", "bitwise_or", "bitwise_xor",
+		"cb", "cbrt", "choose", "comb", "cos", "cosh", "cot", "coth", "csc", "csch", "cubic",
+		"cubicc", "deg", "deriv", "det", "dfact", "diff", "div", "eq", "exp", "exp2", "expm1",
+		"fact", "fcmp", "fft", "floordiv", "frexp", "gamma", "gamma_inc", "gamma_inc_P",
 		"gamma_inc_Q", "gammainc", "gammaincp", "gammaincq", "gammainv", "gammastar", "gcd",
 		"hex", "hypot", "ifft", "integral", "kurt", "kurtosis", "lag1", "lcm", "ldexp", "ln",
 		"ln1p", "ln2", "lnBeta", "lnchoose", "lncomb", "lndet", "lndfact", "lnfact", "lngamma",
 		"lnperm", "lnpermute", "lnpoch", "log", "log10", "log1p", "log1pm", "log2", "logabs",
-		"logn", "max", "max_index", "mean", "median", "min", "min_index", "neg", "num", "perm",
-		"permute", "poch", "pochrel", "quad", "quadc", "rad", "sd", "sec", "sech", "sin",
-		"sinh", "skew", "solve", "sqr", "sqrt", "std", "stdev", "tan", "tanh", "taylorcoeff",
-		"tss", "var", "variance"
+		"logn", "lshift", "max", "max_index", "mean", "median", "min", "min_index", "mod",
+		"mul", "neg", "num", "perm", "permute", "poch", "pochrel", "pow", "quad", "quadc",
+		"rad", "rshift", "sd", "sec", "sech", "sin", "sinh", "skew", "solve", "sqr", "sqrt",
+		"std", "stdev", "sub", "tan", "tanh", "taylorcoeff", "tss", "var", "variance", "|"
     };
 
     BINARY_SEARCH_INDEX_OF(names, numFunctions)
@@ -76,7 +78,8 @@ namespace Function {
     #define DERIVATIVE_DECLARATION() expression derivative(Function::Args& args, const std::string& var);
     #define INTEGRAL_DECLARATION() expression integral(Function::Args& args, const std::string& var);
     #define PRINT_DECLARATION() std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty);
-    #define POSTFIX_DECLARATION() std::ostream& postfix(std::ostream& out, Function::Args& args);
+    #define POSTFIX_DECLARATION_1() std::ostream& postfix(std::ostream& out, Function::Args& args);
+    #define POSTFIX_DECLARATION_2() std::ostream& (*postfix)(std::ostream&, Function::Args&);
 
 	namespace gamma {
 		VALUE_DECLARATION_2()
@@ -423,6 +426,50 @@ namespace Function {
 	namespace Cholesky {
 		EVAL_DECLARATION()
 	}
+	namespace div {
+		EVAL_DECLARATION()
+		DERIVATIVE_DECLARATION()
+	}
+	namespace mod {
+		EVAL_DECLARATION()
+	}
+	namespace floordiv {
+		EVAL_DECLARATION()
+	}
+	namespace mul {
+		EVAL_DECLARATION()
+		DERIVATIVE_DECLARATION()
+	}
+	namespace eq {
+		EVAL_DECLARATION()
+	}
+	namespace sub {
+		EVAL_DECLARATION()
+		DERIVATIVE_DECLARATION()
+	}
+	namespace lshift {
+		EVAL_DECLARATION()
+	}
+	namespace rshift {
+		EVAL_DECLARATION()
+	}
+	namespace bitwise_and {
+		EVAL_DECLARATION()
+	}
+	namespace bitwise_or {
+		EVAL_DECLARATION()
+	}
+	namespace bitwise_xor {
+		EVAL_DECLARATION()
+	}
+	namespace pow {
+		EVAL_DECLARATION()
+		DERIVATIVE_DECLARATION()
+	}
+	namespace add {
+		EVAL_DECLARATION()
+		DERIVATIVE_DECLARATION()
+	}
 
     #undef EVAL_DECLARATION
     #undef VALUE_DECLARATION_1
@@ -431,7 +478,8 @@ namespace Function {
     #undef DERIVATIVE_DECLARATION
     #undef INTEGRAL_DECLARATION
     #undef PRINT_DECLARATION
-    #undef POSTFIX_DECLARATION
+    #undef POSTFIX_DECLARATION_1
+    #undef POSTFIX_DECLARATION_2
 }
 
 #endif // __FUNCTION_DIRECTORY_H__

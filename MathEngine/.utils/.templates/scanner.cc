@@ -69,7 +69,7 @@ static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
             if (index != -1){
                 lastIndex = index;
             }
-            if (i+1 >= size || i+1 >= Lexeme::longestLexeme){
+            if (lastIndex != -1 && (i+1 >= size || i+1 >= Lexeme::longestLexeme)){
                 lexemeIndex = lastIndex;
                 return true;
             }
@@ -227,8 +227,8 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             i += index;
         }
         else if (startsWithID(c_str, size, index)){
-            if (std::strcmp(c_str, "None") == 0 || std::strcmp(c_str, "null") == 0){
-                tokens.emplace_back(Token{"", NONE});
+            if (std::strncmp(c_str, "None", index) == 0 || std::strncmp(c_str, "null", index) == 0){
+                tokens.emplace_back(Token{"None", NONE});
             }
             else{
                 tokens.emplace_back(Token{str.substr(i, index), ID});

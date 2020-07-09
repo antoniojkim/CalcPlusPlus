@@ -17,6 +17,11 @@ func_signature = re.compile(
         ),
     )
 )
+op_signature = re.compile(
+    r"// @Operator {name}{aliases}".format(
+        name=r"(?P<name>[a-zA-Z_][a-zA-Z0-9_]*)", aliases=r"(:(?P<aliases>( *\S+)+))?",
+    )
+)
 method_types = (
     ("eval", "expression eval(Function::Args& args)", "EVAL_DECLARATION()"),
     ("eval", "STAT_EVAL", "EVAL_DECLARATION()"),
@@ -41,7 +46,12 @@ method_types = (
     (
         "postfix",
         "std::ostream& postfix(std::ostream& out, Function::Args& args)",
-        "POSTFIX_DECLARATION()",
+        "POSTFIX_DECLARATION_1()",
+    ),
+    (
+        "postfix",
+        "std::ostream& (*postfix)(std::ostream&, Function::Args&)",
+        "POSTFIX_DECLARATION_2()",
     ),
 )
 
@@ -57,6 +67,31 @@ def parse_contents(contents):
             depth -= 1
             curly_braces.append((i, c, depth))
 
+    def search_methods(func_dict, i):
+        index1, char1, depth1 = curly_braces[i - 1]
+        index2, char2, depth2 = curly_braces[i]
+        name = func_dict["name"].strip()
+        namespace_re = re.compile(f"namespace {name}")
+        if namespace_re.search(contents, index1, index2):
+            index3, char3, depth3 = next(
+                curly_braces[j]
+                for j in range(i + 1, len(curly_braces))
+                if depth2 == curly_braces[j][2] and char2 != curly_braces[j][1]
+            )
+            namespace = contents[index2 : index3 + 1]
+            found_types = [(mt, decl) for mt, s, decl in method_types if s in namespace]
+            return [
+                {
+                    "name": name,
+                    "signature": func_dict["signature"].strip(),
+                    "aliases": func_dict["aliases"],
+                    "methods": {mt for mt, decl in found_types},
+                    "declarations": [decl for mt, decl in found_types],
+                }
+            ]
+
+        return []
+
     functions = []
     for i in range(1, len(curly_braces)):
         index1, char1, depth1 = curly_braces[i - 1]
@@ -64,26 +99,28 @@ def parse_contents(contents):
         match = func_signature.search(contents, index1, index2)
 
         if match:
-            name = match.group("name").strip()
-            namespace_re = re.compile(f"namespace {name}")
-            if namespace_re.search(contents, index1, index2):
-                index3, char3, depth3 = next(
-                    curly_braces[j]
-                    for j in range(i + 1, len(curly_braces))
-                    if depth2 == curly_braces[j][2] and char2 != curly_braces[j][1]
-                )
-                namespace = contents[index2 : index3 + 1]
-                found_types = [
-                    (mt, decl) for mt, s, decl in method_types if s in namespace
-                ]
-                functions.append(
+            functions.extend(
+                search_methods(
                     {
-                        "name": name,
+                        "name": match.group("name"),
                         "signature": match.group("signature"),
                         "aliases": match.group("aliases"),
-                        "methods": {mt for mt, decl in found_types},
-                        "declarations": [decl for mt, decl in found_types],
-                    }
+                    },
+                    i,
+                )
+            )
+        else:
+            match = op_signature.search(contents, index1, index2)
+            if match:
+                functions.extend(
+                    search_methods(
+                        {
+                            "name": match.group("name"),
+                            "signature": "l, r",
+                            "aliases": match.group("aliases"),
+                        },
+                        i,
+                    )
                 )
 
     return functions
@@ -91,14 +128,15 @@ def parse_contents(contents):
 
 def generate_functions(args=None):
     function_files = (
-        file
-        for file in os.listdir(os.path.join(func_dir, "Functions"))
+        (subdir, file)
+        for subdir in ("Functions", "Operators")
+        for file in os.listdir(os.path.join(func_dir, subdir))
         if file.endswith(".cc")
     )
 
     functions = []
-    for function_file in function_files:
-        with open(os.path.join(func_dir, "Functions", function_file)) as file:
+    for subdir, function_file in function_files:
+        with open(os.path.join(func_dir, subdir, function_file)) as file:
             functions.extend(parse_contents(file.read()))
 
     signatures = {}
@@ -144,27 +182,6 @@ def generate_functions(args=None):
     for function in functions:
         methods = "\n\t\t".join(function["declarations"])
         declarations.append(f"\tnamespace {function['name']} {{\n\t\t{methods}\n\t}}")
-
-    # operator_decorators = []
-    # for header in os.listdir(os.path.join(func_dir, "Operators")):
-    #     if header.endswith(".h"):
-    #         headers.append(os.path.join("Operators", header))
-    #         with open(os.path.join(func_dir, "Operators", header)) as file:
-    #             for row in file:
-    #                 if row.strip().startswith("// @Operator"):
-    #                     operator_decorators.append(row.strip())
-
-    # functions = []
-    # for decorator in function_decorators:
-    #     decorator = decorator.split()
-    #     functions.extend((name, decorator[2]) for name in decorator[2:])
-
-    # for decorator in operator_decorators:
-    #     decorator = decorator.split()
-    #     functions.extend((symbol, decorator[2]) for symbol in decorator[3:])
-
-    # headers.sort()
-    # functions.sort()
 
     with Template("Functions.h", os.path.join(func_dir, "Functions.h")) as template:
         template.replace(

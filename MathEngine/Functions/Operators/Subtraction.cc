@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cmath>
 #include <numeric>
 
@@ -9,19 +7,21 @@
 #include "../../Expressions/ExpressionFunctions.h"
 #include "../../Expressions/ExpressionOperations.h"
 #include "../../Expressions/MatrixExpression.h"
-#include "../../Expressions/TupleExpression.h"
+#include "../../Expressions/NumericalExpression.h"
 #include "../../Scanner/scanner.h"
+#include "../../Utils/Exception.h"
 #include "../Functions.h"
 
 namespace Function {
 
-    // @Operator sub -
-    const struct __sub__: public Function::OperatorFunction {
-        __sub__(): OperatorFunction("-") {}
-        expression eval(Function::Args& args) const override {
+    // @Operator sub: -
+    namespace sub {
+        expression matrix_sub(expression lhs, expression rhs);
+
+        expression eval(Function::Args& args) {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args["l"];
-            auto r = args["r"];
+            auto l = args.next();
+            auto r = args.next();
             if (l == MATRIX || r == MATRIX){
                 return matrix_sub(l, r);
             }
@@ -36,11 +36,13 @@ namespace Function {
             }
             return NumExpression::construct(l->value() - r->value());
         }
-        expression derivative(Function::Args& args, const std::string& var) const override {
-            return args["l"]->derivative(var) - args["r"]->derivative(var);
+        expression derivative(Function::Args& args, const std::string& var) {
+            auto l = args.next();
+            auto r = args.next();
+            return l->derivative(var) - r->derivative(var);
         }
 
-        static expression matrix_sub(expression lhs, expression rhs){
+        expression matrix_sub(expression lhs, expression rhs){
             using Scanner::MATRIX;
             if (lhs == MATRIX && rhs == MATRIX){
                 if (lhs->shape(0) == rhs->shape(0) && lhs->shape(1) == rhs->shape(1)){
@@ -88,6 +90,6 @@ namespace Function {
             }
             throw Exception("Matrix subtraction requires at least one matrix operand.");
         }
-    } sub;
+    }
 
 }
