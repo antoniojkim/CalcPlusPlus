@@ -1,4 +1,6 @@
 #!/bin/bash
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.libs/
-gdb -q -ex="run" --args Tests/run $1
+
+cd Tests
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../.libs/
+gdb -q -ex="run" --args run $1

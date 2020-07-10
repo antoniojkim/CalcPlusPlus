@@ -14,12 +14,10 @@ using namespace Scanner;
 void scannerTest(const string& input, const string& expected){
     auto tokens = engine.scan(input);
     auto output = join(tokens, " ");
-    if (output != expected){
-        UNSCOPED_INFO("scan(" << input << ") == '" << output << "' != '" << expected << "'");
-        UNSCOPED_INFO("Tokens: ");
-        for (auto& token : tokens){
-            UNSCOPED_INFO("    " << token.type << " " << typeStrings[token.type] << " '" << token.lexeme << "'");
-        }
+    INFO("scan(" << input << ") == '" << output << "' != '" << expected << "'");
+    INFO("Tokens: ");
+    for (auto& token : tokens){
+        INFO("    " << token.type << " " << typeStrings[token.type] << " '" << token.lexeme << "'");
     }
     CHECK( output == expected );
 }
@@ -71,6 +69,9 @@ TEST_CASE("Complex Scanner Tests", "[scanner]" ) {
 
     scannerTest("cos(sinh 3)+5i-arcsin(x, 4)+6integral(sin(x), 4, 5)^|4+0x3aF",
                 "cos ( sinh 3 ) + 5i - arcsin ( x , 4 ) + 6 integral ( sin ( x ) , 4 , 5 ) ^| 4 + 0x3aF");
+
+    scannerTest("5 + x * 5 + mean ( 7 * 7 , 8 * ( 8 + x ) , 9 / 9 ) + { { sin ( 3 ) , - 2 } , { 3 ! , cos 4 } } + rand ( )",
+                "5 + x * 5 + mean ( 7 * 7 , 8 * ( 8 + x ) , 9 / 9 ) + { { sin ( 3 ) , - 2 } , { 3 ! , cos 4 } } + rand ( )");
 
 }
 

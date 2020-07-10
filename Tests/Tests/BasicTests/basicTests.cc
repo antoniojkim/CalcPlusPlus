@@ -33,14 +33,14 @@ TEST_CASE("Basic Engine Evaluation Tests", "[test]" ) {
 
 TEST_CASE("Basic Function Evaluation Tests", "[function]" ) {
 
-    requireIsEqual("sin3", 0.141120008);
+    requireIsEqual("sin(3)", 0.141120008);
+    requireIsEqual("sin 3", 0.141120008);
 
     SECTION("Test Full Bracket Expression"){
         requireIsEqual("sin(cos(3))", -0.83602186153773);
     }
     SECTION("Test Bracketless Expression"){
         requireIsEqual("sin cos 3", -0.83602186153773);
-        requireIsEqual("sin cos3", -0.83602186153773);
     }
 }
 

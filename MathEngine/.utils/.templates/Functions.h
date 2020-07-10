@@ -53,28 +53,60 @@ namespace Functions {
     const Function::Signature& getSignature(const int index);
 }
 
+
+// Predefined
+#define OPERATOR_PRINT_POSTFIX_DEFINITION(OP)                                           \
+    std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty){    \
+        auto l = args.next();                                                           \
+        auto r = args.next();                                                           \
+        l->print(out, pretty) << OP;                                                    \
+        r->print(out, pretty);                                                          \
+        return out;                                                                     \
+    }                                                                                   \
+    std::ostream& postfix(std::ostream& out, Function::Args& args){                     \
+        auto l = args.next();                                                           \
+        auto r = args.next();                                                           \
+        l->postfix(out) << ' ';                                                         \
+        r->postfix(out) << ' ';                                                         \
+        return out << OP;                                                               \
+    }
+
+
+// Declarations
 namespace Function {
     #define EVAL_DECLARATION() expression eval(Function::Args& args);
-    #define VALUE_DECLARATION_1() double value(double x);
-    #define VALUE_DECLARATION_2() extern double (*value)(double);
+    #define EVAL_DECLARATION_P() extern expression (*eval)(Function::Args&);
+    #define STAT_EVAL_DECLARATION() EVAL_DECLARATION()
+    #define VALUE_DECLARATION() double value(double x);
+    #define VALUE_DECLARATION_P() extern double (*value)(double);
     #define SIMPLIFY_DECLARATION() expression simplify(Function::Args& args);
+    #define SIMPLIFY_DECLARATION_P() extern expression (*simplify)(Function::Args&);
     #define DERIVATIVE_DECLARATION() expression derivative(Function::Args& args, const std::string& var);
+    #define DERIVATIVE_DECLARATION_P() extern expression (*derivative)(Function::Args&, const std::string&);
     #define INTEGRAL_DECLARATION() expression integral(Function::Args& args, const std::string& var);
+    #define INTEGRAL_DECLARATION_P() extern expression (*integral)(Function::Args&, const std::string&);
     #define PRINT_DECLARATION() std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty);
-    #define POSTFIX_DECLARATION_1() std::ostream& postfix(std::ostream& out, Function::Args& args);
-    #define POSTFIX_DECLARATION_2() std::ostream& (*postfix)(std::ostream&, Function::Args&);
+    #define PRINT_DECLARATION_P() extern std::ostream& (*print)(std::ostream&, Function::Args&, const bool);
+    #define POSTFIX_DECLARATION() std::ostream& postfix(std::ostream& out, Function::Args& args);
+    #define POSTFIX_DECLARATION_P() extern std::ostream& (*postfix)(std::ostream&, Function::Args&);
 
 {declarations}
 
     #undef EVAL_DECLARATION
-    #undef VALUE_DECLARATION_1
-    #undef VALUE_DECLARATION_2
+    #undef EVAL_DECLARATION_P
+    #undef STAT_EVAL_DECLARATION
+    #undef VALUE_DECLARATION
+    #undef VALUE_DECLARATION_P
     #undef SIMPLIFY_DECLARATION
+    #undef SIMPLIFY_DECLARATION_P
     #undef DERIVATIVE_DECLARATION
+    #undef DERIVATIVE_DECLARATION_P
     #undef INTEGRAL_DECLARATION
+    #undef INTEGRAL_DECLARATION_P
     #undef PRINT_DECLARATION
-    #undef POSTFIX_DECLARATION_1
-    #undef POSTFIX_DECLARATION_2
+    #undef PRINT_DECLARATION_P
+    #undef POSTFIX_DECLARATION
+    #undef POSTFIX_DECLARATION_P
 }
 
 #endif // __FUNCTION_DIRECTORY_H__

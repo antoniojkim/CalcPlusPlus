@@ -15,7 +15,7 @@
 #include "../Utils/BinarySearch.h"
 
 namespace Functions {
-    constexpr const int numFunctions = 173;
+    constexpr const int numFunctions = 175;
     constexpr const char* names[numFunctions] = {
         "%", "&", "*", "**", "+", "-", "/", "//", ":=", "<-", "<<", "=", ">>", "Beta",
 		"Betainc", "C", "Cholesky", "LU", "LUsolve", "P", "^", "^|", "abs", "absdev", "acos",
@@ -33,8 +33,9 @@ namespace Functions {
 		"lnperm", "lnpermute", "lnpoch", "log", "log10", "log1p", "log1pm", "log2", "logabs",
 		"logn", "lshift", "max", "max_index", "mean", "median", "min", "min_index", "mod",
 		"mul", "neg", "num", "perm", "permute", "poch", "pochrel", "pow", "quad", "quadc",
-		"rad", "rshift", "sd", "sec", "sech", "sin", "sinh", "skew", "solve", "sqr", "sqrt",
-		"std", "stdev", "sub", "tan", "tanh", "taylorcoeff", "tss", "var", "variance", "|"
+		"rad", "rand", "random", "rshift", "sd", "sec", "sech", "sin", "sinh", "skew", "solve",
+		"sqr", "sqrt", "std", "stdev", "sub", "tan", "tanh", "taylorcoeff", "tss", "var",
+		"variance", "|"
     };
 
     BINARY_SEARCH_INDEX_OF(names, numFunctions)
@@ -70,40 +71,66 @@ namespace Functions {
     const Function::Signature& getSignature(const int index);
 }
 
+
+// Predefined
+#define OPERATOR_PRINT_POSTFIX_DEFINITION(OP)                                           \
+    std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty){    \
+        auto l = args.next();                                                           \
+        auto r = args.next();                                                           \
+        l->print(out, pretty) << OP;                                                    \
+        r->print(out, pretty);                                                          \
+        return out;                                                                     \
+    }                                                                                   \
+    std::ostream& postfix(std::ostream& out, Function::Args& args){                     \
+        auto l = args.next();                                                           \
+        auto r = args.next();                                                           \
+        l->postfix(out) << ' ';                                                         \
+        r->postfix(out) << ' ';                                                         \
+        return out << OP;                                                               \
+    }
+
+
+// Declarations
 namespace Function {
     #define EVAL_DECLARATION() expression eval(Function::Args& args);
-    #define VALUE_DECLARATION_1() double value(double x);
-    #define VALUE_DECLARATION_2() extern double (*value)(double);
+    #define EVAL_DECLARATION_P() extern expression (*eval)(Function::Args&);
+    #define STAT_EVAL_DECLARATION() EVAL_DECLARATION()
+    #define VALUE_DECLARATION() double value(double x);
+    #define VALUE_DECLARATION_P() extern double (*value)(double);
     #define SIMPLIFY_DECLARATION() expression simplify(Function::Args& args);
+    #define SIMPLIFY_DECLARATION_P() extern expression (*simplify)(Function::Args&);
     #define DERIVATIVE_DECLARATION() expression derivative(Function::Args& args, const std::string& var);
+    #define DERIVATIVE_DECLARATION_P() extern expression (*derivative)(Function::Args&, const std::string&);
     #define INTEGRAL_DECLARATION() expression integral(Function::Args& args, const std::string& var);
+    #define INTEGRAL_DECLARATION_P() extern expression (*integral)(Function::Args&, const std::string&);
     #define PRINT_DECLARATION() std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty);
-    #define POSTFIX_DECLARATION_1() std::ostream& postfix(std::ostream& out, Function::Args& args);
-    #define POSTFIX_DECLARATION_2() std::ostream& (*postfix)(std::ostream&, Function::Args&);
+    #define PRINT_DECLARATION_P() extern std::ostream& (*print)(std::ostream&, Function::Args&, const bool);
+    #define POSTFIX_DECLARATION() std::ostream& postfix(std::ostream& out, Function::Args& args);
+    #define POSTFIX_DECLARATION_P() extern std::ostream& (*postfix)(std::ostream&, Function::Args&);
 
 	namespace gamma {
-		VALUE_DECLARATION_2()
+		VALUE_DECLARATION_P()
 	}
 	namespace lngamma {
-		VALUE_DECLARATION_2()
+		VALUE_DECLARATION_P()
 	}
 	namespace gammastar {
-		VALUE_DECLARATION_2()
+		VALUE_DECLARATION_P()
 	}
 	namespace gammainv {
-		VALUE_DECLARATION_2()
+		VALUE_DECLARATION_P()
 	}
 	namespace fact {
-		VALUE_DECLARATION_1()
+		VALUE_DECLARATION()
 	}
 	namespace dfact {
-		VALUE_DECLARATION_1()
+		VALUE_DECLARATION()
 	}
 	namespace lnfact {
-		VALUE_DECLARATION_1()
+		VALUE_DECLARATION()
 	}
 	namespace lndfact {
-		VALUE_DECLARATION_1()
+		VALUE_DECLARATION()
 	}
 	namespace choose {
 		EVAL_DECLARATION()
@@ -149,6 +176,10 @@ namespace Function {
 	namespace Betainc {
 		EVAL_DECLARATION()
 	}
+	namespace rand {
+		EVAL_DECLARATION()
+		VALUE_DECLARATION()
+	}
 	namespace quad {
 		EVAL_DECLARATION()
 	}
@@ -168,7 +199,7 @@ namespace Function {
 		EVAL_DECLARATION()
 	}
 	namespace mean {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace var {
 		EVAL_DECLARATION()
@@ -177,168 +208,168 @@ namespace Function {
 		EVAL_DECLARATION()
 	}
 	namespace tss {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace absdev {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace skew {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace kurtosis {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace lag1 {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace max {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace min {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace argmax {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace argmin {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace median {
-		EVAL_DECLARATION()
+		STAT_EVAL_DECLARATION()
 	}
 	namespace exp {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace exp2 {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace expm1 {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace ln {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace ln2 {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace ln1p {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace log {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace log1pm {
-		VALUE_DECLARATION_2()
+		VALUE_DECLARATION_P()
 	}
 	namespace logabs {
-		VALUE_DECLARATION_2()
+		VALUE_DECLARATION_P()
 	}
 	namespace logn {
-		EVAL_DECLARATION()
 		DERIVATIVE_DECLARATION()
+		EVAL_DECLARATION()
 	}
 	namespace sin {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace cos {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace tan {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace asin {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace acos {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace atan {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace sinh {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace cosh {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace tanh {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace asinh {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace acosh {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace atanh {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace csc {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace sec {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace cot {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace acsc {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace asec {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace acot {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace csch {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace sech {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace coth {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace acsch {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace asech {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace acoth {
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace deriv {
 		EVAL_DECLARATION()
@@ -350,16 +381,16 @@ namespace Function {
 		EVAL_DECLARATION()
 	}
 	namespace neg {
-		EVAL_DECLARATION()
-		VALUE_DECLARATION_1()
 		DERIVATIVE_DECLARATION()
+		EVAL_DECLARATION()
+		VALUE_DECLARATION()
 	}
 	namespace frexp {
 		EVAL_DECLARATION()
 	}
 	namespace num {
 		EVAL_DECLARATION()
-		VALUE_DECLARATION_1()
+		VALUE_DECLARATION()
 	}
 	namespace hex {
 		EVAL_DECLARATION()
@@ -368,33 +399,33 @@ namespace Function {
 		EVAL_DECLARATION()
 	}
 	namespace abs {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace sqr {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
 		PRINT_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace sqrt {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
 		PRINT_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace cb {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
 		PRINT_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace cbrt {
-		VALUE_DECLARATION_2()
 		DERIVATIVE_DECLARATION()
+		VALUE_DECLARATION_P()
 	}
 	namespace rad {
-		VALUE_DECLARATION_1()
+		VALUE_DECLARATION()
 	}
 	namespace deg {
-		VALUE_DECLARATION_1()
+		VALUE_DECLARATION()
 	}
 	namespace hypot {
 		EVAL_DECLARATION()
@@ -427,59 +458,93 @@ namespace Function {
 		EVAL_DECLARATION()
 	}
 	namespace div {
-		EVAL_DECLARATION()
 		DERIVATIVE_DECLARATION()
+		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace mod {
 		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace floordiv {
 		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace mul {
-		EVAL_DECLARATION()
 		DERIVATIVE_DECLARATION()
+		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace eq {
 		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace sub {
-		EVAL_DECLARATION()
 		DERIVATIVE_DECLARATION()
+		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
+		SIMPLIFY_DECLARATION()
 	}
 	namespace lshift {
 		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace rshift {
 		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace bitwise_and {
 		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace bitwise_or {
 		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace bitwise_xor {
 		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace pow {
-		EVAL_DECLARATION()
 		DERIVATIVE_DECLARATION()
+		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
 	}
 	namespace add {
-		EVAL_DECLARATION()
 		DERIVATIVE_DECLARATION()
+		EVAL_DECLARATION()
+		POSTFIX_DECLARATION()
+		PRINT_DECLARATION()
+		SIMPLIFY_DECLARATION()
 	}
 
     #undef EVAL_DECLARATION
-    #undef VALUE_DECLARATION_1
-    #undef VALUE_DECLARATION_2
+    #undef EVAL_DECLARATION_P
+    #undef STAT_EVAL_DECLARATION
+    #undef VALUE_DECLARATION
+    #undef VALUE_DECLARATION_P
     #undef SIMPLIFY_DECLARATION
+    #undef SIMPLIFY_DECLARATION_P
     #undef DERIVATIVE_DECLARATION
+    #undef DERIVATIVE_DECLARATION_P
     #undef INTEGRAL_DECLARATION
+    #undef INTEGRAL_DECLARATION_P
     #undef PRINT_DECLARATION
-    #undef POSTFIX_DECLARATION_1
-    #undef POSTFIX_DECLARATION_2
+    #undef PRINT_DECLARATION_P
+    #undef POSTFIX_DECLARATION
+    #undef POSTFIX_DECLARATION_P
 }
 
 #endif // __FUNCTION_DIRECTORY_H__

@@ -97,7 +97,8 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 expressionStacks.pop_back();
 
                 vector<expression> matrixElements;
-                matrixElements.reserve(expressionLists.size());
+                matrixElements.reserve(expressionLists.back().size());
+                size_t numRows = expressionLists.back().size();
                 size_t numCols = 0;
                 for (auto matrix : expressionLists.back()){
                     if (matrix == MATRIX){
@@ -106,7 +107,7 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                         }
                         else if (numCols == 0){
                             numCols = matrix->shape(1);
-                            matrixElements.reserve(expressionLists.size() * numCols);
+                            matrixElements.reserve(expressionLists.back().size() * numCols);
                         }
                         else if (matrix->shape(1) != numCols){
                             throw Exception("Matrix expected ", numCols, " columns. Got ", matrix->shape(1));
@@ -115,18 +116,20 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                     }
                     else if (numCols == 0){
                         numCols = 1;
-                        for (auto e : *matrix){ matrixElements.emplace_back(e); }
-                        break;
+                        matrixElements.emplace_back(matrix);
                     }
                     else if (numCols != 1){
                         throw Exception("Matrix expected ", numCols, " columns. Got 1");
                     }
+                    else{
+                        matrixElements.emplace_back(matrix);
+                    }
                 }
                 if (numCols == 1){
-                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), 1, matrixElements.size()));
+                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), 1, numRows));
                 }
                 else {
-                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), matrixElements.size(), numCols));
+                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), numRows, numCols));
                 }
                 expressionLists.pop_back();
                 continue;
@@ -298,10 +301,6 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                 token.lexeme = "neg";
                 token.type = FUNCTION;
             }
-            else if (token.type == STAR && (current == tokens.begin() || !isPreImplicit(std::prev(current)->type))){
-                token.lexeme = "varargs";
-                token.type = FUNCTION;
-            }
             else if (!operatorStack.empty()){
                 auto type = operatorStack.peek()->type;
                 while((type == FUNCTION
@@ -332,14 +331,6 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
     while(!operatorStack.empty()){
         outputStacks.back().push(operatorStack.pop());
     }
-
-#ifdef PRINT_POSTFIX
-    cout << "Postfix:  ";
-    for (auto t : outputStacks.back()){
-        cout << t->lexeme << " ";
-    }
-    cout << endl;
-#endif  // PRINT_POSTFIX
 
     return postfix_to_expression(outputStacks.back());
 }

@@ -8,7 +8,7 @@ from .Template import wrap, Template, func_dir
 func_signature = re.compile(
     r"// @Function {name}{signature}{aliases}".format(
         name=r"(?P<name>{id})",
-        signature=r"\((?P<signature>{id}{arg}(\s*,\s*{id}{arg})*)\)",
+        signature=r"\((?P<signature>{id}{arg}(\s*,\s*{id}{arg})*)?\)",
         aliases=r"(:(?P<aliases>( *{id})+))?",
     ).format(
         id=r"[a-zA-Z_][a-zA-Z0-9_]*",
@@ -23,36 +23,28 @@ op_signature = re.compile(
     )
 )
 method_types = (
-    ("eval", "expression eval(Function::Args& args)", "EVAL_DECLARATION()"),
-    ("eval", "STAT_EVAL", "EVAL_DECLARATION()"),
-    ("value", "double value(double x)", "VALUE_DECLARATION_1()"),
-    ("value", "double (*value)(double)", "VALUE_DECLARATION_2()"),
-    ("simplify", "expression simplify(Function::Args& args)", "SIMPLIFY_DECLARATION()"),
+    ("eval", "expression"),
+    ("value", "double"),
+    ("simplify", "expression"),
+    ("derivative", "expression"),
+    ("integral", "expression"),
+    ("print", "std::ostream&"),
+    ("postfix", "std::ostream&"),
+)
+method_decls = tuple(
     (
-        "derivative",
-        "expression derivative(Function::Args& args, const std::string& var)",
-        "DERIVATIVE_DECLARATION()",
-    ),
-    (
-        "integral",
-        "expression integral(Function::Args& args, const std::string& var)",
-        "INTEGRAL_DECLARATION()",
-    ),
-    (
-        "print",
-        "std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty)",
-        "PRINT_DECLARATION()",
-    ),
-    (
-        "postfix",
-        "std::ostream& postfix(std::ostream& out, Function::Args& args)",
-        "POSTFIX_DECLARATION_1()",
-    ),
-    (
-        "postfix",
-        "std::ostream& (*postfix)(std::ostream&, Function::Args&)",
-        "POSTFIX_DECLARATION_2()",
-    ),
+        (
+            method,
+            f"{ret} {method_decl.format(method)}",
+            f"{method.upper()}_DECLARATION{suffix}()",
+        )
+        for method, ret in method_types
+        for method_decl, suffix in zip(("{}", "(*{})"), ("", "_P"))
+    )
+) + (
+    ("eval", "STAT_EVAL", "STAT_EVAL_DECLARATION()"),
+    ("print", "OPERATOR_PRINT_POSTFIX_DEFINITION", "PRINT_DECLARATION()"),
+    ("postfix", "OPERATOR_PRINT_POSTFIX_DEFINITION", "POSTFIX_DECLARATION()"),
 )
 
 
@@ -79,14 +71,14 @@ def parse_contents(contents):
                 if depth2 == curly_braces[j][2] and char2 != curly_braces[j][1]
             )
             namespace = contents[index2 : index3 + 1]
-            found_types = [(mt, decl) for mt, s, decl in method_types if s in namespace]
+            found_types = [(mt, decl) for mt, s, decl in method_decls if s in namespace]
             return [
                 {
                     "name": name,
-                    "signature": func_dict["signature"].strip(),
+                    "signature": func_dict["signature"],
                     "aliases": func_dict["aliases"],
                     "methods": {mt for mt, decl in found_types},
-                    "declarations": [decl for mt, decl in found_types],
+                    "declarations": sorted({decl for mt, decl in found_types}),
                 }
             ]
 
@@ -140,30 +132,41 @@ def generate_functions(args=None):
             functions.extend(parse_contents(file.read()))
 
     signatures = {}
+    unique_args = {}
 
     def generate_signature(function):
-        args = function["signature"].split(", ")
-        num_pos = 0
-        has_varargs = "f"
-        default_args = []
-        for arg in args:
-            if arg.endswith("..."):
-                has_varargs = "t"
-            elif "=" in arg:
-                val = arg.split("=")[1].strip()
-                default_args.append("GSL_NAN" if val == "None" else val)
-            else:
-                num_pos += 1
+        nonlocal unique_args
+        if function["signature"]:
+            args = function["signature"].split(", ")
+            num_pos = 0
+            has_varargs = "f"
+            default_args = []
+            for arg in args:
+                if arg.endswith("..."):
+                    has_varargs = "t"
+                elif "=" in arg:
+                    val = arg.split("=")[1].strip()
+                    default_args.append("GSL_NAN" if val == "None" else val)
+                else:
+                    num_pos += 1
 
-        default_args = tuple(default_args)
+            default_args = tuple(default_args)
+            for arg in default_args:
+                if arg not in unique_args:
+                    unique_args[arg] = str(len(unique_args))
 
-        key = f"sig_{num_pos}_{has_varargs}_{abs(hash(default_args)) % 1000}"
-        if key not in signatures:
-            varargs = "true" if has_varargs == "t" else "false"
-            init = f"{num_pos}, {varargs}, {{{', '.join(default_args)}}}"
-            signatures[key] = f"const Function::Signature {key}({init});"
+            hash = "_".join(map(unique_args.get, default_args))
 
-        return key
+            key = f"sig_{num_pos}_{has_varargs}_{hash}"
+            if key not in signatures:
+                varargs = "true" if has_varargs == "t" else "false"
+                init = f"{num_pos}, {varargs}, {{{', '.join(default_args)}}}"
+                signatures[key] = f"const Function::Signature {key}({init});"
+            return key
+
+        else:
+            signatures["sig_0"] = "const Function::Signature sig_0(0, false, {});"
+            return "sig_0"
 
     def get_all():
         for function in functions:

@@ -13,14 +13,11 @@ void postfixTest(const string& input, const string& expected){
     ostringstream oss;
     expr->postfix(oss);
     auto output = oss.str();
-    if (output != expected){
-        cout << "Input:   " << input << endl;
-        cout << "Postfix: " << output << endl;
-#ifdef DEBUG
-        cout << "Postfix Tokens: "; print(cout, engine.tokens, " ") << endl;
-#endif
-    }
-    REQUIRE( output == expected );
+    INFO("Input:    " << input);
+    INFO("Expr:     " << expr);
+    INFO("Postfix:  " << output);
+    INFO("Expected: " << expected);
+    CHECK( output == expected );
 }
 
 TEST_CASE("Basic Postfix Tests", "[postfix]" ) {
@@ -34,7 +31,7 @@ TEST_CASE("Basic Postfix Tests", "[postfix]" ) {
     postfixTest("sinh(cosh 5)", "5 cosh sinh");
     postfixTest("log25", "log25");
     postfixTest("log_25", "log_25");
-    postfixTest("log_2(5)", "5 log_2");
+    postfixTest("log2(5)", "5 log2");
     postfixTest("ln 45", "45 ln");
 
 }
@@ -78,9 +75,7 @@ TEST_CASE("Complex Postfix Tests", "[postfix]" ) {
     postfixTest("cos(sinh3)+5i-arcsin(x)+6integral(sin(x), 4, 5)^|4+0x3aF",
                 "sinh3 cos 5i + x arcsin - 6 (x sin, 4, 5) integral * + 4 0x3af + ^|");
 
-}
-
-TEST_CASE("Complex Postfix Tests 2", "[postfix]") {
     postfixTest("5 + x * 5 + mean ( 7 * 7 , 8 * ( 8 + x ) , 9 / 9 ) + { { sin ( 3 ) , - 2 } , { 3 ! , cos 4 } } + rand ( )",
                 "5 x 5 * + (7 7 *, 8 8 x + *, 9 9 /) mean + {{3 sin, -2}, {3 fact, 4 cos}} + () rand +");
+
 }

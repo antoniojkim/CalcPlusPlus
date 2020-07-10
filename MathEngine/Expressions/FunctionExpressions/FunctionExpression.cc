@@ -28,7 +28,7 @@ expression FunctionExpression::construct(std::string& name, const expression arg
 }
 expression FunctionExpression::construct(int functionIndex, const expression arg){
     if (functionIndex < 0){
-        return InvalidExpression::construct(Exception("Invalid Function"));
+        throw Exception("Invalid Function");
     }
     if (functionIndex == Functions::indexOf("neg")){
         return -arg;
@@ -152,19 +152,20 @@ std::ostream& FunctionExpression::print(std::ostream& out, const bool pretty) co
         return printFunction(out, args, pretty);
     }
 
+
     out << Functions::names[functionIndex];
     if (arg == TUPLE){
         return arg->print(out, pretty);
     }
     return arg->print(out << "(", pretty) << ")";
 }
-std::ostream& FunctionExpression::postfix(std::ostream& out) const {
-    auto postfixFunction = Functions::getPostfixFunction(functionIndex);
+std::ostream& FunctionExpression::postfix(std::ostream& out) const {auto postfixFunction = Functions::getPostfixFunction(functionIndex);
     if (postfixFunction){
         auto signature = Functions::getSignature(functionIndex);
         auto args = signature.parse(arg);
         return postfixFunction(out, args);
     }
+
 
     arg->postfix(out) << " ";
     return out << Functions::names[functionIndex];

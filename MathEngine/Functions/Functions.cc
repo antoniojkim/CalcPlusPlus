@@ -39,9 +39,10 @@ namespace Functions {
 		nullptr, nullptr, logn::eval, lshift::eval, max::eval, argmax::eval, mean::eval,
 		median::eval, min::eval, argmin::eval, mod::eval, mul::eval, neg::eval, num::eval,
 		permute::eval, permute::eval, poch::eval, pochrel::eval, pow::eval, quad::eval,
-		quadc::eval, nullptr, rshift::eval, sd::eval, nullptr, nullptr, nullptr, nullptr,
-		skew::eval, LUsolve::eval, nullptr, nullptr, sd::eval, sd::eval, sub::eval, nullptr,
-		nullptr, taylorcoeff::eval, tss::eval, var::eval, var::eval, bitwise_or::eval
+		quadc::eval, nullptr, rand::eval, rand::eval, rshift::eval, sd::eval, nullptr, nullptr,
+		nullptr, nullptr, skew::eval, LUsolve::eval, nullptr, nullptr, sd::eval, sd::eval,
+		sub::eval, nullptr, nullptr, taylorcoeff::eval, tss::eval, var::eval, var::eval,
+		bitwise_or::eval
     };
     FUNCTION_GET(EvalFunction)
 
@@ -66,14 +67,18 @@ namespace Functions {
 		nullptr, log::value, log::value, ln1p::value, log1pm::value, ln2::value, logabs::value,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, neg::value, num::value, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, rad::value, nullptr, nullptr, sec::value, sech::value, sin::value, sinh::value,
-		nullptr, nullptr, sqr::value, sqrt::value, nullptr, nullptr, nullptr, tan::value,
-		tanh::value, nullptr, nullptr, nullptr, nullptr, nullptr
+		nullptr, rad::value, rand::value, rand::value, nullptr, nullptr, sec::value,
+		sech::value, sin::value, sinh::value, nullptr, nullptr, sqr::value, sqrt::value,
+		nullptr, nullptr, nullptr, tan::value, tanh::value, nullptr, nullptr, nullptr, nullptr,
+		nullptr
     };
     FUNCTION_GET(ValueFunction)
 
     const Functions::SimplifyFunction SimplifyFunctions[Functions::numFunctions] = {
-        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+        nullptr, nullptr, nullptr, nullptr, add::simplify, sub::simplify, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, add::simplify, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
@@ -88,11 +93,8 @@ namespace Functions {
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr
+		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, sub::simplify, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr
     };
     FUNCTION_GET(SimplifyFunction)
 
@@ -121,10 +123,10 @@ namespace Functions {
 		log::derivative, ln1p::derivative, nullptr, ln2::derivative, nullptr, logn::derivative,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, mul::derivative,
 		neg::derivative, nullptr, nullptr, nullptr, nullptr, nullptr, pow::derivative, nullptr,
-		nullptr, nullptr, nullptr, nullptr, sec::derivative, sech::derivative, sin::derivative,
-		sinh::derivative, nullptr, nullptr, sqr::derivative, sqrt::derivative, nullptr, nullptr,
-		sub::derivative, tan::derivative, tanh::derivative, nullptr, nullptr, nullptr, nullptr,
-		nullptr
+		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, sec::derivative, sech::derivative,
+		sin::derivative, sinh::derivative, nullptr, nullptr, sqr::derivative, sqrt::derivative,
+		nullptr, nullptr, sub::derivative, tan::derivative, tanh::derivative, nullptr, nullptr,
+		nullptr, nullptr, nullptr
     };
     FUNCTION_GET(DerivativeFunction)
 
@@ -148,99 +150,98 @@ namespace Functions {
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr
+		nullptr, nullptr, nullptr, nullptr
     };
     FUNCTION_GET(IntegralFunction)
 
     const Functions::PrintFunction PrintFunctions[Functions::numFunctions] = {
-        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, choose::print, nullptr, nullptr,
-		nullptr, permute::print, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+        mod::print, bitwise_and::print, mul::print, pow::print, add::print, sub::print,
+		div::print, floordiv::print, eq::print, eq::print, lshift::print, eq::print,
+		rshift::print, nullptr, nullptr, choose::print, nullptr, nullptr, nullptr,
+		permute::print, pow::print, bitwise_xor::print, nullptr, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, add::print, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, bitwise_and::print, bitwise_or::print, bitwise_xor::print,
+		cb::print, nullptr, choose::print, choose::print, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, cb::print, nullptr, choose::print,
-		choose::print, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		div::print, eq::print, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		floordiv::print, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, permute::print, permute::print, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, sqr::print, sqrt::print, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr
+		nullptr, nullptr, nullptr, nullptr, nullptr, lshift::print, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, mod::print, mul::print, nullptr, nullptr, permute::print,
+		permute::print, nullptr, nullptr, pow::print, nullptr, nullptr, nullptr, nullptr,
+		nullptr, rshift::print, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		sqr::print, sqrt::print, nullptr, nullptr, sub::print, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, bitwise_or::print
     };
     FUNCTION_GET(PrintFunction)
 
     const Functions::PostfixFunction PostfixFunctions[Functions::numFunctions] = {
-        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+        mod::postfix, bitwise_and::postfix, mul::postfix, pow::postfix, add::postfix,
+		sub::postfix, div::postfix, floordiv::postfix, eq::postfix, eq::postfix,
+		lshift::postfix, eq::postfix, rshift::postfix, nullptr, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, pow::postfix, bitwise_xor::postfix, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, add::postfix, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr, bitwise_and::postfix, bitwise_or::postfix,
+		bitwise_xor::postfix, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		nullptr, div::postfix, eq::postfix, nullptr, nullptr, nullptr, nullptr, nullptr,
+		nullptr, floordiv::postfix, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		nullptr, nullptr
+		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, lshift::postfix, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr, mod::postfix, mul::postfix, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr, pow::postfix, nullptr, nullptr, nullptr,
+		nullptr, nullptr, rshift::postfix, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, nullptr, nullptr, sub::postfix, nullptr, nullptr, nullptr,
+		nullptr, nullptr, nullptr, bitwise_or::postfix
     };
     FUNCTION_GET(PostfixFunction)
 
-    const Function::Signature sig_1_f_539(1, false, {});
-	const Function::Signature sig_2_f_539(2, false, {});
-	const Function::Signature sig_3_f_539(3, false, {});
-	const Function::Signature sig_4_f_539(4, false, {});
-	const Function::Signature sig_0_t_539(0, true, {});
-	const Function::Signature sig_0_t_359(0, true, {1});
-	const Function::Signature sig_2_f_119(2, false, {GSL_NAN});
-	const Function::Signature sig_1_f_119(1, false, {GSL_NAN});
-	const Function::Signature sig_3_f_119(3, false, {GSL_NAN});
-	const Function::Signature sig_2_f_169(2, false, {1e-8});
+    const Function::Signature sig_1_f_(1, false, {});
+	const Function::Signature sig_2_f_(2, false, {});
+	const Function::Signature sig_3_f_(3, false, {});
+	const Function::Signature sig_0(0, false, {});
+	const Function::Signature sig_4_f_(4, false, {});
+	const Function::Signature sig_0_t_(0, true, {});
+	const Function::Signature sig_0_t_0(0, true, {1});
+	const Function::Signature sig_2_f_1(2, false, {GSL_NAN});
+	const Function::Signature sig_1_f_1(1, false, {GSL_NAN});
+	const Function::Signature sig_3_f_1(3, false, {GSL_NAN});
+	const Function::Signature sig_2_f_2(2, false, {1e-8});
 
     const Function::Signature* Signatures[Functions::numFunctions] = {
-        &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539,
-		&sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539,
-		&sig_2_f_539, &sig_2_f_539, &sig_3_f_539, &sig_2_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_1_f_539, &sig_0_t_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_2_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_0_t_539, &sig_0_t_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_0_t_539, &sig_1_f_539, &sig_2_f_539,
-		&sig_2_f_539, &sig_2_f_539, &sig_1_f_539, &sig_1_f_539, &sig_2_f_539, &sig_2_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_4_f_539, &sig_4_f_539, &sig_1_f_539, &sig_2_f_119, &sig_1_f_539, &sig_1_f_539,
-		&sig_1_f_119, &sig_2_f_539, &sig_2_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_2_f_169, &sig_1_f_539, &sig_2_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_0_t_539, &sig_1_f_539, &sig_0_t_539, &sig_1_f_539,
-		&sig_3_f_119, &sig_0_t_539, &sig_0_t_539, &sig_0_t_539, &sig_0_t_539, &sig_2_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_2_f_539, &sig_2_f_539,
-		&sig_2_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_2_f_539, &sig_2_f_539, &sig_0_t_539, &sig_0_t_539, &sig_0_t_539,
-		&sig_0_t_539, &sig_0_t_539, &sig_0_t_539, &sig_2_f_539, &sig_2_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539, &sig_2_f_539,
-		&sig_3_f_539, &sig_3_f_539, &sig_1_f_539, &sig_2_f_539, &sig_0_t_359, &sig_1_f_539,
-		&sig_1_f_539, &sig_1_f_539, &sig_1_f_539, &sig_0_t_539, &sig_2_f_539, &sig_1_f_539,
-		&sig_1_f_539, &sig_0_t_359, &sig_0_t_359, &sig_2_f_539, &sig_1_f_539, &sig_1_f_539,
-		&sig_2_f_539, &sig_0_t_539, &sig_0_t_359, &sig_0_t_359, &sig_2_f_539
+        &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_,
+		&sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_3_f_, &sig_2_f_,
+		&sig_1_f_, &sig_1_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_1_f_, &sig_0_t_,
+		&sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_2_f_, &sig_1_f_,
+		&sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_,
+		&sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_,
+		&sig_1_f_, &sig_0_t_, &sig_0_t_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_,
+		&sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_0_t_,
+		&sig_1_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_1_f_, &sig_1_f_, &sig_2_f_, &sig_2_f_,
+		&sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_4_f_, &sig_4_f_,
+		&sig_1_f_, &sig_2_f_1, &sig_1_f_, &sig_1_f_, &sig_1_f_1, &sig_2_f_, &sig_2_f_,
+		&sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_2_f_2, &sig_1_f_, &sig_2_f_, &sig_1_f_,
+		&sig_1_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_1_f_,
+		&sig_1_f_, &sig_0_t_, &sig_1_f_, &sig_0_t_, &sig_1_f_, &sig_3_f_1, &sig_0_t_, &sig_0_t_,
+		&sig_0_t_, &sig_0_t_, &sig_2_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_2_f_, &sig_2_f_,
+		&sig_2_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_,
+		&sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_1_f_, &sig_2_f_, &sig_2_f_,
+		&sig_0_t_, &sig_0_t_, &sig_0_t_, &sig_0_t_, &sig_0_t_, &sig_0_t_, &sig_2_f_, &sig_2_f_,
+		&sig_1_f_, &sig_1_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_2_f_, &sig_3_f_,
+		&sig_3_f_, &sig_1_f_, &sig_0, &sig_0, &sig_2_f_, &sig_0_t_0, &sig_1_f_, &sig_1_f_,
+		&sig_1_f_, &sig_1_f_, &sig_0_t_, &sig_2_f_, &sig_1_f_, &sig_1_f_, &sig_0_t_0,
+		&sig_0_t_0, &sig_2_f_, &sig_1_f_, &sig_1_f_, &sig_2_f_, &sig_0_t_, &sig_0_t_0,
+		&sig_0_t_0, &sig_2_f_
     };
     const Function::Signature& getSignature(const char* name){
         return *Signatures[Functions::indexOf(name)];

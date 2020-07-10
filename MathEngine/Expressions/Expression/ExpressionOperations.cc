@@ -22,9 +22,15 @@ constexpr const int powIndex = Functions::indexOf("^");
 
 expression operator+(const expression expr1, const expression expr2) {
     if (expr1->isEvaluable()){
-        return expr2 + expr1->value();
+        if (expr1->isComplex()){
+            return expr1->complex() + expr2;
+        }
+        return expr1->value() + expr2;
     }
     if (expr2->isEvaluable()){
+        if (expr2->isComplex()){
+            return expr1 + expr2->complex();
+        }
         return expr1 + expr2->value();
     }
     return FunctionExpression::construct(addIndex, {expr1, expr2});
@@ -34,6 +40,9 @@ expression operator+(double expr1, const expression expr2) {
 }
 expression operator+(const expression expr1, double expr2) {
     if (expr1->isEvaluable()){
+        if (expr1->isComplex()){
+            return expr1->complex() + expr2;
+        }
         return NumExpression::construct(expr1->value() + expr2);
     }
     if (expr2 == 0){
@@ -42,10 +51,25 @@ expression operator+(const expression expr1, double expr2) {
     return FunctionExpression::construct(addIndex, {expr1, NumExpression::construct(expr2)});
 }
 expression operator+(const gsl_complex& expr1, const expression expr2) {
+    if (expr2->isEvaluable()){
+        if (expr2->isComplex()){
+            return expr1 + expr2->complex();
+        }
+        return expr1 + expr2->value();
+    }
     return FunctionExpression::construct(addIndex, {NumExpression::construct(expr1), expr2});
 }
 expression operator+(const expression expr1, const gsl_complex& expr2) {
-    return FunctionExpression::construct(addIndex, {expr1, NumExpression::construct(expr2)});
+    return expr2 + expr1;
+}
+expression operator+(const gsl_complex& c1, const gsl_complex& c2) {
+    return NumExpression::construct(gsl_complex_add(c1, c2));
+}
+expression operator+(const gsl_complex& c, double d){
+    return NumExpression::construct(gsl_complex_add(c, {d, 0}));
+}
+expression operator+(double d, const gsl_complex& c){
+    return c + d;
 }
 
 expression operator-(const expression expr){
@@ -55,28 +79,58 @@ expression operator-(const expression expr){
     return FunctionExpression::construct("neg", expr);
 }
 expression operator-(const expression expr1, const expression expr2) {
-    if (expr1->isEvaluable() && expr2->isEvaluable()){
-        return NumExpression::construct(expr1->value() - expr2->value());
+    if (expr1->isEvaluable()){
+        if (expr1->isComplex()){
+            return expr1->complex() - expr2;
+        }
+        return expr1->value() - expr2;
+    }
+    if (expr2->isEvaluable()){
+        if (expr2->isComplex()){
+            return expr1 - expr2->complex();
+        }
+        return expr1 - expr2->value();
     }
     return FunctionExpression::construct(subIndex, {expr1, expr2});
 }
 expression operator-(double expr1, const expression expr2) {
     if (expr2->isEvaluable()){
+        if (expr2->isComplex()){
+            return expr1 - expr2->complex();
+        }
         return NumExpression::construct(expr1 - expr2->value());
     }
     return FunctionExpression::construct(subIndex, {NumExpression::construct(expr1), expr2});
 }
 expression operator-(const expression expr1, double expr2) {
     if (expr1->isEvaluable()){
+        if (expr1->isComplex()){
+            return expr1->complex() - expr2;
+        }
         return NumExpression::construct(expr1->value() - expr2);
     }
     return FunctionExpression::construct(subIndex, {expr1, NumExpression::construct(expr2)});
 }
 expression operator-(const gsl_complex& expr1, const expression expr2) {
+    if (expr2->isComplex()){
+        return expr1 - expr2->complex();
+    }
     return FunctionExpression::construct(subIndex, {NumExpression::construct(expr1), expr2});
 }
 expression operator-(const expression expr1, const gsl_complex& expr2) {
+    if (expr1->isComplex()){
+        return expr1->complex() - expr2;
+    }
     return FunctionExpression::construct(subIndex, {expr1, NumExpression::construct(expr2)});
+}
+expression operator-(const gsl_complex& c1, const gsl_complex& c2){
+    return NumExpression::construct(gsl_complex_sub(c1, c2));
+}
+expression operator-(const gsl_complex& c, double d){
+    return NumExpression::construct(gsl_complex_sub(c, {d, 0}));
+}
+expression operator-(double d, const gsl_complex& c){
+    return NumExpression::construct(gsl_complex_sub({d, 0}, c));
 }
 
 expression operator*(const expression expr1, const expression expr2) {

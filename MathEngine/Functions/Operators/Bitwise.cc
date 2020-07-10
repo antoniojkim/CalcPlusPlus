@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cmath>
 #include <numeric>
 
@@ -26,6 +24,7 @@ namespace Function {
             }
             throw Exception("l << r expects integers. Got: ", args);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION("<<")
     }
 
 
@@ -40,6 +39,7 @@ namespace Function {
             }
             throw Exception("l >> r expects integers. Got: ", args);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION(">>")
     }
 
 
@@ -54,6 +54,7 @@ namespace Function {
             }
             throw Exception("l & r expects integers. Got: ", args);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION('&')
     }
 
 
@@ -68,6 +69,7 @@ namespace Function {
             }
             throw Exception("l | r expects integers. Got: ", args);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION('|')
     }
 
 
@@ -82,6 +84,7 @@ namespace Function {
             }
             throw Exception("l ^| r expects integers. Got: ", args);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION("^|")
     }
 
 }

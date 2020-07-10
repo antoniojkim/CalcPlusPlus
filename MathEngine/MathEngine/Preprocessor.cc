@@ -65,7 +65,7 @@ void replaceGreekLetters(list<Token>& tokens){
 void implicitMultiplication(list<Token>& tokens){
     for (auto token = std::next(tokens.begin()); token != tokens.end(); ++token){
         if (isPreImplicit(std::prev(token)->type) && isPostImplicit(token->type)){
-            tokens.insert(token, Token{typeStrings[STAR], STAR});
+            tokens.insert(token, Token{"*", STAR});
         }
     }
 }

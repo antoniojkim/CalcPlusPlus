@@ -6,7 +6,7 @@ else
 	INCLUDES := -I../.includes/
 endif
 
-CXXFLAGS := -Ofast -g -std=c++17 -fPIC -shared -Wall -MMD -Werror=vla ${INCLUDES}
+CXXFLAGS := -g -std=c++17 -fPIC -shared -Wall -MMD -Werror=vla ${INCLUDES}
 CPPFLAGS := -DDEBUG
 TARGET_LIB := libMathEngine.so  # target lib
 

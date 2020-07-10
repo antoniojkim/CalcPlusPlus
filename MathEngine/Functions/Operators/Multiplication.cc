@@ -42,6 +42,7 @@ namespace Function {
             auto r = args.next();
             return l->derivative(var) * r + l * r->derivative(var);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION('*')
 
         expression matrix_mul(expression lhs, expression rhs){
             using Scanner::MATRIX;

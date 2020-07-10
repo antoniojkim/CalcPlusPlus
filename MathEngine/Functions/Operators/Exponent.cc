@@ -58,6 +58,7 @@ namespace Function {
                 return (l ^ (r - 1)) * (l->derivative(var) * r + l * ln(l) * r->derivative(var));
             }
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION('^')
 
 
         expression matrix_inverse(expression matrix) {

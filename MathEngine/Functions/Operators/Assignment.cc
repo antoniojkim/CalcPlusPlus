@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cmath>
 #include <numeric>
 
@@ -27,6 +25,7 @@ namespace Function {
             }
             return VariableExpression::construct(l->repr(), r);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION('=')
     };
 
 }

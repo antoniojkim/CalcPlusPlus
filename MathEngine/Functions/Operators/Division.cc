@@ -42,6 +42,7 @@ namespace Function {
             auto r = args.next();
             return (l->derivative(var) * r - l * r->derivative(var)) / (r ^ 2);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION('/')
 
         expression matrix_div(expression lhs, expression rhs){
             using Scanner::MATRIX;
@@ -117,6 +118,7 @@ namespace Function {
             }
             return NumExpression::construct(std::fmod(l->value(), r->value()));
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION('%')
     }
 
 
@@ -139,6 +141,7 @@ namespace Function {
             }
             return NumExpression::construct(intpart);
         }
+        OPERATOR_PRINT_POSTFIX_DEFINITION("//")
     }
 
 }
