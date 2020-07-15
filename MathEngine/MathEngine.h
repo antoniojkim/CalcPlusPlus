@@ -24,7 +24,8 @@ class MathEngine {
         expression parse(const std::string& input);
         expression operator()(const std::string& input);
 
-        expression evaluate(const std::string& input);
+        expression eval(const std::string& input);
+        expression eval(expression inputExpr);
 
         std::string formatInput(const std::string& input, int& cursorPosition);
         std::string evaluateOutput(const std::string& input, const std::string& output);

@@ -69,15 +69,15 @@ namespace Function {
                     auto gsl_mat = to_gsl_matrix_complex(lhs);
                     auto scalar_mat = make_gsl_matrix_complex(lhs->shape(0), lhs->shape(1));
                     gsl_matrix_complex_set_all(scalar_mat.get(), rhs->complex());
-                    gsl_matrix_complex_div_elements(scalar_mat.get(), gsl_mat.get());
-                    return MatrixExpression::construct(scalar_mat);
+                    gsl_matrix_complex_div_elements(gsl_mat.get(), scalar_mat.get());
+                    return MatrixExpression::construct(gsl_mat);
                 }
                 else{
                     auto gsl_mat = to_gsl_matrix(lhs);
                     auto scalar_mat = make_gsl_matrix(lhs->shape(0), lhs->shape(1));
                     gsl_matrix_set_all(scalar_mat.get(), rhs->value());
-                    gsl_matrix_div_elements(scalar_mat.get(), gsl_mat.get());
-                    return MatrixExpression::construct(scalar_mat);
+                    gsl_matrix_div_elements(gsl_mat.get(), scalar_mat.get());
+                    return MatrixExpression::construct(gsl_mat);
                 }
             }
             if (rhs == MATRIX){

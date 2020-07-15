@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 #include <numeric>
 
 #include <gsl/gsl_math.h>
@@ -12,6 +13,8 @@
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
+
+using namespace std;
 
 namespace Function {
 
@@ -51,6 +54,7 @@ namespace Function {
 
         expression matrix_add(expression lhs, expression rhs){
             using Scanner::MATRIX;
+            cout << "Matrix Addition: " << lhs << " + " << rhs << endl;
             if (lhs == MATRIX && rhs == MATRIX){
                 if (lhs->shape(0) == rhs->shape(0) && lhs->shape(1) == rhs->shape(1)){
                     if (lhs->isComplex() || rhs->isComplex()){

@@ -50,7 +50,7 @@ namespace Function {
     namespace hex {
         expression eval(Function::Args& args) {
             auto x = args.next();
-            if (x->isComplex()){
+            if (!x->isComplex()){
                 double val = x->value();
                 if (std::trunc(val) == val){
                     return HexExpression::construct((unsigned long long) std::trunc(val));
@@ -64,7 +64,7 @@ namespace Function {
     namespace bin {
         expression eval(Function::Args& args) {
             auto x = args.next();
-            if (x->isComplex()){
+            if (!x->isComplex()){
                 double val = x->value();
                 if (std::trunc(val) == val){
                     return BinExpression::construct((unsigned long long) std::trunc(val));
@@ -93,7 +93,7 @@ namespace Function {
         }
         std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty) {
             auto x = args.next();
-            return out << "(" << x << ")^2";
+            return out << "(" << x << ")²";
         }
     }
 
@@ -107,7 +107,7 @@ namespace Function {
         }
         std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty) {
             auto x = args.next();
-            return out << "(" << x << ")^3";
+            return out << "√(" << x << ")";
         }
     }
 
@@ -120,7 +120,7 @@ namespace Function {
             return 3 / sqr(x) * x->derivative(var);
         }
         std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty) {
-            return out << "(" << args.next() << ")^3";
+            return out << "(" << args.next() << ")³";
         }
     }
 

@@ -6,7 +6,6 @@
 #include "../Expressions/ExpressionOperations.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/TupleExpression.h"
-#include "../Expressions/VariableExpression.h"
 #include "../Parser/modifiedShuntingYard.h"
 #include "../Scanner/scanner.h"
 #include "../Utils/Exception.h"
@@ -22,6 +21,12 @@ Args::Args(int numPositional, bool hasVarArgs, const std::vector<double>& defaul
 
 // TODO: Add support for passing in named arguments
 expression Args::next(){
+    if (e != TUPLE){
+        if (eIndex == 0){
+            return e;
+        }
+        throw Exception("Could not iterate over expression: ", e);
+    }
     if (numPositional > 0){
         if (eIndex >= e->size()){
             throw Exception("Not enough arguments provided. Got: ", e);

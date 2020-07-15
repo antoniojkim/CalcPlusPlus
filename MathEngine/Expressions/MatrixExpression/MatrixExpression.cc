@@ -191,7 +191,7 @@ double MatrixExpression::value(const Variables& vars) const { return GSL_NAN; }
 
 
 bool MatrixExpression::equals(expression e, double precision) const {
-    if (e->is(MATRIX) && rows == e->shape(0) && cols == e->shape(0)){
+    if (e->is(MATRIX) && rows == e->shape(0) && cols == e->shape(1)){
         for (size_t i = 0; i < mat.size(); ++i){
             if (!mat.at(i)->equals(e->at(i), precision)){
                 return false;

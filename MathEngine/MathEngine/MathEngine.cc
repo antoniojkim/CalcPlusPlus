@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "../Expressions/ExpressionOperations.h"
 #include "../Expressions/InvalidExpression.h"
 #include "../Expressions/VariableExpressions/Constants.h"
 #include "../Expressions/VariableExpressions/GreekLetters.h"
@@ -39,10 +40,30 @@ expression MathEngine::operator()(const std::string& input){
     return parse(input);
 }
 
-expression MathEngine::evaluate(const std::string& input){
+expression MathEngine::eval(const std::string& input){
+    return eval(parse(input));
+}
+expression MathEngine::eval(expression inputExpr){
     try {
-        auto expr = parse(input);
-        return expr->eval(variables);
+        auto expr = inputExpr->eval(variables);
+
+        if (expr == VAR){
+            string name = expr->repr();
+            if (expr->at(0) == NONE){
+                if (variables.count(name) > 0){
+                    variables.erase(name);
+                    throw Exception("Deleted Variable: ", name);
+                }
+                else{
+                    throw Exception("Variable does not exist: ", name);
+                }
+            }
+            else {
+                variables[name] = expr;
+            }
+        }
+
+        return expr;
     } catch(const Exception& e){
         return InvalidExpression::construct(e);
     }
@@ -86,29 +107,7 @@ std::string MathEngine::evaluateOutput(const std::string& input, const std::stri
     }
 
     try {
-        auto expr = evaluate(input);
-
-        // if (expr == VAR){
-        //     auto& second = *std::next(tokens.begin());
-        //     if (second.type == EQUALS || second.type == COLON_EQUALS || second.type == L_ARROW){
-        //         string name = tokens.front().lexeme;
-        //         tokens.pop_front(); tokens.pop_front();
-        //         variables[name] = parser->parse(tokens);
-        //         return variables[name];
-        //     }
-        // }
-        // else if (tokens.size() == 2 && tokens.front().type == POUND){
-        //     auto& second = *std::next(tokens.begin());
-        //     if (second.type == ID || second.type == SPECIALID){
-        //         if (variables.count(second.lexeme) > 0){
-        //             variables.erase(second.lexeme);
-        //             throw Exception("Deleted Variable: ", second.lexeme);
-        //         }
-        //         else{
-        //             throw Exception("Variable does not exist: ", second.lexeme);
-        //         }
-        //     }
-        // }
+        auto expr = eval(input);
 
         ostringstream out;
 

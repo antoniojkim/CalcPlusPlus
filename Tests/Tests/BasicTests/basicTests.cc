@@ -51,11 +51,11 @@ TEST_CASE("Basic GSL Math Function Tests", "[basic_function]"){
     requireIsEqual("ldexp(.53, 7)", 67.84);
     requireExprIsEqual("frexp(67.84)", "(0.53, 7)");
 
-    requireIsEqual("fcmp(3, 3)", 1);
-    requireIsEqual("fcmp(3, 3.1)", 0);
-    requireIsEqual("fcmp(3, 3.000000000000001)", 1);
-    requireIsEqual("fcmp(3, 3.0001, 1e-2)", 1);
-    requireIsEqual("fcmp(3, 3.0001, 1E-2)", 1);
+    requireIsEqual("fcmp(3, 3)", 0);
+    requireIsEqual("fcmp(3, 3.1)", -1);
+    requireIsEqual("fcmp(3, 3.000000000000001)", 0);
+    requireIsEqual("fcmp(3, 3.0001, 1e-2)", 0);
+    requireIsEqual("fcmp(3, 3.0001, 1E-2)", 0);
 }
 
 TEST_CASE("Basic Constants Tests", "[constants]"){
@@ -70,17 +70,17 @@ TEST_CASE("Basic Constants Tests", "[constants]"){
     requireIsEqual("vphi", 1.6180339887498948482);
     requireIsEqual("γ", M_EULER);
     requireIsEqual("πe", M_PI * M_E);
-    requireIsEqual("eπ", M_PI * M_E);
+    requireIsEqual("e * π", M_E * M_PI);
 }
 
-TEST_CASE("Basic Variable Setting Tests", "[constants]"){
+TEST_CASE("Basic Variable Setting Tests", "[variables]"){
     requireIsEqual("a=3", 3);
     requireIsEqual("3*a", 9);
     requireIsEqual("a:=4", 4);
     requireIsEqual("3*a", 12);
     requireIsEqual("a<-3*2", 6);
     requireIsEqual("3*a", 18);
-    requireIsEqual("#a", "Deleted Variable: a", true);
+    requireIsEqual("a=None", "Deleted Variable: a", true);
     requireIsEqual("3*a", GSL_NAN);
 }
 

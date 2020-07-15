@@ -43,7 +43,7 @@ bool Scanner::isPreImplicit(Type type){
         case RSQUARE:
         case RBRACE:
         // case ID:
-        // case SPECIALID:
+        case SPECIALID:
             return true;
         default:
             return false;

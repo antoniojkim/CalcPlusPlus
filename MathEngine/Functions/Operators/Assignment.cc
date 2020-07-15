@@ -21,7 +21,7 @@ namespace Function {
             auto l = args.next();
             auto r = args.next();
             if (l != VAR){
-                throw Exception("Assignment operator expects variable. Got: ", l);
+                throw Exception("Assignment operator expects variable. Got: ", l, ", ", r);
             }
             return VariableExpression::construct(l->repr(), r);
         }

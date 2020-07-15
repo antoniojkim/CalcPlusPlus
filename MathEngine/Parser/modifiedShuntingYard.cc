@@ -5,6 +5,7 @@
 #include "../Expressions/ExpressionOperations.h"
 #include "../Expressions/FunctionExpression.h"
 #include "../Expressions/MatrixExpression.h"
+#include "../Expressions/NullExpression.h"
 #include "../Expressions/NumericalExpression.h"
 #include "../Expressions/TupleExpression.h"
 #include "../Expressions/VariableExpression.h"
@@ -57,6 +58,9 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 continue;
             case BIN:
                 expressionStacks.back().push(BinExpression::construct(token->lexeme));
+                continue;
+            case NONE:
+                expressionStacks.back().push(NullExpression::construct());
                 continue;
             case ID:
             case SPECIALID:
@@ -187,6 +191,11 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
 expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const {
     int stackSize = tokens.size();
 
+    // cout << "TOKENS: " << endl;
+    // for (auto& token : tokens){
+    //     cout << "    " << token.lexeme << " " << Scanner::typeStrings[token.type] << endl;
+    // }
+
     FixedStack<Token*> operatorStack(stackSize);
     list<FixedStack<Token*>> outputStacks;
     outputStacks.emplace_back(FixedStack<Token*>(stackSize));
@@ -199,6 +208,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
             case NUM:
             case HEX:
             case BIN:
+            case NONE:
                 outputStacks.back().push(&token);
                 continue;
             case ID:

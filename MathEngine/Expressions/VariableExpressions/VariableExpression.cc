@@ -68,7 +68,7 @@ expression VariableExpression::eval(const Variables& vars) {
         }
         return copy();
     }
-    return vars.at(name)->eval(vars);
+    return vars.at(name);  // ->eval(vars);
 }
 
 double VariableExpression::value(const Variables& vars) const {
