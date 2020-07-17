@@ -25,6 +25,8 @@ class NumExpression: public NumericalExpression {
         static expression construct(const gsl_complex& z);
         static expression construct(const std::string&);
 
+        bool isNumber() const override { return true; }
+
         gsl_complex complex(const Variables& vars = emptyVars) const override;
 
         EXPRESSION_OVERRIDES
@@ -41,6 +43,8 @@ class HexExpression: public NumericalExpression {
         static expression construct(unsigned long long num);
         static expression construct(const std::string&);
 
+        bool isNumber() const override { return true; }
+
         EXPRESSION_OVERRIDES
 
 };
@@ -54,6 +58,8 @@ class BinExpression: public NumericalExpression {
     public:
         static expression construct(unsigned long long num);
         static expression construct(const std::string&);
+
+        bool isNumber() const override { return true; }
 
         EXPRESSION_OVERRIDES
 

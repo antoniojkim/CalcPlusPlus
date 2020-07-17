@@ -15,9 +15,9 @@ TEST_CASE("Numerical Differentiation Evaluation Tests", "[deriv]" ) {
         requireIsEqual("deriv(ln(x^2 + ln(x*2 + x^3) + sin(cos(x))), 10)", 0.194564706303018368455);
     }
     SECTION("Test diff Function"){
-        requireIsEqual("diff(sin(x))", "cos(x)", true);
-        requireIsEqual("(sin(x))'", "cos(x)", true);
-        requireIsEqual("diff(ln(x^2 + ln(x*2 + x^3) + sin(cos(x))))", "1 / (x ^ 2 + ln(x * 2 + x ^ 3) + sin(cos(x))) * (2 * x + 1 / (x * 2 + x ^ 3) * (3 * sqr(x) + 2) + cos(cos(x)) * neg(sin(x)))", true);
+        requireExprIsEqual("diff(sin(x))", "cos(x)");
+        requireExprIsEqual("(sin(x))'", "cos(x)");
+        requireExprIsEqual("diff(ln(x^2 + ln(x*2 + x^3) + sin(cos(x))))", "1 / (x ^ 2 + ln(x * 2 + x ^ 3) + sin(cos(x))) * (2 * x + 1 / (x * 2 + x ^ 3) * (3 * sqr(x) + 2) + cos(cos(x)) * neg(sin(x)))");
     }
 
 }

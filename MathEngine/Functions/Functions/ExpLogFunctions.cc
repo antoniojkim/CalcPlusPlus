@@ -6,7 +6,6 @@
 #include "../../Expressions/ExpressionFunctions.h"
 #include "../../Expressions/ExpressionOperations.h"
 #include "../../Expressions/NumericalExpression.h"
-#include "../../Utils/Argparse.h"
 #include "../Functions.h"
 
 namespace Function {

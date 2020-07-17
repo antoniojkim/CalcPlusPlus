@@ -32,6 +32,7 @@ class Expression: public std::enable_shared_from_this<Expression> {
 
         virtual bool isComplex() const = 0;
         virtual bool isEvaluable(const Variables& vars = emptyVars) const = 0;
+        virtual bool isNumber() const { return false; }
 
         virtual expression eval(const Variables& vars = emptyVars) = 0;
         virtual double value(const Variables& vars = emptyVars) const = 0;
@@ -97,11 +98,14 @@ class Expression: public std::enable_shared_from_this<Expression> {
 
 std::ostream& operator<<(std::ostream&, const expression);
 
-#define EXPRESSION_OVERRIDES                                                        \
+#define EXPRESSION_PARTIAL_OVERRIDES                                                \
     bool isComplex() const override;                                                \
     bool isEvaluable(const Variables& vars = emptyVars) const override;             \
-    expression eval(const Variables& vars = emptyVars) override;                    \
-    double value(const Variables& vars = emptyVars) const override;                 \
     bool equals(expression, double precision) const override;                       \
     std::ostream& print(std::ostream&, const bool pretty = false) const override;   \
     std::ostream& postfix(std::ostream&) const override;
+
+#define EXPRESSION_OVERRIDES                                                        \
+    EXPRESSION_PARTIAL_OVERRIDES                                                    \
+    expression eval(const Variables& vars = emptyVars) override;                    \
+    double value(const Variables& vars = emptyVars) const override;

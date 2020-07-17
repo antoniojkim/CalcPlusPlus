@@ -52,8 +52,8 @@ bool printDifference(const std::string& input, const expression expr, const expr
 }
 
 void requireIsEqual(const string& input, const double expected){
-    auto expression = engine.eval(input);
-    double output = expression->value();
+    auto expression = engine.parse(input);
+    double output = engine.eval(expression)->value();
     CHECK( (compare(output, expected, 1e-8) != 0 ? printDifference(input, expression, output, expected) : true) );
 }
 

@@ -1,55 +1,73 @@
 #include <cmath>
+#include <memory>
 #include <numeric>
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_complex_math.h>
 
+#include "../../Expressions/Expression.h"
 #include "../../Expressions/ExpressionFunctions.h"
 #include "../../Expressions/ExpressionOperations.h"
+#include "../../Expressions/FunctionExpression.h"
 #include "../../Expressions/NumericalExpression.h"
 #include "../../Expressions/TupleExpression.h"
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
 
+using namespace std;
+
 namespace Function {
-    // @Function neg(x)
-    namespace neg {
-        expression eval(Function::Args& args) {
-            auto x = args.next();
+
+    // @Function neg
+    struct neg: public FunctionExpression {
+        neg(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 1) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            auto x = arg->at(0)->eval(vars);
             if (x->isComplex()){
                 return NumExpression::construct(gsl_complex_negative(x->complex()));
             }
             return NumExpression::construct(-x->value());
         }
-        double value(double x) { return -x; }
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(0)->value(vars);
+            return -x;
+        }
         expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+            auto x = arg->at(0)->eval();
             return -x->derivative(var);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(neg);
 
-    // @Function frexp(x)
-    namespace frexp {
-        expression eval(Function::Args& args) {
-            double x = args.nextValue();
+
+    // @Function frexp
+    struct frexp: public FunctionExpression {
+        frexp(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 1) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            double x = arg->at(0)->value(vars);
             int e;
             double f = gsl_frexp(x, &e);
             return TupleExpression::construct({f, (double) e});
         }
-    }
+        double value(const Variables& vars = emptyVars) const { return GSL_NAN; }
+    };
+    MAKE_FUNCTION_EXPRESSION(frexp);
 
-    // @Function num(x)
-    namespace num {
-        expression eval(Function::Args& args) {
-            return NumExpression::construct(args.nextValue());
+    // @Function num
+    struct num: public FunctionExpression {
+        num(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 1) {}
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(0)->value(vars);
+            return x;
         }
-        double value(double x) { return x; }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(num);
 
-    // @Function hex(x)
-    namespace hex {
-        expression eval(Function::Args& args) {
-            auto x = args.next();
+    // @Function hex
+    struct hex: public FunctionExpression {
+        hex(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 1) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            auto x = arg->at(0)->eval(vars);
             if (!x->isComplex()){
                 double val = x->value();
                 if (std::trunc(val) == val){
@@ -58,12 +76,18 @@ namespace Function {
             }
             throw Exception("Unable to convert to hex: ", x);
         }
-    }
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(0)->value(vars);
+            return x;
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(hex);
 
-    // @Function bin(x)
-    namespace bin {
-        expression eval(Function::Args& args) {
-            auto x = args.next();
+    // @Function bin
+    struct bin: public FunctionExpression {
+        bin(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 1) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            auto x = arg->at(0)->eval(vars);
             if (!x->isComplex()){
                 double val = x->value();
                 if (std::trunc(val) == val){
@@ -72,153 +96,183 @@ namespace Function {
             }
             throw Exception("Unable to convert to bin: ", x);
         }
-    }
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(0)->value(vars);
+            return x;
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(bin);
 
-    // @Function abs(x)
-    namespace abs {
-        double (*value)(double) = std::abs;
+    // @Function abs
+    struct abs: public ValueFunctionExpression {
+        abs(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::abs, arg) {}
         expression derivative(Function::Args& args, const std::string& var) {
             using ExpressionMath::abs;
-            auto x = args.next();
+            auto x = arg->at(0);
             return x / abs(x) * x->derivative(var);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(abs);
 
-    // @Function sqr(x)
-    namespace sqr {
-        double (*value)(double) = gsl_pow_2;
+    // @Function sqr
+    struct sqr: public ValueFunctionExpression {
+        sqr(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, gsl_pow_2, arg) {}
         expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+            auto x = arg->at(0)->eval();
             return 2 * x * x->derivative(var);
         }
-        std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty) {
-            auto x = args.next();
-            return out << "(" << x << ")²";
+        std::ostream& print(std::ostream& out, const bool pretty) {
+            auto x = arg->at(0);
+            return out << "("; x->print(out, pretty) << ")²";
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(sqr);
 
-    // @Function sqrt(x)
-    namespace sqrt {
-        double (*value)(double) = std::sqrt;
+    // @Function sqrt
+    struct sqrt: public ValueFunctionExpression {
+        sqrt(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::sqrt, arg) {}
         expression derivative(Function::Args& args, const std::string& var) {
             using ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(0)->eval();
             return 0.5 / sqrt(x) * x->derivative(var);
         }
         std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty) {
-            auto x = args.next();
-            return out << "√(" << x << ")";
+            auto x = arg->at(0);
+            return out << "√("; x->print(out, pretty) << ")";
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(sqrt);
 
-    // @Function cb(x)
-    namespace cb {
-        double (*value)(double) = gsl_pow_3;
+    // @Function cb
+    struct cb: public ValueFunctionExpression {
+        cb(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, gsl_pow_3, arg) {}
         expression derivative(Function::Args& args, const std::string& var) {
             using ExpressionMath::sqr;
-            auto x = args.next();
+            auto x = arg->at(0)->eval();
             return 3 / sqr(x) * x->derivative(var);
         }
         std::ostream& print(std::ostream& out, Function::Args& args, const bool pretty) {
-            return out << "(" << args.next() << ")³";
+            auto x = arg->at(0);
+            return out << "("; x->print(out, pretty) << ")³";
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(cb);
 
-    // @Function cbrt(x)
-    namespace cbrt {
-        double (*value)(double) = std::cbrt;
+    // @Function cbrt
+    struct cbrt: public ValueFunctionExpression {
+        cbrt(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::cbrt, arg) {}
         expression derivative(Function::Args& args, const std::string& var) {
             using ExpressionMath::sqr, ExpressionMath::cbrt;
-            auto x = args.next();
+            auto x = arg->at(0)->eval();
             return (1.0 / 3) / sqr(cbrt(x)) * x->derivative(var);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(cbrt);
 
-    // @Function rad(x)
-    namespace rad {
-        double value(double x) { return x * M_PI / 180; }
-    }
+    // @Function rad
+    struct rad: public ValueFunctionExpression {
+        rad(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
+        double value(const Variables& vars = emptyVars) const override {
+            auto x = arg->at(0)->value(vars);
+            return x * M_PI / 180;
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(rad);
 
     // @Function deg(x)
-    namespace deg {
-        double value(double x) { return x * M_PI / 180; }
-    }
+    struct deg: public ValueFunctionExpression {
+        deg(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
+        double value(const Variables& vars = emptyVars) const override {
+            auto x = arg->at(0)->value(vars);
+            return x * 180 / M_PI;
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(deg);
 
     // @Function hypot(a...)
-    namespace hypot {
-        expression eval(Function::Args& args) {
-            auto a = args.next();
-            switch(a->size()){
+    struct hypot: public FunctionExpression {
+        hypot(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 0, true) {}
+        double value(const Variables& vars = emptyVars) const override {
+            auto a = arg->at(0)->eval(vars)->array();
+            switch(a.size()){
                 case 2:
-                    return NumExpression::construct(gsl_hypot(a->get(0), a->get(1)));
+                    return gsl_hypot(a.at(0), a.at(1));
                 case 3:
-                    return NumExpression::construct(gsl_hypot3(a->get(0), a->get(1), a->get(2)));
+                    return gsl_hypot3(a.at(0), a.at(1), a.at(2));
                 default: {
                     double sum = 0;
-                    for (auto e : *a){
-                        sum += gsl_pow_2(e->value());
+                    for (auto e : a){
+                        sum += gsl_pow_2(e);
                     }
-                    return NumExpression::construct(std::sqrt(sum));
+                    return std::sqrt(sum);
                 }
             }
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(hypot);
 
-    // @Function ldexp(x, e)
-    namespace ldexp {
-        expression eval(Function::Args& args) {
-            double x = args.nextValue();
-            double e = args.nextValue();
+    // @Function ldexp
+    struct ldexp: public FunctionExpression {
+        ldexp(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 2) {}
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(0)->value(vars);
+            double e = arg->at(1)->value(vars);
             if (std::trunc(e) == e){
-                return NumExpression::construct(gsl_ldexp(x, (int) e));
+                return gsl_ldexp(x, (int) e);
             }
             throw Exception("ldexp expected an integer for 'e'. Got: ", e);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(ldexp);
 
-    // @Function fcmp(x, y, tol=1e-8)
-    namespace fcmp {
-        expression eval(Function::Args& args) {
-            double x = args.nextValue();
-            double y = args.nextValue();
-            double tol = args.nextValue();
-            return NumExpression::construct(gsl_fcmp(x, y, tol));
+    // @Function fcmp
+    struct fcmp: public FunctionExpression {
+        fcmp(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, 2, false, {{"tol", NumExpression::construct(1e-8)}}) {}
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(0)->value(vars);
+            double y = arg->at(1)->value(vars);
+            double tol = arg->at(2)->value(vars);
+            return gsl_fcmp(x, y, tol);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(fcmp);
 
     // @Function gcd(a...)
-    namespace gcd {
-        expression eval(Function::Args& args) {
-            auto a = args.next();
+    struct gcd: public FunctionExpression {
+        gcd(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 0, true) {}
+        double value(const Variables& vars = emptyVars) const override {
+            auto a = arg->at(0)->eval(vars)->array();
             long long g = 0;
-            for (auto e : *a){
-                double v = e->value();
+            for (auto v : a){
                 if (std::trunc(v) == v){
                     g = g == 0 ? v : std::gcd(g, (long long) v);
                 }
                 else{
-                    throw Exception("gcd expected integer arguments. Got: ", args);
+                    throw Exception("gcd expected integer arguments. Got: ", arg);
                 }
             }
-            return NumExpression::construct(g);
+            return g;
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(gcd);
 
     // @Function lcm(a...)
-    namespace lcm {
-        expression eval(Function::Args& args) {
-            auto a = args.next();
+    struct lcm: public FunctionExpression {
+        lcm(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, 0, true) {}
+        double value(const Variables& vars = emptyVars) const override {
+            auto a = arg->at(0)->eval(vars)->array();
             long long l = 0;
-            for (auto e : *a){
-                double v = e->value();
+            for (auto v : a){
                 if (std::trunc(v) == v){
                     l = l == 0 ? v : std::lcm(l, (long long) v);
                 }
                 else{
-                    throw Exception("lcm expected integer arguments. Got: ", args);
+                    throw Exception("lcm expected integer arguments. Got: ", arg);
                 }
             }
-            return NumExpression::construct(l);
+            return l;
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(lcm);
 }

@@ -1,5 +1,5 @@
 #include <cmath>
-#include <list>
+#include <iostream>
 #include <string>
 
 #include <gsl/gsl_deriv.h>
@@ -12,6 +12,8 @@
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
+
+using namespace std;
 
 namespace Function {
     // @Function deriv(f, x, x1=None)
@@ -33,11 +35,13 @@ namespace Function {
 
             try{
                 auto derivative = f->derivative(var);
+                cout << "Derivative: " << derivative << endl;
                 Variables vars;
                 vars[var] = x;
                 return derivative->eval(vars);
-            } catch(const Exception& e){}
-
+            } catch(const Exception& e){
+                cout << "Could not differentiate: " << e.what() << endl;
+            }
 
             gsl_function F = f->function(var);
 
@@ -62,7 +66,7 @@ namespace Function {
             std::string var = "x";
             if (x != NONE){
                 if (x != VAR){
-                    throw Exception("diff expected second argument to be a variable. Got: ", x);
+                    throw Exception("diff expected second argument to be a variable. Got: ", args);
                 }
                 var = x->repr();
             }
@@ -82,7 +86,7 @@ namespace Function {
             std::string var = "x";
             if (x != NONE){
                 if (a != VAR){
-                    throw Exception("diff expected second argument to be a variable. Got: ", a);
+                    throw Exception("integral expected second argument to be a variable. Got: ", a, ". x = ", x);
                 }
                 var = a->repr();
                 a = b;

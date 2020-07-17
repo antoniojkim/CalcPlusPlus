@@ -37,6 +37,11 @@ namespace Function {
             }
             return NumExpression::construct(l->value() * r->value());
         }
+        expression simplify(Function::Args& args) {
+            auto l = args.next();
+            auto r = args.next();
+            return l * r;
+        }
         expression derivative(Function::Args& args, const std::string& var) {
             auto l = args.next();
             auto r = args.next();

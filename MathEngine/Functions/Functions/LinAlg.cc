@@ -12,7 +12,6 @@
 #include "../../Expressions/MatrixExpression.h"
 #include "../../Expressions/NumericalExpression.h"
 #include "../../Expressions/TupleExpression.h"
-#include "../../Utils/Argparse.h"
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
 

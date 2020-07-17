@@ -11,7 +11,6 @@
 #include "../../Expressions/InvalidExpression.h"
 #include "../../Expressions/MatrixExpression.h"
 #include "../../Expressions/TupleExpression.h"
-#include "../../Utils/Argparse.h"
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
 
