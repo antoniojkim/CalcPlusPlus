@@ -26,12 +26,12 @@ namespace Function {
 
 
     // @Function rand(): random
-    namespace rand {
-        expression eval(Function::Args& args) {
-            return NumExpression::construct(gsl_rng_uniform(r.get()));
-        }
-        double value(double x) {
+    struct rand: public FunctionExpression {
+        rand(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {}) {}  // Signature: ()
+        double value(const Variables& vars = emptyVars) const override {
             return gsl_rng_uniform(r.get());
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(rand);
 }

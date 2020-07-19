@@ -22,7 +22,7 @@ FunctionExpression::FunctionExpression(int functionIndex, expression arg, std::i
     // Parse args
     if (arg != TUPLE){
         if (signature.size() == 1){
-            this->arg = arg;
+            this->arg = TupleExpression::construct({arg});
             return;
         }
         throw Exception(repr(), " expected a tuple. Got: ", arg);
@@ -178,10 +178,7 @@ int FunctionExpression::id() const {
 
 std::ostream& FunctionExpression::print(std::ostream& out, const bool pretty) const {
     out << Functions::names[functionIndex];
-    if (arg == TUPLE){
-        return arg->print(out, pretty);
-    }
-    return arg->print(out << "(", pretty) << ")";
+    return arg->print(out, pretty);
 }
 std::ostream& FunctionExpression::postfix(std::ostream& out) const {
     arg->postfix(out) << " ";

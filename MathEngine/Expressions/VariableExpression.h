@@ -13,6 +13,7 @@ class VariableExpression: public Expression {
     public:
         static expression construct(const std::string& name);
         static expression construct(const std::string& name, double var);
+        static expression construct(const std::string& name, gsl_complex var);
         static expression construct(const std::string& name, expression var);
 
         expression simplify() override;

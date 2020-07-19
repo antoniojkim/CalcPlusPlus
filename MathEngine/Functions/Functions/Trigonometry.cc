@@ -5,7 +5,7 @@
 #include "../../Expressions/Expression.h"
 #include "../../Expressions/ExpressionFunctions.h"
 #include "../../Expressions/ExpressionOperations.h"
-#include "../../Expressions/InvalidExpression.h"
+#include "../../Expressions/NullExpression.h"
 #include "../../Expressions/NumericalExpression.h"
 #include "../../Expressions/TupleExpression.h"
 #include "../Functions.h"
@@ -13,243 +13,309 @@
 namespace Function {
 
     // @Function sin(x)
-    namespace sin {
-        double (*value)(double) = std::sin;
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct sin: public ValueFunctionExpression {
+        sin(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::sin, arg) {}
+        expression derivative(const std::string& var) {
             using ExpressionMath::cos;
-            auto x = args.next();
+            auto x = arg->at(1);
             return cos(x);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(sin);
 
     // @Function cos(x)
-    namespace cos {
-        double (*value)(double) = std::cos;
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct cos: public ValueFunctionExpression {
+        cos(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::cos, arg) {}
+        expression derivative(const std::string& var) {
             using ExpressionMath::cos;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -cos(x);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(cos);
 
     // @Function tan(x)
-    namespace tan {
-        double (*value)(double) = std::tan;
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct tan: public ValueFunctionExpression {
+        tan(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::tan, arg) {};
+        expression derivative(const std::string& var) {
             using ExpressionMath::sec;
-            auto x = args.next();
+            auto x = arg->at(1);
             return sec(x) ^ 2;
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(tan);
 
-    // @Function asin(x): arcsin arsin
-    namespace asin {
-        double (*value)(double) = std::asin;
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function asin: arcsin arsin
+    struct asin: public ValueFunctionExpression {
+        asin(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::asin, arg) {};
+        expression derivative(const std::string& var) {
             using ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(1);
             return 1 / sqrt(1 - (x ^ 2));
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(tan);
 
-    // @Function acos(x): arccos arcos
-    namespace acos {
-        double (*value)(double) = std::acos;
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function acos: arccos arcos
+    struct acos: public ValueFunctionExpression {
+        acos(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::acos, arg) {};
+        expression derivative(const std::string& var) {
             using ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -1 / sqrt(1 - (x ^ 2));
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(tan);
 
-    // @Function atan(x): arctan artan
-    namespace atan {
-        double (*value)(double) = std::atan;
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+    // @Function atan: arctan artan
+    struct atan: public ValueFunctionExpression {
+        atan(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::atan, arg) {};
+        expression derivative(const std::string& var) {
+            auto x = arg->at(1);
             return 1 / (1 + (x ^ 2));
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(atan);
 
     // @Function sinh(x)
-    namespace sinh {
-        double (*value)(double) = std::sinh;
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct sinh: public ValueFunctionExpression {
+        sinh(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::sinh, arg) {};
+        expression derivative(const std::string& var) {
             using ExpressionMath::cosh;
-            auto x = args.next();
+            auto x = arg->at(1);
             return cosh(x);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(sinh);
 
     // @Function cosh(x)
-    namespace cosh {
-        double (*value)(double) = std::cosh;
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct cosh: public ValueFunctionExpression {
+        cosh(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::cosh, arg) {};
+        expression derivative(const std::string& var) {
             using ExpressionMath::sinh;
-            auto x = args.next();
+            auto x = arg->at(1);
             return sinh(x);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(cosh);
 
     // @Function tanh(x)
-    namespace tanh {
-        double (*value)(double) = std::tanh;
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct tanh: public ValueFunctionExpression {
+        tanh(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::tanh, arg) {};
+        expression derivative(const std::string& var) {
             using ExpressionMath::sech;
-            auto x = args.next();
+            auto x = arg->at(1);
             return sech(x) ^ 2;
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(tanh);
 
-    // @Function asinh(x): arcsinh arsinh
-    namespace asinh {
-        double (*value)(double) = std::asinh;
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function asinh: arcsinh arsinh
+    struct asinh: public ValueFunctionExpression {
+        asinh(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::asinh, arg) {};
+        expression derivative(const std::string& var) {
             using ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(1);
             return 1 / sqrt((x ^ 2) + 1);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(asinh);
 
-    // @Function acosh(x): arccosh arcosh
-    namespace acosh {
-        double (*value)(double) = std::acosh;
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function acosh: arccosh arcosh
+    struct acosh: public ValueFunctionExpression {
+        acosh(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::acosh, arg) {};
+        expression derivative(const std::string& var) {
             using ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(1);
             return 1 / sqrt((x ^ 2) - 1);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(acosh);
 
-    // @Function atanh(x): arctanh artanh
-    namespace atanh {
-        double (*value)(double) = std::atanh;
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+    // @Function atanh: arctanh artanh
+    struct atanh: public ValueFunctionExpression {
+        atanh(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::atanh, arg) {};
+        expression derivative(const std::string& var) {
+            auto x = arg->at(1);
             return 1 / (1 - (x ^ 2));
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(atanh);
 
     // @Function csc(x)
-    namespace csc {
-        double value(double x) { return 1.0 / std::sin(x); }
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct csc: public ValueFunctionExpression {
+        csc(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return 1.0 / std::sin(x);
+        }
+        expression derivative(const std::string& var) {
             using ExpressionMath::cot, ExpressionMath::csc;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -cot(x) * csc(x);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(csc);
 
     // @Function sec(x)
-    namespace sec {
-        double value(double x) { return 1.0 / std::cos(x); }
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct sec: public ValueFunctionExpression {
+        sec(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return 1.0 / std::cos(x);
+        }
+        expression derivative(const std::string& var) {
             using ExpressionMath::tan, ExpressionMath::sec;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -tan(x) * sec(x);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(sec);
 
     // @Function cot(x)
-    namespace cot {
-        double value(double x) { return 1.0 / std::tan(x); }
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct cot: public ValueFunctionExpression {
+        cot(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return 1.0 / std::tan(x);
+        }
+        expression derivative(const std::string& var) {
             using ExpressionMath::csc;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -(csc(x) ^ 2); }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(cot);
 
-    // @Function acsc(x): arccsc arcsc
-    namespace acsc {
-        double value(double x) { return std::asin(1.0 / x); }
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function acsc: arccsc arcsc
+    struct acsc: public ValueFunctionExpression {
+        acsc(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return std::asin(1.0 / x);
+        }
+        expression derivative(const std::string& var) {
             using ExpressionMath::abs, ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -1 / (abs(x) * sqrt((x ^ 2) - 1)); }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(acsc);
 
-    // @Function asec(x): arcsec arsec
-    namespace asec {
-        double value(double x) { return std::acos(1.0 / x); }
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function asec: arcsec arsec
+    struct asec: public ValueFunctionExpression {
+        asec(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return std::acos(1.0 / x);
+        }
+        expression derivative(const std::string& var) {
             using ExpressionMath::abs, ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(1);
             return 1 / (abs(x) * sqrt((x ^ 2) - 1));
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(asec);
 
-    // @Function acot(x): arccot arcot
-    namespace acot {
-        double value(double x) { return (x > 0 ? M_PI_2 : -M_PI_2) - std::atan(x); }
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+    // @Function acot: arccot arcot
+    struct acot: public ValueFunctionExpression {
+        acot(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return (x > 0 ? M_PI_2 : -M_PI_2) - std::atan(x);
+        }
+        expression derivative(const std::string& var) {
+            auto x = arg->at(1);
             return -1 / (1 + (x ^ 2));
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(acot);
 
     // @Function csch(x)
-    namespace csch {
-        double value(double x) { return 1.0 / std::sinh(x); }
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct csch: public ValueFunctionExpression {
+        csch(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return 1.0 / std::sinh(x);
+        }
+        expression derivative(const std::string& var) {
             using ExpressionMath::coth, ExpressionMath::csch;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -coth(x) * csch(x);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(csch);
 
     // @Function sech(x)
-    namespace sech {
-        double value(double x) { return 1.0 / std::cosh(x); }
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct sech: public ValueFunctionExpression {
+        sech(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return 1.0 / std::cosh(x);
+        }
+        expression derivative(const std::string& var) {
             using ExpressionMath::tanh, ExpressionMath::sech;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -tanh(x) * sech(x);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(sech);
 
     // @Function coth(x)
-    namespace coth {
-        double value(double x) { return 1.0 / std::tanh(x); }
-        expression derivative(Function::Args& args, const std::string& var) {
+    struct coth: public ValueFunctionExpression {
+        coth(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
+            return 1.0 / std::tanh(x);
+        }
+        expression derivative(const std::string& var) {
             using ExpressionMath::csch;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -(csch(x) ^ 2);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(coth);
 
-    // @Function acsch(x): arccsch arcsch
-    namespace acsch {
-        double value(double x) {
+    // @Function acsch: arccsch arcsch
+    struct acsch: public ValueFunctionExpression {
+        acsch(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
             if (x == 0){ return GSL_NAN; }
             return std::log(1 / x + std::sqrt(1 / (x * x) + 1));
         }
-        expression derivative(Function::Args& args, const std::string& var) {
+        expression derivative(const std::string& var) {
             using ExpressionMath::abs, ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -1 / (abs(x) * sqrt((x ^ 2) - 1)); }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(acsch);
 
-    // @Function asech(x): arcsech arsech
-    namespace asech {
-        double value(double x) {
+    // @Function asech: arcsech arsech
+    struct asech: public ValueFunctionExpression {
+        asech(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
             if (x <= 0 || x > 1){ return GSL_NAN; }
             return std::log(1 / x + std::sqrt(1 / (x * x) - 1));
         }
-        expression derivative(Function::Args& args, const std::string& var) {
+        expression derivative(const std::string& var) {
             using ExpressionMath::abs, ExpressionMath::sqrt;
-            auto x = args.next();
+            auto x = arg->at(1);
             return -1 / (abs(x) * sqrt(1 - (x ^ 2))); }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(asech);
 
-    // @Function acoth(x): arccoth arcoth
-    namespace acoth {
-        double value(double x) {
+    // @Function acoth: arccoth arcoth
+    struct acoth: public ValueFunctionExpression {
+        acoth(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {};
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(1)->value(vars);
             if (x >= -1 && x <= 1){ return GSL_NAN; }
             return std::log((x + 1) / (x - 1)) / 2;
         }
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+        expression derivative(const std::string& var) {
+            auto x = arg->at(1);
             return 1 / (1 - (x ^ 2));
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(acoth);
 }

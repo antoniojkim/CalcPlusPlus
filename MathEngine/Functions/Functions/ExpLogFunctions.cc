@@ -91,18 +91,10 @@ namespace Function {
     MAKE_FUNCTION_EXPRESSION(log);
 
     // @Function log1pm
-    struct log1pm: public ValueFunctionExpression {
-        log1pm(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, gsl_sf_log_1plusx_mx, arg) {}
-    };
-    MAKE_FUNCTION_EXPRESSION(log1pm);
+    MAKE_VALUEFUNCTION_EXPRESSION(log1pm, gsl_sf_log_1plusx_mx)
 
     // @Function logabs
-    struct logabs: public ValueFunctionExpression {
-        logabs(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, gsl_sf_log_abs, arg) {}
-    };
-    MAKE_FUNCTION_EXPRESSION(logabs);
+    MAKE_VALUEFUNCTION_EXPRESSION(logabs, gsl_sf_log_abs)
 
     // @Function logn
     struct logn: public FunctionExpression {

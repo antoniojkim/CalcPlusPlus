@@ -24,6 +24,9 @@ expression VariableExpression::construct(const std::string& name){
 expression VariableExpression::construct(const std::string& name, double num){
     return shared_ptr<VariableExpression>(new VariableExpression(name, NumExpression::construct(num)));
 }
+expression VariableExpression::construct(const std::string& name, gsl_complex num){
+    return shared_ptr<VariableExpression>(new VariableExpression(name, NumExpression::construct(num)));
+}
 expression VariableExpression::construct(const std::string& name, expression var){
     return shared_ptr<VariableExpression>(new VariableExpression(name, var));
 }
