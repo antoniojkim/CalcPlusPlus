@@ -110,6 +110,7 @@ namespace Function {
                     throw; // Should never throw;
             }
         }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
     MAKE_FUNCTION_EXPRESSION(cubic)
 
@@ -132,6 +133,7 @@ namespace Function {
                 VariableExpression::construct("z3", z3)
             });
         }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
     MAKE_FUNCTION_EXPRESSION(cubicc)
 }

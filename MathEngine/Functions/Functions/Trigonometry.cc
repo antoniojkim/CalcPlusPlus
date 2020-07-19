@@ -54,7 +54,7 @@ namespace Function {
             return 1 / sqrt(1 - (x ^ 2));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(tan)
+    MAKE_FUNCTION_EXPRESSION(asin)
 
     // @Function acos: arccos arcos
     struct acos: public ValueFunctionExpression {
@@ -65,7 +65,7 @@ namespace Function {
             return -1 / sqrt(1 - (x ^ 2));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(tan)
+    MAKE_FUNCTION_EXPRESSION(acos)
 
     // @Function atan: arctan artan
     struct atan: public ValueFunctionExpression {

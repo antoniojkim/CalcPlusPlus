@@ -31,7 +31,7 @@ expression VarArgsExpression::construct(expression var){
     return shared_ptr<VarArgsExpression>(new VarArgsExpression(var));
 }
 
-extern expression EmptyVarArgs = VarArgsExpression::construct(Empty);
+expression EmptyVarArgs = VarArgsExpression::construct(Empty);
 
 bool VarArgsExpression::isComplex() const { return var->isComplex(); }
 bool VarArgsExpression::isEvaluable(const Variables& vars) const {

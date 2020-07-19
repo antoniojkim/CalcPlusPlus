@@ -50,7 +50,7 @@ namespace Functions {
 
 // Declarations
 typedef expression(*FunctionConstructor)(int functionIndex, const expression arg);
-namespace functions{
+namespace Functions{
     #define DECLARE_FUNCTION_EXPRESSION(name) \
         expression make_fe_##name(int functionIndex, const expression arg);
 

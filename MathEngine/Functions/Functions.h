@@ -14,21 +14,27 @@
 #include "../Utils/BinarySearch.h"
 
 namespace Functions {
-    constexpr const int numFunctions = 130;
+    constexpr const int numFunctions = 175;
     constexpr const char* names[numFunctions] = {
         "%", "&", "*", "**", "+", "-", "/", "//", ":=", "<-", "<<", "=", ">>", "Beta",
-		"Betainc", "Cholesky", "LU", "LUsolve", "^", "^|", "abs", "absdev", "acos", "acosh",
-		"acot", "acoth", "acsc", "acsch", "add", "argmax", "argmin", "asec", "asech", "asin",
-		"asinh", "atan", "atanh", "bin", "bitwise_and", "bitwise_or", "bitwise_xor", "cb",
-		"cbrt", "choose", "cos", "cosh", "cot", "coth", "csc", "csch", "cubic", "cubicc", "deg",
-		"deriv", "det", "dfact", "diff", "div", "eq", "exp", "exp2", "expm1", "fact", "fcmp",
-		"fft", "floordiv", "frexp", "gamma", "gamma_inc", "gamma_inc_P", "gamma_inc_Q",
-		"gammainv", "gammastar", "gcd", "hex", "hypot", "ifft", "integral", "kurtosis", "lag1",
-		"lcm", "ldexp", "ln", "ln1p", "ln2", "lnBeta", "lnchoose", "lndet", "lndfact", "lnfact",
-		"lngamma", "lnpermute", "lnpoch", "log", "log1pm", "logabs", "logn", "lshift", "max",
-		"mean", "median", "min", "mod", "mul", "neg", "num", "permute", "poch", "pochrel",
-		"pow", "quad", "quadc", "rad", "rand", "rshift", "sd", "sec", "sech", "sin", "sinh",
-		"skew", "sqr", "sqrt", "sub", "tan", "tanh", "taylorcoeff", "tss", "var", "|"
+		"Betainc", "C", "Chol", "Cholesky", "LU", "LUsolve", "P", "^", "^|", "abs", "absdev",
+		"acos", "acosh", "acot", "acoth", "acsc", "acsch", "add", "arccos", "arccosh", "arccot",
+		"arccoth", "arccsc", "arccsch", "arcos", "arcosh", "arcot", "arcoth", "arcsc", "arcsch",
+		"arcsec", "arcsech", "arcsin", "arcsinh", "arctan", "arctanh", "argmax", "argmin",
+		"arsec", "arsech", "arsin", "arsinh", "artan", "artanh", "asec", "asech", "asin",
+		"asinh", "atan", "atanh", "autocorr", "bin", "bitwise_and", "bitwise_or", "bitwise_xor",
+		"cb", "cbrt", "choose", "comb", "cos", "cosh", "cot", "coth", "csc", "csch", "cubic",
+		"cubicc", "deg", "deriv", "det", "dfact", "diff", "div", "eq", "exp", "exp2", "expm1",
+		"fact", "fcmp", "fft", "floordiv", "frexp", "gamma", "gamma_inc", "gamma_inc_P",
+		"gamma_inc_Q", "gammainc", "gammaincp", "gammaincq", "gammainv", "gammastar", "gcd",
+		"hex", "hypot", "ifft", "integral", "kurt", "kurtosis", "lag1", "lcm", "ldexp", "ln",
+		"ln1p", "ln2", "lnBeta", "lnchoose", "lncomb", "lndet", "lndfact", "lnfact", "lngamma",
+		"lnperm", "lnpermute", "lnpoch", "log", "log10", "log1p", "log1pm", "log2", "logabs",
+		"logn", "lshift", "max", "max_index", "mean", "median", "min", "min_index", "mod",
+		"mul", "neg", "num", "perm", "permute", "poch", "pochrel", "pow", "quad", "quadc",
+		"rad", "rand", "rshift", "sd", "sec", "sech", "sin", "sinh", "skew", "solve", "sqr",
+		"sqrt", "std", "stdev", "sub", "tan", "tanh", "taylorcoeff", "tss", "var", "variance",
+		"|"
     };
 
     BINARY_SEARCH_INDEX_OF(names, numFunctions)
@@ -62,7 +68,7 @@ namespace Functions {
 
 // Declarations
 typedef expression(*FunctionConstructor)(int functionIndex, const expression arg);
-namespace functions{
+namespace Functions{
     #define DECLARE_FUNCTION_EXPRESSION(name) \
         expression make_fe_##name(int functionIndex, const expression arg);
 

@@ -98,7 +98,7 @@ namespace Function {
             std::string varStr = "x";
             if (var != NONE){
                 if (var != VAR){
-                    throw Exception("integral expected second argument to be a variable. Got: ", a, ". x = ", x);
+                    throw Exception("integral expected second argument to be a variable. Got: ", a, ". var = ", var);
                 }
                 varStr = var->repr();
             }

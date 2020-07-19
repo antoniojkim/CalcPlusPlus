@@ -19,6 +19,11 @@ namespace Function {
         StatisticsExpression(int functionIndex, expression arg, StatsFunction f):
             FunctionExpression(functionIndex, arg, {{"a", EmptyVarArgs}}), f{f} {}
 
+
+        expression eval(const Variables& vars = emptyVars) override {
+            return NumExpression::construct(value(vars));
+        }
+
         double value(const Variables& vars = emptyVars) const override {
             auto array = arg->at(1)->eval(vars)->array();
             return f(array.data(), 1, array.size());
@@ -39,17 +44,20 @@ namespace Function {
             // Signature: (a..., ddof=1)
             {"a", EmptyVarArgs}, {"ddof", NumExpression::construct(1)}
         }) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            return NumExpression::construct(value(vars));
+        }
         double value(const Variables& vars = emptyVars) const override {
             auto array = arg->at(1)->eval(vars)->array();
             double ddof = arg->at(2)->value(vars);
             if (ddof < 1 || trunc(ddof) != ddof){
                 throw Exception("Variance expected an integer ddof >= 1. Got: ", ddof);
             }
-            if (trunc(ddof) == 1){
-                return gsl_stats_variance(array.data(), 1, array.size());
-            }
             double N = array.size();
-            return gsl_stats_tss(array.data(), 1, array.size()) / (N - ddof);
+            if (trunc(ddof) == 1){
+                return gsl_stats_variance(array.data(), 1, N);
+            }
+            return gsl_stats_tss(array.data(), 1, N) / (N - ddof);
         }
     };
     MAKE_FUNCTION_EXPRESSION(var)
@@ -60,17 +68,20 @@ namespace Function {
             // Signature: (a..., ddof=1)
             {"a", EmptyVarArgs}, {"ddof", NumExpression::construct(1)}
         }) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            return NumExpression::construct(value(vars));
+        }
         double value(const Variables& vars = emptyVars) const override {
             auto array = arg->at(1)->eval(vars)->array();
             double ddof = arg->at(2)->value(vars);
             if (ddof < 1 || trunc(ddof) != ddof){
                 throw Exception("Standard Deviation expected an integer ddof >= 1. Got: ", ddof);
             }
-            if (trunc(ddof) == 1){
-                return gsl_stats_sd(array.data(), 1, array.size());
-            }
             double N = array.size();
-            return std::sqrt(gsl_stats_tss(array.data(), 1, array.size()) / (N - ddof));
+            if (trunc(ddof) == 1){
+                return gsl_stats_sd(array.data(), 1, N);
+            }
+            return std::sqrt(gsl_stats_tss(array.data(), 1, N) / (N - ddof));
         }
     };
     MAKE_FUNCTION_EXPRESSION(sd)
@@ -97,11 +108,50 @@ namespace Function {
     MAKE_STATS_EXPRESSION(min, gsl_stats_min)
 
     // @Function argmax: max_index
-    MAKE_STATS_EXPRESSION(argmax, gsl_stats_max_index)
+    struct argmax: public FunctionExpression {
+        argmax(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
+            // Signature: (a...)
+            {"a", EmptyVarArgs}
+        }) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            return NumExpression::construct(value(vars));
+        }
+        double value(const Variables& vars = emptyVars) const override {
+            auto array = arg->at(1)->eval(vars)->array();
+            return gsl_stats_max_index(array.data(), 1, array.size());
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(argmax)
 
     // @Function argmin: min_index
-    MAKE_STATS_EXPRESSION(argmin, gsl_stats_min_index)
+    struct argmin: public FunctionExpression {
+        argmin(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
+            // Signature: (a...)
+            {"a", EmptyVarArgs}
+        }) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            return NumExpression::construct(value(vars));
+        }
+        double value(const Variables& vars = emptyVars) const override {
+            auto array = arg->at(1)->eval(vars)->array();
+            return gsl_stats_min_index(array.data(), 1, array.size());
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(argmin)
 
     // @Function median
-    MAKE_STATS_EXPRESSION(median, gsl_stats_median)
+    struct median: public FunctionExpression {
+        median(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
+            // Signature: (a...)
+            {"a", EmptyVarArgs}
+        }) {}
+        expression eval(const Variables& vars = emptyVars) override {
+            return NumExpression::construct(value(vars));
+        }
+        double value(const Variables& vars = emptyVars) const override {
+            auto array = arg->at(1)->eval(vars)->array();
+            return gsl_stats_median(array.data(), 1, array.size());
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(median)
 }

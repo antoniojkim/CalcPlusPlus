@@ -5,8 +5,6 @@
 
 #include "Functions.h"
 
-using namespace Function;
-
 namespace Functions {
 
 	FunctionConstructor functionConstructors[Functions::numFunctions] = {

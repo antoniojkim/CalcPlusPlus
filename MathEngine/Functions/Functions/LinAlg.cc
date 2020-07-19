@@ -110,6 +110,7 @@ namespace Function {
             }
             throw Exception("LU Factorization expects a matrix. Got: ", matrix);
         }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
     MAKE_FUNCTION_EXPRESSION(LU)
 
@@ -146,6 +147,7 @@ namespace Function {
             }
             throw Exception("LU Solve expects a (m, n) matrix and a (n) vector. Got: ", arg);
         }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
     MAKE_FUNCTION_EXPRESSION(LUsolve)
 
@@ -176,6 +178,7 @@ namespace Function {
             }
             throw Exception("Cholesky decomposition expects a matrix. Got: ", matrix);
         }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
     MAKE_FUNCTION_EXPRESSION(Cholesky)
 }

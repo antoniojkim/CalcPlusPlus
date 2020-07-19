@@ -5,7 +5,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_complex_math.h>
 
-#include "../../Functions/Operator.h"
+#include "../../Functions/Operators.h"
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
 #include "../ExpressionOperations.h"
@@ -22,7 +22,7 @@ OperatorFunctionExpression::OperatorFunctionExpression(int functionIndex, expres
     FunctionExpression(functionIndex, arg, {{"lhs", Empty}, {"rhs", Empty}}) {} // Signature: (lhs, rhs)
 
 
-std::ostream& OperatorFunctionExpression::print(std::ostream& out, const bool pretty = false) const {
+std::ostream& OperatorFunctionExpression::print(std::ostream& out, const bool pretty) const {
     if(!Functions::isOperator(functionIndex)){
         return out << repr(); arg->print(out, pretty) << endl;
     }

@@ -33,8 +33,8 @@ namespace Operators {
     inline int indexOf(const std::string& lexeme){
         return indexOf(lexeme.c_str());
     }
-    constexpr bool isOperator(Scanner::Type type){ return (int(type) - offset) >= 0; }
-    constexpr int getPrecedence(Scanner::Type type){ return std::abs(precedences[int(type) - offset]); }
-    constexpr bool isRightAssociative(Scanner::Type type){ return precedences[int(type) - offset] > 0; }
-    constexpr bool isSingleOperator(Scanner::Type type){ return singleOperators[int(type) - offset]; }
+    constexpr bool isOperator(int type){ return (int(type) - offset) >= 0; }
+    constexpr int getPrecedence(int type){ return std::abs(precedences[int(type) - offset]); }
+    constexpr bool isRightAssociative(int type){ return precedences[int(type) - offset] > 0; }
+    constexpr bool isSingleOperator(int type){ return singleOperators[int(type) - offset]; }
 }
