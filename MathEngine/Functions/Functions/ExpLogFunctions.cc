@@ -5,98 +5,120 @@
 #include "../../Expressions/Expression.h"
 #include "../../Expressions/ExpressionFunctions.h"
 #include "../../Expressions/ExpressionOperations.h"
+#include "../../Expressions/NullExpression.h"
 #include "../../Expressions/NumericalExpression.h"
 #include "../Functions.h"
 
 namespace Function {
-    // @Function exp(x)
-    namespace exp {
-        double (*value)(double) = std::exp;
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function exp
+    struct exp: public ValueFunctionExpression {
+        exp(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, std::exp, arg) {}
+        expression derivative(const std::string& var) {
             using ExpressionMath::exp;
-            auto x = args.next();
+            auto x = arg->at(1);
             return exp(x) * x->derivative(var);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(exp);
 
-    // @Function exp2(x)
-    namespace exp2 {
-        double (*value)(double) = std::exp2;
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function exp2
+    struct exp2: public ValueFunctionExpression {
+        exp2(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, std::exp2, arg) {}
+        expression derivative(const std::string& var) {
             using ExpressionMath::exp2;
-            auto x = args.next();
+            auto x = arg->at(1);
             return exp2(x) * M_LN2 * x->derivative(var);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(exp);
 
-    // @Function expm1(x)
-    namespace expm1 {
-        double (*value)(double) = std::expm1;
-        expression derivative(Function::Args& args, const std::string& var) {
+    // @Function expm1
+    struct expm1: public ValueFunctionExpression {
+        expm1(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, std::expm1, arg) {}
+        expression derivative(const std::string& var) {
             using ExpressionMath::expm1;
-            auto x = args.next();
+            auto x = arg->at(1);
             return expm1(x) * x->derivative(var);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(expm1);
 
-    // @Function ln(x)
-    namespace ln {
-        double (*value)(double) = std::log;
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+    // @Function ln
+    struct ln: public ValueFunctionExpression {
+        ln(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, std::log, arg) {}
+        expression derivative(const std::string& var) {
+            auto x = arg->at(1);
             return x->derivative(var) / x;
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(ln);
 
-    // @Function ln2(x): log2
-    namespace ln2 {
-        double (*value)(double) = std::log2;
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+    // @Function ln2: log2
+    struct ln2: public ValueFunctionExpression {
+        ln2(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, std::log2, arg) {}
+        expression derivative(const std::string& var) {
+            auto x = arg->at(1);
             return x->derivative(var) / (x * M_LN2);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(ln2);
 
-    // @Function ln1p(x): log1p
-    namespace ln1p {
-        double (*value)(double) = std::log1p;
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+    // @Function ln1p: log1p
+    struct ln1p: public ValueFunctionExpression {
+        ln1p(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, std::log1p, arg) {}
+        expression derivative(const std::string& var) {
+            auto x = arg->at(1);
             return x->derivative(var) / (x + 1);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(ln1p);
 
-    // @Function log(x): log10
-    namespace log {
-        double (*value)(double) = std::log10;
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto x = args.next();
+    // @Function log: log10
+    struct log: public ValueFunctionExpression {
+        log(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, std::log10, arg) {}
+        expression derivative(const std::string& var) {
+            auto x = arg->at(1);
             return x->derivative(var) / (x * M_LN10);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(log);
 
-    // @Function log1pm(x)
-    namespace log1pm {
-        double (*value)(double) = gsl_sf_log_1plusx_mx;
-    }
+    // @Function log1pm
+    struct log1pm: public ValueFunctionExpression {
+        log1pm(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, gsl_sf_log_1plusx_mx, arg) {}
+    };
+    MAKE_FUNCTION_EXPRESSION(log1pm);
 
-    // @Function logabs(x)
-    namespace logabs {
-        double (*value)(double) = gsl_sf_log_abs;
-    }
+    // @Function logabs
+    struct logabs: public ValueFunctionExpression {
+        logabs(int functionIndex, expression arg):
+            ValueFunctionExpression(functionIndex, gsl_sf_log_abs, arg) {}
+    };
+    MAKE_FUNCTION_EXPRESSION(logabs);
 
-    // @Function logn(a, b)
-    namespace logn {
-        expression eval(Function::Args& args) {
-            auto a = args.next();
-            auto b = args.next();
-            return NumExpression::construct(std::log(a->value()) / std::log(b->value()));
+    // @Function logn
+    struct logn: public FunctionExpression {
+        logn(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"a", Empty}, {"b", Empty}}) {}  // Signature: (a, b)
+        double value(const Variables& vars = emptyVars) const override {
+            double a = arg->at(1)->value(vars);
+            double b = arg->at(2)->value(vars);
+            return std::log(a) / std::log(b);
         }
-        expression derivative(Function::Args& args, const std::string& var) {
+        expression derivative(const std::string& var) {
             using ExpressionMath::ln;
-            auto a = args.next();
-            auto b = args.next();
+            auto a = arg->at(1);
+            auto b = arg->at(2);
             return a->derivative(var) / (a * ln(b));
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(logn);
 }

@@ -8,8 +8,9 @@
 
 #include "../../Expressions/Expression.h"
 #include "../../Expressions/ExpressionOperations.h"
-#include "../../Expressions/InvalidExpression.h"
+#include "../../Expressions/FunctionExpression.h"
 #include "../../Expressions/MatrixExpression.h"
+#include "../../Expressions/NullExpression.h"
 #include "../../Expressions/TupleExpression.h"
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
@@ -31,11 +32,13 @@ inline std::unique_ptr<double[]> make_complex_packed_array(size_t n){
 }
 
 namespace Function {
-    // @Function fft(m)
-    namespace fft {
-        expression eval(Function::Args& args) {
+    // @Function fft
+    struct fft: public FunctionExpression {
+        fft(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = args.next();
+            auto matrix = arg->at(1)->eval(vars);
             if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
                 size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
@@ -77,13 +80,17 @@ namespace Function {
             }
             throw Exception("FFT expected 1D Matrix. Got: ", matrix);
         }
-    }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
+    };
+    MAKE_FUNCTION_EXPRESSION(fft);
 
-    // @Function ifft(m)
-    namespace ifft {
-        expression eval(Function::Args& args) {
+    // @Function ifft
+    struct ifft: public FunctionExpression {
+        ifft(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = args.next();
+            auto matrix = arg->at(1)->eval(vars);
             if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
                 size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
@@ -125,5 +132,7 @@ namespace Function {
             }
             throw Exception("IFFT expected 1D Matrix. Got: ", matrix);
         }
-    }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
+    };
+    MAKE_FUNCTION_EXPRESSION(ifft);
 }

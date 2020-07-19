@@ -9,6 +9,7 @@
 #include "../../Utils/Exception.h"
 #include "../ExpressionOperations.h"
 #include "../FunctionExpression.h"
+#include "../NullExpression.h"
 #include "../NumericalExpression.h"
 
 using namespace std;
@@ -16,10 +17,7 @@ using namespace Scanner;
 
 
 ValueFunctionExpression::ValueFunctionExpression(int functionIndex, ValueFunction f, expression arg):
-    FunctionExpression(functionIndex, arg, 1), f{f} {}
-
-ValueFunctionExpression::ValueFunctionExpression(int functionIndex, ValueFunction f, expression arg):
-    FunctionExpression(functionIndex, arg, 1), f{f} {}
+    FunctionExpression(functionIndex, arg, {{"x", Empty}}), f{f} {} // Signature: (x)
 
 
 expression ValueFunctionExpression::construct(int functionIndex, ValueFunction f, const expression arg){

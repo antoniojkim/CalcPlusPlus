@@ -17,67 +17,99 @@ using namespace std;
 using namespace Scanner;
 
 
-FunctionExpression::FunctionExpression(int functionIndex, expression arg, int numPositional, bool hasVarArgs, std::initializer_list<std::pair<std::string, expression>> defaultArgs):
+FunctionExpression::FunctionExpression(int functionIndex, expression arg, std::initializer_list<std::pair<std::string, expression>> signature):
     Expression(FUNCTION), functionIndex(functionIndex) {
     // Parse args
-    int numArgs = numPositional + (hasVarArgs ? 1 : 0) + defaultArgs.size();
-    if (arg->size() < numPositional){
-        throw Exception("Not enough many arguments given for ", repr(), ": ", arg);
+    if (arg != TUPLE){
+        if (signature.size() == 1){
+            this->arg = arg;
+            return;
+        }
+        throw Exception(repr(), " expected a tuple. Got: ", arg);
     }
-    if (arg->size() > numArgs){
-        throw Exception("Too many arguments given for ", repr(), ": ", arg);
+    if(arg->size() == signature.size()){
+        bool hasVar = false;
+        for (auto e : *arg){
+            if (e == VAR){
+                hasVar = true;
+                break;
+            }
+        }
+        if (!hasVar){ // Most cases should go here
+            this->arg = arg;
+            return;
+        }
     }
 
-    if (arg != TUPLE){
-        if (numArgs == 1){
-            this->arg = arg;
+    std::vector<expression> positionalArgs;
+    positionalArgs.reserve(arg->size());
+
+    int eIndex = 0;
+
+    // Get Positional Args
+    while(eIndex < arg->size() && arg->at(eIndex) != VAR){
+        positionalArgs.emplace_back(arg->at(eIndex++));
+    }
+
+    // Get Keyword Args
+    std::map<std::string, expression> kwargs;
+    while(eIndex < arg->size()){
+        if (arg->at(eIndex) != VAR){
+            throw Exception("Positional argument follows keyword argument");
+        }
+        auto name = arg->at(eIndex)->repr();
+        if (kwargs.count(name) > 0){
+            throw Exception("Keyword argument repeated: ", arg);
+        }
+        kwargs[name] = arg->at(eIndex++)->at(1);
+    }
+
+    std::vector<expression> args;
+    args.reserve(signature.size());
+
+    int pIndex = 0;
+    auto s = signature.begin();
+    auto end = signature.end();
+    while (s != end && s->second == EMPTY && !positionalArgs.empty()){
+        if (kwargs.count(s->first) > 0){
+            throw Exception(repr(), " got multiple value for argument '", s->first, "'");
+        }
+        args.emplace_back(positionalArgs.at(0));
+        positionalArgs.erase(positionalArgs.begin());
+        ++s;
+    }
+
+    if (s->second == VARARGS){  // Move remaining positional args into varargs
+        args.emplace_back(TupleExpression::construct(std::move(positionalArgs)));
+        ++s;
+    }
+    else {
+        for(auto p: positionalArgs){
+            if (kwargs.count(s->first) > 0){
+                throw Exception(repr(), " got multiple value for argument '", s->first, "'");
+            }
+            args.emplace_back(p);
+            ++s;
+        }
+    }
+
+    while (s != end){
+        if (s->second == EMPTY){
+            throw Exception(repr(), ": non-default argument follows default argument");
+        }
+        if (s->second == VARARGS){
+            throw Exception(repr(), ": varargs argument follows named argument");
+        }
+        if (kwargs.count(s->first) > 0){
+            args.emplace_back(kwargs.at(s->first));
         }
         else{
-            throw Exception(repr(), " expected a tuple. Got: ", arg);
+            args.emplace_back(s->second);
         }
-    }
-    else if(arg->size() == numPositional && !hasVarArgs && defaultArgs.size() == 0){
-        this->arg = arg;
-    }
-    else{
-        std::vector<expression> args;
-        args.reserve(numArgs);
-
-        int eIndex = 0;
-        for (int i = 0; i < numPositional; ++i){
-            args.emplace_back(arg->at(eIndex++));
-        }
-        if (hasVarArgs){
-            std::vector<expression> vararg;
-            vararg.reserve(arg->size() - eIndex);
-            while(eIndex < arg->size() && arg->at(eIndex) != VAR){
-                vararg.emplace_back(arg->at(eIndex++));
-            }
-            args.emplace_back(TupleExpression::construct(std::move(vararg)));
-        }
-        std::map<std::string, expression> kwargs;
-        while(eIndex < arg->size()){
-            if (arg->at(eIndex) != VAR){
-                throw Exception("Positional argument follows keyword argument");
-            }
-            auto name = arg->at(eIndex)->repr();
-            if (kwargs.count(name) > 0){
-                throw Exception("Keyword argument repeated: ", arg);
-            }
-            kwargs[name] = arg->at(eIndex++)->at(0);
-        }
-        for (auto& defaultArg : defaultArgs){
-            if (kwargs.count(defaultArg.first) > 0){
-                args.emplace_back(kwargs.at(defaultArg.first));
-            }
-            else{
-                args.emplace_back(defaultArg.second);
-            }
-        }
-
-        this->arg = TupleExpression::construct(std::move(args));
+        ++s;
     }
 
+    this->arg = TupleExpression::construct(std::move(args));
 }
 
 

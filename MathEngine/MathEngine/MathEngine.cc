@@ -49,7 +49,7 @@ expression MathEngine::eval(expression inputExpr){
 
         if (expr == VAR){
             string name = expr->repr();
-            if (expr->at(0) == NONE){
+            if (expr->at(1) == NONE){
                 if (variables.count(name) > 0){
                     variables.erase(name);
                     throw Exception("Deleted Variable: ", name);

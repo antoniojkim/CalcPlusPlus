@@ -15,9 +15,7 @@ class FunctionExpression: public Expression {
         FunctionExpression(
             int functionIndex,
             expression arg,
-            int numPositional,
-            bool hasVarArgs=false,
-            std::initializer_list<std::pair<std::string, expression>> defaultArgs={}
+            std::initializer_list<std::pair<std::string, expression>> signature={}
         );
 
     public:

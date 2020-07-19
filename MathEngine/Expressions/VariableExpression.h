@@ -42,3 +42,5 @@ class VarArgsExpression: public Expression {
         EXPRESSION_OVERRIDES
 
 };
+
+extern expression EmptyVarArgs;

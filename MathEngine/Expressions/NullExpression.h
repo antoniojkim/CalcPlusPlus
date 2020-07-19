@@ -14,3 +14,17 @@ class NullExpression: public Expression {
         EXPRESSION_OVERRIDES
 
 };
+
+extern expression None;
+
+class EmptyExpression: public Expression {
+    EmptyExpression();
+
+    public:
+        static expression construct();
+
+        EXPRESSION_OVERRIDES
+
+};
+
+extern expression Empty;

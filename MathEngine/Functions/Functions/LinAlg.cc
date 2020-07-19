@@ -9,18 +9,23 @@
 
 #include "../../Expressions/Expression.h"
 #include "../../Expressions/ExpressionOperations.h"
+#include "../../Expressions/FunctionExpression.h"
+#include "../../Expressions/NullExpression.h"
 #include "../../Expressions/MatrixExpression.h"
 #include "../../Expressions/NumericalExpression.h"
 #include "../../Expressions/TupleExpression.h"
+#include "../../Expressions/VariableExpression.h"
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
 
 namespace Function {
-    // @Function det(m)
-    namespace det {
-        expression eval(Function::Args& args) {
+    // @Function det
+    struct det: public FunctionExpression {
+        det(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = args.next();
+            auto matrix = arg->at(1)->eval(vars);
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -39,13 +44,17 @@ namespace Function {
             }
             throw Exception("det expected matrix. Got: ", matrix);
         }
-    }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
+    };
+    MAKE_FUNCTION_EXPRESSION(det);
 
-    // @Function lndet(m)
-    namespace lndet {
-        expression eval(Function::Args& args) {
+    // @Function lndet
+    struct lndet: public FunctionExpression {
+        lndet(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = args.next();
+            auto matrix = arg->at(1)->eval(vars);
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -64,13 +73,17 @@ namespace Function {
             }
             throw Exception("lndet expected matrix. Got: ", matrix);
         }
-    }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
+    };
+    MAKE_FUNCTION_EXPRESSION(lndet);
 
-    // @Function LU(m)
-    namespace LU {
-        expression eval(Function::Args& args) {
+    // @Function LU
+    struct LU: public FunctionExpression {
+        LU(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = args.next();
+            auto matrix = arg->at(1)->eval(vars);
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -78,9 +91,9 @@ namespace Function {
                     int signum;
                     gsl_linalg_complex_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
                     return TupleExpression::construct({
-                        MatrixExpression::construct(gsl_mat),
-                        MatrixExpression::construct(gsl_perm),
-                        NumExpression::construct(signum)
+                        VariableExpression::construct("LU", MatrixExpression::construct(gsl_mat)),
+                        VariableExpression::construct("P", MatrixExpression::construct(gsl_perm)),
+                        VariableExpression::construct("sign", NumExpression::construct(signum))
                     });
                 }
                 else{
@@ -89,22 +102,28 @@ namespace Function {
                     int signum;
                     gsl_linalg_LU_decomp(gsl_mat.get(), gsl_perm.get(), &signum);
                     return TupleExpression::construct({
-                        MatrixExpression::construct(gsl_mat),
-                        MatrixExpression::construct(gsl_perm),
-                        NumExpression::construct(signum)
+                        VariableExpression::construct("LU", MatrixExpression::construct(gsl_mat)),
+                        VariableExpression::construct("P", MatrixExpression::construct(gsl_perm)),
+                        VariableExpression::construct("sign", NumExpression::construct(signum))
                     });
                 }
             }
             throw Exception("LU Factorization expects a matrix. Got: ", matrix);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(LU);
 
-    // @Function LUsolve(A, b): solve
-    namespace LUsolve {
-        expression eval(Function::Args& args) {
+    // @Function LUsolve: solve
+    struct LUsolve: public FunctionExpression {
+        LUsolve(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {
+                // Signature: (A, b)
+                {"A", Empty}, {"b", Empty}
+            }) {}
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto A = args.next();
-            auto b = args.next();
+            auto A = arg->at(1)->eval(vars);
+            auto b = arg->at(2)->eval(vars);
             if (A == MATRIX && b == MATRIX && (A->shape(0) == b->size())){
                 if (A->isComplex() || b->isComplex()){
                     auto LU = to_gsl_matrix_complex(A);
@@ -125,15 +144,18 @@ namespace Function {
                     return MatrixExpression::construct(x);
                 }
             }
-            throw Exception("LU Solve expects a (m, n) matrix and a (n) vector. Got: ", args);
+            throw Exception("LU Solve expects a (m, n) matrix and a (n) vector. Got: ", arg);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(LUsolve);
 
-    // @Function Cholesky(m)
-    namespace Cholesky {
-        expression eval(Function::Args& args) {
+    // @Function Cholesky: Chol
+    struct Cholesky: public FunctionExpression {
+        Cholesky(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = args.next();
+            auto matrix = arg->at(1)->eval(vars);
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -154,5 +176,6 @@ namespace Function {
             }
             throw Exception("Cholesky decomposition expects a matrix. Got: ", matrix);
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(Cholesky);
 }

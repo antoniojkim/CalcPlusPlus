@@ -1,5 +1,6 @@
 tokens:
     NONE:
+    EMPTY:
     HEX:
     BIN:
     NUM:

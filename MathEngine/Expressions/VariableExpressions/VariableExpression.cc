@@ -87,16 +87,17 @@ double VariableExpression::value(const Variables& vars) const {
 
 bool VariableExpression::equals(expression e, double precision) const {
     if (e == VAR){
-        return name == e->repr() && ((!var && !e->at(0)) || (var && e->at(0) && var->equals(e->at(0), precision)));
+        return name == e->repr() && ((!var && !e->at(1)) || (var && e->at(1) && var->equals(e->at(1), precision)));
     }
     return false;
 }
 
 expression VariableExpression::at(const int index) {
-    if (index == 0){
-        return var;
+    switch(index){
+        case 0: return copy();
+        case 1: return var;
+        default: throw Exception("VariableExpression::at: Index out of bounds: ", index);
     }
-    return nullptr;
 }
 
 std::ostream& VariableExpression::print(std::ostream& out, const bool pretty) const {

@@ -7,6 +7,7 @@
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
 #include "../ExpressionOperations.h"
+#include "../NullExpression.h"
 #include "../NumericalExpression.h"
 #include "../UnitExpression.h"
 #include "../TupleExpression.h"
@@ -24,12 +25,13 @@ expression VarArgsExpression::construct(){
 }
 
 expression VarArgsExpression::construct(expression var){
-    if (var != VAR){
+    if (var != VAR && var != EMPTY){
         throw Exception("VarArgs Expression expected a variable. Got: ", var);
     }
     return shared_ptr<VarArgsExpression>(new VarArgsExpression(var));
 }
 
+extern expression EmptyVarArgs = VarArgsExpression::construct(Empty);
 
 bool VarArgsExpression::isComplex() const { return var->isComplex(); }
 bool VarArgsExpression::isEvaluable(const Variables& vars) const {
@@ -47,10 +49,11 @@ bool VarArgsExpression::equals(expression e, double precision) const {
 }
 
 expression VarArgsExpression::at(const int index) {
-    if (index == 0){
-        return var;
+    switch(index){
+        case 0: return copy();
+        case 1: return var;
+        default: throw Exception("VarArgsExpression::at: Index out of bounds: ", index);
     }
-    return nullptr;
 }
 
 std::ostream& VarArgsExpression::print(std::ostream& out, const bool pretty) const {
