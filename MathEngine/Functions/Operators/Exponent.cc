@@ -16,14 +16,13 @@
 namespace Function {
 
     // @Operator pow: ^ **
-    namespace pow {
-        expression matrix_inverse(expression matrix);
-        expression matrix_transpose(expression matrix);
+    struct pow: public OperatorFunctionExpression {
+        pow(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
-        expression eval(Function::Args& args) {
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN, Scanner::VAR;
-            auto l = args.next();
-            auto r = args.next();
+            auto l = arg->at(1)->eval(vars);
+            auto r = arg->at(2)->eval(vars);
             if (l == MATRIX){
                 if (r == VAR && r->repr() == "T"){
                     return matrix_transpose(l);
@@ -44,21 +43,26 @@ namespace Function {
             }
             return NumExpression::construct(std::pow(l->value(), r->value()));
         }
-        expression derivative(Function::Args& args, const std::string& var) {
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
+            return std::pow(l, r);
+        }
+
+        expression derivative(const std::string& var) {
             using ExpressionMath::ln;
-            auto l = args.next();
-            auto r = args.next();
-            if (r->isEvaluable()){
+            auto l = arg->at(1);
+            auto r = arg->at(2);
+            if (r->isNumber()){
                 return (l ^ (r - 1)) * (l->derivative(var) * r);
             }
-            else if (l->isEvaluable()){
+            else if (l->isNumber()){
                 return (l ^ r) *  ln(l) * r->derivative(var);
             }
             else{
                 return (l ^ (r - 1)) * (l->derivative(var) * r + l * ln(l) * r->derivative(var));
             }
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION('^')
 
 
         expression matrix_inverse(expression matrix) {
@@ -111,6 +115,7 @@ namespace Function {
                 }
             }
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(pow)
 
 }

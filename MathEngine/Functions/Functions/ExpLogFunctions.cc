@@ -20,7 +20,7 @@ namespace Function {
             return exp(x) * x->derivative(var);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(exp);
+    MAKE_FUNCTION_EXPRESSION(exp)
 
     // @Function exp2
     struct exp2: public ValueFunctionExpression {
@@ -32,7 +32,7 @@ namespace Function {
             return exp2(x) * M_LN2 * x->derivative(var);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(exp);
+    MAKE_FUNCTION_EXPRESSION(exp2)
 
     // @Function expm1
     struct expm1: public ValueFunctionExpression {
@@ -44,7 +44,7 @@ namespace Function {
             return expm1(x) * x->derivative(var);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(expm1);
+    MAKE_FUNCTION_EXPRESSION(expm1)
 
     // @Function ln
     struct ln: public ValueFunctionExpression {
@@ -55,7 +55,7 @@ namespace Function {
             return x->derivative(var) / x;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(ln);
+    MAKE_FUNCTION_EXPRESSION(ln)
 
     // @Function ln2: log2
     struct ln2: public ValueFunctionExpression {
@@ -66,7 +66,7 @@ namespace Function {
             return x->derivative(var) / (x * M_LN2);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(ln2);
+    MAKE_FUNCTION_EXPRESSION(ln2)
 
     // @Function ln1p: log1p
     struct ln1p: public ValueFunctionExpression {
@@ -77,7 +77,7 @@ namespace Function {
             return x->derivative(var) / (x + 1);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(ln1p);
+    MAKE_FUNCTION_EXPRESSION(ln1p)
 
     // @Function log: log10
     struct log: public ValueFunctionExpression {
@@ -88,7 +88,7 @@ namespace Function {
             return x->derivative(var) / (x * M_LN10);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(log);
+    MAKE_FUNCTION_EXPRESSION(log)
 
     // @Function log1pm
     MAKE_VALUEFUNCTION_EXPRESSION(log1pm, gsl_sf_log_1plusx_mx)
@@ -112,5 +112,5 @@ namespace Function {
             return a->derivative(var) / (a * ln(b));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(logn);
+    MAKE_FUNCTION_EXPRESSION(logn)
 }

@@ -40,7 +40,7 @@ namespace Function {
             return -x->derivative(var);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(neg);
+    MAKE_FUNCTION_EXPRESSION(neg)
 
 
     // @Function frexp
@@ -55,7 +55,7 @@ namespace Function {
         }
         double value(const Variables& vars = emptyVars) const { return GSL_NAN; }
     };
-    MAKE_FUNCTION_EXPRESSION(frexp);
+    MAKE_FUNCTION_EXPRESSION(frexp)
 
     // @Function num
     struct num: public FunctionExpression {
@@ -66,7 +66,7 @@ namespace Function {
             return x;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(num);
+    MAKE_FUNCTION_EXPRESSION(num)
 
     // @Function hex
     struct hex: public FunctionExpression {
@@ -87,7 +87,7 @@ namespace Function {
             return x;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(hex);
+    MAKE_FUNCTION_EXPRESSION(hex)
 
     // @Function bin
     struct bin: public FunctionExpression {
@@ -108,7 +108,7 @@ namespace Function {
             return x;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(bin);
+    MAKE_FUNCTION_EXPRESSION(bin)
 
     // @Function abs
     struct abs: public ValueFunctionExpression {
@@ -119,7 +119,7 @@ namespace Function {
             return x / abs(x) * x->derivative(var);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(abs);
+    MAKE_FUNCTION_EXPRESSION(abs)
 
     // @Function sqr
     struct sqr: public ValueFunctionExpression {
@@ -133,7 +133,7 @@ namespace Function {
             return out << "("; x->print(out, pretty) << ")²";
         }
     };
-    MAKE_FUNCTION_EXPRESSION(sqr);
+    MAKE_FUNCTION_EXPRESSION(sqr)
 
     // @Function sqrt
     struct sqrt: public ValueFunctionExpression {
@@ -148,7 +148,7 @@ namespace Function {
             return out << "√("; x->print(out, pretty) << ")";
         }
     };
-    MAKE_FUNCTION_EXPRESSION(sqrt);
+    MAKE_FUNCTION_EXPRESSION(sqrt)
 
     // @Function cb
     struct cb: public ValueFunctionExpression {
@@ -163,7 +163,7 @@ namespace Function {
             return out << "("; x->print(out, pretty) << ")³";
         }
     };
-    MAKE_FUNCTION_EXPRESSION(cb);
+    MAKE_FUNCTION_EXPRESSION(cb)
 
     // @Function cbrt
     struct cbrt: public ValueFunctionExpression {
@@ -174,7 +174,7 @@ namespace Function {
             return (1.0 / 3) / sqr(cbrt(x)) * x->derivative(var);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(cbrt);
+    MAKE_FUNCTION_EXPRESSION(cbrt)
 
     // @Function rad
     struct rad: public ValueFunctionExpression {
@@ -184,7 +184,7 @@ namespace Function {
             return x * M_PI / 180;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(rad);
+    MAKE_FUNCTION_EXPRESSION(rad)
 
     // @Function deg
     struct deg: public ValueFunctionExpression {
@@ -194,7 +194,7 @@ namespace Function {
             return x * 180 / M_PI;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(deg);
+    MAKE_FUNCTION_EXPRESSION(deg)
 
     // @Function hypot
     struct hypot: public FunctionExpression {
@@ -217,7 +217,7 @@ namespace Function {
             }
         }
     };
-    MAKE_FUNCTION_EXPRESSION(hypot);
+    MAKE_FUNCTION_EXPRESSION(hypot)
 
     // @Function ldexp
     struct ldexp: public FunctionExpression {
@@ -232,7 +232,7 @@ namespace Function {
             throw Exception("ldexp expected an integer for 'e'. Got: ", e);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(ldexp);
+    MAKE_FUNCTION_EXPRESSION(ldexp)
 
     // @Function fcmp
     struct fcmp: public FunctionExpression {
@@ -248,7 +248,7 @@ namespace Function {
             return gsl_fcmp(x, y, tol);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(fcmp);
+    MAKE_FUNCTION_EXPRESSION(fcmp)
 
     // @Function gcd
     struct gcd: public FunctionExpression {
@@ -268,7 +268,7 @@ namespace Function {
             return g;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(gcd);
+    MAKE_FUNCTION_EXPRESSION(gcd)
 
     // @Function lcm
     struct lcm: public FunctionExpression {
@@ -288,5 +288,5 @@ namespace Function {
             return l;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(lcm);
+    MAKE_FUNCTION_EXPRESSION(lcm)
 }

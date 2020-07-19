@@ -21,7 +21,7 @@ namespace Function {
             return cos(x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(sin);
+    MAKE_FUNCTION_EXPRESSION(sin)
 
     // @Function cos(x)
     struct cos: public ValueFunctionExpression {
@@ -32,7 +32,7 @@ namespace Function {
             return -cos(x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(cos);
+    MAKE_FUNCTION_EXPRESSION(cos)
 
     // @Function tan(x)
     struct tan: public ValueFunctionExpression {
@@ -43,7 +43,7 @@ namespace Function {
             return sec(x) ^ 2;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(tan);
+    MAKE_FUNCTION_EXPRESSION(tan)
 
     // @Function asin: arcsin arsin
     struct asin: public ValueFunctionExpression {
@@ -54,7 +54,7 @@ namespace Function {
             return 1 / sqrt(1 - (x ^ 2));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(tan);
+    MAKE_FUNCTION_EXPRESSION(tan)
 
     // @Function acos: arccos arcos
     struct acos: public ValueFunctionExpression {
@@ -65,7 +65,7 @@ namespace Function {
             return -1 / sqrt(1 - (x ^ 2));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(tan);
+    MAKE_FUNCTION_EXPRESSION(tan)
 
     // @Function atan: arctan artan
     struct atan: public ValueFunctionExpression {
@@ -75,7 +75,7 @@ namespace Function {
             return 1 / (1 + (x ^ 2));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(atan);
+    MAKE_FUNCTION_EXPRESSION(atan)
 
     // @Function sinh(x)
     struct sinh: public ValueFunctionExpression {
@@ -86,7 +86,7 @@ namespace Function {
             return cosh(x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(sinh);
+    MAKE_FUNCTION_EXPRESSION(sinh)
 
     // @Function cosh(x)
     struct cosh: public ValueFunctionExpression {
@@ -97,7 +97,7 @@ namespace Function {
             return sinh(x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(cosh);
+    MAKE_FUNCTION_EXPRESSION(cosh)
 
     // @Function tanh(x)
     struct tanh: public ValueFunctionExpression {
@@ -108,7 +108,7 @@ namespace Function {
             return sech(x) ^ 2;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(tanh);
+    MAKE_FUNCTION_EXPRESSION(tanh)
 
     // @Function asinh: arcsinh arsinh
     struct asinh: public ValueFunctionExpression {
@@ -119,7 +119,7 @@ namespace Function {
             return 1 / sqrt((x ^ 2) + 1);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(asinh);
+    MAKE_FUNCTION_EXPRESSION(asinh)
 
     // @Function acosh: arccosh arcosh
     struct acosh: public ValueFunctionExpression {
@@ -130,7 +130,7 @@ namespace Function {
             return 1 / sqrt((x ^ 2) - 1);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(acosh);
+    MAKE_FUNCTION_EXPRESSION(acosh)
 
     // @Function atanh: arctanh artanh
     struct atanh: public ValueFunctionExpression {
@@ -140,7 +140,7 @@ namespace Function {
             return 1 / (1 - (x ^ 2));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(atanh);
+    MAKE_FUNCTION_EXPRESSION(atanh)
 
     // @Function csc(x)
     struct csc: public ValueFunctionExpression {
@@ -155,7 +155,7 @@ namespace Function {
             return -cot(x) * csc(x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(csc);
+    MAKE_FUNCTION_EXPRESSION(csc)
 
     // @Function sec(x)
     struct sec: public ValueFunctionExpression {
@@ -170,7 +170,7 @@ namespace Function {
             return -tan(x) * sec(x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(sec);
+    MAKE_FUNCTION_EXPRESSION(sec)
 
     // @Function cot(x)
     struct cot: public ValueFunctionExpression {
@@ -184,7 +184,7 @@ namespace Function {
             auto x = arg->at(1);
             return -(csc(x) ^ 2); }
     };
-    MAKE_FUNCTION_EXPRESSION(cot);
+    MAKE_FUNCTION_EXPRESSION(cot)
 
     // @Function acsc: arccsc arcsc
     struct acsc: public ValueFunctionExpression {
@@ -198,7 +198,7 @@ namespace Function {
             auto x = arg->at(1);
             return -1 / (abs(x) * sqrt((x ^ 2) - 1)); }
     };
-    MAKE_FUNCTION_EXPRESSION(acsc);
+    MAKE_FUNCTION_EXPRESSION(acsc)
 
     // @Function asec: arcsec arsec
     struct asec: public ValueFunctionExpression {
@@ -213,7 +213,7 @@ namespace Function {
             return 1 / (abs(x) * sqrt((x ^ 2) - 1));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(asec);
+    MAKE_FUNCTION_EXPRESSION(asec)
 
     // @Function acot: arccot arcot
     struct acot: public ValueFunctionExpression {
@@ -227,7 +227,7 @@ namespace Function {
             return -1 / (1 + (x ^ 2));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(acot);
+    MAKE_FUNCTION_EXPRESSION(acot)
 
     // @Function csch(x)
     struct csch: public ValueFunctionExpression {
@@ -242,7 +242,7 @@ namespace Function {
             return -coth(x) * csch(x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(csch);
+    MAKE_FUNCTION_EXPRESSION(csch)
 
     // @Function sech(x)
     struct sech: public ValueFunctionExpression {
@@ -257,7 +257,7 @@ namespace Function {
             return -tanh(x) * sech(x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(sech);
+    MAKE_FUNCTION_EXPRESSION(sech)
 
     // @Function coth(x)
     struct coth: public ValueFunctionExpression {
@@ -272,7 +272,7 @@ namespace Function {
             return -(csch(x) ^ 2);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(coth);
+    MAKE_FUNCTION_EXPRESSION(coth)
 
     // @Function acsch: arccsch arcsch
     struct acsch: public ValueFunctionExpression {
@@ -287,7 +287,7 @@ namespace Function {
             auto x = arg->at(1);
             return -1 / (abs(x) * sqrt((x ^ 2) - 1)); }
     };
-    MAKE_FUNCTION_EXPRESSION(acsch);
+    MAKE_FUNCTION_EXPRESSION(acsch)
 
     // @Function asech: arcsech arsech
     struct asech: public ValueFunctionExpression {
@@ -302,7 +302,7 @@ namespace Function {
             auto x = arg->at(1);
             return -1 / (abs(x) * sqrt(1 - (x ^ 2))); }
     };
-    MAKE_FUNCTION_EXPRESSION(asech);
+    MAKE_FUNCTION_EXPRESSION(asech)
 
     // @Function acoth: arccoth arcoth
     struct acoth: public ValueFunctionExpression {
@@ -317,5 +317,5 @@ namespace Function {
             return 1 / (1 - (x ^ 2));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(acoth);
+    MAKE_FUNCTION_EXPRESSION(acoth)
 }

@@ -15,13 +15,13 @@
 namespace Function {
 
     // @Operator sub: -
-    namespace sub {
-        expression matrix_sub(expression lhs, expression rhs);
+    struct sub: public OperatorFunctionExpression {
+        sub(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
-        expression eval(Function::Args& args) {
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args.next();
-            auto r = args.next();
+            auto l = arg->at(1)->eval(vars);
+            auto r = arg->at(2)->eval(vars);
             if (l == MATRIX || r == MATRIX){
                 return matrix_sub(l, r);
             }
@@ -36,17 +36,22 @@ namespace Function {
             }
             return NumExpression::construct(l->value() - r->value());
         }
-        expression simplify(Function::Args& args) {
-            auto l = args.next();
-            auto r = args.next();
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
             return l - r;
         }
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto l = args.next();
-            auto r = args.next();
+
+        expression simplify() {
+            auto l = arg->at(1);
+            auto r = arg->at(2);
+            return l - r;
+        }
+        expression derivative(const std::string& var) {
+            auto l = arg->at(1);
+            auto r = arg->at(2);
             return l->derivative(var) - r->derivative(var);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION('-')
 
         expression matrix_sub(expression lhs, expression rhs){
             using Scanner::MATRIX;
@@ -96,6 +101,7 @@ namespace Function {
             }
             throw Exception("Matrix subtraction requires at least one matrix operand.");
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(sub)
 
 }

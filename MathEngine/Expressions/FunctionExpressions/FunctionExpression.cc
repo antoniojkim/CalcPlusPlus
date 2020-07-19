@@ -150,7 +150,7 @@ bool FunctionExpression::isEvaluable(const Variables& vars) const {
 
 expression FunctionExpression::eval(const Variables& vars){
     if (!arg->isEvaluable()){
-        return ValueFunctionExpression::construct(functionIndex, f, arg->eval(vars));
+        return FunctionExpression::construct(functionIndex, arg->eval(vars));
     }
     return NumExpression::construct(value(vars));
 }

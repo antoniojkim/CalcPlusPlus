@@ -16,13 +16,13 @@
 namespace Function {
 
     // @Operator div: /
-    namespace div {
-        expression matrix_div(expression lhs, expression rhs);
+    struct div: public OperatorFunctionExpression {
+        div(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
-        expression eval(Function::Args& args) {
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args.next();
-            auto r = args.next();
+            auto l = arg->at(1)->eval(vars);
+            auto r = arg->at(2)->eval(vars);
             if (l == MATRIX || r == MATRIX){
                 return matrix_div(l, r);
             }
@@ -37,17 +37,22 @@ namespace Function {
             }
             return NumExpression::construct(l->value() / r->value());
         }
-        expression simplify(Function::Args& args) {
-            auto l = args.next();
-            auto r = args.next();
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
             return l / r;
         }
-        expression derivative(Function::Args& args, const std::string& var) {
-            auto l = args.next();
-            auto r = args.next();
+
+        expression simplify() {
+            auto l = arg->at(1);
+            auto r = arg->at(2);
+            return l / r;
+        }
+        expression derivative(const std::string& var) {
+            auto l = arg->at(1);
+            auto r = arg->at(2);
             return (l->derivative(var) * r - l * r->derivative(var)) / (r ^ 2);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION('/')
 
         expression matrix_div(expression lhs, expression rhs){
             using Scanner::MATRIX;
@@ -103,15 +108,18 @@ namespace Function {
             }
             throw Exception("Matrix division requires at least one matrix operand.");
         }
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(div)
 
 
     // @Operator mod: %
-    namespace mod {
-        expression eval(Function::Args& args) {
+    struct mod: public OperatorFunctionExpression {
+        mod(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
+
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args.next();
-            auto r = args.next();
+            auto l = arg->at(1)->eval(vars);
+            auto r = arg->at(2)->eval(vars);
             if (l->isComplex() || r->isComplex()){
                 throw Exception("Arithmetic Error: cannot modulo divide complex numbers.");
             }
@@ -123,16 +131,23 @@ namespace Function {
             }
             return NumExpression::construct(std::fmod(l->value(), r->value()));
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION('%')
-    }
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
+            return std::fmod(l, r);
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(mod)
 
 
     // @Operator floordiv: //
-    namespace floordiv {
-        expression eval(Function::Args& args) {
+    struct floordiv: public OperatorFunctionExpression {
+        floordiv(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
+
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = args.next();
-            auto r = args.next();
+            auto l = arg->at(1)->eval(vars);
+            auto r = arg->at(2)->eval(vars);
             if (l->isComplex() || r->isComplex()){
                 throw Exception("Arithmetic Error: cannot floor divide complex numbers.");
             }
@@ -146,7 +161,14 @@ namespace Function {
             }
             return NumExpression::construct(intpart);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION("//")
-    }
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
+            double intpart;
+            std::modf(l / r, &intpart);
+            return intpart;
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(floordiv)
 
 }

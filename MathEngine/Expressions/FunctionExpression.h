@@ -62,3 +62,10 @@ class ValueFunctionExpression: public FunctionExpression {
     expression make_fe_##name(int functionIndex, expression arg){          \
         return ValueFunctionExpression::construct(functionIndex, f, arg);  \
     }
+
+struct OperatorFunctionExpression: public FunctionExpression {
+    OperatorFunctionExpression(int functionIndex, expression arg);
+
+    std::ostream& print(std::ostream& out, const bool pretty = false) const override;
+    std::ostream& postfix(std::ostream& out) const override;
+};

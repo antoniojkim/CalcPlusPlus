@@ -50,7 +50,7 @@ namespace Function {
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
-    MAKE_FUNCTION_EXPRESSION(quad);
+    MAKE_FUNCTION_EXPRESSION(quad)
 
     // @Function quadc
     struct quadc: public FunctionExpression {
@@ -80,7 +80,7 @@ namespace Function {
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
-    MAKE_FUNCTION_EXPRESSION(quadc);
+    MAKE_FUNCTION_EXPRESSION(quadc)
 
     // @Function cubic
     struct cubic: public FunctionExpression {
@@ -111,7 +111,7 @@ namespace Function {
             }
         }
     };
-    MAKE_FUNCTION_EXPRESSION(cubic);
+    MAKE_FUNCTION_EXPRESSION(cubic)
 
     // @Function cubicc
     struct cubicc: public FunctionExpression {
@@ -133,5 +133,5 @@ namespace Function {
             });
         }
     };
-    MAKE_FUNCTION_EXPRESSION(cubicc);
+    MAKE_FUNCTION_EXPRESSION(cubicc)
 }

@@ -57,7 +57,7 @@ namespace Function {
             throw Exception("Error encountered when computing numerical derivative. Args: ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(deriv);
+    MAKE_FUNCTION_EXPRESSION(deriv)
 
     // @Function diff
     struct diff: public FunctionExpression {
@@ -80,7 +80,7 @@ namespace Function {
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
-    MAKE_FUNCTION_EXPRESSION(diff);
+    MAKE_FUNCTION_EXPRESSION(diff)
 
     // @Function integral
     struct integral: public FunctionExpression {
@@ -117,6 +117,6 @@ namespace Function {
             throw Exception("Error encountered when computing numerical integral. Args: ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(integral);
+    MAKE_FUNCTION_EXPRESSION(integral)
 
 }

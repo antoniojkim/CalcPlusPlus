@@ -15,17 +15,22 @@
 namespace Function {
 
     // @Operator eq: = := <-
-    namespace eq {
-        expression eval(Function::Args& args) {
+    struct eq: public OperatorFunctionExpression {
+        eq(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
+
+        expression eval(const Variables& vars = emptyVars) override {
             using Scanner::VAR;
-            auto l = args.next();
-            auto r = args.next();
+            auto l = arg->at(1);
+            auto r = arg->at(2)->eval(vars);
             if (l != VAR){
                 throw Exception("Assignment operator expects variable. Got: ", l, ", ", r);
             }
             return VariableExpression::construct(l->repr(), r);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION('=')
+        double value(const Variables& vars = emptyVars) const override {
+            return arg->at(2)->value(vars);
+        }
     };
+    MAKE_FUNCTION_EXPRESSION(eq)
 
 }

@@ -82,7 +82,7 @@ namespace Function {
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
-    MAKE_FUNCTION_EXPRESSION(fft);
+    MAKE_FUNCTION_EXPRESSION(fft)
 
     // @Function ifft
     struct ifft: public FunctionExpression {
@@ -134,5 +134,5 @@ namespace Function {
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
-    MAKE_FUNCTION_EXPRESSION(ifft);
+    MAKE_FUNCTION_EXPRESSION(ifft)
 }

@@ -52,7 +52,7 @@ namespace Function {
             return gsl_stats_tss(array.data(), 1, array.size()) / (N - ddof);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(var);
+    MAKE_FUNCTION_EXPRESSION(var)
 
     // @Function sd: std stdev
     struct sd: public FunctionExpression {
@@ -73,7 +73,7 @@ namespace Function {
             return std::sqrt(gsl_stats_tss(array.data(), 1, array.size()) / (N - ddof));
         }
     };
-    MAKE_FUNCTION_EXPRESSION(sd);
+    MAKE_FUNCTION_EXPRESSION(sd)
 
     // @Function tss
     MAKE_STATS_EXPRESSION(tss, gsl_stats_tss)

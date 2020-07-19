@@ -46,7 +46,7 @@ namespace Function {
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
-    MAKE_FUNCTION_EXPRESSION(det);
+    MAKE_FUNCTION_EXPRESSION(det)
 
     // @Function lndet
     struct lndet: public FunctionExpression {
@@ -75,7 +75,7 @@ namespace Function {
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
-    MAKE_FUNCTION_EXPRESSION(lndet);
+    MAKE_FUNCTION_EXPRESSION(lndet)
 
     // @Function LU
     struct LU: public FunctionExpression {
@@ -111,7 +111,7 @@ namespace Function {
             throw Exception("LU Factorization expects a matrix. Got: ", matrix);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(LU);
+    MAKE_FUNCTION_EXPRESSION(LU)
 
     // @Function LUsolve: solve
     struct LUsolve: public FunctionExpression {
@@ -147,7 +147,7 @@ namespace Function {
             throw Exception("LU Solve expects a (m, n) matrix and a (n) vector. Got: ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(LUsolve);
+    MAKE_FUNCTION_EXPRESSION(LUsolve)
 
     // @Function Cholesky: Chol
     struct Cholesky: public FunctionExpression {
@@ -177,5 +177,5 @@ namespace Function {
             throw Exception("Cholesky decomposition expects a matrix. Got: ", matrix);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(Cholesky);
+    MAKE_FUNCTION_EXPRESSION(Cholesky)
 }

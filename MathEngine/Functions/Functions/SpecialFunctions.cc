@@ -38,7 +38,7 @@ namespace Function {
             return gsl_sf_fact((unsigned int) x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(fact);
+    MAKE_FUNCTION_EXPRESSION(fact)
 
     // @Function dfact
     struct dfact: public ValueFunctionExpression {
@@ -54,7 +54,7 @@ namespace Function {
             return GSL_NAN;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(dfact);
+    MAKE_FUNCTION_EXPRESSION(dfact)
 
     // @Function lnfact
     struct lnfact: public ValueFunctionExpression {
@@ -67,7 +67,7 @@ namespace Function {
             return GSL_NAN;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(lnfact);
+    MAKE_FUNCTION_EXPRESSION(lnfact)
 
     // @Function lndfact
     struct lndfact: public ValueFunctionExpression {
@@ -80,7 +80,7 @@ namespace Function {
             return GSL_NAN;
         }
     };
-    MAKE_FUNCTION_EXPRESSION(lndfact);
+    MAKE_FUNCTION_EXPRESSION(lndfact)
 
     // @Function choose: comb C
     struct choose: public FunctionExpression {
@@ -102,7 +102,7 @@ namespace Function {
             return out << "C("; n->print(out, pretty) << ", "; r->print(out, pretty) << ")";
         }
     };
-    MAKE_FUNCTION_EXPRESSION(choose);
+    MAKE_FUNCTION_EXPRESSION(choose)
 
     // @Function lnchoose: lncomb
     struct lnchoose: public FunctionExpression {
@@ -119,7 +119,7 @@ namespace Function {
             throw Exception("lnchoose expects integers n >= r. Got: ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(lnchoose);
+    MAKE_FUNCTION_EXPRESSION(lnchoose)
 
     // @Function permute: perm P
     struct permute: public FunctionExpression {
@@ -141,7 +141,7 @@ namespace Function {
             return out << "P("; n->print(out, pretty) << ", "; r->print(out, pretty) << ")";
         }
     };
-    MAKE_FUNCTION_EXPRESSION(permute);
+    MAKE_FUNCTION_EXPRESSION(permute)
 
     // @Function lnpermute: lnperm
     struct lnpermute: public FunctionExpression {
@@ -158,7 +158,7 @@ namespace Function {
             throw Exception("lnpermute expects integers n >= r. Got: ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(lnpermute);
+    MAKE_FUNCTION_EXPRESSION(lnpermute)
 
     // @Function taylorcoeff
     struct taylorcoeff: public FunctionExpression {
@@ -175,7 +175,7 @@ namespace Function {
             throw Exception("taylorcoeff expects an integer n and double x. Got ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(taylorcoeff);
+    MAKE_FUNCTION_EXPRESSION(taylorcoeff)
 
     // @Function poch
     struct poch: public FunctionExpression {
@@ -189,7 +189,7 @@ namespace Function {
             return gsl_sf_poch(a, x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(poch);
+    MAKE_FUNCTION_EXPRESSION(poch)
 
     // @Function lnpoch
     struct lnpoch: public FunctionExpression {
@@ -203,7 +203,7 @@ namespace Function {
             return gsl_sf_lnpoch(a, x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(lnpoch);
+    MAKE_FUNCTION_EXPRESSION(lnpoch)
 
     // @Function pochrel
     struct pochrel: public FunctionExpression {
@@ -217,7 +217,7 @@ namespace Function {
             return gsl_sf_pochrel(a, x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(pochrel);
+    MAKE_FUNCTION_EXPRESSION(pochrel)
 
     // @Function gamma_inc: gammainc
     struct gamma_inc: public FunctionExpression {
@@ -231,7 +231,7 @@ namespace Function {
             return gsl_sf_gamma_inc(a, x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(gamma_inc);
+    MAKE_FUNCTION_EXPRESSION(gamma_inc)
 
     // @Function gamma_inc_Q: gammaincq
     struct gamma_inc_Q: public FunctionExpression {
@@ -245,7 +245,7 @@ namespace Function {
             return gsl_sf_gamma_inc_Q(a, x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(gamma_inc_Q);
+    MAKE_FUNCTION_EXPRESSION(gamma_inc_Q)
 
     // @Function gamma_inc_P: gammaincp
     struct gamma_inc_P: public FunctionExpression {
@@ -259,7 +259,7 @@ namespace Function {
             return gsl_sf_gamma_inc_P(a, x);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(gamma_inc_P);
+    MAKE_FUNCTION_EXPRESSION(gamma_inc_P)
 
     // @Function Beta(a, b)
     struct Beta: public FunctionExpression {
@@ -276,7 +276,7 @@ namespace Function {
             throw Exception("Beta function expected positive integers a and b. Got ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(Beta);
+    MAKE_FUNCTION_EXPRESSION(Beta)
 
     // @Function lnBeta(a, b)
     struct lnBeta: public FunctionExpression {
@@ -293,7 +293,7 @@ namespace Function {
             throw Exception("lnBeta function expected positive integers a and b. Got ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(lnBeta);
+    MAKE_FUNCTION_EXPRESSION(lnBeta)
 
     // @Function Betainc(a, b, x)
     struct Betainc: public FunctionExpression {
@@ -311,5 +311,5 @@ namespace Function {
             throw Exception("Betainc expected doubles a, b, and x between 0 and 1. Got ", arg);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(Betainc);
+    MAKE_FUNCTION_EXPRESSION(Betainc)
 }

@@ -14,77 +14,87 @@
 namespace Function {
 
     // @Operator lshift: <<
-    namespace lshift {
-        expression eval(Function::Args& args) {
-            double l = args.nextValue();
-            double r = args.nextValue();
+    struct lshift: public OperatorFunctionExpression {
+        lshift(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
+
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
-                return NumExpression::construct(((long long int) intpartl) << ((long long int) intpartr));
+                return ((long long int) intpartl) << ((long long int) intpartr);
             }
-            throw Exception("l << r expects integers. Got: ", args);
+            throw Exception("l << r expects integers. Got: ", arg);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION("<<")
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(lshift)
 
 
     // @Operator rshift: >>
-    namespace rshift {
-        expression eval(Function::Args& args) {
-            double l = args.nextValue();
-            double r = args.nextValue();
+    struct rshift: public OperatorFunctionExpression {
+        rshift(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
+
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
-                return NumExpression::construct(((long long int) intpartl) >> ((long long int) intpartr));
+                return ((long long int) intpartl) >> ((long long int) intpartr);
             }
-            throw Exception("l >> r expects integers. Got: ", args);
+            throw Exception("l >> r expects integers. Got: ", arg);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION(">>")
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(rshift)
 
 
     // @Operator bitwise_and: &
-    namespace bitwise_and {
-        expression eval(Function::Args& args) {
-            double l = args.nextValue();
-            double r = args.nextValue();
+    struct bitwise_and: public OperatorFunctionExpression {
+        bitwise_and(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
+
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
-                return NumExpression::construct(((long long int) intpartl) & ((long long int) intpartr));
+                return ((long long int) intpartl) & ((long long int) intpartr);
             }
-            throw Exception("l & r expects integers. Got: ", args);
+            throw Exception("l & r expects integers. Got: ", arg);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION('&')
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(bitwise_and)
 
 
     // @Operator bitwise_or: |
-    namespace bitwise_or {
-        expression eval(Function::Args& args) {
-            double l = args.nextValue();
-            double r = args.nextValue();
+    struct bitwise_or: public OperatorFunctionExpression {
+        bitwise_or(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
+
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
-                return NumExpression::construct(((long long int) intpartl) | ((long long int) intpartr));
+                return ((long long int) intpartl) | ((long long int) intpartr);
             }
-            throw Exception("l | r expects integers. Got: ", args);
+            throw Exception("l | r expects integers. Got: ", arg);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION('|')
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(bitwise_or)
 
 
     // @Operator bitwise_xor: ^|
-    namespace bitwise_xor {
-        expression eval(Function::Args& args) {
-            double l = args.nextValue();
-            double r = args.nextValue();
+    struct bitwise_xor: public OperatorFunctionExpression {
+        bitwise_xor(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
+
+        double value(const Variables& vars = emptyVars) const override {
+            double l = arg->at(1)->value(vars);
+            double r = arg->at(2)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
-                return NumExpression::construct(((long long int) intpartl) ^ ((long long int) intpartr));
+                return ((long long int) intpartl) ^ ((long long int) intpartr);
             }
-            throw Exception("l ^| r expects integers. Got: ", args);
+            throw Exception("l ^| r expects integers. Got: ", arg);
         }
-        OPERATOR_PRINT_POSTFIX_DEFINITION("^|")
-    }
+    };
+    MAKE_FUNCTION_EXPRESSION(bitwise_xor)
 
 }

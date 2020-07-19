@@ -33,5 +33,5 @@ namespace Function {
             return gsl_rng_uniform(r.get());
         }
     };
-    MAKE_FUNCTION_EXPRESSION(rand);
+    MAKE_FUNCTION_EXPRESSION(rand)
 }
