@@ -7,8 +7,7 @@
 #include <QTextEdit>
 #include <QString>
 
-#include <Expressions/InvalidExpression.h>
-#include <Utils/exceptions.h>
+#include <Utils/Exception.h>
 
 using namespace std;
 
