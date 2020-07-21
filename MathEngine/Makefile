@@ -4,7 +4,7 @@ ifeq ($(OS),Windows_NT)
 	INCLUDES := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
 	LIB_FLAGS := -shared
 	LINK_FLAGS := -Wl,--out-implib,libMathEngine.a -LC:\DEV\vcpkg\packages\gsl_x64-windows\bin
-	TARGET_LIB := libMathEngine.dll
+	TARGET_LIB := MathEngine.dll
 else
 	INCLUDES := -I../.includes/
 	LIB_FLAGS := -fPIC -shared

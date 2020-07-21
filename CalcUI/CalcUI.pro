@@ -27,9 +27,8 @@ HEADERS += \
 FORMS += \
     calcwindow.ui
 
-INCLUDEPATH += C:\Users\anton\Projects\CalcPlusPlus\MathEngine
-
-LIBS += -LC:\Users\anton\Projects\CalcPlusPlus\MathEngine -llibMathEngine
+INCLUDEPATH += ../MathEngine
+LIBS += -L../MathEngine -lMathEngine
 
 win32 {
     INCLUDEPATH += C:\DEV\vcpkg\packages\gsl_x64-windows\include

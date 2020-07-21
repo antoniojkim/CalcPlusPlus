@@ -12,7 +12,7 @@ if [ ! -f Makefile ]; then
     fi
 fi
 
-make -j10 SUBLIBS="-L../MathEngine -lMathEngine -L../.libs/ -lgsl -lgslcblas -lm" 2> calcui.cerr
+make -j10 SUBLIBS="-L../.libs/ -lMathEngine -lgsl -lgslcblas -lm" 2> calcui.cerr
 if [ $? -ne 0 ]; then
     vi -R calcui.cerr
     exit 1

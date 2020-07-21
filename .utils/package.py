@@ -52,6 +52,14 @@ def main(args):
     for dep in depends:
         copyfile(dep, os.path.join(LIB_DIR, dep.split("/")[-1]))
 
+    depends = [
+        ("MathEngine/libMathEngine.so", "libMathEngine.so"),
+        (".includes/gsl-2.6/cblas/.libs/libgslcblas.so.0.0.0", "libgslcblas.so.0"),
+        (".includes/gsl-2.6/.libs/libgsl.so.25.0.0", "libgsl.so.25"),
+    ]
+    for dep, name in depends:
+        copyfile(dep, os.path.join(LIB_DIR, name))
+
     copytree(
         "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms",
         os.path.join(CALC_DIR, "platforms"),
