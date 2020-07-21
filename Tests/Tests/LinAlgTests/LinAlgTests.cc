@@ -20,7 +20,8 @@ TEST_CASE("Matrix Determinant Tests", "[det]" ) {
 
 TEST_CASE("LU Decomposition Tests", "[LU]") {
 
-    requireExprIsEqual("LU{{1, 1, 1}, {1, -2, 2}, {1, 2, -1}}", "({{1, 1, 1}, {1, -3, 1}, {1, -1/3, -5/3}}, {0, 1, 2}, 1)");
+    requireExprIsEqual("LU{{1, 1, 1}, {1, -2, 2}, {1, 2, -1}}",
+                       "(LU = {{1, 1, 1}, {1, -3, 1}, {1, -1/3, -5/3}}, P = {0, 1, 2}, sign = 1)");
 
 }
 

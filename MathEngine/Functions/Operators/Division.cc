@@ -21,8 +21,8 @@ namespace Function {
 
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = arg->at(1)->eval(vars);
-            auto r = arg->at(2)->eval(vars);
+            auto l = arg->at(0)->eval(vars);
+            auto r = arg->at(1)->eval(vars);
             if (l == MATRIX || r == MATRIX){
                 return matrix_div(l, r);
             }
@@ -35,22 +35,25 @@ namespace Function {
             if (l == BIN || r == BIN){
                 return BinExpression::construct((unsigned long long)(l->value() / r->value()));
             }
+            if (!l->isEvaluable() || !r->isEvaluable()){
+                return l / r;
+            }
             return NumExpression::construct(l->value() / r->value());
         }
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             return l / r;
         }
 
         expression simplify() {
-            auto l = arg->at(1);
-            auto r = arg->at(2);
+            auto l = arg->at(0);
+            auto r = arg->at(1);
             return l / r;
         }
         expression derivative(const std::string& var) {
-            auto l = arg->at(1);
-            auto r = arg->at(2);
+            auto l = arg->at(0);
+            auto r = arg->at(1);
             return (l->derivative(var) * r - l * r->derivative(var)) / (r ^ 2);
         }
 
@@ -118,8 +121,8 @@ namespace Function {
 
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = arg->at(1)->eval(vars);
-            auto r = arg->at(2)->eval(vars);
+            auto l = arg->at(0)->eval(vars);
+            auto r = arg->at(1)->eval(vars);
             if (l->isComplex() || r->isComplex()){
                 throw Exception("Arithmetic Error: cannot modulo divide complex numbers.");
             }
@@ -132,8 +135,8 @@ namespace Function {
             return NumExpression::construct(std::fmod(l->value(), r->value()));
         }
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             return std::fmod(l, r);
         }
     };
@@ -146,8 +149,8 @@ namespace Function {
 
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = arg->at(1)->eval(vars);
-            auto r = arg->at(2)->eval(vars);
+            auto l = arg->at(0)->eval(vars);
+            auto r = arg->at(1)->eval(vars);
             if (l->isComplex() || r->isComplex()){
                 throw Exception("Arithmetic Error: cannot floor divide complex numbers.");
             }
@@ -162,8 +165,8 @@ namespace Function {
             return NumExpression::construct(intpart);
         }
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             double intpart;
             std::modf(l / r, &intpart);
             return intpart;

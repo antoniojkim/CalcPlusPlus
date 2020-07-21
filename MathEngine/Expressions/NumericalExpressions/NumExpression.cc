@@ -62,6 +62,9 @@ gsl_complex NumExpression::complex(const Variables& vars) const { return gsl_com
 
 bool NumExpression::equals(expression e, double precision) const {
     if (e == NUM){
+        if (compare(complex(), e->complex(), precision) != 0){
+            print(cout); cout << " != " << e << endl;
+        }
         return compare(complex(), e->complex(), precision) == 0;
     }
     return false;

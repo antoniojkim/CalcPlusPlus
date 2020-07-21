@@ -27,14 +27,13 @@ std::ostream& OperatorFunctionExpression::print(std::ostream& out, const bool pr
         return out << repr(); arg->print(out, pretty) << endl;
     }
 
-    auto lhs = arg->at(1);
-    auto rhs = arg->at(2);
+    auto lhs = arg->at(0);
+    auto rhs = arg->at(1);
 
     if (!pretty){
         out << "("; lhs->print(out, pretty) << ")";
         out << Functions::names[functionIndex];
         out << "("; rhs->print(out, pretty) << ")";
-        return out;
     }
     else{
         int precedence = Operators::getPrecedence(Operators::indexOf(repr()));
@@ -54,10 +53,11 @@ std::ostream& OperatorFunctionExpression::print(std::ostream& out, const bool pr
             rhs->print(out, pretty);
         }
     }
+    return out;
 }
 std::ostream& OperatorFunctionExpression::postfix(std::ostream& out) const {
-    auto lhs = arg->at(1);
-    auto rhs = arg->at(2);
+    auto lhs = arg->at(0);
+    auto rhs = arg->at(1);
 
     lhs->postfix(out) << " ";
     rhs->postfix(out) << " ";

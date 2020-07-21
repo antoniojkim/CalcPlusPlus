@@ -46,7 +46,7 @@ TEST_CASE("Basic Operator Tests", "[postfix]" ) {
 TEST_CASE("Multi Arg Function Postfix Tests", "[postfix]") {
 
     postfixTest("logn(10, 4)", "(10, 4) logn");
-    postfixTest("deriv(sin(x), 3)", "(x sin, 3) deriv");
+    postfixTest("deriv(sin(x), 3)", "(x sin, 3, x) deriv");
     postfixTest("mean(1, -1, 4+7, -4, 5)", "(1, -1, 4 7 +, -4, 5) mean");
 
 }
@@ -73,7 +73,7 @@ TEST_CASE("Matrix Postfix Tests", "[postfix]") {
 TEST_CASE("Complex Postfix Tests", "[postfix]" ) {
 
     postfixTest("cos(sinh3)+5i-arcsin(x)+6integral(sin(x), 4, 5)^|4+0x3aF",
-                "sinh3 cos 5i + x arcsin - 6 (x sin, 4, 5) integral * + 4 0x3af + ^|");
+                "sinh3 cos 5i + x arcsin - 6 (x sin, 4, 5, x) integral * + 4 0x3af + ^|");
 
     postfixTest("5 + x * 5 + mean ( 7 * 7 , 8 * ( 8 + x ) , 9 / 9 ) + { { sin ( 3 ) , - 2 } , { 3 ! , cos 4 } } + rand ( )",
                 "5 x 5 * + (7 7 *, 8 8 x + *, 9 9 /) mean + {{3 sin, -2}, {3 fact, 4 cos}} + () rand +");

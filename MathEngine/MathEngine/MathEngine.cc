@@ -47,9 +47,9 @@ expression MathEngine::eval(expression inputExpr){
     try {
         auto expr = inputExpr->eval(variables);
 
-        if (expr == VAR){
-            string name = expr->repr();
-            if (expr->at(1) == NONE){
+        if (inputExpr == VAR){
+            string name = inputExpr->repr();
+            if (expr == NONE){
                 if (variables.count(name) > 0){
                     variables.erase(name);
                     throw Exception("Deleted Variable: ", name);

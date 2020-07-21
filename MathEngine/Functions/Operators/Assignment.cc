@@ -12,6 +12,8 @@
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
 
+using namespace Scanner;
+
 namespace Function {
 
     // @Operator eq: = := <-
@@ -20,17 +22,22 @@ namespace Function {
 
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::VAR;
-            auto l = arg->at(1);
-            auto r = arg->at(2)->eval(vars);
+            auto l = arg->at(0);
+            auto r = arg->at(1)->eval(vars);
             if (l != VAR){
                 throw Exception("Assignment operator expects variable. Got: ", l, ", ", r);
             }
             return VariableExpression::construct(l->repr(), r);
         }
         double value(const Variables& vars = emptyVars) const override {
-            return arg->at(2)->value(vars);
+            return arg->at(1)->value(vars);
         }
     };
-    MAKE_FUNCTION_EXPRESSION(eq)
+    expression make_fe_eq(int functionIndex, expression arg){
+        if (arg->size() == 2 && arg->at(0) == VAR){
+            return VariableExpression::construct(arg->at(0)->repr(), arg->at(1));
+        }
+        return std::make_shared<Function::eq>(functionIndex, arg);
+    }
 
 }

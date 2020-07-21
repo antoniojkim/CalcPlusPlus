@@ -50,7 +50,7 @@ def generate_functions(args=None):
 
     def get_all():
         for function in functions:
-            yield function["name"], function["name"], False
+            yield function["name"], function["name"], "false"
             if function["aliases"] is not None:
                 isOperator = "true" if function["type"] == "operator" else "false"
                 for alias in function["aliases"].split():

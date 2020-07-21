@@ -26,6 +26,6 @@ expression ValueFunctionExpression::construct(int functionIndex, ValueFunction f
 
 
 double ValueFunctionExpression::value(const Variables& vars) const {
-    double x = arg->value(vars);
+    double x = arg->at(0)->value(vars);
     return f(x);
 }

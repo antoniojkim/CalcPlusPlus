@@ -16,7 +16,7 @@ namespace Function {
             ValueFunctionExpression(functionIndex, std::exp, arg) {}
         expression derivative(const std::string& var) {
             using ExpressionMath::exp;
-            auto x = arg->at(1);
+            auto x = arg->at(0);
             return exp(x) * x->derivative(var);
         }
     };
@@ -28,7 +28,7 @@ namespace Function {
             ValueFunctionExpression(functionIndex, std::exp2, arg) {}
         expression derivative(const std::string& var) {
             using ExpressionMath::exp2;
-            auto x = arg->at(1);
+            auto x = arg->at(0);
             return exp2(x) * M_LN2 * x->derivative(var);
         }
     };
@@ -40,7 +40,7 @@ namespace Function {
             ValueFunctionExpression(functionIndex, std::expm1, arg) {}
         expression derivative(const std::string& var) {
             using ExpressionMath::expm1;
-            auto x = arg->at(1);
+            auto x = arg->at(0);
             return expm1(x) * x->derivative(var);
         }
     };
@@ -51,7 +51,7 @@ namespace Function {
         ln(int functionIndex, expression arg):
             ValueFunctionExpression(functionIndex, std::log, arg) {}
         expression derivative(const std::string& var) {
-            auto x = arg->at(1);
+            auto x = arg->at(0);
             return x->derivative(var) / x;
         }
     };
@@ -62,7 +62,7 @@ namespace Function {
         ln2(int functionIndex, expression arg):
             ValueFunctionExpression(functionIndex, std::log2, arg) {}
         expression derivative(const std::string& var) {
-            auto x = arg->at(1);
+            auto x = arg->at(0);
             return x->derivative(var) / (x * M_LN2);
         }
     };
@@ -73,7 +73,7 @@ namespace Function {
         ln1p(int functionIndex, expression arg):
             ValueFunctionExpression(functionIndex, std::log1p, arg) {}
         expression derivative(const std::string& var) {
-            auto x = arg->at(1);
+            auto x = arg->at(0);
             return x->derivative(var) / (x + 1);
         }
     };
@@ -84,7 +84,7 @@ namespace Function {
         log(int functionIndex, expression arg):
             ValueFunctionExpression(functionIndex, std::log10, arg) {}
         expression derivative(const std::string& var) {
-            auto x = arg->at(1);
+            auto x = arg->at(0);
             return x->derivative(var) / (x * M_LN10);
         }
     };
@@ -101,14 +101,14 @@ namespace Function {
         logn(int functionIndex, expression arg):
             FunctionExpression(functionIndex, arg, {{"a", Empty}, {"b", Empty}}) {}  // Signature: (a, b)
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double b = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double b = arg->at(1)->value(vars);
             return std::log(a) / std::log(b);
         }
         expression derivative(const std::string& var) {
             using ExpressionMath::ln;
-            auto a = arg->at(1);
-            auto b = arg->at(2);
+            auto a = arg->at(0);
+            auto b = arg->at(1);
             return a->derivative(var) / (a * ln(b));
         }
     };

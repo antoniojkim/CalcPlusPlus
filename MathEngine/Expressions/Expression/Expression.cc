@@ -31,6 +31,7 @@ std::vector<double> Expression::array(){
     }
     std::vector<double> array;
     array.reserve(size());
+
     for (size_t i = 0; i < size(); ++i){
         array.emplace_back(at(i)->value());
     }

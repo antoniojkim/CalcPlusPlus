@@ -46,7 +46,7 @@ bool printDifference(const std::string& input, const expression expr, const expr
     out << "Expression: " << expr << endl;
     out << "Postfix:    "; expr->postfix(out) << endl;
     out << "Expected:   "; expectedExpr->postfix(out) << endl;
-    output->print(out, true) << endl << " != " << endl << expected << endl;
+    output->print(out, true) << endl << " != " << endl; expectedExpr->print(out, true) << endl;
     UNSCOPED_INFO(out.str());
     return false;
 }

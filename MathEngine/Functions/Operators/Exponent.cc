@@ -21,8 +21,8 @@ namespace Function {
 
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX, Scanner::HEX, Scanner::BIN, Scanner::VAR;
-            auto l = arg->at(1)->eval(vars);
-            auto r = arg->at(2)->eval(vars);
+            auto l = arg->at(0)->eval(vars);
+            auto r = arg->at(1)->eval(vars);
             if (l == MATRIX){
                 if (r == VAR && r->repr() == "T"){
                     return matrix_transpose(l);
@@ -41,18 +41,21 @@ namespace Function {
             if (l == BIN || r == BIN){
                 return BinExpression::construct((unsigned long long) std::pow(l->value(), r->value()));
             }
+            if (!l->isEvaluable() || !r->isEvaluable()){
+                return l ^ r;
+            }
             return NumExpression::construct(std::pow(l->value(), r->value()));
         }
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             return std::pow(l, r);
         }
 
         expression derivative(const std::string& var) {
             using ExpressionMath::ln;
-            auto l = arg->at(1);
-            auto r = arg->at(2);
+            auto l = arg->at(0);
+            auto r = arg->at(1);
             if (r->isNumber()){
                 return (l ^ (r - 1)) * (l->derivative(var) * r);
             }

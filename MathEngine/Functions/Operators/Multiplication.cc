@@ -13,6 +13,8 @@
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
 
+using namespace Scanner;
+
 namespace Function {
 
     // @Operator mul: *
@@ -20,9 +22,8 @@ namespace Function {
         mul(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
         expression eval(const Variables& vars = emptyVars) override {
-            using Scanner::MATRIX, Scanner::HEX, Scanner::BIN;
-            auto l = arg->at(1)->eval(vars);
-            auto r = arg->at(2)->eval(vars);
+            auto l = arg->at(0)->eval(vars);
+            auto r = arg->at(1)->eval(vars);
             if (l == MATRIX || r == MATRIX){
                 return matrix_mul(l, r);
             }
@@ -35,23 +36,38 @@ namespace Function {
             if (l == BIN || r == BIN){
                 return BinExpression::construct((unsigned long long)(l->value() * r->value()));
             }
+            if (!l->isEvaluable() || !r->isEvaluable()){
+                return l * r;
+            }
             return NumExpression::construct(l->value() * r->value());
         }
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             return l * r;
         }
 
         expression simplify() {
-            auto l = arg->at(1);
-            auto r = arg->at(2);
+            auto l = arg->at(0);
+            auto r = arg->at(1);
             return l * r;
         }
         expression derivative(const std::string& var) {
-            auto l = arg->at(1);
-            auto r = arg->at(2);
+            auto l = arg->at(0);
+            auto r = arg->at(1);
             return l->derivative(var) * r + l * r->derivative(var);
+        }
+
+        bool equals(expression e, double precision) const override {
+            if (e == FUNCTION && functionIndex == e->id()){
+                auto l1 = arg->at(0);
+                auto r1 = arg->at(1);
+                auto l2 = e->at(1)->at(0);
+                auto r2 = e->at(1)->at(1);
+                return (l1->equals(l2, precision) && r1->equals(r2, precision)) ||
+                       (l1->equals(r2, precision) && l2->equals(r1, precision));
+            }
+            return false;
         }
 
         expression matrix_mul(expression lhs, expression rhs){

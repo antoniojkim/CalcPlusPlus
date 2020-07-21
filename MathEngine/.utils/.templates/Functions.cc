@@ -4,6 +4,7 @@
  ***************************************************/
 
 #include "Functions.h"
+#include "../Utils/Exception.h"
 
 using namespace Function;
 
@@ -25,6 +26,9 @@ namespace Functions {
 		return functionIsOperator[Functions::indexOf(name)];
 	}
 	bool isOperator(const int functionIndex){
+		if (functionIndex < 0){
+			throw Exception("Invalid Function Index: ", functionIndex);
+		}
 		return functionIsOperator[functionIndex];
 	}
 }

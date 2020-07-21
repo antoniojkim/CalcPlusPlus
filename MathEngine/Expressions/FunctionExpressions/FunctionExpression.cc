@@ -21,21 +21,17 @@ FunctionExpression::FunctionExpression(int functionIndex, expression arg, std::i
     Expression(FUNCTION), functionIndex(functionIndex) {
     // Parse args
     if (arg != TUPLE){
-        if (signature.size() == 1){
-            this->arg = TupleExpression::construct({arg});
-            return;
-        }
-        throw Exception(repr(), " expected a tuple. Got: ", arg);
+        arg = TupleExpression::construct({arg});
     }
     if(arg->size() == signature.size()){
-        bool hasVar = false;
+        bool onlyEmpty = true;
         for (auto e : *arg){
-            if (e == VAR){
-                hasVar = true;
+            if (e != EMPTY){
+                onlyEmpty = false;
                 break;
             }
         }
-        if (!hasVar){ // Most cases should go here
+        if (onlyEmpty){ // Most cases should go here
             this->arg = arg;
             return;
         }
@@ -47,7 +43,7 @@ FunctionExpression::FunctionExpression(int functionIndex, expression arg, std::i
     int eIndex = 0;
 
     // Get Positional Args
-    while(eIndex < arg->size() && arg->at(eIndex) != VAR){
+    while(eIndex < arg->size() && !(arg->at(eIndex) == VAR && arg->at(eIndex)->at(1))){
         positionalArgs.emplace_back(arg->at(eIndex++));
     }
 
@@ -77,6 +73,11 @@ FunctionExpression::FunctionExpression(int functionIndex, expression arg, std::i
         args.emplace_back(positionalArgs.at(0));
         positionalArgs.erase(positionalArgs.begin());
         ++s;
+    }
+
+    if (s == end){
+        this->arg = TupleExpression::construct(std::move(args));
+        return;
     }
 
     if (s->second == VARARGS){  // Move remaining positional args into varargs
@@ -157,16 +158,17 @@ expression FunctionExpression::eval(const Variables& vars){
 
 bool FunctionExpression::equals(expression e, double precision) const {
     if (e == FUNCTION && functionIndex == e->id()){
-        return arg->equals(e->at(0), precision);
+        return arg->equals(e->at(1), precision);
     }
     return false;
 }
 
 expression FunctionExpression::at(const int index) {
-    if (index == 0){
-        return copy();
+    switch (index){
+        case 0: return copy();
+        case 1: return arg;
+        default: throw Exception("FunctionExpression::at: Index out of bounds");
     }
-    return arg->at(index - 1);
 }
 
 std::string FunctionExpression::repr() const {
@@ -181,6 +183,11 @@ std::ostream& FunctionExpression::print(std::ostream& out, const bool pretty) co
     return arg->print(out, pretty);
 }
 std::ostream& FunctionExpression::postfix(std::ostream& out) const {
-    arg->postfix(out) << " ";
-    return out << Functions::names[functionIndex];
+    if (arg->size() == 1){
+        arg->at(0)->postfix(out);
+    }
+    else{
+        arg->postfix(out);
+    }
+    return out << " " << Functions::names[functionIndex];
 }

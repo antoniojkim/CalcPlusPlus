@@ -22,9 +22,9 @@ namespace Function {
             {"a", Empty}, {"b", Empty}, {"c", Empty}
         }) {}
         expression eval(const Variables& vars = emptyVars) override {
-            double a = arg->at(1)->value(vars);
-            double b = arg->at(2)->value(vars);
-            double c = arg->at(3)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double b = arg->at(1)->value(vars);
+            double c = arg->at(2)->value(vars);
             double x1, x2;
             int num_roots = gsl_poly_solve_quadratic(a, b, c, &x1, &x2);
             switch(num_roots){
@@ -59,9 +59,9 @@ namespace Function {
             {"a", Empty}, {"b", Empty}, {"c", Empty}
         }) {}
         expression eval(const Variables& vars = emptyVars) override {
-            double a = arg->at(1)->value(vars);
-            double b = arg->at(2)->value(vars);
-            double c = arg->at(3)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double b = arg->at(1)->value(vars);
+            double c = arg->at(2)->value(vars);
             gsl_complex z1, z2;
             int num_roots = gsl_poly_complex_solve_quadratic(a, b, c, &z1, &z2);
             switch(num_roots){
@@ -89,10 +89,10 @@ namespace Function {
             {"a", Empty}, {"b", Empty}, {"c", Empty}, {"d", Empty}
         }) {}
         expression eval(const Variables& vars = emptyVars) override {
-            double a = arg->at(1)->value(vars);
-            double b = arg->at(2)->value(vars) / a;
-            double c = arg->at(3)->value(vars) / a;
-            double d = arg->at(4)->value(vars) / a;
+            double a = arg->at(0)->value(vars);
+            double b = arg->at(1)->value(vars) / a;
+            double c = arg->at(2)->value(vars) / a;
+            double d = arg->at(3)->value(vars) / a;
             double x1, x2, x3;
             int num_roots = gsl_poly_solve_cubic(b, c, d, &x1, &x2, &x3);
             switch(num_roots){
@@ -121,10 +121,10 @@ namespace Function {
             {"a", Empty}, {"b", Empty}, {"c", Empty}, {"d", Empty}
         }) {}
         expression eval(const Variables& vars = emptyVars) override {
-            double a = arg->at(1)->value(vars);
-            double b = arg->at(2)->value(vars) / a;
-            double c = arg->at(3)->value(vars) / a;
-            double d = arg->at(4)->value(vars) / a;
+            double a = arg->at(0)->value(vars);
+            double b = arg->at(1)->value(vars) / a;
+            double c = arg->at(2)->value(vars) / a;
+            double d = arg->at(3)->value(vars) / a;
             gsl_complex z1, z2, z3;
             gsl_poly_complex_solve_cubic(b, c, d, &z1, &z2, &z3);
             return TupleExpression::construct({

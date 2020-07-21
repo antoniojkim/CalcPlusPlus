@@ -38,7 +38,7 @@ namespace Function {
             FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = arg->at(1)->eval(vars);
+            auto matrix = arg->at(0)->eval(vars);
             if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
                 size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);
@@ -90,7 +90,7 @@ namespace Function {
             FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = arg->at(1)->eval(vars);
+            auto matrix = arg->at(0)->eval(vars);
             if (matrix == MATRIX && (matrix->shape(0) == 1 || matrix->shape(1) == 1)){
                 size_t N = matrix->size();
                 auto work = make_unique_fft_real_workspace(N);

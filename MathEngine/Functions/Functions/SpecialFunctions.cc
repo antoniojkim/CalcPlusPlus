@@ -28,7 +28,7 @@ namespace Function {
     struct fact: public ValueFunctionExpression {
         fact(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
         double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(1)->value(vars);
+            double x = arg->at(0)->value(vars);
             if (x > GSL_SF_FACT_NMAX){
                 return GSL_POSINF;
             }
@@ -44,7 +44,7 @@ namespace Function {
     struct dfact: public ValueFunctionExpression {
         dfact(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
         double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(1)->value(vars);
+            double x = arg->at(0)->value(vars);
             if (x > GSL_SF_DOUBLEFACT_NMAX){
                 return GSL_POSINF;
             }
@@ -60,7 +60,7 @@ namespace Function {
     struct lnfact: public ValueFunctionExpression {
         lnfact(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
         double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(1)->value(vars);
+            double x = arg->at(0)->value(vars);
             if (x >= 0 && std::trunc(x) == x) {
                 return gsl_sf_lnfact((unsigned int) x);
             }
@@ -73,7 +73,7 @@ namespace Function {
     struct lndfact: public ValueFunctionExpression {
         lndfact(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
         double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(1)->value(vars);
+            double x = arg->at(0)->value(vars);
             if (x >= 0 && std::trunc(x) == x) {
                 return gsl_sf_lndoublefact((unsigned int) x);
             }
@@ -89,16 +89,16 @@ namespace Function {
             {"n", Empty}, {"r", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double n = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
                 return gsl_sf_choose((unsigned int) n, (unsigned int) r);
             }
             throw Exception("nCr expects integers n >= r. Got: ", arg);
         }
         std::ostream& print(std::ostream& out, const bool pretty) {
-            auto n = arg->at(1);
-            auto r = arg->at(2);
+            auto n = arg->at(0);
+            auto r = arg->at(1);
             return out << "C("; n->print(out, pretty) << ", "; r->print(out, pretty) << ")";
         }
     };
@@ -111,8 +111,8 @@ namespace Function {
             {"n", Empty}, {"r", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double n = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
                 return gsl_sf_lnchoose((unsigned int) n, (unsigned int) r);
             }
@@ -128,16 +128,16 @@ namespace Function {
             {"n", Empty}, {"r", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double n = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
                 return gsl_sf_choose((unsigned int) n, (unsigned int) r) * gsl_sf_fact((unsigned int) r);
             }
             throw Exception("nPr expects integers n >= r. Got: ", arg);
         }
         std::ostream& print(std::ostream& out, const bool pretty) {
-            auto n = arg->at(1);
-            auto r = arg->at(2);
+            auto n = arg->at(0);
+            auto r = arg->at(1);
             return out << "P("; n->print(out, pretty) << ", "; r->print(out, pretty) << ")";
         }
     };
@@ -150,8 +150,8 @@ namespace Function {
             {"n", Empty}, {"r", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double n = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
                 return gsl_sf_lnchoose((unsigned int) n, (unsigned int) r) + gsl_sf_lnfact((unsigned int) r);
             }
@@ -167,8 +167,8 @@ namespace Function {
             {"n", Empty}, {"x", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(1)->value(vars);
-            double x = arg->at(2)->value(vars);
+            double n = arg->at(0)->value(vars);
+            double x = arg->at(1)->value(vars);
             if (x >= 0 && n >= 0 && std::trunc(n) == n){
                 return gsl_sf_taylorcoeff((int) n, x);
             }
@@ -184,8 +184,8 @@ namespace Function {
             {"a", Empty}, {"x", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double x = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double x = arg->at(1)->value(vars);
             return gsl_sf_poch(a, x);
         }
     };
@@ -198,8 +198,8 @@ namespace Function {
             {"a", Empty}, {"x", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double x = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double x = arg->at(1)->value(vars);
             return gsl_sf_lnpoch(a, x);
         }
     };
@@ -212,8 +212,8 @@ namespace Function {
             {"a", Empty}, {"x", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double x = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double x = arg->at(1)->value(vars);
             return gsl_sf_pochrel(a, x);
         }
     };
@@ -226,8 +226,8 @@ namespace Function {
             {"a", Empty}, {"x", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double x = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double x = arg->at(1)->value(vars);
             return gsl_sf_gamma_inc(a, x);
         }
     };
@@ -240,8 +240,8 @@ namespace Function {
             {"a", Empty}, {"x", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double x = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double x = arg->at(1)->value(vars);
             return gsl_sf_gamma_inc_Q(a, x);
         }
     };
@@ -254,8 +254,8 @@ namespace Function {
             {"a", Empty}, {"x", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double x = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double x = arg->at(1)->value(vars);
             return gsl_sf_gamma_inc_P(a, x);
         }
     };
@@ -268,8 +268,8 @@ namespace Function {
             {"a", Empty}, {"b", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double b = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double b = arg->at(1)->value(vars);
             if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
                 return gsl_sf_beta(a, b);
             }
@@ -285,8 +285,8 @@ namespace Function {
             {"a", Empty}, {"b", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double b = arg->at(2)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double b = arg->at(1)->value(vars);
             if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
                 return gsl_sf_lnbeta(a, b);
             }
@@ -302,9 +302,9 @@ namespace Function {
             {"a", Empty}, {"b", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(1)->value(vars);
-            double b = arg->at(2)->value(vars);
-            double x = arg->at(3)->value(vars);
+            double a = arg->at(0)->value(vars);
+            double b = arg->at(1)->value(vars);
+            double x = arg->at(2)->value(vars);
             if (x >= 0 && x <= 1){
                 return gsl_sf_beta_inc(a, b, x);
             }

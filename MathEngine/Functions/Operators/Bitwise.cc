@@ -18,8 +18,8 @@ namespace Function {
         lshift(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
                 return ((long long int) intpartl) << ((long long int) intpartr);
@@ -35,8 +35,8 @@ namespace Function {
         rshift(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
                 return ((long long int) intpartl) >> ((long long int) intpartr);
@@ -52,8 +52,8 @@ namespace Function {
         bitwise_and(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
                 return ((long long int) intpartl) & ((long long int) intpartr);
@@ -69,8 +69,8 @@ namespace Function {
         bitwise_or(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
                 return ((long long int) intpartl) | ((long long int) intpartr);
@@ -86,8 +86,8 @@ namespace Function {
         bitwise_xor(int functionIndex, expression arg): OperatorFunctionExpression(functionIndex, arg) {}
 
         double value(const Variables& vars = emptyVars) const override {
-            double l = arg->at(1)->value(vars);
-            double r = arg->at(2)->value(vars);
+            double l = arg->at(0)->value(vars);
+            double r = arg->at(1)->value(vars);
             double intpartl, intpartr;
             if (modf(l, &intpartl) == 0 && modf(r, &intpartr) == 0){
                 return ((long long int) intpartl) ^ ((long long int) intpartr);

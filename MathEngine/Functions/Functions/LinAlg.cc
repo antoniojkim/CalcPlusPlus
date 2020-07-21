@@ -25,7 +25,7 @@ namespace Function {
             FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = arg->at(1)->eval(vars);
+            auto matrix = arg->at(0)->eval(vars);
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -54,7 +54,7 @@ namespace Function {
             FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = arg->at(1)->eval(vars);
+            auto matrix = arg->at(0)->eval(vars);
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -83,7 +83,7 @@ namespace Function {
             FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = arg->at(1)->eval(vars);
+            auto matrix = arg->at(0)->eval(vars);
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -123,8 +123,8 @@ namespace Function {
             }) {}
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto A = arg->at(1)->eval(vars);
-            auto b = arg->at(2)->eval(vars);
+            auto A = arg->at(0)->eval(vars);
+            auto b = arg->at(1)->eval(vars);
             if (A == MATRIX && b == MATRIX && (A->shape(0) == b->size())){
                 if (A->isComplex() || b->isComplex()){
                     auto LU = to_gsl_matrix_complex(A);
@@ -157,7 +157,7 @@ namespace Function {
             FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
-            auto matrix = arg->at(1)->eval(vars);
+            auto matrix = arg->at(0)->eval(vars);
             if (matrix == MATRIX){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
@@ -181,4 +181,38 @@ namespace Function {
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
     MAKE_FUNCTION_EXPRESSION(Cholesky)
+
+    // @Function SVD
+    struct SVD: public FunctionExpression {
+        SVD(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
+        expression eval(const Variables& vars = emptyVars) override {
+            using Scanner::MATRIX;
+            auto matrix = arg->at(0)->eval(vars);
+            if (matrix == MATRIX){
+                if (matrix->isComplex()){
+                    throw Exception("Cannot compute SVD of complex matrix");
+                }
+                else{
+                    size_t n = matrix->shape(1);
+                    auto A = to_gsl_matrix(matrix);
+                    auto V = make_gsl_matrix(n, n);
+                    auto S = make_gsl_vector(n);
+                    auto work = make_gsl_vector(n);
+                    int code = gsl_linalg_SV_decomp(A.get(), V.get(), S.get(), work.get());
+                    if (code != 0){
+                        throw Exception("SVD failed on matrix: ", matrix);
+                    }
+                    return TupleExpression::construct({
+                        VariableExpression::construct("U", MatrixExpression::construct(A)),
+                        VariableExpression::construct("S", MatrixExpression::construct(S)),
+                        VariableExpression::construct("V", MatrixExpression::construct(V))
+                    });
+                }
+            }
+            throw Exception("SVD expects a matrix. Got: ", matrix);
+        }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
+    };
+    MAKE_FUNCTION_EXPRESSION(SVD)
 }

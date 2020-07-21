@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 
 #include <gsl/gsl_statistics_double.h>
 
@@ -25,7 +26,7 @@ namespace Function {
         }
 
         double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(1)->eval(vars)->array();
+            auto array = arg->at(0)->eval(vars)->array();
             return f(array.data(), 1, array.size());
         }
     };
@@ -48,12 +49,12 @@ namespace Function {
             return NumExpression::construct(value(vars));
         }
         double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(1)->eval(vars)->array();
-            double ddof = arg->at(2)->value(vars);
+            auto array = arg->at(0)->eval(vars)->array();
+            double ddof = arg->at(1)->value(vars);
             if (ddof < 1 || trunc(ddof) != ddof){
                 throw Exception("Variance expected an integer ddof >= 1. Got: ", ddof);
             }
-            double N = array.size();
+            size_t N = array.size();
             if (trunc(ddof) == 1){
                 return gsl_stats_variance(array.data(), 1, N);
             }
@@ -72,12 +73,13 @@ namespace Function {
             return NumExpression::construct(value(vars));
         }
         double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(1)->eval(vars)->array();
-            double ddof = arg->at(2)->value(vars);
+            auto array = arg->at(0)->eval(vars)->array();
+            double ddof = arg->at(1)->value(vars);
+
             if (ddof < 1 || trunc(ddof) != ddof){
                 throw Exception("Standard Deviation expected an integer ddof >= 1. Got: ", ddof);
             }
-            double N = array.size();
+            size_t N = array.size();
             if (trunc(ddof) == 1){
                 return gsl_stats_sd(array.data(), 1, N);
             }
@@ -117,7 +119,7 @@ namespace Function {
             return NumExpression::construct(value(vars));
         }
         double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(1)->eval(vars)->array();
+            auto array = arg->at(0)->eval(vars)->array();
             return gsl_stats_max_index(array.data(), 1, array.size());
         }
     };
@@ -133,7 +135,7 @@ namespace Function {
             return NumExpression::construct(value(vars));
         }
         double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(1)->eval(vars)->array();
+            auto array = arg->at(0)->eval(vars)->array();
             return gsl_stats_min_index(array.data(), 1, array.size());
         }
     };
@@ -149,7 +151,7 @@ namespace Function {
             return NumExpression::construct(value(vars));
         }
         double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(1)->eval(vars)->array();
+            auto array = arg->at(0)->eval(vars)->array();
             return gsl_stats_median(array.data(), 1, array.size());
         }
     };
