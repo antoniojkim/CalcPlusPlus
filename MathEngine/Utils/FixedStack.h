@@ -75,8 +75,18 @@ class FixedStack { // Fixed Size Stack
             }
             fs.clear();
         }
-        T& peek(){ return data[tail-1]; }
-        T pop(){ return data[--tail]; }
+        T& peek(){
+            if (tail == 0){
+                throw std::out_of_range("FixedStack::peek out of range");
+            }
+            return data[tail-1];
+        }
+        T pop(){
+            if (tail == 0){
+                throw std::out_of_range("FixedStack::pop out of range");
+            }
+            return data[--tail];
+        }
         void clear(){ tail = 0; }
 
         T* begin(){ return data.get(); }

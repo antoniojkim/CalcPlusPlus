@@ -89,6 +89,9 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 }
                 continue;
             case RPAREN:
+                if (expressionLists.empty()){
+                    throw Exception("Cannot construct Tuple from empty list of expressions");
+                }
                 if (!expressionStacks.back().empty()){
                     expressionLists.back().emplace_back(expressionStacks.back().pop());
                     if (!expressionStacks.back().empty()){
