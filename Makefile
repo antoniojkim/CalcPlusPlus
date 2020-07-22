@@ -1,6 +1,6 @@
 
 build: generate
-	.utils/build MathEngine
+	.utils/build MathEngine $(name)
 
 generate:
 	python3 -u MathEngine/.utils/auto_generate.py
@@ -15,13 +15,18 @@ bp:  # breakpoints
 newtest:
 	python3 -u .utils/new_test.py --name $(name)
 
+repl: build
+	.utils/build_repl
 
 ui:
 	rm -f CalcUI/CalcUI
 	.utils/build_ui
 
-run: build ui
-	./CalcUI/CalcUI
+# run: build ui
+# 	.utils/run
+
+run: package
+	.package/CalcPlusPlus/Calculator
 
 debug: build ui
 	gdb -q -ex="run" ./CalcUI/CalcUI

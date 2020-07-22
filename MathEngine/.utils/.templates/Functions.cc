@@ -15,6 +15,9 @@ namespace Functions {
 	};
 
 	expression construct(const int functionIndex, const expression arg){
+		if (functionIndex < 0){
+			throw Exception("Invalid Function Index: ", functionIndex);
+		}
 		return functionConstructors[functionIndex](functionIndex, arg);
 	}
 

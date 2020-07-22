@@ -1,5 +1,10 @@
 CXX := g++
 
+mode := debug
+optflag.release := -Ofast
+optflag.debug := -g
+OPT_FLAG := ${optflag.${mode}}
+
 ifeq ($(OS),Windows_NT)
 	INCLUDES := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
 	LIB_FLAGS := -shared
@@ -12,7 +17,7 @@ else
 	TARGET_LIB := libMathEngine.so
 endif
 
-CXXFLAGS := -Ofast -std=c++17 ${LIB_FLAGS} -Wall -MMD -Werror=vla ${INCLUDES}
+CXXFLAGS := ${OPT_FLAG} -std=c++17 ${LIB_FLAGS} -Wall -MMD -Werror=vla ${INCLUDES}
 CPPFLAGS := -DDEBUG
 
 UTILS := $(wildcard Utils/*.cc)

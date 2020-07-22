@@ -26,7 +26,7 @@ namespace Function {
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
             auto matrix = arg->at(0)->eval(vars);
-            if (matrix == MATRIX){
+            if (matrix == MATRIX && matrix->size() > 0){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
                     auto gsl_perm = to_gsl_permutation(matrix);
@@ -42,7 +42,7 @@ namespace Function {
                     return NumExpression::construct(gsl_linalg_LU_det(gsl_mat.get(), signum));
                 }
             }
-            throw Exception("det expected matrix. Got: ", matrix);
+            throw Exception("det expected a non-empty matrix. Got: ", matrix);
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
@@ -55,7 +55,7 @@ namespace Function {
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
             auto matrix = arg->at(0)->eval(vars);
-            if (matrix == MATRIX){
+            if (matrix == MATRIX && matrix->size() > 0){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
                     auto gsl_perm = to_gsl_permutation(matrix);
@@ -71,7 +71,7 @@ namespace Function {
                     return NumExpression::construct(gsl_linalg_LU_lndet(gsl_mat.get()));
                 }
             }
-            throw Exception("lndet expected matrix. Got: ", matrix);
+            throw Exception("lndet expected non-empty matrix. Got: ", matrix);
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
@@ -84,7 +84,7 @@ namespace Function {
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
             auto matrix = arg->at(0)->eval(vars);
-            if (matrix == MATRIX){
+            if (matrix == MATRIX && matrix->size() > 0){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
                     auto gsl_perm = to_gsl_permutation(matrix);
@@ -108,7 +108,7 @@ namespace Function {
                     });
                 }
             }
-            throw Exception("LU Factorization expects a matrix. Got: ", matrix);
+            throw Exception("LU Factorization expects a non-empty matrix. Got: ", matrix);
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
@@ -158,7 +158,7 @@ namespace Function {
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
             auto matrix = arg->at(0)->eval(vars);
-            if (matrix == MATRIX){
+            if (matrix == MATRIX && matrix->size() > 0){
                 if (matrix->isComplex()){
                     auto gsl_mat = to_gsl_matrix_complex(matrix);
                     int code = gsl_linalg_complex_cholesky_decomp(gsl_mat.get());
@@ -176,7 +176,7 @@ namespace Function {
                     return MatrixExpression::construct(gsl_mat);
                 }
             }
-            throw Exception("Cholesky decomposition expects a matrix. Got: ", matrix);
+            throw Exception("Cholesky decomposition expects a non-empty matrix. Got: ", matrix);
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
@@ -189,7 +189,7 @@ namespace Function {
         expression eval(const Variables& vars = emptyVars) override {
             using Scanner::MATRIX;
             auto matrix = arg->at(0)->eval(vars);
-            if (matrix == MATRIX){
+            if (matrix == MATRIX && matrix->size() > 0){
                 if (matrix->isComplex()){
                     throw Exception("Cannot compute SVD of complex matrix");
                 }
@@ -210,7 +210,7 @@ namespace Function {
                     });
                 }
             }
-            throw Exception("SVD expects a matrix. Got: ", matrix);
+            throw Exception("SVD expects a non-empty matrix. Got: ", matrix);
         }
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };

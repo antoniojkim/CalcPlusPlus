@@ -25,6 +25,9 @@ namespace Function {
             // Signature: (f, x, var="x")
             {"f", Empty}, {"x", Empty}, {"var", VariableExpression::construct("x")}
         }) {}
+        expression eval(const Variables& vars) override {
+            return NumExpression::construct(value(vars));
+        }
         double value(const Variables& vars = emptyVars) const override {
             auto f = arg->at(0);
             double x = arg->at(1)->value(vars);
@@ -82,6 +85,9 @@ namespace Function {
             // Signature: (f, a, b, var="x")
             {"f", Empty}, {"a", Empty}, {"b", Empty}, {"var", VariableExpression::construct("x")}
         }) {}
+        expression eval(const Variables& vars) override {
+            return NumExpression::construct(value(vars));
+        }
         double value(const Variables& vars = emptyVars) const override {
             using Scanner::NONE, Scanner::VAR;
             auto f = arg->at(0);

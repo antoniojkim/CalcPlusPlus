@@ -37,9 +37,13 @@ void fixBrackets(list<Token>& tokens){
             case RSQUARE: {
                 Type L = correspondingBracket(token->type);
                 while(!brackets.empty() && brackets.peek()->type != L){
-                    tokens.insert(token++, *(brackets.pop()));
+                    Type L2 = correspondingBracket(brackets.peek()->type);
+                    tokens.insert(token, Token{typeStrings[L2], L2});
+                    brackets.pop();
                 }
-                brackets.pop();
+                if (!brackets.empty()){
+                    brackets.pop();
+                }
             }
             default:
                 break;
@@ -48,6 +52,7 @@ void fixBrackets(list<Token>& tokens){
     while(!brackets.empty()){
         Type R = correspondingBracket(brackets.peek()->type);
         tokens.insert(tokens.end(), Token{typeStrings[R], R});
+        brackets.pop();
     }
 }
 

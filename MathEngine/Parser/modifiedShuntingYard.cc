@@ -94,9 +94,11 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 expressionLists.pop_back();
                 continue;
             case RBRACE: {
-                expressionLists.back().emplace_back(expressionStacks.back().pop());
                 if (!expressionStacks.back().empty()){
-                    throw Exception("Top Expression Stack left with more than one expression: '}'");
+                    expressionLists.back().emplace_back(expressionStacks.back().pop());
+                    if (!expressionStacks.back().empty()){
+                        throw Exception("Top Expression Stack left with more than one expression: '}'");
+                    }
                 }
                 expressionStacks.pop_back();
 
@@ -341,6 +343,12 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
     while(!operatorStack.empty()){
         outputStacks.back().push(operatorStack.pop());
     }
+
+    // cout << "Output Stack:  ";
+    // for (auto token : outputStacks.back()){
+    //     cout << token->lexeme << " ";
+    // }
+    // cout << endl;
 
     return postfix_to_expression(outputStacks.back());
 }

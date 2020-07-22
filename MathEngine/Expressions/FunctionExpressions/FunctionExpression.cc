@@ -118,6 +118,10 @@ expression FunctionExpression::construct(const char * name, expression arg){
     return Functions::construct(Functions::indexOf(name), arg);
 }
 expression FunctionExpression::construct(std::string& name, expression arg){
+    int functionIndex = Functions::indexOf(name);
+    if (functionIndex < 0){
+        throw Exception("Invalid Function: ", name);
+    }
     return Functions::construct(Functions::indexOf(name), arg);
 }
 expression FunctionExpression::construct(int functionIndex, expression arg){
