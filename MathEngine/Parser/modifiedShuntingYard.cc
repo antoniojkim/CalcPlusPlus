@@ -67,6 +67,9 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 expressionStacks.back().push(VariableExpression::construct(token->lexeme));
                 continue;
             case FUNCTION:
+                if (expressionStacks.back().empty()){
+                    throw Exception("Function '", token->lexeme, "' found no argument");
+                }
                 expressionStacks.back().push(FunctionExpression::construct(token->lexeme, expressionStacks.back().pop()));
                 continue;
             case LPAREN:
@@ -76,6 +79,9 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 expressionLists.emplace_back(list<expression>());
                 continue;
             case COMMA:
+                if (expressionStacks.back().empty()){
+                    throw Exception("comma separator found no preceding expression");
+                }
                 expressionLists.back().emplace_back(expressionStacks.back().pop());
                 if (!expressionStacks.back().empty()){
                     cout << "Top Expression Stack: " << expressionStacks.back() << endl;

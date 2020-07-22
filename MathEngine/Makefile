@@ -35,7 +35,7 @@ DEPENDS := ${OBJECTS:.o=.d}
 ifeq ($(OS),Windows_NT)
 	LINK_STEP := ar.exe rcs ${TARGET_LIB} ${OBJECTS}
 else
-	LINK_STEP := ${cxx} ${CXXFLAGS} ${OBJECTS} -o ${TARGET_LIB} ${LINK_FLAGS} -lgsl -lgslcblas -lm
+	LINK_STEP := ${CXX} ${CXXFLAGS} ${OBJECTS} -o ${TARGET_LIB} ${LINK_FLAGS} -lgsl -lgslcblas -lm
 endif
 
 ${TARGET_LIB}: ${OBJECTS}

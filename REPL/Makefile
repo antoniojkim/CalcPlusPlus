@@ -10,9 +10,7 @@ CXXFLAGS = -g -std=c++17 -MMD -Werror=vla -Wall ${INCLUDES}
 CPPFLAGS = -DDEBUG
 EXEC = calc++
 
-TESTS = $(wildcard Tests/*/*.cc)
-
-SOURCES = repl.cc ${TESTS}
+SOURCES = repl.cc
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = ${OBJECTS:.o=.d}
 

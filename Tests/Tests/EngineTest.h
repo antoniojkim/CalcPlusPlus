@@ -16,3 +16,5 @@ void requireIsEqual(const std::string& input, const std::string& expected, bool 
 
 bool printDifference(const std::string& input, const expression expr, const expression output, const std::string& expected);
 void requireExprIsEqual(const std::string& input, const std::string& expected);
+
+void requireErrorIsEqual(const std::string& input, const std::string& expected);

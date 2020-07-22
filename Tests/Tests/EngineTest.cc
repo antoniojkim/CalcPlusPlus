@@ -72,3 +72,7 @@ void requireExprIsEqual(const string& input, const std::string& expected){
 
     CHECK( ((!outputExpr->equals(expectedExpr, 1e-8)) ? printDifference(input, inputExpr, outputExpr, expectedExpr, expected) : true) );
 }
+
+void requireErrorIsEqual(const std::string& input, const std::string& expected){
+    REQUIRE_THROWS_WITH(engine.eval(input), expected);
+}
