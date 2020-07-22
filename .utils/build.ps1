@@ -1,5 +1,5 @@
 cd MathEngine
-rm libMathEngine.dll
+rm libMathEngine.a
 make -f Makefile -j10
 cd ../CalcUI
 qmake -config release CalcUI.pro

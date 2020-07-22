@@ -1,15 +1,15 @@
 CXX := g++
 
-mode := debug
+mode := release
 optflag.release := -Ofast
 optflag.debug := -g
 OPT_FLAG := ${optflag.${mode}}
 
 ifeq ($(OS),Windows_NT)
 	INCLUDES := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
-	LIB_FLAGS := -shared
-	LINK_FLAGS := -Wl,--out-implib,libMathEngine.a -LC:\DEV\vcpkg\packages\gsl_x64-windows\bin
-	TARGET_LIB := MathEngine.dll
+	LIB_FLAGS := -fPIC -static
+	LINK_FLAGS := -LC:\DEV\vcpkg\packages\gsl_x64-windows\bin
+	TARGET_LIB := libMathEngine.a
 else
 	INCLUDES := -I../.includes/
 	LIB_FLAGS := -fPIC -shared
@@ -32,8 +32,14 @@ SOURCES := ${UTILS} ${SCANNER} ${PARSER} ${EXPRESSIONS} ${FUNCTIONS} ${FUNCTIONI
 OBJECTS := ${SOURCES:.cc=.o}
 DEPENDS := ${OBJECTS:.o=.d}
 
+ifeq ($(OS),Windows_NT)
+	LINK_STEP := ar.exe rcs ${TARGET_LIB} ${OBJECTS}
+else
+	LINK_STEP := ${cxx} ${CXXFLAGS} ${OBJECTS} -o ${TARGET_LIB} ${LINK_FLAGS} -lgsl -lgslcblas -lm
+endif
+
 ${TARGET_LIB}: ${OBJECTS}
-	${CXX} ${CXXFLAGS} ${OBJECTS} -o ${TARGET_LIB} ${LINK_FLAGS} -lgsl -lgslcblas -lm
+	${LINK_STEP}
 
 
 # $(SOURCES:.cc=.d):%.d:%.cc
