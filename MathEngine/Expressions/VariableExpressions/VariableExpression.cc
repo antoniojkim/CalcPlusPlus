@@ -12,22 +12,24 @@
 #include "../UnitExpression.h"
 #include "../VariableExpression.h"
 #include "Constants.h"
+#include "GreekLetters.h"
 
 using namespace std;
 using namespace Scanner;
 
 VariableExpression::VariableExpression(const std::string& name, expression var): Expression{VAR}, name{name}, var{var} {}
 
-expression VariableExpression::construct(const std::string& name){
-    return shared_ptr<VariableExpression>(new VariableExpression(name));
-}
 expression VariableExpression::construct(const std::string& name, double num){
-    return shared_ptr<VariableExpression>(new VariableExpression(name, NumExpression::construct(num)));
+    return construct(name, NumExpression::construct(num));
 }
 expression VariableExpression::construct(const std::string& name, gsl_complex num){
-    return shared_ptr<VariableExpression>(new VariableExpression(name, NumExpression::construct(num)));
+    return construct(name, NumExpression::construct(num));
 }
 expression VariableExpression::construct(const std::string& name, expression var){
+    // int greekLetterIndex = getGreekLetterNameIndex(name);
+    // if (greekLetterIndex != -1){
+    //     return shared_ptr<VariableExpression>(new VariableExpression(greekLetters[greekLetterIndex], var));
+    // }
     return shared_ptr<VariableExpression>(new VariableExpression(name, var));
 }
 
@@ -90,7 +92,17 @@ double VariableExpression::value(const Variables& vars) const {
 
 bool VariableExpression::equals(expression e, double precision) const {
     if (e == VAR){
-        return name == e->repr() && ((!var && !e->at(1)) || (var && e->at(1) && var->equals(e->at(1), precision)));
+        if (name != e->repr()){
+            int index1 = getGreekLetterIndex(name);
+            if (index1 != -1){
+                int index2 = getGreekLetterIndex(e->repr());
+                return index1 == index2;
+            }
+        }
+        if (!var){
+            return !e->at(1);
+        }
+        return e->at(1) && var->equals(e->at(1), precision);
     }
     return false;
 }

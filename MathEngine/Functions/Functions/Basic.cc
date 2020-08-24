@@ -2,8 +2,10 @@
 #include <memory>
 #include <numeric>
 
+#include <gsl/gsl_blas.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_complex_math.h>
+#include <gsl/gsl_vector.h>
 
 #include "../../Expressions/Expression.h"
 #include "../../Expressions/ExpressionFunctions.h"
@@ -219,11 +221,11 @@ namespace Function {
                 case 3:
                     return gsl_hypot3(a.at(0), a.at(1), a.at(2));
                 default: {
-                    double sum = 0;
-                    for (auto e : a){
-                        sum += gsl_pow_2(e);
-                    }
-                    return std::sqrt(sum);
+                    gsl_vector v;
+                    v.data = a.data();
+                    v.size = a.size();
+                    v.stride = 1;
+                    return gsl_blas_dnrm2(&v);
                 }
             }
         }

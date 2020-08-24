@@ -20,7 +20,7 @@ bool to_fraction(double num, long& numerator, long& denominator){
         c = numerator;
         d = denominator;
         g = 1.0/(g-s);
-        if(gsl_fcmp(sign*numerator/denominator, num, 1e-13) == 0){
+        if(gsl_fcmp(sign*numerator, num*denominator, 1e-13) == 0){
             numerator *= sign;
             return true;
         }

@@ -8,13 +8,12 @@ class VariableExpression: public Expression {
         const std::string name;
         expression var;
 
-        VariableExpression(const std::string& name, expression var = nullptr);
+        VariableExpression(const std::string& name, expression var);
 
     public:
-        static expression construct(const std::string& name);
         static expression construct(const std::string& name, double var);
         static expression construct(const std::string& name, gsl_complex var);
-        static expression construct(const std::string& name, expression var);
+        static expression construct(const std::string& name, expression var = nullptr);
 
         expression simplify() override;
         expression derivative(const std::string& var) override;

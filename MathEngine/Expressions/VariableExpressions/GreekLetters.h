@@ -73,7 +73,7 @@ static int getGreekLetterIndex(const std::string& name){
             }
         }
     }
-    return -1;
+    return getGreekLetterNameIndex(name.c_str());
 }
 
 #endif // __GREEK_LETTERS_H__

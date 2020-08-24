@@ -113,14 +113,15 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
 
                 vector<expression> matrixElements;
                 matrixElements.reserve(expressionLists.back().size());
-                size_t numRows = expressionLists.back().size();
-                size_t numCols = 0;
+                size_t numRows = 0;
+                size_t numCols = expressionLists.back().size();
                 for (auto matrix : expressionLists.back()){
                     if (matrix == MATRIX){
                         if (matrix->shape(0) != 1){
                             throw Exception("Matrix must be two dimensional");
                         }
-                        else if (numCols == 0){
+                        else if (numRows == 0){
+                            numRows = numCols;
                             numCols = matrix->shape(1);
                             matrixElements.reserve(expressionLists.back().size() * numCols);
                         }
@@ -129,23 +130,18 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                         }
                         for (auto e : *matrix){ matrixElements.emplace_back(e); }
                     }
-                    else if (numCols == 0){
-                        numCols = 1;
+                    else if (numRows == 0){
+                        numRows = 1;
                         matrixElements.emplace_back(matrix);
                     }
-                    else if (numCols != 1){
-                        throw Exception("Matrix expected ", numCols, " columns. Got 1");
+                    else if (numRows != 1){
+                        throw Exception("Matrix expected ", numRows, " rows. Got 1");
                     }
                     else{
                         matrixElements.emplace_back(matrix);
                     }
                 }
-                if (numCols == 1){
-                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), 1, numRows));
-                }
-                else {
-                    expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), numRows, numCols));
-                }
+                expressionStacks.back().push(MatrixExpression::construct(std::move(matrixElements), numRows, numCols));
                 expressionLists.pop_back();
                 continue;
             }
@@ -182,7 +178,27 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
 
                 expression rhs = expressionStacks.back().pop();
                 expression lhs = expressionStacks.back().pop();
-                expressionStacks.back().push(FunctionExpression::construct(token->lexeme, {lhs, rhs}));
+                // switch(token->type){
+                //     case PLUS:
+                //         expressionStacks.back().push(lhs + rhs);
+                //         break;
+                //     case MINUS:
+                //         expressionStacks.back().push(lhs - rhs);
+                //         break;
+                //     case STAR:
+                //         expressionStacks.back().push(lhs * rhs);
+                //         break;
+                //     case SLASH:
+                //         expressionStacks.back().push(lhs / rhs);
+                //         break;
+                //     case CARET:
+                //     case STAR_STAR:
+                //         expressionStacks.back().push(lhs ^ rhs);
+                //         break;
+                //     default:
+                        expressionStacks.back().push(FunctionExpression::construct(token->lexeme, {lhs, rhs}));
+                        // break;
+                // }
             }
         }
         else{

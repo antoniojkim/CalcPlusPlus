@@ -47,6 +47,7 @@ TEST_CASE("Basic Function Evaluation Tests", "[function]" ) {
 TEST_CASE("Basic GSL Math Function Tests", "[basic_function]"){
     requireIsEqual("hypot(3, 4)", 5);
     requireIsEqual("hypot(3, 4, 5)", 7.071067811865475244);
+    requireIsEqual("hypot(3, 4, 5, 6)", 9.273618495495704);
 
     requireIsEqual("ldexp(.53, 7)", 67.84);
     requireExprIsEqual("frexp(67.84)", "(0.53, 7)");
