@@ -79,6 +79,9 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
                 expressionLists.emplace_back(list<expression>());
                 continue;
             case COMMA:
+                if (expressionLists.empty()){
+                    throw Exception("Cannot construct Tuple from empty list of expressions");
+                }
                 if (expressionStacks.back().empty()){
                     throw Exception("comma separator found no preceding expression");
                 }
@@ -210,22 +213,47 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
         return expressionStacks.back().pop();
     }
 
-    // cout << "Expression Stack: " << expressionStacks.size() << endl << expressionStacks << endl;
-
     throw Exception("Expression Stack left with more than one expression");
 }
 
 expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const {
     int stackSize = tokens.size();
 
-    // cout << "TOKENS: " << endl;
-    // for (auto& token : tokens){
-    //     cout << "    " << token.lexeme << " " << Scanner::typeStrings[token.type] << endl;
-    // }
-
     FixedStack<Token*> operatorStack(stackSize);
     list<FixedStack<Token*>> outputStacks;
     outputStacks.emplace_back(FixedStack<Token*>(stackSize));
+
+    #ifdef DEBUG
+    #undef DEBUG
+    #endif  // DEBUG
+
+    #ifdef DEBUG
+    cout << "TOKENS:     ";
+    for (auto& token : tokens){
+        cout << token.lexeme << " ";
+    }
+    cout << endl;
+    #endif  // DEBUG
+
+    #ifdef DEBUG
+    #define PRINT_DEBUG(name)                       \
+        cout << name << endl;                       \
+        cout << "    Output:       │ ";             \
+        for (auto& outputStack : outputStacks) {    \
+            for (auto token : outputStack){         \
+                cout << token->lexeme << " ";       \
+            }                                       \
+            cout << "│ ";                           \
+        }                                           \
+        cout << endl;                               \
+        cout << "    Operators:    │ ";             \
+        for (auto token : operatorStack){           \
+            cout << token->lexeme << " ";           \
+        }                                           \
+        cout << "│" << endl;
+    #else
+    #define PRINT_DEBUG(name)
+    #endif  // DEBUG
 
     auto current = tokens.begin();
     auto end = tokens.end();
@@ -255,6 +283,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
             // case LSQUARE:
                 outputStacks.emplace_back(FixedStack<Token*>(stackSize));
                 operatorStack.push(&token);
+                PRINT_DEBUG("LPAREN/LBRACE:")
                 continue;
             case COMMA: {
                 while (true) {
@@ -274,6 +303,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                 }
                 operatorStack.push(&token);
                 outputStacks.emplace_back(FixedStack<Token*>(stackSize));
+                PRINT_DEBUG("COMMA:")
                 continue;
             }
             case RPAREN: {
@@ -304,6 +334,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                      operatorStack.peek()->type == SPECIALID)){
                     outputStacks.back().push(operatorStack.pop());
                 }
+                PRINT_DEBUG("RPAREN:")
                 continue;
             }
             case RBRACE: {
@@ -327,6 +358,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                      operatorStack.peek()->type == SPECIALID)){
                     outputStacks.back().push(operatorStack.pop());
                 }
+                PRINT_DEBUG("RBRACE:")
                 continue;
             }
             default:
@@ -350,6 +382,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                 }
             }
             operatorStack.push(&token);
+            PRINT_DEBUG("OPERATOR:")
         }
         else{
             cout << "TOKENS:  ";
@@ -369,11 +402,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
         outputStacks.back().push(operatorStack.pop());
     }
 
-    // cout << "Output Stack:  ";
-    // for (auto token : outputStacks.back()){
-    //     cout << token->lexeme << " ";
-    // }
-    // cout << endl;
+    PRINT_DEBUG("\nFinal:")
 
     return postfix_to_expression(outputStacks.back());
 }

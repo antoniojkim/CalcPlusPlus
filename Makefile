@@ -16,7 +16,8 @@ newtest:
 	python3 -u .utils/new_test.py --name $(name)
 
 repl: build
-	.utils/build_repl
+	# .utils/build_repl
+	cd Calc++ && ./main.sh
 
 ui:
 	rm -f CalcUI/CalcUI

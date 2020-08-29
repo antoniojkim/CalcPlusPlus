@@ -6,6 +6,7 @@ using namespace std;
 
 TEST_CASE("Syntax Error Tests", "[syntax]" ) {
 
+    requireErrorIsEqual("quad(1, 2, -", "Cannot construct Tuple from empty list of expressions");
     requireErrorIsEqual("quad(-", "Function 'neg' found no argument");
     requireErrorIsEqual("quad(,", "comma separator found no preceding expression");
 
