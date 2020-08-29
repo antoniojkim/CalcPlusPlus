@@ -2,8 +2,8 @@
 import argparse
 import sys
 
-from Calcpp.REPL import repl_main
-from Calcpp.UI.MainWindow import MainWindow
+from calcpp.REPL import repl_main
+from calcpp.UI.MainWindow import MainWindow
 from PyQt5.QtWidgets import QApplication
 
 

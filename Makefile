@@ -17,7 +17,7 @@ newtest:
 
 repl: build
 	# .utils/build_repl
-	cd Calc++ && ./main.sh
+	cd calcpp && ./main.sh
 
 ui:
 	rm -f CalcUI/CalcUI
@@ -26,8 +26,8 @@ ui:
 # run: build ui
 # 	.utils/run
 
-run: package
-	.package/CalcPlusPlus/Calculator
+run:
+	cd calcpp && ./main.sh -m ui
 
 debug: build ui
 	gdb -q -ex="run" ./CalcUI/CalcUI

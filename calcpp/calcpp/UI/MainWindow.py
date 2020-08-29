@@ -10,7 +10,7 @@ class OutputTextBox(QTextEdit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        font = QFont("Cambria Math", 18)
+        font = QFont("Computer Modern", 18)
         self.setFont(font)
         self.setReadOnly(True)
 
@@ -34,7 +34,7 @@ class EquationEditor(QTextEdit):
         self.prev = None
 
         self.setAutoFormatting(QTextEdit.AutoAll)
-        font = QFont("Cambria Math", 18)
+        font = QFont("Computer Modern", 18)
         self.setFont(font)
         self.textChanged.connect(self.textChangedAction)
 
@@ -53,14 +53,25 @@ class EquationEditor(QTextEdit):
         size = self.document().size().toSize()
         self.setFixedHeight(size.height() + 3)
 
-    def textChangedAction(self):
-        self.update_size()
-
+    def update_output(self):
         inputStr = self.toPlainText()
         self.outputStr = self.parent.engine.evaluateOutput(inputStr, self.outputStr)
         self.output.setText(self.outputStr)
-
         self.output.update_size()
+
+    def textChangedAction(self):
+        self.update_size()
+        self.update_output()
+
+        curr = self.next
+        while curr is not None:
+            curr.update_output()
+            curr = curr.next
+
+        curr = self.prev
+        while curr is not None:
+            curr.update_output()
+            curr = curr.prev
 
     def keyPressEvent(self, qKeyEvent):
         if qKeyEvent.modifiers() == Qt.ControlModifier:
@@ -71,20 +82,25 @@ class EquationEditor(QTextEdit):
                 return
         elif (
             qKeyEvent.key() in (Qt.Key_Backspace, Qt.Key_Delete)
+            and (self.prev is not None or self.next is not None)  # noqa: W503
             and len(self.toPlainText()) == 0  # noqa: W503
         ):
             self.parent.layout.removeWidget(self)
             self.parent.layout.removeWidget(self.output)
+            if self.prev is None:
+                self.parent.editors = self.next
+                self.next.prev = None
+                self.next.setFocus()
+            elif self.next is None:
+                self.prev.next = None
+                self.prev.setFocus()
+            else:
+                self.prev.next = self.next
+                self.next.prev = self.prev
+                self.prev.setFocus()
 
-            if self.prev is not None or self.next is not None:
-                if self.prev is None:
-                    self.parent.editors = self.next
-                    self.next.prev = None
-                elif self.next is None:
-                    self.prev.next = None
-                else:
-                    self.prev.next = self.next
-                    self.next.prev = self.prev
+            self.hide()
+            self.output.hide()
             return
 
         elif qKeyEvent.key() == Qt.Key_Up:
