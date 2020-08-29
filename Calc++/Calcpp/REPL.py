@@ -9,6 +9,9 @@ def repl_main(args):
     session = PromptSession()
     outputStr = ""
     while True:
-        inputStr = session.prompt(">>> ")
+        try:
+            inputStr = session.prompt(">>> ")
+        except:  # noqa: E722
+            break
         outputStr = engine.evaluateOutput(inputStr, outputStr)
         print(outputStr)
