@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cctype>
 #include <sstream>
+#include <iostream>
 
 #include "scanner.h"
 #include "../Utils/BinarySearch.h"
@@ -14,6 +15,9 @@
 
 using namespace std;
 using namespace Scanner;
+
+
+Token::~Token(){}
 
 
 namespace Lexeme {

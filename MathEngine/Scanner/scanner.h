@@ -34,6 +34,7 @@ namespace Scanner {
 	struct Token {
 		std::string lexeme;
 		Type type;
+		~Token();
 	};
 
 	bool isPreImplicit(Type type);

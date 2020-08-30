@@ -30,8 +30,4 @@ class MathEngine {
         std::string formatInput(const std::string& input, int& cursorPosition);
         std::string evaluateOutput(const std::string& input, const std::string& output);
 
-
-#ifdef DEBUG
-        std::list<Scanner::Token> tokens;
-#endif
 };

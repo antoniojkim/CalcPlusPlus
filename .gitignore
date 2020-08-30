@@ -15,6 +15,7 @@ Tests/run
 CalcUI/CalcUI
 CalcUI/debug
 CalcUI/release
+UI/Makefile
 .includes/
 .libs/
 .package

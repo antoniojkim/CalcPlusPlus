@@ -19,21 +19,23 @@ repl: build
 	# .utils/build_repl
 	cd calcpp && ./main.sh
 
-ui:
-	rm -f CalcUI/CalcUI
-	.utils/build_ui
-
-# run: build ui
-# 	.utils/run
-
-run:
+pyui: build
 	cd calcpp && ./main.sh -m ui
 
+ui:
+	rm -f UI/calcpp
+	.utils/build_ui
+
+run: build ui
+	python -u .utils/package.py --no-tar
+	cd .package/CalcPlusPlus && ./Calculator
+
 debug: build ui
-	gdb -q -ex="run" ./CalcUI/CalcUI
+	python -u .utils/package.py --no-tar
+	cd .package/CalcPlusPlus && gdb -q -ex="run" ./Calculator
 
 
-package:
+package: ui
 	python -u .utils/package.py
 
 pkg: package

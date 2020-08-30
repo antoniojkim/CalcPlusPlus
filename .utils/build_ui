@@ -1,9 +1,10 @@
 #!/bin/bash
 
-cd CalcUI/
+# cd CalcUI/
+cd UI/
 
 if [ ! -f Makefile ]; then
-    qmake -config release CalcUI.pro \
+    qmake -config release calcpp.pro \
             INCPATH+=../MathEngine \
             INCPATH+=../.includes
 

@@ -1,7 +1,7 @@
 CXX := g++
 
 mode := release
-optflag.release := -Ofast -g
+optflag.release := -g
 optflag.debug := -g
 OPT_FLAG := ${optflag.${mode}}
 

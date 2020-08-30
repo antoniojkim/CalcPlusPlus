@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QFontMetrics
 from PyQt5.QtWidgets import QVBoxLayout, QTextEdit, QWidget, QFrame
@@ -6,25 +8,24 @@ from PyQt5.QtWidgets import QVBoxLayout, QTextEdit, QWidget, QFrame
 from ..MathEngine import MathEngine
 
 
-class OutputTextBox(QTextEdit):
-    def __init__(self, *args, **kwargs):
+class TextEdit(QTextEdit):
+    def __init__(self, *args, height_factor=2, **kwargs):
         super().__init__(*args, **kwargs)
 
         font = QFont("Computer Modern", 18)
         self.setFont(font)
-        self.setReadOnly(True)
 
         self.setFrameShape(QFrame.NoFrame)
         self.setLineWidth(0)
 
-        self.setFixedHeight(QFontMetrics(font).lineSpacing() * 2)
+        self.setFixedHeight(QFontMetrics(font).lineSpacing() * height_factor)
 
     def update_size(self):
         size = self.document().size().toSize()
         self.setFixedHeight(size.height() + 3)
 
 
-class EquationEditor(QTextEdit):
+class EquationEditor(TextEdit):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -32,26 +33,11 @@ class EquationEditor(QTextEdit):
 
         self.next = None
         self.prev = None
-
-        self.setAutoFormatting(QTextEdit.AutoAll)
-        font = QFont("Computer Modern", 18)
-        self.setFont(font)
         self.textChanged.connect(self.textChangedAction)
 
-        self.setFrameShape(QFrame.NoFrame)
-        self.setLineWidth(0)
-
-        self.setFixedHeight(QFontMetrics(font).lineSpacing() * 2)
-
-        self.output = OutputTextBox()
+        self.output = TextEdit(height_factor=1.5)
+        self.output.setReadOnly(True)
         self.outputStr = ""
-
-        self.parent.layout.addWidget(self)
-        self.parent.layout.addWidget(self.output)
-
-    def update_size(self):
-        size = self.document().size().toSize()
-        self.setFixedHeight(size.height() + 3)
 
     def update_output(self):
         inputStr = self.toPlainText()
@@ -75,10 +61,27 @@ class EquationEditor(QTextEdit):
 
     def keyPressEvent(self, qKeyEvent):
         if qKeyEvent.modifiers() == Qt.ControlModifier:
-            if qKeyEvent.key() in (Qt.Key_Enter, Qt.Key_Return):
-                self.next = EquationEditor(self.parent)
-                self.next.setFocus()
-                self.next.prev = self
+            if qKeyEvent.key() == Qt.Key_W:
+                sys.exit(0)
+            elif qKeyEvent.key() in (Qt.Key_Enter, Qt.Key_Return):
+                editor = EquationEditor(self.parent)
+                if self.next is not None:
+                    i = self.parent.layout.indexOf(self.next)
+                    self.parent.layout.insertWidget(i, editor)
+                    self.parent.layout.insertWidget(i + 1, editor.output)
+
+                    editor.next = self.next
+                    editor.prev = self
+                    self.next.prev = editor
+                    self.next = editor
+                else:
+                    self.parent.layout.addWidget(editor)
+                    self.parent.layout.addWidget(editor.output)
+
+                    editor.prev = self
+                    self.next = editor
+
+                editor.setFocus()
                 return
         elif (
             qKeyEvent.key() in (Qt.Key_Backspace, Qt.Key_Delete)
@@ -88,7 +91,7 @@ class EquationEditor(QTextEdit):
             self.parent.layout.removeWidget(self)
             self.parent.layout.removeWidget(self.output)
             if self.prev is None:
-                self.parent.editors = self.next
+                self.parent.editor = self.next
                 self.next.prev = None
                 self.next.setFocus()
             elif self.next is None:
@@ -136,6 +139,9 @@ class MainWindow(QWidget):
         self.layout.setSpacing(0)
         self.layout.setAlignment(Qt.AlignTop)
 
-        self.editors = EquationEditor(self)
+        self.editor = EquationEditor(self)
+
+        self.layout.addWidget(self.editor)
+        self.layout.addWidget(self.editor.output)
 
         self.setLayout(self.layout)

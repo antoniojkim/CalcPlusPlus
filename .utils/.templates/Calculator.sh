@@ -12,4 +12,4 @@ export LD_LIBRARY_PATH
 QT_PLUGIN_PATH=$dirname
 export QT_PLUGIN_PATH
 
-$dirname/bin/CalcUI "$@"
+$dirname/bin/calcpp "$@"
