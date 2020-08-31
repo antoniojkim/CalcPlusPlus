@@ -15,6 +15,9 @@ TextEdit::TextEdit(double heightFactor){
     QFont font ("Cambria", 18);
     setFont(font);
 
+    setToolTip(QString::fromUtf8("Right-click for help"));
+    setToolTipDuration(3000);
+
     setFrameShape(QFrame::NoFrame);
     setLineWidth(0);
 

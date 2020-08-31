@@ -1,3 +1,4 @@
+# File Extensions
 *.d
 *.o
 *.a
@@ -8,8 +9,13 @@
 *.gdbinit
 *.qmake.stash
 *.tar*
+
+# General Directory types to ignore
 *pycache*
 *ipynb_checkpoint*
+
+# Specific Directories to ignore
+docs/build
 MathEngine/libMathEngine.a
 Tests/run
 UI/debug/
@@ -20,4 +26,3 @@ UI/Makefile*
 .package
 .sandbox/*/sandbox
 .vscode/
-
