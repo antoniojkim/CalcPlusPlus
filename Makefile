@@ -7,7 +7,7 @@ generate:
 
 test: build
 	.utils/build Tests
-	.utils/test $(name) $(nogdb)
+	.utils/test $(name)
 
 bp:  # breakpoints
 	vim Tests/.gdbinit

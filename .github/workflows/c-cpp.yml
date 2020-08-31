@@ -13,5 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: make test name=nogdb
+    - name: make requirements install
+      run: make requirements install
+    - name: make test
       run: make test name=nogdb
