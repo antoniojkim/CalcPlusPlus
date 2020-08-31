@@ -1,6 +1,12 @@
 #!/bin/bash
 
-
 cd Tests
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../.libs/
-gdb -q -ex="run" --args run $1
+
+name=$1
+
+if [ $name == "nogdb" ]; then
+    ./run
+else
+    gdb -q -ex="run" --args run $name
+fi
