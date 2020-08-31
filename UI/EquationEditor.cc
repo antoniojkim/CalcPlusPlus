@@ -23,7 +23,7 @@ TextEdit::TextEdit(double heightFactor){
 }
 void TextEdit::updateSize(){
     auto size = document()->size().toSize();
-    setFixedHeight(size.height() * 2);
+    setFixedHeight(size.height() + 3);
 }
 
 EquationEditor::EquationEditor(MainWindow* parent):
@@ -51,15 +51,12 @@ void EquationEditor::updateOutput(){
         cursor.setPosition(cursorPosition);
         setTextCursor(cursor);
         blockSignals(false);
+        updateSize();
     }
     inputStr = newInputStr;
 
-    cout << "inputStr: " << inputStr << endl;
-
     outputStr = parent->engine.evaluateOutput(inputStr, outputStr);
     output.setText(QString::fromUtf8(outputStr.c_str()));
-
-    cout << "outputStr: " << outputStr << endl;
 
     output.updateSize();
 }

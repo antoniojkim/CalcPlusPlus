@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QFontMetrics
 from PyQt5.QtWidgets import QVBoxLayout, QTextEdit, QWidget, QFrame
 
-from ..MathEngine import MathEngine
+from .MathEngine import MathEngine
 
 
 class TextEdit(QTextEdit):
@@ -41,6 +41,20 @@ class EquationEditor(TextEdit):
 
     def update_output(self):
         inputStr = self.toPlainText()
+        cursor = self.textCursor()
+        cursor_position = cursor.position()
+
+        newInputStr, cursor_position = self.parent.engine.formatInput(
+            inputStr, cursor_position
+        )
+        if inputStr != newInputStr:
+            self.blockSignals(True)
+            self.setText(newInputStr)
+            cursor.setPosition(cursor_position)
+            self.setTextCursor(cursor)
+            self.blockSignals(False)
+            inputStr = newInputStr
+
         self.outputStr = self.parent.engine.evaluateOutput(inputStr, self.outputStr)
         self.output.setText(self.outputStr)
         self.output.update_size()

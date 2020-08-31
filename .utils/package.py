@@ -64,8 +64,8 @@ def main(args):
     ]
     for dep, name in depends:
         dest = os.path.join(LIB_DIR, name)
-        if not os.path.isfile(dest):
-            copyfile(dep, dest)
+        # if not os.path.isfile(dest):
+        copyfile(dep, dest)
 
     platform_dir = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms"
     for file in os.listdir(platform_dir):

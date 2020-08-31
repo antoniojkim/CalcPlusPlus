@@ -15,30 +15,32 @@ bp:  # breakpoints
 newtest:
 	python3 -u .utils/new_test.py --name $(name)
 
-repl: build
-	# .utils/build_repl
-	cd calcpp && ./main.sh
+pydep:
+	cp MathEngine/libMathEngine.so calcpp/
+	cp `readlink .libs/libgsl.so.25` calcpp/libgsl.so.25
+	cp `readlink .libs/libgslcblas.so.0` calcpp/libgslcblas.so.0
 
-pyui: build
-	cd calcpp && ./main.sh -m ui
+repl: build pydep
+	cd calcpp && python main.py -m ui
+
+pyui: build pydep
+	cd calcpp && python main.py -m ui
+
+pypkg: build pydep
+	cd calcpp && pyinstaller calcpp.spec
 
 ui:
 	rm -f UI/calcpp
 	.utils/build_ui
 
-run: build ui
+run: ui
 	python -u .utils/package.py --no-tar
 	cd .package/CalcPlusPlus && ./Calculator
-
-debug: build ui
-	python -u .utils/package.py --no-tar
-	cd .package/CalcPlusPlus && gdb -q -ex="run" ./Calculator
-
 
 package: ui
 	python -u .utils/package.py
 
-pkg: package
+pkg: pypkg
 
 
 buildwin:

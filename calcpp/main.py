@@ -2,12 +2,24 @@
 import argparse
 import sys
 
-from calcpp.REPL import repl_main
-from calcpp.UI.MainWindow import MainWindow
 from PyQt5.QtWidgets import QApplication
 
+from calcpp.REPL import repl_main
+from calcpp.UI import MainWindow
 
-def main(args):
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-m",
+        "--mode",
+        type=str,
+        choices=["repl", "REPL", "ui", "UI"],
+        default="ui",
+        help="CalcPlusPlus Mode",
+    )
+    args = parser.parse_args()
+
     if args.mode.lower() == "repl":
         repl_main(args)
     elif args.mode.lower() == "ui":
@@ -18,13 +30,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    mode = parser.add_argument(
-        "-m",
-        "--mode",
-        type=str,
-        choices=["repl", "REPL", "ui", "UI"],
-        default="repl",
-        help="CalcPlusPlus Mode",
-    )
-    main(parser.parse_args())
+    main()

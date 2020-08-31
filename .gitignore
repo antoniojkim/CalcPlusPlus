@@ -2,7 +2,7 @@
 *.o
 *.a
 *.dll
-*.so
+*.so*
 *.log
 *.cerr
 *.gdbinit
@@ -21,3 +21,7 @@ UI/Makefile
 .package
 .sandbox/*/sandbox
 .vscode/
+
+# setup.py generated directories
+dist/
+calcpp.egg-info/

@@ -1,3 +1,4 @@
 git+https://github.com/antoniojkim/Sandboxer.git@e8389a2
 pre-commit
 prompt_toolkit
+pyqt5
