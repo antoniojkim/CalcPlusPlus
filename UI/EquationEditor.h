@@ -27,6 +27,10 @@ struct EquationEditor: public TextEdit, public std::enable_shared_from_this<Equa
     EquationEditor(MainWindow* parent);
 
     void updateOutput();
+    void updateNeighbours();
     void textChangedAction();
+
+    void insertEditorBelow();
+    bool deleteCurrentEditor();
     void keyPressEvent(QKeyEvent* qKeyEvent) override;
 };

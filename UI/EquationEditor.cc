@@ -39,6 +39,12 @@ void TextEdit::contextMenuEvent(QContextMenuEvent* event){
     QMenu *menu = createStandardContextMenu();
     menu->addSeparator();
     menu->addAction(QString::fromUtf8("Help?"), openDocs, QKeySequence(tr("Ctrl+H")));
+
+    auto settingsMenu = menu->addMenu("Settings");
+    auto precisionMenu = settingsMenu->addMenu(QString::fromUtf8("Precision"));
+    precisionMenu->addAction(QString::fromUtf8("Full"));
+    precisionMenu->addAction(QString::fromUtf8("Fraction"));
+
     menu->exec(event->globalPos());
     delete menu;
 }
@@ -77,10 +83,8 @@ void EquationEditor::updateOutput(){
 
     output.updateSize();
 }
-void EquationEditor::textChangedAction(){
-    updateSize();
-    updateOutput();
 
+void EquationEditor::updateNeighbours(){
     auto curr = next;
     while(curr){
         curr->updateOutput();
@@ -93,6 +97,62 @@ void EquationEditor::textChangedAction(){
         curr = curr->prev;
     }
 }
+
+void EquationEditor::textChangedAction(){
+    updateSize();
+    updateOutput();
+    updateNeighbours();
+}
+
+void EquationEditor::insertEditorBelow(){
+    auto editor = std::make_shared<EquationEditor>(parent);
+    if (next){
+        int i = parent->vlayout.indexOf(next.get());
+        parent->vlayout.insertWidget(i, editor.get());
+        parent->vlayout.insertWidget(i+1, &(editor->output));
+
+        editor->next = next;
+        editor->prev = shared_from_this();
+        next->prev = editor;
+        next = editor;
+    }
+    else{
+        parent->vlayout.addWidget(editor.get());
+        parent->vlayout.addWidget(&(editor->output));
+
+        editor->prev = shared_from_this();
+        next = editor;
+    }
+    editor->setFocus();
+}
+
+bool EquationEditor::deleteCurrentEditor(){
+    if ((prev || next) && toPlainText().size() == 0){
+        hide();
+        output.hide();
+
+        parent->vlayout.removeWidget(this);
+        parent->vlayout.removeWidget(&output);
+
+        if (!prev){
+            parent->editor = next;
+            next->prev = nullptr;
+            next->setFocus();
+        }
+        else if (!next){
+            prev->next = nullptr;
+            prev->setFocus();
+        }
+        else{
+            prev->next = next;
+            next->prev = prev;
+            prev->setFocus();
+        }
+        return true;
+    }
+    return false;
+}
+
 void EquationEditor::keyPressEvent(QKeyEvent* qKeyEvent){
     if (qKeyEvent->modifiers() == Qt::ControlModifier){
         switch(qKeyEvent->key()) {
@@ -103,25 +163,7 @@ void EquationEditor::keyPressEvent(QKeyEvent* qKeyEvent){
                 return;
             case Qt::Key_Enter:
             case Qt::Key_Return: {
-                auto editor = std::make_shared<EquationEditor>(parent);
-                if (next){
-                    int i = parent->vlayout.indexOf(next.get());
-                    parent->vlayout.insertWidget(i, editor.get());
-                    parent->vlayout.insertWidget(i+1, &(editor->output));
-
-                    editor->next = next;
-                    editor->prev = shared_from_this();
-                    next->prev = editor;
-                    next = editor;
-                }
-                else{
-                    parent->vlayout.addWidget(editor.get());
-                    parent->vlayout.addWidget(&(editor->output));
-
-                    editor->prev = shared_from_this();
-                    next = editor;
-                }
-                editor->setFocus();
+                insertEditorBelow();
                 return;
             }
             default:
@@ -132,27 +174,7 @@ void EquationEditor::keyPressEvent(QKeyEvent* qKeyEvent){
         switch(qKeyEvent->key()){
             case Qt::Key_Backspace:
             case Qt::Key_Delete: {
-                if ((prev || next) && toPlainText().size() == 0){
-                    parent->vlayout.removeWidget(this);
-                    parent->vlayout.removeWidget(&output);
-
-                    if (!prev){
-                        parent->editor = next;
-                        next->prev = nullptr;
-                        next->setFocus();
-                    }
-                    else if (!next){
-                        prev->next = nullptr;
-                        prev->setFocus();
-                    }
-                    else{
-                        prev->next = next;
-                        next->prev = prev;
-                        prev->setFocus();
-                    }
-
-                    hide();
-                    output.hide();
+                if (deleteCurrentEditor()){
                     return;
                 }
                 break;

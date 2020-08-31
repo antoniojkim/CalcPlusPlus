@@ -7,6 +7,10 @@ API
 .. toctree::
    :maxdepth: 2
 
+   api/introduction
+   api/interface
+   api/mathfunctions
+
 
 Guide
 ^^^^^
