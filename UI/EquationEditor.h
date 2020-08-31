@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include <QPoint>
 #include <QTextEdit>
 
 
@@ -10,6 +11,8 @@ class MainWindow;
 struct TextEdit: public QTextEdit {
     TextEdit(double heightFactor = 2.0);
     void updateSize();
+
+    void contextMenuEvent(QContextMenuEvent *) override;
 };
 
 struct EquationEditor: public TextEdit, public std::enable_shared_from_this<EquationEditor> {

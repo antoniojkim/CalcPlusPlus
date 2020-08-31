@@ -1,9 +1,12 @@
 #include <iostream>
 
+#include <QDesktopServices>
 #include <QFont>
 #include <QFontMetrics>
 #include <QFrame>
 #include <QKeyEvent>
+#include <QMenu>
+#include <Qt>
 
 #include "EquationEditor.h"
 #include "MainWindow.h"
@@ -16,7 +19,6 @@ TextEdit::TextEdit(double heightFactor){
     setFont(font);
 
     setToolTip(QString::fromUtf8("Right-click for help"));
-    setToolTipDuration(3000);
 
     setFrameShape(QFrame::NoFrame);
     setLineWidth(0);
@@ -27,6 +29,18 @@ TextEdit::TextEdit(double heightFactor){
 void TextEdit::updateSize(){
     auto size = document()->size().toSize();
     setFixedHeight(size.height() + 3);
+}
+
+void openDocs(){
+    QDesktopServices::openUrl(QUrl("https://calcplusplus.readthedocs.io/en/latest/", QUrl::TolerantMode));
+}
+
+void TextEdit::contextMenuEvent(QContextMenuEvent* event){
+    QMenu *menu = createStandardContextMenu();
+    menu->addSeparator();
+    menu->addAction(QString::fromUtf8("Help?"), openDocs, QKeySequence(tr("Ctrl+H")));
+    menu->exec(event->globalPos());
+    delete menu;
 }
 
 EquationEditor::EquationEditor(MainWindow* parent):
@@ -84,6 +98,9 @@ void EquationEditor::keyPressEvent(QKeyEvent* qKeyEvent){
         switch(qKeyEvent->key()) {
             case Qt::Key_W:
                 exit(0);
+            case Qt::Key_H:
+                openDocs();
+                return;
             case Qt::Key_Enter:
             case Qt::Key_Return: {
                 auto editor = std::make_shared<EquationEditor>(parent);

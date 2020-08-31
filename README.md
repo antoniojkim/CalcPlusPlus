@@ -1,5 +1,7 @@
 # CalcPlusPlus
 
+[![Documentation Status](https://readthedocs.org/projects/calcplusplus/badge/?version=latest)](https://calcplusplus.readthedocs.io/en/latest/?badge=latest)
+
 Advanced Scientific Calculator written in C++. This calculator is meant to replace my [previous calculator](https://github.com/antoniojkim/Math-Evaluation-Library) which was written using Java.
 
 ## Table of Contents

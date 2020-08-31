@@ -47,6 +47,10 @@ buildwin:
 	powershell.exe -noprofile -executionpolicy bypass -file .utils/build.ps1
 
 
+docs:
+	cd docs && make html
+.PHONY: docs
+
 sandbox:
 	sandboxer --create --name $(name) --lang $(lang)
 
