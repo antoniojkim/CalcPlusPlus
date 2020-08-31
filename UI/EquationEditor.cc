@@ -12,7 +12,7 @@ using namespace std;
 
 
 TextEdit::TextEdit(double heightFactor){
-    QFont font ("Computer Modern", 18);
+    QFont font ("Cambria", 18);
     setFont(font);
 
     setFrameShape(QFrame::NoFrame);
@@ -154,6 +154,6 @@ void EquationEditor::keyPressEvent(QKeyEvent* qKeyEvent){
             default:
                 break;
         }
-        QTextEdit::keyPressEvent(qKeyEvent);
     }
+    QTextEdit::keyPressEvent(qKeyEvent);
 }

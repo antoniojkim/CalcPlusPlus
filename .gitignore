@@ -12,16 +12,12 @@
 *ipynb_checkpoint*
 MathEngine/libMathEngine.a
 Tests/run
-CalcUI/CalcUI
-CalcUI/debug
-CalcUI/release
-UI/Makefile
+UI/debug/
+UI/release/
+UI/Makefile*
 .includes/
 .libs/
 .package
 .sandbox/*/sandbox
 .vscode/
 
-# setup.py generated directories
-dist/
-calcpp.egg-info/
