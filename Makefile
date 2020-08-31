@@ -21,7 +21,7 @@ pydep:
 	cp `readlink .libs/libgslcblas.so.0` calcpp/libgslcblas.so.0
 
 repl: build pydep
-	cd calcpp && python main.py -m ui
+	cd calcpp && python main.py -m repl
 
 pyui: build pydep
 	cd calcpp && python main.py -m ui

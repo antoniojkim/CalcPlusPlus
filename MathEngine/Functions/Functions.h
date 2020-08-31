@@ -14,18 +14,18 @@
 #include "../Utils/BinarySearch.h"
 
 namespace Functions {
-    constexpr const int numFunctions = 179;
+    constexpr const int numFunctions = 181;
     constexpr const char* names[numFunctions] = {
         "%", "&", "*", "**", "+", "-", "/", "//", ":=", "<-", "<<", "=", ">>", "Beta",
-		"Betainc", "C", "Chol", "Cholesky", "Eig", "LU", "LUsolve", "P", "SVD", "^", "^|",
+		"Betainc", "C", "Chol", "Cholesky", "Eig", "LU", "LUsolve", "P", "QR", "SVD", "^", "^|",
 		"abs", "absdev", "acos", "acosh", "acot", "acoth", "acsc", "acsch", "add", "arccos",
 		"arccosh", "arccot", "arccoth", "arccsc", "arccsch", "arcos", "arcosh", "arcot",
 		"arcoth", "arcsc", "arcsch", "arcsec", "arcsech", "arcsin", "arcsinh", "arctan",
 		"arctanh", "argmax", "argmin", "arsec", "arsech", "arsin", "arsinh", "artan", "artanh",
 		"asec", "asech", "asin", "asinh", "atan", "atanh", "autocorr", "bin", "bitwise_and",
-		"bitwise_or", "bitwise_xor", "cb", "cbrt", "choose", "comb", "cos", "cosh", "cot",
-		"coth", "csc", "csch", "cubic", "cubicc", "deg", "deriv", "det", "dfact", "diff", "div",
-		"eig", "eigen", "eq", "exp", "exp2", "expm1", "fact", "fcmp", "fft", "floordiv",
+		"bitwise_or", "bitwise_xor", "cb", "cbrt", "chol", "choose", "comb", "cos", "cosh",
+		"cot", "coth", "csc", "csch", "cubic", "cubicc", "deg", "deriv", "det", "dfact", "diff",
+		"div", "eig", "eigen", "eq", "exp", "exp2", "expm1", "fact", "fcmp", "fft", "floordiv",
 		"frexp", "gamma", "gamma_inc", "gamma_inc_P", "gamma_inc_Q", "gammainc", "gammaincp",
 		"gammaincq", "gammainv", "gammastar", "gcd", "hex", "hypot", "ifft", "integral", "kurt",
 		"kurtosis", "lag1", "lcm", "ldexp", "ln", "ln1p", "ln2", "lnBeta", "lnchoose", "lncomb",
@@ -57,6 +57,7 @@ namespace Function{
 	DECLARE_FUNCTION_EXPRESSION(Eig);
 	DECLARE_FUNCTION_EXPRESSION(LU);
 	DECLARE_FUNCTION_EXPRESSION(LUsolve);
+	DECLARE_FUNCTION_EXPRESSION(QR);
 	DECLARE_FUNCTION_EXPRESSION(SVD);
 	DECLARE_FUNCTION_EXPRESSION(abs);
 	DECLARE_FUNCTION_EXPRESSION(absdev);

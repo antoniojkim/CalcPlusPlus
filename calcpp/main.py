@@ -15,7 +15,7 @@ def main():
         "--mode",
         type=str,
         choices=["repl", "REPL", "ui", "UI"],
-        default="ui",
+        default="repl",
         help="CalcPlusPlus Mode",
     )
     args = parser.parse_args()

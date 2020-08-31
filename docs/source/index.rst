@@ -10,6 +10,14 @@ API
    api/introduction
    api/interface
    api/mathfunctions
+   api/calculus
+   api/eigensystems
+   api/explog
+   api/fft
+   api/linalg
+   api/polynomial
+   api/random
+   api/special
 
 
 Guide

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <initializer_list>
 #include <list>
 #include <utility>
@@ -151,7 +152,7 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(LUsolve)
 
-    // @Function Cholesky: Chol
+    // @Function Cholesky: Chol chol
     struct Cholesky: public FunctionExpression {
         Cholesky(int functionIndex, expression arg):
             FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
@@ -215,4 +216,42 @@ namespace Function {
         double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
     };
     MAKE_FUNCTION_EXPRESSION(SVD)
+
+    // @Function QR
+    struct QR: public FunctionExpression {
+        QR(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"m", Empty}}) {}  // Signature: (m)
+        expression eval(const Variables& vars = emptyVars) override {
+            using Scanner::MATRIX;
+            auto matrix = arg->at(0)->eval(vars);
+            if (matrix == MATRIX && matrix->size() > 0){
+                if (matrix->isComplex()){
+                    throw Exception("Cannot compute SVD of complex matrix");
+                }
+                else{
+                    size_t m = matrix->shape(0);
+                    size_t n = matrix->shape(1);
+                    auto QR = to_gsl_matrix(matrix);
+                    auto tau = make_gsl_vector(std::min(m, n));
+                    int code = gsl_linalg_QR_decomp(QR.get(), tau.get());
+                    if (code != 0){
+                        throw Exception("QR decomposition failed on matrix: ", matrix);
+                    }
+                    auto Q = make_gsl_matrix(m, m);
+                    auto R = make_gsl_matrix(m, n);
+                    code = gsl_linalg_QR_unpack(QR.get(), tau.get(), Q.get(), R.get());
+                    if (code != 0){
+                        throw Exception("QR decomposition failed on matrix: ", matrix);
+                    }
+                    return TupleExpression::construct({
+                        VariableExpression::construct("Q", MatrixExpression::construct(Q)),
+                        VariableExpression::construct("R", MatrixExpression::construct(R)),
+                    });
+                }
+            }
+            throw Exception("QR decomposition expects a non-empty matrix. Got: ", matrix);
+        }
+        double value(const Variables& vars = emptyVars) const override { return GSL_NAN; }
+    };
+    MAKE_FUNCTION_EXPRESSION(QR)
 }

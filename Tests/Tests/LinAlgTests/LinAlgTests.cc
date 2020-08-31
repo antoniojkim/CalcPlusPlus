@@ -30,3 +30,16 @@ TEST_CASE("Cholesky Decomposition Tests", "[cholesky]") {
     requireExprIsEqual("Cholesky{{9, 3, 0}, {3, 5, 2}, {0, 2, 17}}", "{{3, 3, 0}, {1, 2, 2}, {0, 1, 4}}");
 
 }
+
+TEST_CASE("SVD Tests", "[svd]") {
+
+    requireExprIsEqual("SVD{{4, 0}, {0, -1}}", "(U = {{1, 0}, {0, 1}}, S = {{4}, {1}}, V = {{1, 0}, {0, -1}})");
+    requireExprIsEqual("SVD{{3, 0}, {0, 2}}", "(U = {{1, 0}, {0, 1}}, S = {{3}, {2}}, V = {{1, 0}, {0, 1}})");
+
+}
+
+TEST_CASE("QR Tests", "[qr]") {
+
+    requireExprIsEqual("QR({{12, -51, 4}, {6, 167, -68}, {-4, 24, -41}})", "(Q = {{-6/7, 69/175, 58/175}, {-3/7, -158/175, -6/175}, {2/7, -6/35, 33/35}}, R = {{-14, -21, 14}, {0, -175, 70}, {0, 0, -35}})");
+
+}
