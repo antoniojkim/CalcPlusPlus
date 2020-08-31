@@ -19,84 +19,84 @@ Elementary Functions
 
 ``neg(x)``: The negation of :math:`x`, i.e., :math:`-x`
 
-.. code-block::
+.. code::
 
     >>> -sin(3)
     = -0.1411200080598672
 
 ``frexp(x)``: Splits the number :math:`x` into its normalized fraction :math:`f` and exponent :math:`e`, such that :math:`x = f \times 2^{e}` and :math:`0.5 \le f < 1`
 
-.. code-block::
+.. code::
 
     >>> frexp(10)
     = (5/8, 4) = (0.625, 4)
 
 ``ldexp(x, e)``: Computes the number :math:`x \times 2^{e}`
 
-.. code-block::
+.. code::
 
     >>> ldexp(0.625, 4)
     = 10
 
 ``hex(x)``: Converts the number :math:`x` into its hex form
 
-.. code-block::
+.. code::
 
     >>> hex(253)
     = 0xfd
 
 ``bin(x)``: Converts the number :math:`x` into its two's complement binary form
 
-.. code-block::
+.. code::
 
     >>> bin(253)
     = 0b11111101
 
 ``abs(x)``: Returns the magnitude of the number :math:`x`, i.e., :math:`|x|`
 
-.. code-block::
+.. code::
 
     >>> abs(-4)
     = 4
 
 ``sqr(x)``: Returns the square of the number :math:`x`, i.e., :math:`x^2`
 
-.. code-block::
+.. code::
 
     >>> sqr(-4)
     = 16
 
 ``sqrt(x)``: Returns the square root of the number :math:`x`, i.e., :math:`\sqrt{x}`
 
-.. code-block::
+.. code::
 
     >>> sqrt(16)
     = 4
 
 ``cb(x)``: Returns the cube of the number :math:`x`, i.e., :math:`x^3`
 
-.. code-block::
+.. code::
 
     >>> cb(-4)
     = -64
 
 ``cbrt(x)``: Returns the cube root of the number :math:`x`, i.e., :math:`\sqrt[3]{x}`
 
-.. code-block::
+.. code::
 
     >>> cbrt(-64)
     = -4
 
 ``rad(x)``: Returns the radians form of the number :math:`x`. Note: Assumes number is in degrees.
 
-.. code-block::
+.. code::
 
     >>> rad(180)
     = 3.141592653589793
 
 ``deg(x)``: Returns the degrees form of the number :math:`x`. Note: Assumes number is in radians.
 
-.. code-block::
+.. code::
 
     >>> deg(pi)
     = 180
@@ -104,7 +104,7 @@ Elementary Functions
 
 ``hypot(a...)``: Computes euclidean distance for the variable number of arguments passed in. For two and three numbers, it computes it in a way that avoids overflow.
 
-.. code-block::
+.. code::
 
     >>> hypot(3, 4)
     = 5
@@ -115,7 +115,7 @@ Elementary Functions
 
 ``fcmp(x, y, tol=1e-8)``: Determines whether :math:`x` and :math:`y` are approximately equal with relative tolerance :math:`tol`. If they are approximately equal, the function returns 0. Otherwise, if :math:`x < y`, the function returns :math:`-1`, or if :math:`x > y`, the function returns :math:`+1`.
 
-.. code-block::
+.. code::
 
     >>> fcmp(sin(3 + pi/2), cos(3))
     = 0
@@ -130,7 +130,7 @@ Elementary Functions
 
 ``gcd(a...)``: Determines greatest common denominator among all passed in numbers.
 
-.. code-block::
+.. code::
 
     >>> gcd(20, 100)
     = 20
@@ -139,7 +139,7 @@ Elementary Functions
 
 ``lcm(a...)``: Determines least common multiple among all passed in numbers.
 
-.. code-block::
+.. code::
 
     >>> lcm(20, 100)
     = 100
