@@ -67,7 +67,7 @@ install:
 	.utils/install
 
 requirements:
-	pip install -r requirements.txt
+	python3 -m pip install -r requirements.txt
 
 lc:
 	.utils/linecount

@@ -9,6 +9,7 @@
 *.gdbinit
 *.qmake.stash
 *.tar*
+*DS_Store*
 
 # General Directory types to ignore
 *pycache*

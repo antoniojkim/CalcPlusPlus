@@ -298,8 +298,8 @@ namespace Function {
     // @Function Betainc(a, b, x)
     struct Betainc: public FunctionExpression {
         Betainc(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, b)
-            {"a", Empty}, {"b", Empty}
+            // Signature: (a, b, x)
+            {"a", Empty}, {"b", Empty}, {"x", Empty}
         }) {}
         double value(const Variables& vars = emptyVars) const override {
             double a = arg->at(0)->value(vars);

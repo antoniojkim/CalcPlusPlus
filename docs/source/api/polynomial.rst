@@ -4,54 +4,62 @@ Polynomials
 Roots of Polynomials
 ^^^^^^^^^^^^^^^^^^^^
 
-``quad(a, b, c)``: Computes the real roots of the quadratic equation
+.. function:: quad(a, b, c)
 
-.. math::
+    Computes the real roots of the quadratic equation
 
-    ax^2 + bx + c
+    .. math::
 
-.. code::
+        ax^2 + bx + c
 
-    >>> quad(1, -7, 12)
-    = (x1 = 3, x2 = 4)
-    >>> quad(1, 7, 11)
-    = ()
+    .. code::
 
-``quadc(a, b, c)``: Computes the complex roots of the quadratic equation
+        >>> quad(1, -7, 12)
+        = (x1 = 3, x2 = 4)
+        >>> quad(1, 7, 11)
+        = ()
 
-.. math::
+.. function:: quadc(a, b, c)
 
-    az^2 + bz + c
+    Computes the complex roots of the quadratic equation
 
-.. code::
+    .. math::
 
-    >>> quadc(1, -7, 12)
-    = (z1 = 3, z2 = 4)
-    >>> quadc(1, 7, 11)
-    = (z1 = -4.618033988749895, z2 = -2.381966011250105)
+        az^2 + bz + c
 
-``cubic(a, b, c, d)``: Computes the real roots of the cubic equation
+    .. code::
 
-.. math::
+        >>> quadc(1, -7, 12)
+        = (z1 = 3, z2 = 4)
+        >>> quadc(1, 7, 11)
+        = (z1 = -4.618033988749895, z2 = -2.381966011250105)
 
-    ax^3 + bx^2 + cx + d
+.. function:: cubic(a, b, c, d)
 
-.. code::
+    Computes the real roots of the cubic equation
 
-    >>> cubic(1, 4, 7, 11)
-    = (x1 = -2.894558248242799)
-    >>> cubic(1, -3, -7, 12)
-    = (x1 = -2.302775637731995, x2 = 1.302775637731995, x3 = 4)
+    .. math::
 
-``cubicc(a, b, c)``: Computes the complex roots of the cubic equation
+        ax^3 + bx^2 + cx + d
 
-.. math::
+    .. code::
 
-    az^3 + bz^2 + cz + d
+        >>> cubic(1, 4, 7, 11)
+        = (x1 = -2.894558248242799)
+        >>> cubic(1, -3, -7, 12)
+        = (x1 = -2.302775637731995, x2 = 1.302775637731995, x3 = 4)
 
-.. code::
+.. function:: cubicc(a, b, c)
 
-    >>> cubicc(1, 4, 7, 11)
-    = (z1 = -2.894558248242799, z2 = -0.5527208758786003-1.869420790744347i, z3 = -0.5527208758786003+1.869420790744347i)
-    >>> cubic(1, -3, -7, 12)
-    = (z1 = -2.302775637731995, z2 = 1.302775637731995, z3 = 4)
+    Computes the complex roots of the cubic equation
+
+    .. math::
+
+        az^3 + bz^2 + cz + d
+
+    .. code::
+
+        >>> cubicc(1, 4, 7, 11)
+        = (z1 = -2.894558248242799, z2 = -0.5527208758786003-1.869420790744347i, z3 = -0.5527208758786003+1.869420790744347i)
+        >>> cubic(1, -3, -7, 12)
+        = (z1 = -2.302775637731995, z2 = 1.302775637731995, z3 = 4)

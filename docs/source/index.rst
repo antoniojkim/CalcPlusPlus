@@ -18,6 +18,8 @@ API
    api/polynomial
    api/random
    api/special
+   api/statistics
+   api/trig
 
 
 Guide
