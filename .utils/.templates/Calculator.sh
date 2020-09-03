@@ -7,8 +7,13 @@ if [ "${dirname%$tmp}" != "/" ]; then
     dirname=$PWD/$dirname
 fi
 
-LD_LIBRARY_PATH=$dirname/libs
-export LD_LIBRARY_PATH
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    LD_LIBRARY_PATH=$dirname/libs
+    export LD_LIBRARY_PATH
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    DYLD_LIBRARY_PATH=$dirname/libs
+    export DYLD_LIBRARY_PATH
+fi
 QT_PLUGIN_PATH=$dirname
 export QT_PLUGIN_PATH
 
