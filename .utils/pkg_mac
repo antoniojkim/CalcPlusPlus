@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+mkdir -p .package/CalcPlusPlus
+mkdir -p .package/CalcPlusPlus/bin
+mkdir -p .package/CalcPlusPlus/libs
+
+CALCPP=".package/CalcPlusPlus/bin/calcpp"
+
+cp UI/calcpp.app/Contents/MacOS/calcpp $CALCPP
+
+sudo cp MathEngine/libMathEngine.dylib .package/CalcPlusPlus/libMathEngine.dylib
+
+gsl_dir="/usr/local/Cellar/gsl/2.6/lib"
+sudo cp .libs/libgsl.dylib .package/CalcPlusPlus/
+sudo cp .libs/libgslcblas.dylib .package/CalcPlusPlus/

@@ -11,7 +11,7 @@
 
 #include "../Scanner/scanner.h"
 
-struct Expression;
+class Expression;
 
 typedef std::shared_ptr<Expression> expression;
 typedef std::map<std::string, expression> Variables;

@@ -223,7 +223,7 @@ Hyperbolic Reciprocal Trigonometric Functions
         = 0.09932792741943321
 
 
-.. function:: cot(x)
+.. function:: coth(x)
 
     Computes the hyperbolic cotangent value of :math:`x`.
 

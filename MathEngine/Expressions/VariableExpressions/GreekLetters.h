@@ -8,6 +8,8 @@
 
 #include <gsl/gsl_math.h>
 
+#include "../../Utils/BinarySearch.h"
+
 constexpr const int numGreekLetters = 49;
 constexpr const char* greekLetterNames[numGreekLetters] = {
 	"Alpha", "Beta", "Chi", "Delta", "Epsilon", "Eta", "Gamma", "Iota", "Kappa", "Lambda",
@@ -39,31 +41,7 @@ Parameters
 name: The name of the constantaddMissingRParens
 The index or -1 if the provided name is not a constant.
 */
-static constexpr int getGreekLetterNameIndex(const char* name){
-    int low = 0;
-    int high = numGreekLetters - 1;
-    while (true){
-        if (low > high){
-            return -1;
-        }
-
-        int mid = (low + high) / 2;
-        int cmp = std::strcmp(name, greekLetterNames[mid]);
-        if (cmp == 0){
-            return mid;
-        }
-        else if (cmp < 0){
-            high = mid-1;
-        }
-        else{
-            low = mid+1;
-        }
-    }
-    return -1;
-}
-inline int getGreekLetterNameIndex(const std::string& name){
-    return getGreekLetterNameIndex(name.c_str());
-}
+CONSTEXPR_BINARY_SEARCH(getGreekLetterNameIndex, greekLetterNames, numGreekLetters)
 
 static int getGreekLetterIndex(const std::string& name){
     if (name.size() <= greekLetterLength){

@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <memory>
 #include <sstream>
+#include <string>
 
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
@@ -26,14 +27,25 @@ NumExpression::NumExpression(const std::string& num):
         default:
             break;
     }
-    istringstream ss {num};
-    if (!(ss >> real)){
+    try {
+        size_t pos;
+        real = stod(num, &pos);
+
+        if (pos < num.size()){
+            switch(num.at(pos)){
+                case 'i':
+                case 'j':
+                    imag = real;
+                    real = 0;
+                    break;
+                default:
+                    break;
+            }
+        }
+    } catch (std::invalid_argument& e1){
         throw Exception("Number Error: Invalid Number ", num);
-    }
-    char i;
-    if ((ss >> i) && (i == 'i' || i == 'j')){
-        imag = real;
-        real = 0;
+    } catch (std::out_of_range& e2){
+        throw Exception("Number Error: Out of Range ", num);
     }
 }
 

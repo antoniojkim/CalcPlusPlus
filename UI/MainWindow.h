@@ -14,6 +14,6 @@ struct MainWindow: public QWidget {
     QVBoxLayout vlayout;
     std::shared_ptr<EquationEditor> editor;
 
-    MainWindow(int width = 575, int height = 175);
+    MainWindow(int width = 600, int height = 175);
 
 };

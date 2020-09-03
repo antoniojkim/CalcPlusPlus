@@ -32,6 +32,7 @@ pypkg: build pydep
 ui:
 	rm -f UI/calcpp
 	.utils/build_ui
+.PHONY: ui
 
 run: ui
 	python -u .utils/package.py --no-tar
@@ -45,6 +46,10 @@ pkg: pypkg
 
 buildwin:
 	powershell.exe -noprofile -executionpolicy bypass -file .utils/build.ps1
+
+buildmac: ui
+	.utils/pkg_mac
+	cd .package/CalcPlusPlus && ./Calculator
 
 
 docs:

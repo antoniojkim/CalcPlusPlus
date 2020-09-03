@@ -45,8 +45,8 @@ class Specifications:
 def is_newer(file1, file2):
     return (
         not os.path.isfile(file1)
-        or not os.path.isfile(file2)
-        or os.path.getmtime(file1) > os.path.getmtime(file2)
+        or not os.path.isfile(file2)  # noqa: W503
+        or os.path.getmtime(file1) > os.path.getmtime(file2)  # noqa: W503
     )
 
 
@@ -72,8 +72,12 @@ class Template:
                 old_template = ""
 
             if old_template != self.template:
+                print(f"Generating {self.write_path}")
                 with open(self.write_path, "w") as file:
                     file.write(self.template)
+
+        else:
+            print(traceback)
 
         return True
 

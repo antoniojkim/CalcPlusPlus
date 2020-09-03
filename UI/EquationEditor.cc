@@ -15,8 +15,13 @@ using namespace std;
 
 
 TextEdit::TextEdit(double heightFactor){
+    #ifdef __APPLE__
+    QFont font ("STIXGeneral", 24);
+    #else
     QFont font ("Cambria", 18);
+    #endif
     setFont(font);
+    setStyleSheet("color: black;");
 
     setToolTip(QString::fromUtf8("Right-click for help"));
 

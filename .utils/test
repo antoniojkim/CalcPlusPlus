@@ -1,12 +1,20 @@
 #!/bin/bash
 
 cd Tests
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../.libs/
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../.libs/
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:../.libs/
+fi
 
 name=$1
 
-if [ $name == "nogdb" ]; then
+if [[ $name == "nogdb" ]]; then
     ./run
 else
-    gdb -q -ex="run" --args run $name
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        gdb -q -ex="run" --args run $name
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        lldb -o run run $name
+    fi
 fi

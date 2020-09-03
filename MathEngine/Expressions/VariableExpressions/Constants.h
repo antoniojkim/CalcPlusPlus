@@ -12,6 +12,8 @@
 
 #include <gsl/gsl_math.h>
 
+#include "../../Utils/BinarySearch.h"
+
 constexpr const int numConstants = 4;
 constexpr const char* constants[numConstants] = {
     "e", "gamma", "pi", "vphi"
@@ -44,31 +46,8 @@ Returns
 -------
 The index or -1 if the provided name is not a constant.
 */
-constexpr int getConstantIndex(const char* name){
-    int low = 0;
-    int high = numConstants - 1;
-    while (true){
-        if (low > high){
-            return -1;
-        }
+CONSTEXPR_BINARY_SEARCH(getConstantIndex, constants, numConstants)
 
-        int mid = (low + high) / 2;
-        int cmp = std::strcmp(name, constants[mid]);
-        if (cmp == 0){
-            return mid;
-        }
-        else if (cmp < 0){
-            high = mid-1;
-        }
-        else{
-            low = mid+1;
-        }
-    }
-    return -1;
-}
-inline int getConstantIndex(const std::string& name){
-    return getConstantIndex(name.c_str());
-}
 
 /*
 Returns the value of the constant at the provided index.

@@ -5,6 +5,8 @@ optflag.release := -g -Ofast
 optflag.debug := -g
 OPT_FLAG := ${optflag.${mode}}
 
+OS := $(shell uname)
+
 ifeq ($(OS),Windows_NT)
 	INCLUDES := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
 	LIB_FLAGS := -fPIC -static
@@ -12,9 +14,14 @@ ifeq ($(OS),Windows_NT)
 	TARGET_LIB := libMathEngine.a
 else
 	INCLUDES := -I../.includes/
-	LIB_FLAGS := -fPIC -shared
 	LINK_FLAGS := -L../.libs/
-	TARGET_LIB := libMathEngine.so
+    ifeq ($(OS),Darwin)
+		LIB_FLAGS := -fPIC -dynamiclib -Wno-unused-command-line-argument -pedantic
+		TARGET_LIB := libMathEngine.dylib
+	else
+		LIB_FLAGS := -fPIC -shared
+		TARGET_LIB := libMathEngine.so
+    endif
 endif
 
 CXXFLAGS := ${OPT_FLAG} -std=c++17 ${LIB_FLAGS} -Wall -MMD -Werror=vla ${INCLUDES}

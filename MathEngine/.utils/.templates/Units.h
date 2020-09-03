@@ -10,6 +10,8 @@
 #include <gsl/gsl_const_mksa.h>
 #include <gsl/gsl_const_num.h>
 
+#include "../../Utils/BinarySearch.h"
+
 enum UnitType {
 	NONE,
 	{UnitTypes}
@@ -45,56 +47,9 @@ Returns
 -------
 The index or -1 if the provided name is not a unit.
 */
-constexpr int getUnitIndex(const char* name){
-    int low = 0;
-    int high = numUnits - 1;
-    while (true){
-        if (low > high){
-            return -1;
-        }
+CONSTEXPR_BINARY_SEARCH(getUnitIndex, unitNames, numUnits)
 
-        int mid = (low + high) / 2;
-        int cmp = std::strcmp(name, unitNames[mid]);
-        if (cmp == 0){
-            return unitIndices[mid];
-        }
-        else if (cmp < 0){
-            high = mid-1;
-        }
-        else{
-            low = mid+1;
-        }
-    }
-    return -1;
-}
-inline int getUnitIndex(const std::string& name){
-    return getUnitIndex(name.c_str());
-}
-constexpr int getAbbrIndex(const char* name){
-    int low = 0;
-    int high = numUnits - 1;
-    while (true){
-        if (low > high){
-            return -1;
-        }
-
-        int mid = (low + high) / 2;
-        int cmp = std::strcmp(name, unitAbbreviations[mid]);
-        if (cmp == 0){
-            return mid;
-        }
-        else if (cmp < 0){
-            high = mid-1;
-        }
-        else{
-            low = mid+1;
-        }
-    }
-    return -1;
-}
-inline int getAbbrIndex(const std::string& name){
-    return getAbbrIndex(name.c_str());
-}
+CONSTEXPR_BINARY_SEARCH(getAbbrIndex, unitAbbreviations, numUnits)
 
 
 constexpr UnitType getUnitType(const char* name){
@@ -105,7 +60,7 @@ constexpr UnitType getUnitType(const char* name){
 	return unitTypes[index];
 }
 inline UnitType getUnitType(const std::string& name){
-    int index = getUnitIndex(name);
+    int index = getUnitIndex(name.c_str());
     if (index != -1){
 		return NONE;
 	}
@@ -126,7 +81,7 @@ constexpr double getUnitConversion(const char* name){
 	return unitConversions[index];
 }
 inline double getUnitConversion(const std::string& name){
-    int index = getUnitIndex(name);
+    int index = getUnitIndex(name.c_str());
     if (index != -1){
 		return NONE;
 	}

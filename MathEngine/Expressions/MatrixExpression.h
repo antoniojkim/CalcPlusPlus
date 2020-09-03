@@ -69,9 +69,9 @@ class MatrixExpression: public Expression {
         expression derivative(const std::string& var) override;
         expression integrate(const std::string& var) override;
 
-        expression at(const int index);
-        size_t shape(const int axis) const;
-        size_t size() const;
+        expression at(const int index) override;
+        size_t shape(const int axis) const override;
+        size_t size() const override;
 
         EXPRESSION_OVERRIDES
 };

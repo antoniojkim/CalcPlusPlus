@@ -30,3 +30,7 @@ Custom Keyboard Shortcuts
 ``Ctrl + W`` to close the application
 
 ``Ctrl + H`` to open the docs
+
+.. note::
+
+   On Mac OS X, the above Keyboard shortcuts use the ``Command`` modifier key instead of ``Ctrl``

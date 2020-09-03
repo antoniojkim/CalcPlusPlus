@@ -4,10 +4,10 @@
  *************** Auto-Generated File ***************
  ***************************************************/
 
-#include <cmath>
 #include <cstring>
 
 #include "../Scanner/scanner.h"
+#include "../Utils/BinarySearch.h"
 
 namespace Operators {
     constexpr const int size = {numOperators};
@@ -24,7 +24,7 @@ namespace Operators {
 
     constexpr int indexOf(const char * lexeme){
         for (int i = 0; i < size; ++i){
-            if (std::strcmp(lexeme, operators[i]) == 0){
+            if (compare_string(lexeme, operators[i]) == 0){
                 return i;
             }
         }
@@ -37,8 +37,10 @@ namespace Operators {
     constexpr bool isOperator(Scanner::Type type){ return (int(type) - offset) >= 0; }
     constexpr bool isOperator(int index){ return index >= 0; }
 
-    constexpr int getPrecedence(Scanner::Type type){ return std::abs(precedences[int(type) - offset]); }
-    constexpr int getPrecedence(int index){ return std::abs(precedences[index]); }
+    constexpr int _abs(int x){ return x >= 0 ? x : -x; }
+
+    constexpr int getPrecedence(Scanner::Type type){ return _abs(precedences[int(type) - offset]); }
+    constexpr int getPrecedence(int index){ return _abs(precedences[index]); }
 
     constexpr bool isRightAssociative(Scanner::Type type){ return precedences[int(type) - offset] > 0; }
     constexpr bool isRightAssociative(int index){ return precedences[index] > 0; }

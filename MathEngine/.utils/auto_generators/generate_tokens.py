@@ -91,7 +91,7 @@ def generate_tokens(args=None):
                 numConstants=len(constants),
                 constants=wrap((f'"{name}"' for name, val in constants)),
                 constantValues=wrap((str(val["val"]) for name, val in constants)),
-                shortConstants=wrap((f'"{val["short"]}"' for name, val in constants)),
+                shortConstants=wrap((f'"{val["repr"]}"' for name, val in constants)),
                 constantLongValues=",\n\t".join(
                     f'"{val["longval"]}"' for name, val in constants
                 ),

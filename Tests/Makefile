@@ -17,8 +17,7 @@ OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
-	${CXX} ${CXXFLAGS} -Wl,--no-undefined \
-		 ${OBJECTS} \
+	${CXX} ${CXXFLAGS} ${OBJECTS} \
 		-L../MathEngine -lMathEngine \
 		-L../.libs/ -lgsl -lgslcblas -lm \
 		-o ${EXEC}

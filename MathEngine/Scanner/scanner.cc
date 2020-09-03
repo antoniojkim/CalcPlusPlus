@@ -80,10 +80,13 @@ static bool startsWithLexeme(const char* str, size_t size, int& lexemeIndex){
             if (index != -1){
                 lastIndex = index;
             }
-            if (lastIndex != -1 && (i+1 >= size || i+1 >= Lexeme::longestLexeme)){
-                lexemeIndex = lastIndex;
-                return true;
+            if (i+1 >= size || i+1 >= Lexeme::longestLexeme){
+                break;
             }
+        }
+        if (lastIndex != -1){
+            lexemeIndex = lastIndex;
+            return true;
         }
     }
     return false;
@@ -255,6 +258,7 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             i += index;
         }
         else{
+            cout << "Unrecognizable:  " << c_str << endl;
             return false;
         }
     }

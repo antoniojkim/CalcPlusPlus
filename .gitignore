@@ -4,9 +4,12 @@
 *.a
 *.dll
 *.so*
+*.dylib*
+*.app*
 *.log
 *.cerr
 *.gdbinit
+*.lldbinit
 *.qmake.stash
 *.tar*
 *DS_Store*
