@@ -22,6 +22,7 @@
 docs/build
 MathEngine/libMathEngine.a
 Tests/run
+UI/calcpp
 UI/debug/
 UI/release/
 UI/Makefile*

@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <memory>
 #include <utility>
 
@@ -89,6 +90,10 @@ expression TupleExpression::at(const int index) {
 }
 size_t TupleExpression::size() const { return data.size(); }
 
+expression TupleExpression::apply(TransformerFunction f){
+    std::transform(data.begin(), data.end(), data.begin(), f);
+    return copy();
+}
 
 bool TupleExpression::isComplex() const {
     for(auto& expr : data){

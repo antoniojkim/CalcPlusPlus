@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <list>
 #include <memory>
 #include <utility>
@@ -8,6 +9,7 @@
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
 #include "../ExpressionOperations.h"
+#include "../NullExpression.h"
 #include "../NumericalExpression.h"
 #include "../MatrixExpression.h"
 
@@ -15,6 +17,8 @@ using namespace std;
 using namespace Scanner;
 
 MatrixExpression::MatrixExpression(): Expression(MATRIX) {}
+MatrixExpression::MatrixExpression(size_t rows, size_t cols):
+    Expression(MATRIX), mat{rows * cols, None}, rows{rows}, cols{cols} {}
 MatrixExpression::MatrixExpression(std::vector<expression>&& matrix, size_t rows, size_t cols):
     Expression(MATRIX), mat{std::move(matrix)}, rows{rows}, cols{cols} {
     if (rows*cols != mat.size()){
@@ -95,6 +99,9 @@ MatrixExpression::MatrixExpression(unique_gsl_vector_complex& vec):
 expression MatrixExpression::construct(){
     return shared_ptr<MatrixExpression>(new MatrixExpression());
 }
+expression MatrixExpression::construct(size_t numRows, size_t numCols){
+    return shared_ptr<MatrixExpression>(new MatrixExpression(numRows, numCols));
+}
 expression MatrixExpression::construct(std::vector<expression>&& matrix, size_t rows, size_t cols){
     return shared_ptr<MatrixExpression>(new MatrixExpression(std::move(matrix), rows, cols));
 }
@@ -134,6 +141,11 @@ size_t MatrixExpression::shape(const int axis) const {
     }
 }
 size_t MatrixExpression::size() const { return rows*cols; }
+
+expression MatrixExpression::apply(TransformerFunction f){
+    std::transform(mat.begin(), mat.end(), mat.begin(), f);
+    return copy();
+}
 
 
 expression MatrixExpression::simplify() {

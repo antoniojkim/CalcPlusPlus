@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <sstream>
 
 #include "../Expression.h"
@@ -56,6 +57,9 @@ size_t Expression::size() const { return 1; }
 
 expression Expression::call(expression e){
     throw Exception("Expression is not callable: ", copy());
+}
+expression Expression::apply(TransformerFunction f){
+    throw Exception("Cannot apply function to Expression: ", copy());
 }
 
 std::string Expression::repr() const {

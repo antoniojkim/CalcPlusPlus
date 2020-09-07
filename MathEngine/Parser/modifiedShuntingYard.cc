@@ -223,38 +223,6 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
     list<FixedStack<Token*>> outputStacks;
     outputStacks.emplace_back(FixedStack<Token*>(stackSize));
 
-    #ifdef DEBUG
-    #undef DEBUG
-    #endif  // DEBUG
-
-    #ifdef DEBUG
-    cout << "TOKENS:     ";
-    for (auto& token : tokens){
-        cout << token.lexeme << " ";
-    }
-    cout << endl;
-    #endif  // DEBUG
-
-    #ifdef DEBUG
-    #define PRINT_DEBUG(name)                       \
-        cout << name << endl;                       \
-        cout << "    Output:       │ ";             \
-        for (auto& outputStack : outputStacks) {    \
-            for (auto token : outputStack){         \
-                cout << token->lexeme << " ";       \
-            }                                       \
-            cout << "│ ";                           \
-        }                                           \
-        cout << endl;                               \
-        cout << "    Operators:    │ ";             \
-        for (auto token : operatorStack){           \
-            cout << token->lexeme << " ";           \
-        }                                           \
-        cout << "│" << endl;
-    #else
-    #define PRINT_DEBUG(name)
-    #endif  // DEBUG
-
     auto current = tokens.begin();
     auto end = tokens.end();
     for (; current != end; ++current, --stackSize){
@@ -281,13 +249,13 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
             case LPAREN:
             case LBRACE:
             // case LSQUARE:
+                // Create a new stack to handle the new context
                 outputStacks.emplace_back(FixedStack<Token*>(stackSize));
                 operatorStack.push(&token);
-                PRINT_DEBUG("LPAREN/LBRACE:")
                 continue;
             case COMMA: {
                 while (true) {
-                    if (operatorStack.size() == 0){
+                    if (operatorStack.empty()){
                         throw Exception("Mismatched Comma.");
                     }
                     if (operatorStack.peek()->type == LPAREN ||
@@ -303,7 +271,6 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                 }
                 operatorStack.push(&token);
                 outputStacks.emplace_back(FixedStack<Token*>(stackSize));
-                PRINT_DEBUG("COMMA:")
                 continue;
             }
             case RPAREN: {
@@ -334,7 +301,6 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                      operatorStack.peek()->type == SPECIALID)){
                     outputStacks.back().push(operatorStack.pop());
                 }
-                PRINT_DEBUG("RPAREN:")
                 continue;
             }
             case RBRACE: {
@@ -358,7 +324,6 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                      operatorStack.peek()->type == SPECIALID)){
                     outputStacks.back().push(operatorStack.pop());
                 }
-                PRINT_DEBUG("RBRACE:")
                 continue;
             }
             default:
@@ -382,7 +347,6 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
                 }
             }
             operatorStack.push(&token);
-            PRINT_DEBUG("OPERATOR:")
         }
         else{
             cout << "TOKENS:  ";
@@ -401,8 +365,6 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
     while(!operatorStack.empty()){
         outputStacks.back().push(operatorStack.pop());
     }
-
-    PRINT_DEBUG("\nFinal:")
 
     return postfix_to_expression(outputStacks.back());
 }

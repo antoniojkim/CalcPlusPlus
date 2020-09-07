@@ -10,6 +10,7 @@
 #include <gsl/gsl_math.h>
 
 #include "../Scanner/scanner.h"
+#include "../Utils/Types.h"
 
 class Expression;
 
@@ -17,6 +18,8 @@ typedef std::shared_ptr<Expression> expression;
 typedef std::map<std::string, expression> Variables;
 
 extern const Variables emptyVars;
+
+typedef expression(*TransformerFunction)(expression);
 
 class Expression: public std::enable_shared_from_this<Expression> {
 
@@ -48,6 +51,9 @@ class Expression: public std::enable_shared_from_this<Expression> {
 
         virtual expression call(expression e);
         inline expression operator()(expression e){ return call(e); }
+
+        virtual expression apply(TransformerFunction f);
+        inline expression operator()(TransformerFunction f){ return apply(f); }
 
         inline bool is(Scanner::Type kind) const { return this->kind == kind; }
         virtual std::string repr() const;

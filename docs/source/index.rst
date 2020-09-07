@@ -10,11 +10,12 @@ API
    api/introduction
    api/interface
    api/mathfunctions
-   api/calculus
-   api/eigensystems
    api/explog
+   api/calculus
+   api/matrix
    api/fft
    api/linalg
+   api/eigensystems
    api/polynomial
    api/random
    api/special

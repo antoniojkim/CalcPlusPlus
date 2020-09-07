@@ -14,7 +14,7 @@
 #include "../Utils/BinarySearch.h"
 
 namespace Functions {
-    constexpr const int numFunctions = 181;
+    constexpr const int numFunctions = 209;
     constexpr const char* names[numFunctions] = {
         "%", "&", "*", "**", "+", "-", "/", "//", ":=", "<-", "<<", "=", ">>", "Beta",
 		"Betainc", "C", "Chol", "Cholesky", "Eig", "LU", "LUsolve", "P", "QR", "SVD", "^", "^|",
@@ -23,18 +23,22 @@ namespace Functions {
 		"arcoth", "arcsc", "arcsch", "arcsec", "arcsech", "arcsin", "arcsinh", "arctan",
 		"arctanh", "argmax", "argmin", "arsec", "arsech", "arsin", "arsinh", "artan", "artanh",
 		"asec", "asech", "asin", "asinh", "atan", "atanh", "autocorr", "bin", "bitwise_and",
-		"bitwise_or", "bitwise_xor", "cb", "cbrt", "chol", "choose", "comb", "cos", "cosh",
-		"cot", "coth", "csc", "csch", "cubic", "cubicc", "deg", "deriv", "det", "dfact", "diff",
-		"div", "eig", "eigen", "eq", "exp", "exp2", "expm1", "fact", "fcmp", "fft", "floordiv",
-		"frexp", "gamma", "gamma_inc", "gamma_inc_P", "gamma_inc_Q", "gammainc", "gammaincp",
-		"gammaincq", "gammainv", "gammastar", "gcd", "hex", "hypot", "ifft", "integral", "kurt",
-		"kurtosis", "lag1", "lcm", "ldexp", "ln", "ln1p", "ln2", "lnBeta", "lnchoose", "lncomb",
-		"lndet", "lndfact", "lnfact", "lngamma", "lnperm", "lnpermute", "lnpoch", "log",
-		"log10", "log1p", "log1pm", "log2", "logabs", "logn", "lshift", "max", "max_index",
-		"mean", "median", "min", "min_index", "mod", "mul", "neg", "num", "perm", "permute",
-		"poch", "pochrel", "pow", "quad", "quadc", "rad", "rand", "rshift", "sd", "sec", "sech",
-		"sin", "sinh", "skew", "solve", "sqr", "sqrt", "std", "stdev", "sub", "tan", "tanh",
-		"taylorcoeff", "tss", "var", "variance", "|"
+		"bitwise_or", "bitwise_xor", "cb", "cbrt", "chisq", "chisq_P", "chisq_Pinv", "chisq_Q",
+		"chisq_Qinv", "chisq_pdf", "chol", "choose", "cnorm", "comb", "cos", "cosh", "cot",
+		"coth", "csc", "csch", "cubic", "cubicc", "deg", "deriv", "det", "dfact", "diff", "div",
+		"eig", "eigen", "eq", "exp", "exp2", "exp_P", "exp_Pinv", "exp_Q", "exp_Qinv", "expm1",
+		"exponential", "exponential_P", "exponential_Pinv", "exponential_Q", "exponential_Qinv",
+		"exponential_pdf", "fact", "fcmp", "fft", "floordiv", "frexp", "gamma", "gamma_inc",
+		"gamma_inc_P", "gamma_inc_Q", "gammainc", "gammaincp", "gammaincq", "gammainv",
+		"gammastar", "gauss_P", "gauss_Pinv", "gauss_Q", "gauss_Qinv", "gauss_pdf", "gaussian",
+		"gcd", "hex", "hypot", "ifft", "integral", "kurt", "kurtosis", "lag1", "lcm", "ldexp",
+		"ln", "ln1p", "ln2", "lnBeta", "lnchoose", "lncomb", "lndet", "lndfact", "lnfact",
+		"lngamma", "lnperm", "lnpermute", "lnpoch", "log", "log10", "log1p", "log1pm", "log2",
+		"logabs", "logn", "lshift", "max", "max_index", "mean", "median", "min", "min_index",
+		"mod", "mul", "neg", "norm", "norminv", "norminv", "num", "perm", "permute", "poch",
+		"pochrel", "pow", "quad", "quadc", "rad", "rand", "randn", "random", "rshift", "sd",
+		"sec", "sech", "sin", "sinh", "skew", "solve", "sqr", "sqrt", "std", "stdev", "sub",
+		"tan", "tanh", "taylorcoeff", "tss", "var", "variance", "|"
     };
 
     BINARY_SEARCH_INDEX_OF(names, numFunctions)
@@ -82,6 +86,12 @@ namespace Function{
 	DECLARE_FUNCTION_EXPRESSION(bitwise_xor);
 	DECLARE_FUNCTION_EXPRESSION(cb);
 	DECLARE_FUNCTION_EXPRESSION(cbrt);
+	DECLARE_FUNCTION_EXPRESSION(chisq);
+	DECLARE_FUNCTION_EXPRESSION(chisq_P);
+	DECLARE_FUNCTION_EXPRESSION(chisq_Pinv);
+	DECLARE_FUNCTION_EXPRESSION(chisq_Q);
+	DECLARE_FUNCTION_EXPRESSION(chisq_Qinv);
+	DECLARE_FUNCTION_EXPRESSION(chisq_pdf);
 	DECLARE_FUNCTION_EXPRESSION(choose);
 	DECLARE_FUNCTION_EXPRESSION(cos);
 	DECLARE_FUNCTION_EXPRESSION(cosh);
@@ -101,6 +111,12 @@ namespace Function{
 	DECLARE_FUNCTION_EXPRESSION(exp);
 	DECLARE_FUNCTION_EXPRESSION(exp2);
 	DECLARE_FUNCTION_EXPRESSION(expm1);
+	DECLARE_FUNCTION_EXPRESSION(exponential);
+	DECLARE_FUNCTION_EXPRESSION(exponential_P);
+	DECLARE_FUNCTION_EXPRESSION(exponential_Pinv);
+	DECLARE_FUNCTION_EXPRESSION(exponential_Q);
+	DECLARE_FUNCTION_EXPRESSION(exponential_Qinv);
+	DECLARE_FUNCTION_EXPRESSION(exponential_pdf);
 	DECLARE_FUNCTION_EXPRESSION(fact);
 	DECLARE_FUNCTION_EXPRESSION(fcmp);
 	DECLARE_FUNCTION_EXPRESSION(fft);
@@ -112,6 +128,11 @@ namespace Function{
 	DECLARE_FUNCTION_EXPRESSION(gamma_inc_Q);
 	DECLARE_FUNCTION_EXPRESSION(gammainv);
 	DECLARE_FUNCTION_EXPRESSION(gammastar);
+	DECLARE_FUNCTION_EXPRESSION(gauss_P);
+	DECLARE_FUNCTION_EXPRESSION(gauss_Pinv);
+	DECLARE_FUNCTION_EXPRESSION(gauss_Q);
+	DECLARE_FUNCTION_EXPRESSION(gauss_Qinv);
+	DECLARE_FUNCTION_EXPRESSION(gauss_pdf);
 	DECLARE_FUNCTION_EXPRESSION(gcd);
 	DECLARE_FUNCTION_EXPRESSION(hex);
 	DECLARE_FUNCTION_EXPRESSION(hypot);
@@ -153,6 +174,7 @@ namespace Function{
 	DECLARE_FUNCTION_EXPRESSION(quadc);
 	DECLARE_FUNCTION_EXPRESSION(rad);
 	DECLARE_FUNCTION_EXPRESSION(rand);
+	DECLARE_FUNCTION_EXPRESSION(randn);
 	DECLARE_FUNCTION_EXPRESSION(rshift);
 	DECLARE_FUNCTION_EXPRESSION(sd);
 	DECLARE_FUNCTION_EXPRESSION(sec);

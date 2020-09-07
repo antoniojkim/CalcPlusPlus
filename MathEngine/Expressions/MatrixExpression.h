@@ -9,6 +9,7 @@
 #include <gsl/gsl_permutation.h>
 #include <gsl/gsl_vector.h>
 
+#include "../Utils/Types.h"
 #include "Expression.h"
 
 #define UNIQUE_GSL(M)                                           \
@@ -42,6 +43,7 @@ class MatrixExpression: public Expression {
     size_t rows, cols;
 
     MatrixExpression();
+    MatrixExpression(size_t numRows, size_t numCols);
     MatrixExpression(std::vector<expression>&& matrix, size_t numRows, size_t numCols);
     MatrixExpression(std::list<expression>& matrix, size_t numRows, size_t numCols);
     MatrixExpression(std::initializer_list<double> matrix, size_t numRows, size_t numCols);
@@ -55,6 +57,7 @@ class MatrixExpression: public Expression {
     public:
 
         static expression construct();
+        static expression construct(size_t numRows, size_t numCols);
         static expression construct(std::vector<expression>&& matrix, size_t numRows, size_t numCols);
         static expression construct(std::list<expression>& matrix, size_t numRows, size_t numCols);
         static expression construct(std::initializer_list<double> matrix, size_t numRows, size_t numCols);
@@ -72,6 +75,8 @@ class MatrixExpression: public Expression {
         expression at(const int index) override;
         size_t shape(const int axis) const override;
         size_t size() const override;
+
+        expression apply(TransformerFunction f) override;
 
         EXPRESSION_OVERRIDES
 };

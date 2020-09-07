@@ -34,6 +34,8 @@ class TupleExpression: public Expression {
         expression at(const int index) override;
         size_t size() const override;
 
+        expression apply(TransformerFunction f) override;
+
         EXPRESSION_OVERRIDES
 
 };
