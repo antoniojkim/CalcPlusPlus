@@ -4,6 +4,7 @@ tokens:
     HEX:
     BIN:
     NUM:
+    INF:
     ID:
     SPECIALID:
     FUNCTION:

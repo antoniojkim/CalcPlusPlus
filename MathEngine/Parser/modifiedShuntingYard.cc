@@ -56,6 +56,9 @@ expression postfix_to_expression(FixedStack<Token*>& outputStack){
             case HEX:
                 expressionStacks.back().push(HexExpression::construct(token->lexeme));
                 continue;
+            case INF:
+                expressionStacks.back().push(NumExpression::construct(GSL_POSINF));
+                continue;
             case BIN:
                 expressionStacks.back().push(BinExpression::construct(token->lexeme));
                 continue;
@@ -231,6 +234,7 @@ expression ModifiedShuntingYard::parse(std::list<Scanner::Token>& tokens) const 
             case NUM:
             case HEX:
             case BIN:
+            case INF:
             case NONE:
                 outputStacks.back().push(&token);
                 continue;

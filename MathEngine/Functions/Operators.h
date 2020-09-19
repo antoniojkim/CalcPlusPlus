@@ -11,7 +11,7 @@
 
 namespace Operators {
     constexpr const int size = 34;
-    constexpr const int offset = 29;
+    constexpr const int offset = 30;
     constexpr const char* operators[size] = {
         ",", "=", ":=", "<-", "->", "...", "||", "&&", "|", "^|", "&", "==", "!=", "<", ">",
 		"<=", ">=", "~", "'", "<<", ">>", "+", "-", "*", "/", "%", "//", "!", "!!", "C", "P",

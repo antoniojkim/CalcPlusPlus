@@ -51,3 +51,9 @@ Calculus
         = -1.273654682063672
         >>> integral(ln(sin(x)^2), -4, 7)
         = -17.06809502828264
+        >>> integral(exp(-x), 1, infty)
+        = 0.3678794411714423
+        >>> integral(exp(x), -infty, 1)
+        = 2.718281828459045
+        >>> integral(exp(x), 1, infty)
+        = 1/0 = inf

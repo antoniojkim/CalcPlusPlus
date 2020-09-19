@@ -104,7 +104,53 @@ namespace Function {
             double result, abserr;
             gsl_set_error_handler_off();
             gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
-            int status = gsl_integration_qags(&F, a, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
+            int status = 0;
+            switch(gsl_isinf(a)){
+                case 1: {
+                    switch(gsl_isinf(b)){
+                        case 1:
+                            result = 0;
+                            break;
+                        case -1:
+                            status = gsl_integration_qagi(&F, 1e-8, 1e-8, 1000, w, &result, &abserr);
+                            break;
+                        default:
+                            status = gsl_integration_qagiu(&F, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
+                            break;
+                    }
+                    result *= -1;
+                    break;
+                }
+                case -1: {
+                    switch(gsl_isinf(b)){
+                        case 1:
+                            status = gsl_integration_qagi(&F, 1e-8, 1e-8, 1000, w, &result, &abserr);
+                            break;
+                        case -1:
+                            result = 0;
+                            break;
+                        default:
+                            status = gsl_integration_qagil(&F, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
+                            break;
+                    }
+                    break;
+                }
+                default: {
+                    switch(gsl_isinf(b)){
+                        case 1:
+                            status = gsl_integration_qagiu(&F, a, 1e-8, 1e-8, 1000, w, &result, &abserr);
+                            break;
+                        case -1:
+                            status = gsl_integration_qagiu(&F, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
+                            result *= -1;
+                            break;
+                        default:
+                            status = gsl_integration_qags(&F, a, b, 1e-8, 1e-8, 1000, w, &result, &abserr);
+                            break;
+                    }
+                    break;
+                }
+            }
             gsl_integration_workspace_free (w);
 
             if (status != GSL_FAILURE){
