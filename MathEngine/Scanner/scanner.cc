@@ -244,8 +244,8 @@ bool Scanner::scan(const std::string& str, std::list<Token>& tokens) {
             if (std::strncmp(c_str, "None", index) == 0 || std::strncmp(c_str, "null", index) == 0){
                 tokens.emplace_back(Token{"None", NONE});
             }
-            else if (std::strncmp(c_str, "infty", index) == 0 || std::strncmp(c_str, "infinity", index) == 0){
-                tokens.emplace_back(Token{"infty", INF});
+            else if (std::strncmp(c_str, "inf", index) == 0 || std::strncmp(c_str, "infty", index) == 0){
+                tokens.emplace_back(Token{"inf", INF});
             }
             else{
                 tokens.emplace_back(Token{str.substr(i, index), ID});
