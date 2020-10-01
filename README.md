@@ -4,6 +4,26 @@
 
 Advanced Scientific Calculator written in C++. This calculator is meant to replace my [previous calculator](https://github.com/antoniojkim/Math-Evaluation-Library) which was written using Java.
 
+## Installation
+
+### Homebrew (Mac OS X)
+
+[Homebrew](brew.sh) can be used to install the Mac OS version of the calculator using the following cask formula:
+
+```bash
+brew cask install antoniojkim/public/calcpp
+# or to update the calculator
+brew reinstall antoniojkim/public/calcpp
+```
+
+### Linux/Windows
+
+Download the OS appropriate version from the [release page](https://github.com/antoniojkim/CalcPlusPlus/releases/)
+  - [Linux](https://github.com/antoniojkim/CalcPlusPlus/releases/download/v0.3/calcplusplus.tar.gz)
+    - `Calculator.sh` is the executable script
+  - [Windows](https://github.com/antoniojkim/CalcPlusPlus/releases/download/v0.4/CalcPlusPlus.zip)
+    - `Calculator.exe` is the executable
+
 ## Getting Started and Documentation
 
 The primary documentation for this repository can be found at https://calcplusplus.readthedocs.io/en/latest/
