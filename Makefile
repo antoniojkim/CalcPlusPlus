@@ -12,6 +12,16 @@ test: build
 bp:  # breakpoints
 	vim Tests/.gdbinit
 
+ui:
+	rm -f UI/calcpp
+	.utils/build_ui
+.PHONY: ui
+
+package: build ui
+	./scripts/package.sh
+
+pkg: package
+
 newtest:
 	python3 -u .utils/new_test.py --name $(name)
 
@@ -29,19 +39,9 @@ pyui: build pydep
 pypkg: build pydep
 	cd calcpp && pyinstaller calcpp.spec
 
-ui:
-	rm -f UI/calcpp
-	.utils/build_ui
-.PHONY: ui
-
 run: ui
 	python -u .utils/package.py --no-tar
 	cd .package/CalcPlusPlus && ./Calculator
-
-package: ui
-	python -u .utils/package.py
-
-pkg: pypkg
 
 
 buildwin:

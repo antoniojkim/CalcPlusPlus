@@ -31,8 +31,8 @@ macx {
     LIBS += -L/usr/local/Cellar/gsl/2.6/lib -lgsl -lgslcblas -lm
 }
 unix:!macx {
-    INCLUDEPATH += ../.includes/0
-    LIBS += ../.libs -lsgl -lgslcblas -lm
+    INCLUDEPATH += ../.includes/
+    LIBS += -L../.libs -lgsl -lgslcblas -lm
 }
 
 # Default rules for deployment.
