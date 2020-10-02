@@ -16,12 +16,17 @@ brew cask install antoniojkim/public/calcpp
 brew reinstall antoniojkim/public/calcpp
 ```
 
-### Linux/Windows
+### Linux
 
-Download the OS appropriate version from the [release page](https://github.com/antoniojkim/CalcPlusPlus/releases/)
-  - [Linux](https://github.com/antoniojkim/CalcPlusPlus/releases/download/v0.3/calcplusplus.tar.gz)
-    - `Calculator.sh` is the executable script
-  - [Windows](https://github.com/antoniojkim/CalcPlusPlus/releases/download/v0.4/CalcPlusPlus.zip)
+``` bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/antoniojkim/CalcPlusPlus/master/scripts/install.sh)"
+```
+
+Paste that in a Linux shell prompt. It downloads the latest tarbell, verifies the checksum and then uncompresses the file.
+
+### Windows
+
+Download the [latest version](https://github.com/antoniojkim/CalcPlusPlus/releases/latest/download/CalcPlusPlus.zip).
     - `Calculator.exe` is the executable
 
 ## Getting Started and Documentation
