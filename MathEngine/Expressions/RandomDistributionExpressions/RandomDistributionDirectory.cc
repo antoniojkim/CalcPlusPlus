@@ -1,194 +1,194 @@
 
-/***************************************************
- *************** Auto-Generated File ***************
- ***************************************************/
+// /***************************************************
+//  *************** Auto-Generated File ***************
+//  ***************************************************/
 
-#include "../../Utils/Exception.h"
-#include "RandomDistributionDirectory.h"
-#include "RandomDistributions.h"
-#include "Distributions/Gauss.h"
+// #include "../../Utils/Exception.h"
+// #include "RandomDistributionDirectory.h"
+// #include "RandomDistributions.h"
+// #include "Distributions/Gauss.h"
 
-using namespace std;
+// using namespace std;
 
-/***************************************************
- ********** Random Distribution Functions **********
- ***************************************************/
+// /***************************************************
+//  ********** Random Distribution Functions **********
+//  ***************************************************/
 
-const RandomDistribution randomDistributions[numDistributions] = {
-    rand_Gauss
-};
+// const RandomDistribution randomDistributions[numDistributions] = {
+//     rand_Gauss
+// };
 
-RandomDistribution get_random_distribution(const string& name){
-    int index = getDistributionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Random Distribution: ", name);
-    }
-    return get_random_distribution(index);
-}
-RandomDistribution get_random_distribution(int distributionIndex){
-    if (distributionIndex < 0 || distributionIndex >= numDistributions){
-        throw Exception("Invalid Random Distribution Index: ", distributionIndex);
-    }
-    return randomDistributions[distributionIndex];
-}
-
-
-/***************************************************
- ************* Random Distribution PDFs ************
- ***************************************************/
-
-const RandomDistributionFunction randomDistributionPDFs[numDistributions] = {
-    pdf_Gauss
-};
-
-RandomDistributionFunction get_random_distribution_pdf(const string& name){
-    int index = getDistributionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Random Distribution: ", name);
-    }
-    return get_random_distribution_pdf(index);
-}
-RandomDistributionFunction get_random_distribution_pdf(int distributionIndex){
-    if (distributionIndex < 0 || distributionIndex >= numDistributions){
-        throw Exception("Invalid Random Distribution Index: ", distributionIndex);
-    }
-    return randomDistributionPDFs[distributionIndex];
-}
+// RandomDistribution get_random_distribution(const string& name){
+//     int index = getDistributionIndex(name);
+//     if (index == -1){
+//         throw Exception("Unknown Random Distribution: ", name);
+//     }
+//     return get_random_distribution(index);
+// }
+// RandomDistribution get_random_distribution(int distributionIndex){
+//     if (distributionIndex < 0 || distributionIndex >= numDistributions){
+//         throw Exception("Invalid Random Distribution Index: ", distributionIndex);
+//     }
+//     return randomDistributions[distributionIndex];
+// }
 
 
-/***************************************************
- ************ Random Distribution CDF_Ps ***********
- ***************************************************/
+// /***************************************************
+//  ************* Random Distribution PDFs ************
+//  ***************************************************/
 
-const RandomDistributionFunction randomDistributionCDFPs[numDistributions] = {
-    cdf_P_Gauss
-};
+// const RandomDistributionFunction randomDistributionPDFs[numDistributions] = {
+//     pdf_Gauss
+// };
 
-RandomDistributionFunction get_random_distribution_cdf_P(const string& name){
-    int index = getDistributionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Random Distribution: ", name);
-    }
-    return get_random_distribution_cdf_P(index);
-}
-RandomDistributionFunction get_random_distribution_cdf_P(int distributionIndex){
-    if (distributionIndex < 0 || distributionIndex >= numDistributions){
-        throw Exception("Invalid Random Distribution Index: ", distributionIndex);
-    }
-    return randomDistributionCDFPs[distributionIndex];
-}
-
-
-/***************************************************
- ************ Random Distribution CDF_Qs ***********
- ***************************************************/
-
-const RandomDistributionFunction randomDistributionCDFQs[numDistributions] = {
-    cdf_Q_Gauss
-};
-
-RandomDistributionFunction get_random_distribution_cdf_Q(const string& name){
-    int index = getDistributionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Random Distribution: ", name);
-    }
-    return get_random_distribution_cdf_Q(index);
-}
-RandomDistributionFunction get_random_distribution_cdf_Q(int distributionIndex){
-    if (distributionIndex < 0 || distributionIndex >= numDistributions){
-        throw Exception("Invalid Random Distribution Index: ", distributionIndex);
-    }
-    return randomDistributionCDFQs[distributionIndex];
-}
+// RandomDistributionFunction get_random_distribution_pdf(const string& name){
+//     int index = getDistributionIndex(name);
+//     if (index == -1){
+//         throw Exception("Unknown Random Distribution: ", name);
+//     }
+//     return get_random_distribution_pdf(index);
+// }
+// RandomDistributionFunction get_random_distribution_pdf(int distributionIndex){
+//     if (distributionIndex < 0 || distributionIndex >= numDistributions){
+//         throw Exception("Invalid Random Distribution Index: ", distributionIndex);
+//     }
+//     return randomDistributionPDFs[distributionIndex];
+// }
 
 
-/***************************************************
- ********** Random Distribution CDF_Pinvs **********
- ***************************************************/
+// /***************************************************
+//  ************ Random Distribution CDF_Ps ***********
+//  ***************************************************/
 
-const RandomDistributionFunction randomDistributionCDFPinvs[numDistributions] = {
-    cdf_Pinv_Gauss
-};
+// const RandomDistributionFunction randomDistributionCDFPs[numDistributions] = {
+//     cdf_P_Gauss
+// };
 
-RandomDistributionFunction get_random_distribution_cdf_Pinv(const string& name){
-    int index = getDistributionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Random Distribution: ", name);
-    }
-    return get_random_distribution_cdf_Pinv(index);
-}
-RandomDistributionFunction get_random_distribution_cdf_Pinv(int distributionIndex){
-    if (distributionIndex < 0 || distributionIndex >= numDistributions){
-        throw Exception("Invalid Random Distribution Index: ", distributionIndex);
-    }
-    return randomDistributionCDFPinvs[distributionIndex];
-}
-
-
-/***************************************************
- *********** Random Distribution CDF_Qinvs *********
- ***************************************************/
-
-const RandomDistributionFunction randomDistributionCDFQinvs[numDistributions] = {
-    cdf_Qinv_Gauss
-};
-
-RandomDistributionFunction get_random_distribution_cdf_Qinv(const string& name){
-    int index = getDistributionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Random Distribution: ", name);
-    }
-    return get_random_distribution_cdf_Qinv(index);
-}
-RandomDistributionFunction get_random_distribution_cdf_Qinv(int distributionIndex){
-    if (distributionIndex < 0 || distributionIndex >= numDistributions){
-        throw Exception("Invalid Random Distribution Index: ", distributionIndex);
-    }
-    return randomDistributionCDFQinvs[distributionIndex];
-}
+// RandomDistributionFunction get_random_distribution_cdf_P(const string& name){
+//     int index = getDistributionIndex(name);
+//     if (index == -1){
+//         throw Exception("Unknown Random Distribution: ", name);
+//     }
+//     return get_random_distribution_cdf_P(index);
+// }
+// RandomDistributionFunction get_random_distribution_cdf_P(int distributionIndex){
+//     if (distributionIndex < 0 || distributionIndex >= numDistributions){
+//         throw Exception("Invalid Random Distribution Index: ", distributionIndex);
+//     }
+//     return randomDistributionCDFPs[distributionIndex];
+// }
 
 
-/***************************************************
- ********** Random Distribution Expectation ********
- ***************************************************/
+// /***************************************************
+//  ************ Random Distribution CDF_Qs ***********
+//  ***************************************************/
 
-const RandomDistribution randomDistributionExp[numDistributions] = {
-    nullptr
-};
+// const RandomDistributionFunction randomDistributionCDFQs[numDistributions] = {
+//     cdf_Q_Gauss
+// };
 
-RandomDistribution get_random_distribution_Exp(const string& name){
-    int index = getDistributionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Random Distribution: ", name);
-    }
-    return get_random_distribution_Exp(index);
-}
-RandomDistribution get_random_distribution_Exp(int distributionIndex){
-    if (distributionIndex < 0 || distributionIndex >= numDistributions){
-        throw Exception("Invalid Random Distribution Index: ", distributionIndex);
-    }
-    return randomDistributionExp[distributionIndex];
-}
+// RandomDistributionFunction get_random_distribution_cdf_Q(const string& name){
+//     int index = getDistributionIndex(name);
+//     if (index == -1){
+//         throw Exception("Unknown Random Distribution: ", name);
+//     }
+//     return get_random_distribution_cdf_Q(index);
+// }
+// RandomDistributionFunction get_random_distribution_cdf_Q(int distributionIndex){
+//     if (distributionIndex < 0 || distributionIndex >= numDistributions){
+//         throw Exception("Invalid Random Distribution Index: ", distributionIndex);
+//     }
+//     return randomDistributionCDFQs[distributionIndex];
+// }
 
 
-/***************************************************
- *********** Random Distribution Variance **********
- ***************************************************/
+// /***************************************************
+//  ********** Random Distribution CDF_Pinvs **********
+//  ***************************************************/
 
-const RandomDistribution randomDistributionVar[numDistributions] = {
-    nullptr
-};
+// const RandomDistributionFunction randomDistributionCDFPinvs[numDistributions] = {
+//     cdf_Pinv_Gauss
+// };
 
-RandomDistribution get_random_distribution_Var(const string& name){
-    int index = getDistributionIndex(name);
-    if (index == -1){
-        throw Exception("Unknown Random Distribution: ", name);
-    }
-    return get_random_distribution_Var(index);
-}
-RandomDistribution get_random_distribution_Var(int distributionIndex){
-    if (distributionIndex < 0 || distributionIndex >= numDistributions){
-        throw Exception("Invalid Random Distribution Index: ", distributionIndex);
-    }
-    return randomDistributionVar[distributionIndex];
-}
+// RandomDistributionFunction get_random_distribution_cdf_Pinv(const string& name){
+//     int index = getDistributionIndex(name);
+//     if (index == -1){
+//         throw Exception("Unknown Random Distribution: ", name);
+//     }
+//     return get_random_distribution_cdf_Pinv(index);
+// }
+// RandomDistributionFunction get_random_distribution_cdf_Pinv(int distributionIndex){
+//     if (distributionIndex < 0 || distributionIndex >= numDistributions){
+//         throw Exception("Invalid Random Distribution Index: ", distributionIndex);
+//     }
+//     return randomDistributionCDFPinvs[distributionIndex];
+// }
+
+
+// /***************************************************
+//  *********** Random Distribution CDF_Qinvs *********
+//  ***************************************************/
+
+// const RandomDistributionFunction randomDistributionCDFQinvs[numDistributions] = {
+//     cdf_Qinv_Gauss
+// };
+
+// RandomDistributionFunction get_random_distribution_cdf_Qinv(const string& name){
+//     int index = getDistributionIndex(name);
+//     if (index == -1){
+//         throw Exception("Unknown Random Distribution: ", name);
+//     }
+//     return get_random_distribution_cdf_Qinv(index);
+// }
+// RandomDistributionFunction get_random_distribution_cdf_Qinv(int distributionIndex){
+//     if (distributionIndex < 0 || distributionIndex >= numDistributions){
+//         throw Exception("Invalid Random Distribution Index: ", distributionIndex);
+//     }
+//     return randomDistributionCDFQinvs[distributionIndex];
+// }
+
+
+// /***************************************************
+//  ********** Random Distribution Expectation ********
+//  ***************************************************/
+
+// const RandomDistribution randomDistributionExp[numDistributions] = {
+//     nullptr
+// };
+
+// RandomDistribution get_random_distribution_Exp(const string& name){
+//     int index = getDistributionIndex(name);
+//     if (index == -1){
+//         throw Exception("Unknown Random Distribution: ", name);
+//     }
+//     return get_random_distribution_Exp(index);
+// }
+// RandomDistribution get_random_distribution_Exp(int distributionIndex){
+//     if (distributionIndex < 0 || distributionIndex >= numDistributions){
+//         throw Exception("Invalid Random Distribution Index: ", distributionIndex);
+//     }
+//     return randomDistributionExp[distributionIndex];
+// }
+
+
+// /***************************************************
+//  *********** Random Distribution Variance **********
+//  ***************************************************/
+
+// const RandomDistribution randomDistributionVar[numDistributions] = {
+//     nullptr
+// };
+
+// RandomDistribution get_random_distribution_Var(const string& name){
+//     int index = getDistributionIndex(name);
+//     if (index == -1){
+//         throw Exception("Unknown Random Distribution: ", name);
+//     }
+//     return get_random_distribution_Var(index);
+// }
+// RandomDistribution get_random_distribution_Var(int distributionIndex){
+//     if (distributionIndex < 0 || distributionIndex >= numDistributions){
+//         throw Exception("Invalid Random Distribution Index: ", distributionIndex);
+//     }
+//     return randomDistributionVar[distributionIndex];
+// }

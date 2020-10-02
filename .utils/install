@@ -30,13 +30,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Install QT5
     sudo apt-get install qt5-default
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    # Install GNU Scientific Library
     brew install gsl
-    ln -s /usr/local/include/gsl/ $include_dir/gsl
-    gsl_dir="/usr/local/Cellar/gsl/2.6/lib"
-    sudo cp $gsl_dir/libgsl.25.dylib $libs_dir/libgsl.dylib
-    sudo cp $gsl_dir/libgslcblas.0.dylib $libs_dir/libgslcblas.dylib
-
-    # Install QT5
     brew install qt5
 fi

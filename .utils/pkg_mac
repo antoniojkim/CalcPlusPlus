@@ -1,21 +1,12 @@
 #!/bin/bash
 
+mkdir -p ".package/CalcPlusPlus"
 
-mkdir -p .package/CalcPlusPlus
-mkdir -p .package/CalcPlusPlus/bin
-mkdir -p .package/CalcPlusPlus/libs
+CALCPP=".package/CalcPlusPlus/calcpp"
+cp -r UI/calcpp.app .package/CalcPlusPlus/calcpp.app
+cp MathEngine/libMathEngine.dylib .package/CalcPlusPlus/calcpp.app/Contents/Resources/
 
-CALCPP=".package/CalcPlusPlus/bin/calcpp"
+cd .package/
 
-cp UI/calcpp.app/Contents/MacOS/calcpp $CALCPP
-cp .utils/.templates/Calculator.sh .package/CalcPlusPlus/Calculator
-
-sudo cp MathEngine/libMathEngine.dylib .package/CalcPlusPlus/libs/libMathEngine.dylib
-
-gsl_dir="/usr/local/Cellar/gsl/2.6/lib"
-if [[ ! -f ".package/CalcPlusPlus/libs/libgsl.dylib" ]]; then
-    sudo cp .libs/libgsl.dylib .package/CalcPlusPlus/libs/
-fi
-if [[ ! -f ".package/CalcPlusPlus/libs/libgslcblas.dylib" ]]; then
-    sudo cp .libs/libgslcblas.dylib .package/CalcPlusPlus/libs/
-fi
+tar -czvf calcplusplus.bottle.tgz CalcPlusPlus/
+sha256sum calcplusplus.bottle.tgz

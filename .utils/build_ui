@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# cd CalcUI/
 cd UI/
 
 if [ ! -f Makefile ]; then

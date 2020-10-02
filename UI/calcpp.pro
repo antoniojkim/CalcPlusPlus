@@ -20,11 +20,19 @@ SOURCES += main.cc MainWindow.cc EquationEditor.cc
 HEADERS += MainWindow.h EquationEditor.h
 
 INCLUDEPATH += ../MathEngine
-LIBS += -L../MathEngine -lMathEngine -lgsl -lgslcblas -lm
+LIBS += -L../MathEngine -lMathEngine
 
 win32 {
     INCLUDEPATH += C:\DEV\vcpkg\packages\gsl_x64-windows\include
     LIBS += -LC:\DEV\vcpkg\packages\gsl_x64-windows\bin -lgsl -lgslcblas -lm
+}
+macx {
+    INCLUDEPATH += /usr/local/include
+    LIBS += -L/usr/local/Cellar/gsl/2.6/lib -lgsl -lgslcblas -lm
+}
+unix:!macx {
+    INCLUDEPATH += ../.includes/0
+    LIBS += ../.libs -lsgl -lgslcblas -lm
 }
 
 # Default rules for deployment.

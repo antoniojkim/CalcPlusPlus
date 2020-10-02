@@ -2,7 +2,7 @@
 
 CURR_DIR=$(pwd)
 
-cd $CURR_DIR/CalcUI
+cd $CURR_DIR/UI
 make clean
 rm Makefile
 

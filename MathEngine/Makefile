@@ -12,12 +12,14 @@ ifeq ($(OS),Windows_NT)
 	TARGET_LIB := libMathEngine.a
 else
 	UNAME_S := $(shell uname -s)
-	INCLUDES := -I../.includes/
-	LINK_FLAGS := -L../.libs/
     ifeq ($(UNAME_S),Darwin)
+		INCLUDES :=
+		LINK_FLAGS :=
 		LIB_FLAGS := -fPIC -dynamiclib -Wno-unused-command-line-argument -pedantic
 		TARGET_LIB := libMathEngine.dylib
 	else
+		INCLUDES := -I../.includes/
+		LINK_FLAGS := -L../.libs/
 		LIB_FLAGS := -fPIC -shared
 		TARGET_LIB := libMathEngine.so
     endif

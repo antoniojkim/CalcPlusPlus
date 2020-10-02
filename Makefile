@@ -47,9 +47,8 @@ pkg: pypkg
 buildwin:
 	powershell.exe -noprofile -executionpolicy bypass -file .utils/build.ps1
 
-buildmac: ui
+buildmac: build ui
 	.utils/pkg_mac
-	cd .package/CalcPlusPlus && ./Calculator
 
 
 docs:
@@ -79,7 +78,7 @@ lc:
 
 
 cleanui:
-	cd CalcUI && make -f Makefile clean
+	cd UI && make -f Makefile clean && rm Makefile
 cleanengine:
 	cd MathEngine && make -f Makefile clean
 cleantest:
