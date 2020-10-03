@@ -31,3 +31,4 @@ UI/Makefile*
 .package
 .sandbox/*/sandbox
 .vscode/
+scripts/calcpp.rb
