@@ -47,10 +47,10 @@ namespace Functions {
 		make_fe_gauss_P, make_fe_gauss_Pinv, make_fe_gauss_Qinv, make_fe_num, make_fe_permute,
 		make_fe_permute, make_fe_poch, make_fe_pochrel, make_fe_pow, make_fe_quad,
 		make_fe_quadc, make_fe_rad, make_fe_rand, make_fe_randn, make_fe_rand, make_fe_rshift,
-		make_fe_sd, make_fe_sec, make_fe_sech, make_fe_sin, make_fe_sinh, make_fe_skew,
-		make_fe_LUsolve, make_fe_sqr, make_fe_sqrt, make_fe_sd, make_fe_sd, make_fe_sub,
-		make_fe_tan, make_fe_tanh, make_fe_taylorcoeff, make_fe_tss, make_fe_var, make_fe_var,
-		make_fe_bitwise_or
+		make_fe_sd, make_fe_sec, make_fe_sech, make_fe_sigmoid, make_fe_sin, make_fe_sinh,
+		make_fe_skew, make_fe_LUsolve, make_fe_sqr, make_fe_sqrt, make_fe_sd, make_fe_sd,
+		make_fe_sub, make_fe_tan, make_fe_tanh, make_fe_taylorcoeff, make_fe_tss, make_fe_var,
+		make_fe_var, make_fe_bitwise_or
 	};
 
 	expression construct(const int functionIndex, const expression arg){
@@ -61,24 +61,14 @@ namespace Functions {
 	}
 
 	bool functionIsOperator[Functions::numFunctions] = {
-		true, true, true, true, true, true, true, true, true, true, true, true, true, false,
-		false, false, false, false, false, false, false, false, false, false, true, true, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, false, false, false, false, false, false, false, false, false, false, false,
-		false, true
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 1
 	};
 
 	bool isOperator(const char* name){

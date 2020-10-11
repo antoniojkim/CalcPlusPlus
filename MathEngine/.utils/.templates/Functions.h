@@ -30,12 +30,12 @@ namespace Functions {
 // Declarations
 typedef expression(*FunctionConstructor)(int functionIndex, const expression arg);
 namespace Function{
-    #define DECLARE_FUNCTION_EXPRESSION(name) \
+    #define DECLARE_FUNCTION(name) \
         expression make_fe_##name(int functionIndex, const expression arg)
 
 	{declarations}
 
-    #undef DECLARE_FUNCTION_EXPRESSION
+    #undef DECLARE_FUNCTION
 }
 
 

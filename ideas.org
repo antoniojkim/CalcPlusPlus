@@ -1,11 +1,15 @@
 #+TITLE: CalcPlusPlus Ideas
 
 * IDEAS
-** add range operator
-+ Possibly add a generator expression class that generates (more efficient for large ranges
-+ Add Polynomial function that constructs a polynomial expression from coefficients
-   + Add simplify mechanims that auomatically genrates a polynomial expression from an expression
-+ TODO Add chained expressions using ';'
+** TODO Add proper type system.
+- Instead of relying on scanner kinds
+** TODO Add ~calcpp~ namespace to all files
+- For portability and organization purposes
+** TODO add range operator
++ Possibly add a generator expression class that generates (more efficient for large range
+** TODO Add Polynomial function that constructs a polynomial expression from coefficients
+  + Add simplify mechanims that auomatically genrates a polynomial expression from an expression
+** TODO Add chained expressions using ';'
 ** TODO Add IQR and summary
 ** TODO Add BooleanExpression for clear ==, >=, <=, <
 ** TODO Possibly explore differential equation solving
@@ -13,5 +17,7 @@
 ** TODO Add normal approximation to the binomial distribution
 https://mathcracker.com/normal-approximation-binomial-distribution
 ** TODO Add matrix multiplication of non numerical matrices
+
+
 * Bugs
 ** TODO Investigate why Mac OS binary can't load dynamic libraries

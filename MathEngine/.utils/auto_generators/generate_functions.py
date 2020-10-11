@@ -50,18 +50,16 @@ def generate_functions(args=None):
 
     def get_all():
         for function in functions:
-            yield function["name"], function["name"], "false"
+            yield function["name"], function["name"], "0"
             if function["aliases"] is not None:
-                isOperator = "true" if function["type"] == "operator" else "false"
+                isOperator = "1" if function["type"] == "operator" else "0"
                 for alias in function["aliases"].split():
                     if len(alias.strip()) > 0:
                         yield alias.strip(), function["name"], isOperator
 
     all_names, all_refs, all_operators = zip(*sorted(get_all()))
 
-    declarations = sorted(
-        f"DECLARE_FUNCTION_EXPRESSION({name});" for name in set(all_refs)
-    )
+    declarations = sorted(f"DECLARE_FUNCTION({name});" for name in set(all_refs))
     function_constructors = [f"make_fe_{name}" for name in all_refs]
 
     with Template("Functions.h", os.path.join(func_dir, "Functions.h")) as template:

@@ -113,4 +113,32 @@ namespace Function {
         }
     };
     MAKE_FUNCTION_EXPRESSION(logn)
+
+    // @Function sigmoid
+    struct sigmoid: public FunctionExpression {
+        sigmoid(int functionIndex, expression arg):
+            FunctionExpression(functionIndex, arg, {{"x", Empty}}) {}  // Signature: (x,)
+        double value(const Variables& vars = emptyVars) const override {
+            double x = arg->at(0)->value(vars);
+            return 1 / (1 + std::exp(-x));
+        }
+        expression derivative(const std::string& var) {
+            using ExpressionMath::exp;
+            using ExpressionMath::sigmoid;
+            auto x = arg->at(0);
+            auto s = sigmoid(x);
+            return s * (1 - s) * x->derivative(var);
+        }
+        std::ostream& print(std::ostream& out, const bool pretty) const override {
+            auto x = arg->at(0);
+            if (pretty){
+                out << "σ(";
+            }
+            else{
+               out << "sigmoid(";
+            }
+            return x->print(out, pretty) << ")";
+        }
+    };
+    MAKE_FUNCTION_EXPRESSION(sigmoid)
 }

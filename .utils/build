@@ -1,12 +1,12 @@
 #!/bin/bash
 
+
 MAKEFILE_DIR=$1
 if [ "$MAKEFILE_DIR" == "" ]; then
     echo "No Makefile Directory provided!"
 fi
 
 cd $MAKEFILE_DIR
-
 make -j10 2> $MAKEFILE_DIR.cerr
 if [ $? -ne 0 ]; then
     vi -R $MAKEFILE_DIR.cerr

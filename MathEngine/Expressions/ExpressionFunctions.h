@@ -16,6 +16,7 @@ namespace ExpressionMath {
     EXPR_MATH(exp2, "exp2")
     EXPR_MATH(expm1, "expm1")
     EXPR_MATH(ln, "ln")
+    EXPR_MATH(sigmoid, "sigmoid")
 
     // Trig Functions
     EXPR_MATH(sin, "sin")
