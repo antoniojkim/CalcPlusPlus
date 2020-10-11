@@ -16,7 +16,11 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     cp MathEngine/libMathEngine.dylib .package/CalcPlusPlus/calcpp.app/Contents/Resources/
     cd .package/
     tar -czvf calcplusplus.bottle.tgz CalcPlusPlus/
-    sha256sum calcplusplus.bottle.tgz | cut -d " " -f 1 | pbcopy
+    SHA256SUM=$(sha256sum calcplusplus.bottle.tgz | cut -d " " -f 1)
+    cd ../scripts/
+    if [ -L calcpp.rb ]; then
+        gsed "s|{SHA256SUM}|$SHA256SUM|g" .templates/calcpp.rb > "$(readlink calcpp.rb)"
+    fi
 else
     echo "Unsupported OS: $OSTYPE"
 fi
