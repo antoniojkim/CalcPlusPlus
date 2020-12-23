@@ -47,10 +47,6 @@ run: ui
 buildwin:
 	powershell.exe -noprofile -executionpolicy bypass -file .utils/build.ps1
 
-buildmac: build ui
-	.utils/pkg_mac
-
-
 docs:
 	cd docs && make html
 .PHONY: docs
