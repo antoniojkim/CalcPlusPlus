@@ -1,45 +1,27 @@
 #pragma once
 
-#ifndef __UTILS_EXCEPTIONS_H__
-#define __UTILS_EXCEPTIONS_H__
-
 #include <exception>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <utility>
 
-struct Exception: std::exception {
+namespace calcpp {
+    using Exception = std::runtime_error;
+}  // namespace calcpp
 
-    std::string msg;
+#define THROW_ERROR(msg)                                                               \
+    do {                                                                               \
+        std::ostringstream err;                                                        \
+        err << msg;                                                                    \
+        throw calcpp::Exception(err.str());                                            \
+    } while (false)
 
-    template <typename... Args>
-    Exception(Args&&... args) {
-        std::ostringstream out;
-        print(out, std::forward<Args>(args)...);
-        msg = out.str();
-    }
-
-    Exception& operator=(const Exception& other) noexcept {
-        this->msg = other.msg;
-        return *this;
-    }
-
-    virtual const char * what () const noexcept override {
-        return msg.c_str();
-    }
-
-
-    static std::ostream& print(std::ostream& out) { return out; }
-
-    template <typename T, typename... Args>
-    static std::ostream& print(std::ostream& out, T t, Args... args)
-    {
-        out << t;
-        return print(out, args...);
-    }
-
-};
-
-std::ostream& operator<<(std::ostream& out, const Exception& e);
-
-#endif // __UTILS_EXCEPTIONS_H__
+#define THROW_NAME_ERROR(msg)   THROW_ERROR("NameError: " << msg)
+#define THROW_SYNTAX_ERROR(msg) THROW_ERROR("SyntaxError: " << msg)
+#define THROW_INVALID_SYNTAX_ERROR(str, index)                                         \
+    THROW_ERROR(                                                                       \
+        "\t" << str << "\n\t" << std::setfill(' ') << std::setw(index + 2) << "^\n"    \
+             << "Syntax Error: invalid syntax");
+#define THROW_TYPE_ERROR(msg)  THROW_ERROR("TypeError: " << msg)
+#define THROW_VALUE_ERROR(msg) THROW_ERROR("ValueError: " << msg)

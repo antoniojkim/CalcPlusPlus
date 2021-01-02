@@ -1,6 +1,8 @@
 #+TITLE: CalcPlusPlus Ideas
 
 * IDEAS
+** TODO Reimplement scanner and parser
+- To support an actual formal language
 ** TODO Add proper type system.
 - Instead of relying on scanner kinds
 ** TODO Add ~calcpp~ namespace to all files
@@ -9,6 +11,7 @@
 + Possibly add a generator expression class that generates (more efficient for large range
 ** TODO Add Polynomial function that constructs a polynomial expression from coefficients
   + Add simplify mechanims that auomatically genrates a polynomial expression from an expression
+** TODO Add dynamic replacement for "->" and "<-"
 ** TODO Add chained expressions using ';'
 ** TODO Add IQR and summary
 ** TODO Add BooleanExpression for clear ==, >=, <=, <
@@ -20,4 +23,4 @@ https://mathcracker.com/normal-approximation-binomial-distribution
 
 
 * Bugs
-** TODO Investigate why Mac OS binary can't load dynamic libraries
+** DONE Investigate why Mac OS binary can't load dynamic libraries
