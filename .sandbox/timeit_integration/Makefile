@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -Ofast -std=c++17 -Wall -MMD -Werror=vla -DDEBUG -I../../.includes
 EXEC = sandbox
 
-OBJECTS =  sandbox.o
+OBJECTS =  timing_experiment.o
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}

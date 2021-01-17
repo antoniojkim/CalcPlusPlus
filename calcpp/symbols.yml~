@@ -1,0 +1,85 @@
+tokens:
+    - NONE
+    - EMPTY
+    - NUM
+    - COMPLEX
+    - HEX
+    - BIN
+    - ID
+    - LPAREN
+    - RPAREN
+    - LBRACE
+    - RBRACE
+    - LCURLY
+    - RCURLY
+    - QUOTE
+    - STRING
+    - BACKTICK
+    - HASH
+    - BACKSLASH
+operators:
+    - COMMA:
+    - EQUALS:
+          rightAssociative:
+      COLON_EQUALS:
+          rightAssociative:
+      L_ARROW:
+          rightAssociative:
+      R_ARROW:
+          rightAssociative:
+      PLUS_EQUALS:
+          rightAssociative:
+      MINUS_EQUALS:
+          rightAssociative:
+      STAR_EQUALS:
+          rightAssociative:
+      SLASH_EQUALS:
+          rightAssociative:
+      PCT_EQUALS:
+          rightAssociative:
+      TILDE_EQUALS:
+          rightAssociative:
+      CARET_EQUALS:
+          rightAssociative:
+      LT_LT_EQUALS:
+          rightAssociative:
+      GT_GT_EQUALS:
+          rightAssociative:
+    - ELLIPSES:
+      DOT:
+      DOT_DOT:
+      DOLLAR:
+          singleOperator:
+    - PIPE_PIPE:
+    - AMP_AMP:
+    - PIPE:
+    - CARET_PIPE:
+    - AMP:
+    - EQUALS_EQUALS:
+      EXCL_EQUALS:
+    - LT:
+      LT_EQUALS:
+      GT:
+      GT_EQUALS:
+      TILDE:
+    - APOSTROPHE:
+    - LT_LT:
+      GT_GT:
+    - PLUS:
+    - MINUS:
+    - STAR:
+      SLASH:
+      PCT:
+      SLASH_SLASH:
+      EXCL:
+          singleOperator:
+      EXCL_EXCL:
+          singleOperator:
+      AT:
+    - CARET:
+      STAR_STAR:
+    - COLON:
+      COLON_COLON:
+      SEMICOLON:
+      SEMICOLON_SEMICOLON:
+      QUESTION:

@@ -1,0 +1,133 @@
+tokens:
+    NONE:
+    EMPTY:
+    HEX:
+    BIN:
+    NUM:
+    INF:
+    ID:
+    SPECIALID:
+    FUNCTION:
+    TUPLE:
+    MATRIX:
+    INVALID:
+    UNIT:
+    VAR:
+    VARARGS:
+    LPAREN: "("
+    RPAREN: ")"
+    LSQUARE: "["
+    RSQUARE: "]"
+    LBRACE: "{"
+    RBRACE: "}"
+    DOT: "."
+    SEMICOLON: ";"
+    QUESTION: "?"
+    POUND: "#"
+    DOLLAR: "$"
+    QUOTE: "\\\""
+    BACKSLASH: "\\\\"
+    BACKTICK: "`"
+    UNDERSCORE: "_"
+operators:
+    -   COMMA:
+            lexeme: ","
+    -   EQUALS:
+            lexeme: "="
+            rightAssociative:
+        COLON_EQUALS:
+            lexeme: ":="
+            rightAssociative:
+        L_ARROW:
+            lexeme: "<-"
+            rightAssociative:
+        R_ARROW:
+            lexeme: "->"
+            rightAssociative:
+    -   ELLIPSIS:
+            lexeme: "..."
+            singleOperator:
+    -   PIPE_PIPE:
+            lexeme: "||"
+    -   AMP_AMP:
+            lexeme: "&&"
+    -   PIPE:
+            lexeme: "|"
+    -   CARET_PIPE:
+            lexeme: "^|"
+    -   AMP:
+            lexeme: "&"
+    -   EQUALS_EQUALS:
+            lexeme: "=="
+        NOT_EQUALS:
+            lexeme: "!="
+    -   LT:
+            lexeme: "<"
+        GT:
+            lexeme: ">"
+        LT_EQ:
+            lexeme: "<="
+        GT_EQ:
+            lexeme: ">="
+        TILDE:
+            lexeme: "~"
+            singleOperator:
+            rightAssociative:
+    -   APOSTROPHE:
+            lexeme: "'"
+            singleOperator:
+    -   LT_LT:
+            lexeme: "<<"
+        GT_GT:
+            lexeme: ">>"
+    -   PLUS:
+            lexeme: "+"
+        MINUS:
+            lexeme: "-"
+    -   STAR:
+            lexeme: "*"
+        SLASH:
+            lexeme: "/"
+        PCT:
+            lexeme: "%"
+        SLASH_SLASH:
+            lexeme: "//"
+        EXCL:
+            lexeme: "!"
+            singleOperator:
+        EXCL_EXCL:
+            lexeme: "!!"
+            singleOperator:
+        CHOOSE:
+            lexeme: "C"
+        PERMUTE:
+            lexeme: "P"
+    -   CARET:
+            lexeme: "^"
+            rightAssociative:
+        STAR_STAR:
+            lexeme: "**"
+            rightAssociative:
+    -   COLON:
+            lexeme: ":"
+            rightAssociative:
+        COLON_COLON:
+            lexeme: "::"
+            rightAssociative:
+constants:
+    pi:
+        repr: π
+        val: M_PI
+        longval: "3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328"
+    e:  # Euler's Number
+        repr: e
+        val: M_E
+        longval: "2.718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427427466391932"
+    gamma:  # Euler–Mascheroni constant
+        repr: γ
+        val: M_EULER
+        longval: "0.5772156649015328606065120900824024310421593359399235988057672348848677267776646709369470632917467495146314472498"
+    vphi:  # Golden Ratio
+        repr: ϕ
+        val: 1.6180339887498948482
+        longval: "1.61803398874989484820458683436563811772030917980576286213544862270526046281890244970720720418939113748475408807538"

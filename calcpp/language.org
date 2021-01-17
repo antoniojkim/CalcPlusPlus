@@ -1,0 +1,55 @@
+#+TITLE: Language
+
+The following is the specification for the CalcPlusPlus Math Language
+
+* Terminals
+
+|---------------+------------------------------------------|
+| Terminal Type | Lexeme Regex                             |
+|---------------+------------------------------------------|
+| Basic         |                                          |
+|---------------+------------------------------------------|
+| NUM           | [1-9][0-9]+                              |
+| FLOAT         | [:NUM:]\.[:NUM:]+((e,E)-?[:NUM:])?(i,j)? |
+| HEX           | 0x[0-9a-fA-f]+                           |
+| BIN           | 0b(0,1)+                                 |
+| ID            | [_a-zA-Z][_0-9a-zA-Z]*                   |
+|---------------+------------------------------------------|
+| Operators     |                                          |
+|---------------+------------------------------------------|
+| COMMA         | ,                                        |
+| EQ            | =                                        |
+| COLON_EQUALS  | :=                                       |
+| L_ARROW       | <-                                       |
+| R_ARROW       | ->                                       |
+| ELLIPSIS      | ...                                      |
+| PIPE_PIPE     | [:pipe:][:pipe:]                         |
+| AMP_AMP       | &&                                       |
+| PIPE          | [:pipe:]                                 |
+| CARET_PIPE    | ^[:pipe:]                                |
+| AMP           | &                                        |
+| EQ_EQ         | ==                                       |
+| NOT_EQ        | !=                                       |
+| LT            | <                                        |
+| GT            | >                                        |
+| LT_EQ         | <=                                       |
+| GT_EQ         | >=                                       |
+| TILDE         | ~                                        |
+| APOS          | '                                        |
+| LT_LT         | <<                                       |
+| GT_GT         | >>                                       |
+| PLUS          | +                                        |
+| MINUS         | -                                        |
+| STAR          | *                                        |
+| SLASH         | /                                        |
+| PCT           | %                                        |
+| SLASH_SLASH   | //                                       |
+| EXCL          | !                                        |
+| EXCL_EXCL     | !!                                       |
+| CHOOSE        | C                                        |
+| PERMUTE       | P                                        |
+| CARET         | ^                                        |
+| STAR_STAR     | **                                       |
+| COLON         | :                                        |
+| COLON_COLON   | ::                                       |
+|---------------+------------------------------------------|

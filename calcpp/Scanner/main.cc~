@@ -1,0 +1,14 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+    std::string inf = u8"\u221E";
+    cout << inf << endl;
+    cout << inf.size() << endl;
+
+    std::string greek = u8"\u03B6";
+    cout << greek << endl;
+    cout << greek.size() << endl;
+}

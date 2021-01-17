@@ -1,9 +1,9 @@
 
 build: generate
-	.utils/build MathEngine $(name)
+	.utils/build calcpp $(name)
 
 generate:
-	python3 -u MathEngine/.utils/auto_generate.py
+	cd calcpp/ && ./sourcegen.sh
 
 test: build
 	.utils/build Tests
@@ -80,12 +80,12 @@ lc:
 cleanui:
 	cd UI && make -f Makefile clean && rm Makefile
 cleanengine:
-	cd MathEngine && make -f Makefile clean
+	cd calcpp && make -f Makefile clean
 cleantest:
 	rm Tests/Tests/EngineTest.o
 cleanall: cleanui cleanengine
 
 clean:
-	rm -f MathEngine/libMathEngine.a Tests/run Tests/Tests/EngineTest.o CalcUI/CalcUI
+	rm -f calcpp/libMathEngine.a Tests/run Tests/Tests/EngineTest.o CalcUI/CalcUI
 
 .PHONY: clean
