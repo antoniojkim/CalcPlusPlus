@@ -1,71 +1,43 @@
 #pragma once
 
-#include <map>
-#include <list>
-#include <utility>
-
-#include "../Functions/Functions.h"
 #include "Expression.h"
 
-class FunctionExpression: public Expression {
-    protected:
+namespace calcpp {
+
+    class FunctionExpression: public Expression {
         const int functionIndex;
-        expression arg;  // TupleExpression
 
-        FunctionExpression(
-            int functionIndex,
-            expression arg,
-            std::initializer_list<std::pair<std::string, expression>> signature={}
-        );
+      protected:
+        FunctionExpression(const int functionIndex);
 
-    public:
+      public:
+        EXPRESSION_OVERRIDES
+    };
 
-        static expression construct(const char * name, expression arg);
-        static expression construct(std::string& name, expression arg);
-        static expression construct(int functionIndex, expression arg);
-        static expression construct(const char * name, std::initializer_list<expression> args);
-        static expression construct(std::string& name, std::initializer_list<expression> args);
-        static expression construct(int functionIndex, std::initializer_list<expression> args);
+    // class ValueFunctionExpression: public FunctionExpression {
+    //   protected:
+    //     typedef double (*ValueFunction)(double);
+    //     ValueFunction f;
 
-        virtual expression eval(const Variables& vars = emptyVars) override;
+    //     ValueFunctionExpression(int functionIndex, ValueFunction f, expression arg);
 
-        expression at(const int index) override;
+    //   public:
+    //     static expression construct(int functionIndex, ValueFunction f, expression
+    //     arg);
 
-        std::string repr() const override;
-        int id() const override;
+    //     virtual double value(const Variables& vars = emptyVars) const override;
+    // };
 
-        EXPRESSION_PARTIAL_OVERRIDES
+    // #define MAKE_VALUEFUNCTION_EXPRESSION(name, f)                                         \
+//     expression make_fe_##name(int functionIndex, expression arg) {                     \
+//         return ValueFunctionExpression::construct(functionIndex, f, arg);              \
+//     }
 
-};
+    // struct OperatorFunctionExpression: public FunctionExpression {
+    //     OperatorFunctionExpression(int functionIndex, expression arg);
 
-#define MAKE_FUNCTION_EXPRESSION(name)                                     \
-    expression make_fe_##name(int functionIndex, expression arg){          \
-        return std::make_shared<Function::name>(functionIndex, arg);       \
-    }
+    //     std::ostream& print(std::ostream& out, const bool pretty = false) const
+    //     override; std::ostream& postfix(std::ostream& out) const override;
+    // };
 
-
-class ValueFunctionExpression: public FunctionExpression {
-    protected:
-        typedef double (*ValueFunction)(double);
-        ValueFunction f;
-
-        ValueFunctionExpression(int functionIndex, ValueFunction f, expression arg);
-
-    public:
-        static expression construct(int functionIndex, ValueFunction f, expression arg);
-
-        virtual double value(const Variables& vars = emptyVars) const override;
-
-};
-
-#define MAKE_VALUEFUNCTION_EXPRESSION(name, f)                             \
-    expression make_fe_##name(int functionIndex, expression arg){          \
-        return ValueFunctionExpression::construct(functionIndex, f, arg);  \
-    }
-
-struct OperatorFunctionExpression: public FunctionExpression {
-    OperatorFunctionExpression(int functionIndex, expression arg);
-
-    std::ostream& print(std::ostream& out, const bool pretty = false) const override;
-    std::ostream& postfix(std::ostream& out) const override;
-};
+}  // namespace calcpp

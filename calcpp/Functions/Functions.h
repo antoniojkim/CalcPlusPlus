@@ -1,199 +1,140 @@
 #pragma once
 
-#ifndef __FUNCTION_DIRECTORY_H__
-#define __FUNCTION_DIRECTORY_H__
-
-/***************************************************
- *************** Auto-Generated File ***************
- ***************************************************/
-
-#include <cstring>
 #include <string>
 
 #include "../Expressions/Expression.h"
-#include "../Utils/BinarySearch.h"
 
-namespace Functions {
-    constexpr const int numFunctions = 210;
-    constexpr const char* names[numFunctions] = {
-        "%", "&", "*", "**", "+", "-", "/", "//", ":=", "<-", "<<", "=", ">>", "Beta",
-		"Betainc", "C", "Chol", "Cholesky", "Eig", "LU", "LUsolve", "P", "QR", "SVD", "^", "^|",
-		"abs", "absdev", "acos", "acosh", "acot", "acoth", "acsc", "acsch", "add", "arccos",
-		"arccosh", "arccot", "arccoth", "arccsc", "arccsch", "arcos", "arcosh", "arcot",
-		"arcoth", "arcsc", "arcsch", "arcsec", "arcsech", "arcsin", "arcsinh", "arctan",
-		"arctanh", "argmax", "argmin", "arsec", "arsech", "arsin", "arsinh", "artan", "artanh",
-		"asec", "asech", "asin", "asinh", "atan", "atanh", "autocorr", "bin", "bitwise_and",
-		"bitwise_or", "bitwise_xor", "cb", "cbrt", "chisq", "chisq_P", "chisq_Pinv", "chisq_Q",
-		"chisq_Qinv", "chisq_pdf", "chol", "choose", "cnorm", "comb", "cos", "cosh", "cot",
-		"coth", "csc", "csch", "cubic", "cubicc", "deg", "deriv", "det", "dfact", "diff", "div",
-		"eig", "eigen", "eq", "exp", "exp2", "exp_P", "exp_Pinv", "exp_Q", "exp_Qinv", "expm1",
-		"exponential", "exponential_P", "exponential_Pinv", "exponential_Q", "exponential_Qinv",
-		"exponential_pdf", "fact", "fcmp", "fft", "floordiv", "frexp", "gamma", "gamma_inc",
-		"gamma_inc_P", "gamma_inc_Q", "gammainc", "gammaincp", "gammaincq", "gammainv",
-		"gammastar", "gauss_P", "gauss_Pinv", "gauss_Q", "gauss_Qinv", "gauss_pdf", "gaussian",
-		"gcd", "hex", "hypot", "ifft", "integral", "kurt", "kurtosis", "lag1", "lcm", "ldexp",
-		"ln", "ln1p", "ln2", "lnBeta", "lnchoose", "lncomb", "lndet", "lndfact", "lnfact",
-		"lngamma", "lnperm", "lnpermute", "lnpoch", "log", "log10", "log1p", "log1pm", "log2",
-		"logabs", "logn", "lshift", "max", "max_index", "mean", "median", "min", "min_index",
-		"mod", "mul", "neg", "norm", "norminv", "norminv", "num", "perm", "permute", "poch",
-		"pochrel", "pow", "quad", "quadc", "rad", "rand", "randn", "random", "rshift", "sd",
-		"sec", "sech", "sigmoid", "sin", "sinh", "skew", "solve", "sqr", "sqrt", "std", "stdev",
-		"sub", "tan", "tanh", "taylorcoeff", "tss", "var", "variance", "|"
-    };
+namespace calcpp {
 
-    BINARY_SEARCH_INDEX_OF(names, numFunctions)
+    // returns one of the externally defined function expressions by its name
+    expression function(const std::string& name);
 
-    expression construct(const int functionIndex, const expression arg);
+    namespace functions {
+        // begin sourcegen functions
+        extern const expression Beta;
+        extern const expression Betainc;
+        extern const expression Cholesky;
+        extern const expression Eig;
+        extern const expression LU;
+        extern const expression LUsolve;
+        extern const expression QR;
+        extern const expression SVD;
+        extern const expression abs;
+        extern const expression absdev;
+        extern const expression acos;
+        extern const expression acosh;
+        extern const expression acot;
+        extern const expression acoth;
+        extern const expression acsc;
+        extern const expression acsch;
+        extern const expression argmax;
+        extern const expression argmin;
+        extern const expression asec;
+        extern const expression asech;
+        extern const expression asin;
+        extern const expression asinh;
+        extern const expression atan;
+        extern const expression atanh;
+        extern const expression bin;
+        extern const expression cb;
+        extern const expression cbrt;
+        extern const expression chisq;
+        extern const expression chisq_P;
+        extern const expression chisq_Pinv;
+        extern const expression chisq_Q;
+        extern const expression chisq_Qinv;
+        extern const expression chisq_pdf;
+        extern const expression choose;
+        extern const expression cos;
+        extern const expression cosh;
+        extern const expression cot;
+        extern const expression coth;
+        extern const expression csc;
+        extern const expression csch;
+        extern const expression cubic;
+        extern const expression cubicc;
+        extern const expression deg;
+        extern const expression deriv;
+        extern const expression det;
+        extern const expression dfact;
+        extern const expression diff;
+        extern const expression exp;
+        extern const expression exp2;
+        extern const expression expm1;
+        extern const expression exponential;
+        extern const expression exponential_P;
+        extern const expression exponential_Pinv;
+        extern const expression exponential_Q;
+        extern const expression exponential_Qinv;
+        extern const expression exponential_pdf;
+        extern const expression fact;
+        extern const expression fcmp;
+        extern const expression fft;
+        extern const expression frexp;
+        extern const expression gamma;
+        extern const expression gamma_inc;
+        extern const expression gamma_inc_P;
+        extern const expression gamma_inc_Q;
+        extern const expression gammainv;
+        extern const expression gammastar;
+        extern const expression gauss_P;
+        extern const expression gauss_Pinv;
+        extern const expression gauss_Q;
+        extern const expression gauss_Qinv;
+        extern const expression gauss_pdf;
+        extern const expression gcd;
+        extern const expression hex;
+        extern const expression hypot;
+        extern const expression ifft;
+        extern const expression integral;
+        extern const expression kurtosis;
+        extern const expression lag1;
+        extern const expression lcm;
+        extern const expression ldexp;
+        extern const expression ln;
+        extern const expression ln1p;
+        extern const expression ln2;
+        extern const expression lnBeta;
+        extern const expression lnchoose;
+        extern const expression lndet;
+        extern const expression lndfact;
+        extern const expression lnfact;
+        extern const expression lngamma;
+        extern const expression lnpermute;
+        extern const expression lnpoch;
+        extern const expression log;
+        extern const expression log1pm;
+        extern const expression logabs;
+        extern const expression logn;
+        extern const expression max;
+        extern const expression mean;
+        extern const expression median;
+        extern const expression min;
+        extern const expression neg;
+        extern const expression num;
+        extern const expression permute;
+        extern const expression poch;
+        extern const expression pochrel;
+        extern const expression quad;
+        extern const expression quadc;
+        extern const expression rad;
+        extern const expression rand;
+        extern const expression randn;
+        extern const expression sd;
+        extern const expression sec;
+        extern const expression sech;
+        extern const expression sigmoid;
+        extern const expression sin;
+        extern const expression sinh;
+        extern const expression skew;
+        extern const expression sqr;
+        extern const expression sqrt;
+        extern const expression tan;
+        extern const expression tanh;
+        extern const expression taylorcoeff;
+        extern const expression tss;
+        extern const expression var;
+        // end sourcegen
+    }  // namespace functions
 
-    bool isOperator(const char* name);
-    bool isOperator(const int functionIndex);
-}
-
-// Declarations
-typedef expression(*FunctionConstructor)(int functionIndex, const expression arg);
-namespace Function{
-    #define DECLARE_FUNCTION(name) \
-        expression make_fe_##name(int functionIndex, const expression arg)
-
-	DECLARE_FUNCTION(Beta);
-	DECLARE_FUNCTION(Betainc);
-	DECLARE_FUNCTION(Cholesky);
-	DECLARE_FUNCTION(Eig);
-	DECLARE_FUNCTION(LU);
-	DECLARE_FUNCTION(LUsolve);
-	DECLARE_FUNCTION(QR);
-	DECLARE_FUNCTION(SVD);
-	DECLARE_FUNCTION(abs);
-	DECLARE_FUNCTION(absdev);
-	DECLARE_FUNCTION(acos);
-	DECLARE_FUNCTION(acosh);
-	DECLARE_FUNCTION(acot);
-	DECLARE_FUNCTION(acoth);
-	DECLARE_FUNCTION(acsc);
-	DECLARE_FUNCTION(acsch);
-	DECLARE_FUNCTION(add);
-	DECLARE_FUNCTION(argmax);
-	DECLARE_FUNCTION(argmin);
-	DECLARE_FUNCTION(asec);
-	DECLARE_FUNCTION(asech);
-	DECLARE_FUNCTION(asin);
-	DECLARE_FUNCTION(asinh);
-	DECLARE_FUNCTION(atan);
-	DECLARE_FUNCTION(atanh);
-	DECLARE_FUNCTION(bin);
-	DECLARE_FUNCTION(bitwise_and);
-	DECLARE_FUNCTION(bitwise_or);
-	DECLARE_FUNCTION(bitwise_xor);
-	DECLARE_FUNCTION(cb);
-	DECLARE_FUNCTION(cbrt);
-	DECLARE_FUNCTION(chisq);
-	DECLARE_FUNCTION(chisq_P);
-	DECLARE_FUNCTION(chisq_Pinv);
-	DECLARE_FUNCTION(chisq_Q);
-	DECLARE_FUNCTION(chisq_Qinv);
-	DECLARE_FUNCTION(chisq_pdf);
-	DECLARE_FUNCTION(choose);
-	DECLARE_FUNCTION(cos);
-	DECLARE_FUNCTION(cosh);
-	DECLARE_FUNCTION(cot);
-	DECLARE_FUNCTION(coth);
-	DECLARE_FUNCTION(csc);
-	DECLARE_FUNCTION(csch);
-	DECLARE_FUNCTION(cubic);
-	DECLARE_FUNCTION(cubicc);
-	DECLARE_FUNCTION(deg);
-	DECLARE_FUNCTION(deriv);
-	DECLARE_FUNCTION(det);
-	DECLARE_FUNCTION(dfact);
-	DECLARE_FUNCTION(diff);
-	DECLARE_FUNCTION(div);
-	DECLARE_FUNCTION(eq);
-	DECLARE_FUNCTION(exp);
-	DECLARE_FUNCTION(exp2);
-	DECLARE_FUNCTION(expm1);
-	DECLARE_FUNCTION(exponential);
-	DECLARE_FUNCTION(exponential_P);
-	DECLARE_FUNCTION(exponential_Pinv);
-	DECLARE_FUNCTION(exponential_Q);
-	DECLARE_FUNCTION(exponential_Qinv);
-	DECLARE_FUNCTION(exponential_pdf);
-	DECLARE_FUNCTION(fact);
-	DECLARE_FUNCTION(fcmp);
-	DECLARE_FUNCTION(fft);
-	DECLARE_FUNCTION(floordiv);
-	DECLARE_FUNCTION(frexp);
-	DECLARE_FUNCTION(gamma);
-	DECLARE_FUNCTION(gamma_inc);
-	DECLARE_FUNCTION(gamma_inc_P);
-	DECLARE_FUNCTION(gamma_inc_Q);
-	DECLARE_FUNCTION(gammainv);
-	DECLARE_FUNCTION(gammastar);
-	DECLARE_FUNCTION(gauss_P);
-	DECLARE_FUNCTION(gauss_Pinv);
-	DECLARE_FUNCTION(gauss_Q);
-	DECLARE_FUNCTION(gauss_Qinv);
-	DECLARE_FUNCTION(gauss_pdf);
-	DECLARE_FUNCTION(gcd);
-	DECLARE_FUNCTION(hex);
-	DECLARE_FUNCTION(hypot);
-	DECLARE_FUNCTION(ifft);
-	DECLARE_FUNCTION(integral);
-	DECLARE_FUNCTION(kurtosis);
-	DECLARE_FUNCTION(lag1);
-	DECLARE_FUNCTION(lcm);
-	DECLARE_FUNCTION(ldexp);
-	DECLARE_FUNCTION(ln);
-	DECLARE_FUNCTION(ln1p);
-	DECLARE_FUNCTION(ln2);
-	DECLARE_FUNCTION(lnBeta);
-	DECLARE_FUNCTION(lnchoose);
-	DECLARE_FUNCTION(lndet);
-	DECLARE_FUNCTION(lndfact);
-	DECLARE_FUNCTION(lnfact);
-	DECLARE_FUNCTION(lngamma);
-	DECLARE_FUNCTION(lnpermute);
-	DECLARE_FUNCTION(lnpoch);
-	DECLARE_FUNCTION(log);
-	DECLARE_FUNCTION(log1pm);
-	DECLARE_FUNCTION(logabs);
-	DECLARE_FUNCTION(logn);
-	DECLARE_FUNCTION(lshift);
-	DECLARE_FUNCTION(max);
-	DECLARE_FUNCTION(mean);
-	DECLARE_FUNCTION(median);
-	DECLARE_FUNCTION(min);
-	DECLARE_FUNCTION(mod);
-	DECLARE_FUNCTION(mul);
-	DECLARE_FUNCTION(neg);
-	DECLARE_FUNCTION(num);
-	DECLARE_FUNCTION(permute);
-	DECLARE_FUNCTION(poch);
-	DECLARE_FUNCTION(pochrel);
-	DECLARE_FUNCTION(pow);
-	DECLARE_FUNCTION(quad);
-	DECLARE_FUNCTION(quadc);
-	DECLARE_FUNCTION(rad);
-	DECLARE_FUNCTION(rand);
-	DECLARE_FUNCTION(randn);
-	DECLARE_FUNCTION(rshift);
-	DECLARE_FUNCTION(sd);
-	DECLARE_FUNCTION(sec);
-	DECLARE_FUNCTION(sech);
-	DECLARE_FUNCTION(sigmoid);
-	DECLARE_FUNCTION(sin);
-	DECLARE_FUNCTION(sinh);
-	DECLARE_FUNCTION(skew);
-	DECLARE_FUNCTION(sqr);
-	DECLARE_FUNCTION(sqrt);
-	DECLARE_FUNCTION(sub);
-	DECLARE_FUNCTION(tan);
-	DECLARE_FUNCTION(tanh);
-	DECLARE_FUNCTION(taylorcoeff);
-	DECLARE_FUNCTION(tss);
-	DECLARE_FUNCTION(var);
-
-    #undef DECLARE_FUNCTION
-}
-
-
-#endif // __FUNCTION_DIRECTORY_H__
+}  // namespace calcpp

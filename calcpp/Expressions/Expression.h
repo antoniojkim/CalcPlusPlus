@@ -3,48 +3,38 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include <gsl/gsl_complex.h>
 #include <gsl/gsl_math.h>
 
 #include "../Utils/Types.h"
+#include "Environment.h"
 #include "Types.h"
 
 namespace calcpp {
 
     class Expression;
-
     typedef std::shared_ptr<Expression> expression;
-    typedef std::unordered_map<std::string, expression> Variables;
-
-    extern const Variables emptyVars;
 
     typedef expression (*TransformerFunction)(expression);
 
     class Expression: public std::enable_shared_from_this<Expression> {
       public:
-        Expression();
-        virtual ~Expression();
-
         virtual expression simplify();
         virtual expression derivative(const std::string& var);
         virtual expression integrate(const std::string& var);
 
-        virtual bool isComplex() const = 0;
-        virtual bool isEvaluable(const Variables& vars = emptyVars) const = 0;
-        virtual bool isNumber() const { return false; }
+        virtual expression eval(const Environment& env = defaultEnv);
+        virtual Double value(const Environment& env = defaultEnv) const = 0;
+        virtual gsl_complex complex(const Environment& env = defaultEnv) const;
 
-        virtual expression eval(const Variables& vars = emptyVars) = 0;
-        virtual double value(const Variables& vars = emptyVars) const = 0;
-        virtual gsl_complex complex(const Variables& vars = emptyVars) const;
+        virtual bool is(const Type type, const Environment& env = defaultEnv) const = 0;
+        virtual bool equals(expression, const double precision = 1e-15) const = 0;
 
-        virtual bool equals(expression, double precision = 1e-15) const = 0;
-
-        std::vector<double> array();
+        std::vector<Double> array();
         virtual expression at(const int index);
-        virtual double get(const int index);
+        virtual Double get(const int index);
         virtual size_t shape(const int axis) const;
         virtual size_t size() const;
 
@@ -54,20 +44,30 @@ namespace calcpp {
         virtual expression apply(TransformerFunction f);
         inline expression operator()(TransformerFunction f) { return apply(f); }
 
-        bool is(calcpp::Type type) const = 0;
-        virtual std::string repr() const;
-        virtual int id() const;
+        virtual unsigned int id() const;
 
         expression copy();
 
-        virtual std::ostream& print(std::ostream&, const bool pretty = false) const = 0;
-        virtual std::ostream& postfix(std::ostream&) const = 0;
+#define OSTREAM_WRAPPER(name)                                                          \
+    struct expression_##name {                                                         \
+        expression e;                                                                  \
+        friend std::ostream& operator<<(std::ostream&, const expression_##name&);      \
+    };                                                                                 \
+    expression_##name name() const;                                                    \
+    virtual std::ostream& name(std::ostream&) const = 0;
+
+        // To get an explicit print out of the expression object
+        OSTREAM_WRAPPER(repr);
+        // To get the pretty output for display
+        OSTREAM_WRAPPER(str);
+        // To get the postfix form of the epxression object
+        OSTREAM_WRAPPER(postfix);
 
       private:
         struct gsl_expression_struct {
             Expression* e;
             const std::string var;
-            Variables vars;
+            Environment env;
 
             gsl_expression_struct(Expression*, const std::string var = "x");
         };
@@ -107,14 +107,13 @@ namespace calcpp {
 std::ostream& operator<<(std::ostream&, const expression);
 
 #define EXPRESSION_PARTIAL_OVERRIDES                                                   \
-    bool isComplex() const override;                                                   \
-    bool isEvaluable(const Variables& vars = emptyVars) const override;                \
     bool equals(expression, double precision) const override;                          \
-    bool is(calcpp::Type type) const override;                                         \
-    std::ostream& print(std::ostream&, const bool pretty = false) const override;      \
+    bool is(Type type, const Environment& env = defaultEnv) const override;            \
+    std::ostream& repr(std::ostream&) const override;                                  \
+    std::ostream& str(std::ostream&) const override;                                   \
     std::ostream& postfix(std::ostream&) const override;
 
 #define EXPRESSION_OVERRIDES                                                           \
     EXPRESSION_PARTIAL_OVERRIDES                                                       \
-    expression eval(const Variables& vars = emptyVars) override;                       \
-    double value(const Variables& vars = emptyVars) const override;
+    expression eval(const Environment& env = defaultEnv) override;                     \
+    Double value(const Environment& env = defaultEnv) const override;

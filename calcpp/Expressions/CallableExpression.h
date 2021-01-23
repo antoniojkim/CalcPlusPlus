@@ -6,19 +6,20 @@
 #include "../Functions/FunctionDispatch.h"
 #include "Expression.h"
 
-class CallableExpression: public Expression {
+namespace calcpp {
 
-    CallableExpression(int functionIndex);
+    class CallableExpression: public Expression {
+        expression f;
+        expression arg;
 
-    public:
-        static expression construct(int functionIndex);
+        CallableExpression(expression f, expression arg);
 
-        expression evaluate(const Variables& vars) override;
+      public:
+        static expression construct(expression f, expression arg);
+
+        expression at(const int index) override;
 
         EXPRESSION_OVERRIDES
+    };
 
-};
-
-// class VariableFunctionExpression: public FunctionExpression{
-
-// };
+}  // namespace calcpp

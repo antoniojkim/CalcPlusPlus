@@ -23,5 +23,6 @@ namespace calcpp {
     THROW_ERROR(                                                                       \
         "\t" << str << "\n\t" << std::setfill(' ') << std::setw(index + 2) << "^\n"    \
              << "Syntax Error: invalid syntax");
-#define THROW_TYPE_ERROR(msg)  THROW_ERROR("TypeError: " << msg)
-#define THROW_VALUE_ERROR(msg) THROW_ERROR("ValueError: " << msg)
+#define THROW_TYPE_ERROR(msg)          THROW_ERROR("TypeError: " << msg)
+#define THROW_VALUE_ERROR(msg)         THROW_ERROR("ValueError: " << msg)
+#define THROW_UNIMPLEMENTED_ERROR(msg) THROW_ERROR("UnimplementedError: " << msg)

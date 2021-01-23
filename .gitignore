@@ -14,6 +14,7 @@
 *.tar*
 *DS_Store*
 *.clang_format
+*~
 
 # General Directory types to ignore
 *pycache*

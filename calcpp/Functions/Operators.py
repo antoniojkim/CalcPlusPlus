@@ -30,7 +30,7 @@ if __name__ == "__main__":
     ]
     opinfo.sort()
 
-    with SourceGenerator("Operators.h") as source:
+    with SourceGenerator("Operators.cc") as source:
         source["size"].set_text(len(operators))
         source["offset"].set_text(len(symbols["tokens"]))
 

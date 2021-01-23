@@ -4,6 +4,8 @@
 #include <string_view>
 #include <vector>
 
+#include "../Expressions/Types.h"
+
 namespace calcpp {
 
     namespace Token {
@@ -87,19 +89,19 @@ namespace calcpp {
                     const char* c_str;
                     const size_t size;
                 } str;
-                long double value;
+                Double value;
                 unsigned long long ull;
             } data;
 
             const Kind kind;
 
             Class(const char* c_str, size_t size, Kind kind);
-            Class(long double value, Kind kind);
+            Class(Double value, Kind kind);
             Class(unsigned long long ull, Kind kind);
 
             std::string_view view() const;
             const char* c_str() const;
-            long double value() const;
+            Double value() const;
             unsigned long long ull() const;
 
             friend bool operator==(const Class& token, const Kind kind);

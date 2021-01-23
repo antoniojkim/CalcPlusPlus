@@ -3,13 +3,14 @@
 
 using namespace std;
 
-Expression::gsl_expression_struct::gsl_expression_struct(Expression* e, const std::string var):
+Expression::gsl_expression_struct::gsl_expression_struct(
+    Expression* e, const std::string var) :
     e{e}, var{var} {}
 
 double Expression::gsl_expression_function(double x, void* p) {
     gsl_expression_struct* params = (gsl_expression_struct*) p;
-    params->vars[params->var] = NumExpression::construct(x);
-    return params->e->value(params->vars);
+    params->env[params->var] = NumExpression::construct(x);
+    return params->e->value(params->env);
 }
 
 gsl_function Expression::function(const std::string& var) {

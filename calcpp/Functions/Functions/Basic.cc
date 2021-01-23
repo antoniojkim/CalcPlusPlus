@@ -3,8 +3,8 @@
 #include <numeric>
 
 #include <gsl/gsl_blas.h>
-#include <gsl/gsl_math.h>
 #include <gsl/gsl_complex_math.h>
+#include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
 
 #include "../../Expressions/Expression.h"
@@ -22,18 +22,16 @@ using namespace std;
 
 namespace Function {
 
-    // @Function neg
+    // @Function neg(x)
     struct neg: public FunctionExpression {
-        neg(int functionIndex, expression arg):
+        neg(int functionIndex, expression arg) :
             FunctionExpression(functionIndex, arg, {{"x", Empty}}) {}  // Signature: (x)
         expression eval(const Variables& vars = emptyVars) override {
             auto x = arg->at(0)->eval(vars);
-            if (x->isComplex()){
+            if (x->isComplex()) {
                 return NumExpression::construct(gsl_complex_negative(x->complex()));
             }
-            if (!x->isEvaluable()){
-                return -x;
-            }
+            if (!x->isEvaluable()) { return -x; }
             return NumExpression::construct(-x->value());
         }
         double value(const Variables& vars = emptyVars) const override {
@@ -45,9 +43,9 @@ namespace Function {
             return -x->derivative(var);
         }
     };
-    expression make_fe_neg(int functionIndex, expression arg){
-        if (arg->isNumber()){
-            if (arg->isComplex()){
+    expression make_fe_neg(int functionIndex, expression arg) {
+        if (arg->isNumber()) {
+            if (arg->isComplex()) {
                 return NumExpression::construct(gsl_complex_negative(arg->complex()));
             }
             return NumExpression::construct(-arg->value());
@@ -55,10 +53,9 @@ namespace Function {
         return std::make_shared<Function::neg>(functionIndex, arg);
     }
 
-
-    // @Function frexp
+    // @Function frexp(x)
     struct frexp: public FunctionExpression {
-        frexp(int functionIndex, expression arg):
+        frexp(int functionIndex, expression arg) :
             FunctionExpression(functionIndex, arg, {{"x", Empty}}) {}  // Signature: (x)
         expression eval(const Variables& vars = emptyVars) override {
             double x = arg->at(0)->value(vars);
@@ -70,9 +67,9 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(frexp)
 
-    // @Function num
+    // @Function num(x)
     struct num: public FunctionExpression {
-        num(int functionIndex, expression arg):
+        num(int functionIndex, expression arg) :
             FunctionExpression(functionIndex, arg, {{"x", Empty}}) {}  // Signature: (x)
         double value(const Variables& vars = emptyVars) const override {
             double x = arg->at(0)->value(vars);
@@ -81,16 +78,17 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(num)
 
-    // @Function hex
+    // @Function hex(x)
     struct hex: public FunctionExpression {
-        hex(int functionIndex, expression arg):
+        hex(int functionIndex, expression arg) :
             FunctionExpression(functionIndex, arg, {{"x", Empty}}) {}  // Signature: (x)
         expression eval(const Variables& vars = emptyVars) override {
             auto x = arg->at(0)->eval(vars);
-            if (!x->isComplex()){
+            if (!x->isComplex()) {
                 double val = x->value();
-                if (std::trunc(val) == val){
-                    return HexExpression::construct((unsigned long long) std::trunc(val));
+                if (std::trunc(val) == val) {
+                    return HexExpression::construct(
+                        (unsigned long long) std::trunc(val));
                 }
             }
             throw Exception("Unable to convert to hex: ", x);
@@ -102,16 +100,17 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(hex)
 
-    // @Function bin
+    // @Function bin(x)
     struct bin: public FunctionExpression {
-        bin(int functionIndex, expression arg):
+        bin(int functionIndex, expression arg) :
             FunctionExpression(functionIndex, arg, {{"x", Empty}}) {}  // Signature: (x)
         expression eval(const Variables& vars = emptyVars) override {
             auto x = arg->at(0)->eval(vars);
-            if (!x->isComplex()){
+            if (!x->isComplex()) {
                 double val = x->value();
-                if (std::trunc(val) == val){
-                    return BinExpression::construct((unsigned long long) std::trunc(val));
+                if (std::trunc(val) == val) {
+                    return BinExpression::construct(
+                        (unsigned long long) std::trunc(val));
                 }
             }
             throw Exception("Unable to convert to bin: ", x);
@@ -123,9 +122,10 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(bin)
 
-    // @Function abs
+    // @Function abs(x)
     struct abs: public ValueFunctionExpression {
-        abs(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::abs, arg) {}
+        abs(int functionIndex, expression arg) :
+            ValueFunctionExpression(functionIndex, std::abs, arg) {}
         expression derivative(const std::string& var) {
             using ExpressionMath::abs;
             auto x = arg->at(0);
@@ -134,23 +134,26 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(abs)
 
-    // @Function sqr
+    // @Function sqr(x)
     struct sqr: public ValueFunctionExpression {
-        sqr(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, gsl_pow_2, arg) {}
+        sqr(int functionIndex, expression arg) :
+            ValueFunctionExpression(functionIndex, gsl_pow_2, arg) {}
         expression derivative(const std::string& var) {
             auto x = arg->at(0)->eval();
             return 2 * x * x->derivative(var);
         }
         std::ostream& print(std::ostream& out, const bool pretty) {
             auto x = arg->at(0);
-            return out << "("; x->print(out, pretty) << ")²";
+            return out << "(";
+            x->print(out, pretty) << ")²";
         }
     };
     MAKE_FUNCTION_EXPRESSION(sqr)
 
-    // @Function sqrt
+    // @Function sqrt(x)
     struct sqrt: public ValueFunctionExpression {
-        sqrt(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::sqrt, arg) {}
+        sqrt(int functionIndex, expression arg) :
+            ValueFunctionExpression(functionIndex, std::sqrt, arg) {}
         expression derivative(const std::string& var) {
             using ExpressionMath::sqrt;
             auto x = arg->at(0)->eval();
@@ -158,14 +161,16 @@ namespace Function {
         }
         std::ostream& print(std::ostream& out, const bool pretty) {
             auto x = arg->at(0);
-            return out << "√("; x->print(out, pretty) << ")";
+            return out << "√(";
+            x->print(out, pretty) << ")";
         }
     };
     MAKE_FUNCTION_EXPRESSION(sqrt)
 
-    // @Function cb
+    // @Function cb(x)
     struct cb: public ValueFunctionExpression {
-        cb(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, gsl_pow_3, arg) {}
+        cb(int functionIndex, expression arg) :
+            ValueFunctionExpression(functionIndex, gsl_pow_3, arg) {}
         expression derivative(const std::string& var) {
             using ExpressionMath::sqr;
             auto x = arg->at(0)->eval();
@@ -173,14 +178,16 @@ namespace Function {
         }
         std::ostream& print(std::ostream& out, const bool pretty) {
             auto x = arg->at(0);
-            return out << "("; x->print(out, pretty) << ")³";
+            return out << "(";
+            x->print(out, pretty) << ")³";
         }
     };
     MAKE_FUNCTION_EXPRESSION(cb)
 
-    // @Function cbrt
+    // @Function cbrt(x)
     struct cbrt: public ValueFunctionExpression {
-        cbrt(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, std::cbrt, arg) {}
+        cbrt(int functionIndex, expression arg) :
+            ValueFunctionExpression(functionIndex, std::cbrt, arg) {}
         expression derivative(const std::string& var) {
             using ExpressionMath::sqr, ExpressionMath::cbrt;
             auto x = arg->at(0)->eval();
@@ -189,9 +196,10 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(cbrt)
 
-    // @Function rad
+    // @Function rad(x)
     struct rad: public ValueFunctionExpression {
-        rad(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
+        rad(int functionIndex, expression arg) :
+            ValueFunctionExpression(functionIndex, nullptr, arg) {}
         double value(const Variables& vars = emptyVars) const override {
             auto x = arg->at(0)->value(vars);
             return x * M_PI / 180;
@@ -199,9 +207,10 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(rad)
 
-    // @Function deg
+    // @Function deg(x)
     struct deg: public ValueFunctionExpression {
-        deg(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
+        deg(int functionIndex, expression arg) :
+            ValueFunctionExpression(functionIndex, nullptr, arg) {}
         double value(const Variables& vars = emptyVars) const override {
             auto x = arg->at(0)->value(vars);
             return x * 180 / M_PI;
@@ -209,13 +218,14 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(deg)
 
-    // @Function hypot
+    // @Function hypot(a...)
     struct hypot: public FunctionExpression {
-        hypot(int functionIndex, expression arg):
-            FunctionExpression(functionIndex, arg, {{"a", EmptyVarArgs}}) {}  // Signature: (a...)
+        hypot(int functionIndex, expression arg) :
+            FunctionExpression(functionIndex, arg, {{"a", EmptyVarArgs}}) {
+        }  // Signature: (a...)
         double value(const Variables& vars = emptyVars) const override {
             auto a = arg->at(0)->eval(vars)->array();
-            switch(a.size()){
+            switch (a.size()) {
                 case 2:
                     return gsl_hypot(a.at(0), a.at(1));
                 case 3:
@@ -232,28 +242,30 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(hypot)
 
-    // @Function ldexp
+    // @Function ldexp(x, e)
     struct ldexp: public FunctionExpression {
-        ldexp(int functionIndex, expression arg):
-            FunctionExpression(functionIndex, arg, {{"x", Empty}, {"e", Empty}}) {}  // Signature: (x, e)
+        ldexp(int functionIndex, expression arg) :
+            FunctionExpression(functionIndex, arg, {{"x", Empty}, {"e", Empty}}) {
+        }  // Signature: (x, e)
         double value(const Variables& vars = emptyVars) const override {
             double x = arg->at(0)->value(vars);
             double e = arg->at(1)->value(vars);
-            if (std::trunc(e) == e){
-                return gsl_ldexp(x, (int) e);
-            }
+            if (std::trunc(e) == e) { return gsl_ldexp(x, (int) e); }
             throw Exception("ldexp expected an integer for 'e'. Got: ", e);
         }
     };
     MAKE_FUNCTION_EXPRESSION(ldexp)
 
-    // @Function fcmp
+    // @Function fcmp(x, y, tol=1e-8)
     struct fcmp: public FunctionExpression {
-        fcmp(int functionIndex, expression arg):
-            FunctionExpression(functionIndex, arg, {
-                 // Signature: (x, y, tol=1e-8)
-                {"x", Empty}, {"y", Empty}, {"tol", NumExpression::construct(1e-8)}
-            }) {}
+        fcmp(int functionIndex, expression arg) :
+            FunctionExpression(
+                functionIndex,
+                arg,
+                {// Signature: (x, y, tol=1e-8)
+                 {"x", Empty},
+                 {"y", Empty},
+                 {"tol", NumExpression::construct(1e-8)}}) {}
         double value(const Variables& vars = emptyVars) const override {
             double x = arg->at(0)->value(vars);
             double y = arg->at(1)->value(vars);
@@ -263,18 +275,18 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(fcmp)
 
-    // @Function gcd
+    // @Function gcd(x)
     struct gcd: public FunctionExpression {
-        gcd(int functionIndex, expression arg):
-            FunctionExpression(functionIndex, arg, {{"a", EmptyVarArgs}}) {}  // Signature: (a...)
+        gcd(int functionIndex, expression arg) :
+            FunctionExpression(functionIndex, arg, {{"a", EmptyVarArgs}}) {
+        }  // Signature: (a...)
         double value(const Variables& vars = emptyVars) const override {
             auto a = arg->at(0)->eval(vars)->array();
             long long g = 0;
-            for (auto v : a){
-                if (std::trunc(v) == v){
+            for (auto v : a) {
+                if (std::trunc(v) == v) {
                     g = g == 0 ? v : std::gcd(g, (long long) v);
-                }
-                else{
+                } else {
                     throw Exception("gcd expected integer arguments. Got: ", arg);
                 }
             }
@@ -283,18 +295,18 @@ namespace Function {
     };
     MAKE_FUNCTION_EXPRESSION(gcd)
 
-    // @Function lcm
+    // @Function lcm(x)
     struct lcm: public FunctionExpression {
-        lcm(int functionIndex, expression arg):
-            FunctionExpression(functionIndex, arg, {{"a", EmptyVarArgs}}) {}  // Signature: (a...)
+        lcm(int functionIndex, expression arg) :
+            FunctionExpression(functionIndex, arg, {{"a", EmptyVarArgs}}) {
+        }  // Signature: (a...)
         double value(const Variables& vars = emptyVars) const override {
             auto a = arg->at(0)->eval(vars)->array();
             long long l = 0;
-            for (auto v : a){
-                if (std::trunc(v) == v){
+            for (auto v : a) {
+                if (std::trunc(v) == v) {
                     l = l == 0 ? v : std::lcm(l, (long long) v);
-                }
-                else{
+                } else {
                     throw Exception("lcm expected integer arguments. Got: ", arg);
                 }
             }
@@ -302,4 +314,4 @@ namespace Function {
         }
     };
     MAKE_FUNCTION_EXPRESSION(lcm)
-}
+}  // namespace Function

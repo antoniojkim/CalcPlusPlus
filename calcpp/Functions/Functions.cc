@@ -1,83 +1,80 @@
 
-/***************************************************
- *************** Auto-Generated File ***************
- ***************************************************/
-
 #include "Functions.h"
 #include "../Utils/Exception.h"
 
-using namespace Function;
+namespace calcpp {
 
-namespace Functions {
+    constexpr const int numFunctions =
+        // begin sourcegen numFunctions
+        181
+        // end sourcegen
+        ;
+    constexpr const char* functionNames[numFunctions] = {
+        // begin sourcegen functionNames
+        "Beta", "Betainc", "C", "Chol", "Cholesky", "Eig", "LU", "LUsolve", "P",
+        "QR", "SVD", "abs", "absdev", "acos", "acosh", "acot", "acoth", "acsc",
+        "acsch", "arccos", "arccosh", "arccot", "arccoth", "arccsc", "arccsch",
+        "arcos", "arcosh", "arcot", "arcoth", "arcsc", "arcsch", "arcsec",
+        "arcsech", "arcsin", "arcsinh", "arctan", "arctanh", "argmax", "argmin",
+        "arsec", "arsech", "arsin", "arsinh", "artan", "artanh", "asec",
+        "asech", "asin", "asinh", "atan", "atanh", "autocorr", "bin", "cb",
+        "cbrt", "chisq", "chisq_P", "chisq_Pinv", "chisq_Q", "chisq_Qinv",
+        "chisq_pdf", "chol", "choose", "cnorm", "comb", "cos", "cosh", "cot",
+        "coth", "csc", "csch", "cubic", "cubicc", "deg", "deriv", "det",
+        "dfact", "diff", "eig", "eigen", "exp", "exp2", "exp_P", "exp_Pinv",
+        "exp_Q", "exp_Qinv", "expm1", "exponential", "exponential_P",
+        "exponential_Pinv", "exponential_Q", "exponential_Qinv",
+        "exponential_pdf", "fact", "fcmp", "fft", "frexp", "gamma", "gamma_inc",
+        "gamma_inc_P", "gamma_inc_Q", "gammainc", "gammaincp", "gammaincq",
+        "gammainv", "gammastar", "gauss_P", "gauss_Pinv", "gauss_Q",
+        "gauss_Qinv", "gauss_pdf", "gaussian", "gcd", "hex", "hypot", "ifft",
+        "integral", "kurt", "kurtosis", "lag1", "lcm", "ldexp", "ln", "ln1p",
+        "ln2", "lnBeta", "lnchoose", "lncomb", "lndet", "lndfact", "lnfact",
+        "lngamma", "lnperm", "lnpermute", "lnpoch", "log", "log10", "log1p",
+        "log1pm", "log2", "logabs", "logn", "max", "max_index", "mean",
+        "median", "min", "min_index", "neg", "norm", "norminv", "norminv",
+        "num", "perm", "permute", "poch", "pochrel", "quad", "quadc", "rad",
+        "rand", "randn", "random", "sd", "sec", "sech", "sigmoid", "sin",
+        "sinh", "skew", "solve", "sqr", "sqrt", "std", "stdev", "tan", "tanh",
+        "taylorcoeff", "tss", "var", "variance"
+        // end sourcegen
+    };
 
-	FunctionConstructor functionConstructors[Functions::numFunctions] = {
-		make_fe_mod, make_fe_bitwise_and, make_fe_mul, make_fe_pow, make_fe_add, make_fe_sub,
-		make_fe_div, make_fe_floordiv, make_fe_eq, make_fe_eq, make_fe_lshift, make_fe_eq,
-		make_fe_rshift, make_fe_Beta, make_fe_Betainc, make_fe_choose, make_fe_Cholesky,
-		make_fe_Cholesky, make_fe_Eig, make_fe_LU, make_fe_LUsolve, make_fe_permute, make_fe_QR,
-		make_fe_SVD, make_fe_pow, make_fe_bitwise_xor, make_fe_abs, make_fe_absdev,
-		make_fe_acos, make_fe_acosh, make_fe_acot, make_fe_acoth, make_fe_acsc, make_fe_acsch,
-		make_fe_add, make_fe_acos, make_fe_acosh, make_fe_acot, make_fe_acoth, make_fe_acsc,
-		make_fe_acsch, make_fe_acos, make_fe_acosh, make_fe_acot, make_fe_acoth, make_fe_acsc,
-		make_fe_acsch, make_fe_asec, make_fe_asech, make_fe_asin, make_fe_asinh, make_fe_atan,
-		make_fe_atanh, make_fe_argmax, make_fe_argmin, make_fe_asec, make_fe_asech,
-		make_fe_asin, make_fe_asinh, make_fe_atan, make_fe_atanh, make_fe_asec, make_fe_asech,
-		make_fe_asin, make_fe_asinh, make_fe_atan, make_fe_atanh, make_fe_lag1, make_fe_bin,
-		make_fe_bitwise_and, make_fe_bitwise_or, make_fe_bitwise_xor, make_fe_cb, make_fe_cbrt,
-		make_fe_chisq, make_fe_chisq_P, make_fe_chisq_Pinv, make_fe_chisq_Q, make_fe_chisq_Qinv,
-		make_fe_chisq_pdf, make_fe_Cholesky, make_fe_choose, make_fe_gauss_Q, make_fe_choose,
-		make_fe_cos, make_fe_cosh, make_fe_cot, make_fe_coth, make_fe_csc, make_fe_csch,
-		make_fe_cubic, make_fe_cubicc, make_fe_deg, make_fe_deriv, make_fe_det, make_fe_dfact,
-		make_fe_diff, make_fe_div, make_fe_Eig, make_fe_Eig, make_fe_eq, make_fe_exp,
-		make_fe_exp2, make_fe_exponential_P, make_fe_exponential_Pinv, make_fe_exponential_Q,
-		make_fe_exponential_Qinv, make_fe_expm1, make_fe_exponential, make_fe_exponential_P,
-		make_fe_exponential_Pinv, make_fe_exponential_Q, make_fe_exponential_Qinv,
-		make_fe_exponential_pdf, make_fe_fact, make_fe_fcmp, make_fe_fft, make_fe_floordiv,
-		make_fe_frexp, make_fe_gamma, make_fe_gamma_inc, make_fe_gamma_inc_P,
-		make_fe_gamma_inc_Q, make_fe_gamma_inc, make_fe_gamma_inc_P, make_fe_gamma_inc_Q,
-		make_fe_gammainv, make_fe_gammastar, make_fe_gauss_P, make_fe_gauss_Pinv,
-		make_fe_gauss_Q, make_fe_gauss_Qinv, make_fe_gauss_pdf, make_fe_randn, make_fe_gcd,
-		make_fe_hex, make_fe_hypot, make_fe_ifft, make_fe_integral, make_fe_kurtosis,
-		make_fe_kurtosis, make_fe_lag1, make_fe_lcm, make_fe_ldexp, make_fe_ln, make_fe_ln1p,
-		make_fe_ln2, make_fe_lnBeta, make_fe_lnchoose, make_fe_lnchoose, make_fe_lndet,
-		make_fe_lndfact, make_fe_lnfact, make_fe_lngamma, make_fe_lnpermute, make_fe_lnpermute,
-		make_fe_lnpoch, make_fe_log, make_fe_log, make_fe_ln1p, make_fe_log1pm, make_fe_ln2,
-		make_fe_logabs, make_fe_logn, make_fe_lshift, make_fe_max, make_fe_argmax, make_fe_mean,
-		make_fe_median, make_fe_min, make_fe_argmin, make_fe_mod, make_fe_mul, make_fe_neg,
-		make_fe_gauss_P, make_fe_gauss_Pinv, make_fe_gauss_Qinv, make_fe_num, make_fe_permute,
-		make_fe_permute, make_fe_poch, make_fe_pochrel, make_fe_pow, make_fe_quad,
-		make_fe_quadc, make_fe_rad, make_fe_rand, make_fe_randn, make_fe_rand, make_fe_rshift,
-		make_fe_sd, make_fe_sec, make_fe_sech, make_fe_sigmoid, make_fe_sin, make_fe_sinh,
-		make_fe_skew, make_fe_LUsolve, make_fe_sqr, make_fe_sqrt, make_fe_sd, make_fe_sd,
-		make_fe_sub, make_fe_tan, make_fe_tanh, make_fe_taylorcoeff, make_fe_tss, make_fe_var,
-		make_fe_var, make_fe_bitwise_or
-	};
+    BINARY_SEARCH_INDEX_OF(functionNames, numFunctions)
 
-	expression construct(const int functionIndex, const expression arg){
-		if (functionIndex < 0){
-			throw Exception("Invalid Function Index: ", functionIndex);
-		}
-		return functionConstructors[functionIndex](functionIndex, arg);
-	}
+    namespace functions {
+        constexpr const expression functionExprs[numFunctions] = {
+            // begin sourcegen functionExprs
+            Beta, Betainc, choose, Cholesky, Cholesky, Eig, LU, LUsolve,
+            permute, QR, SVD, abs, absdev, acos, acosh, acot, acoth, acsc,
+            acsch, acos, acosh, acot, acoth, acsc, acsch, acos, acosh, acot,
+            acoth, acsc, acsch, asec, asech, asin, asinh, atan, atanh, argmax,
+            argmin, asec, asech, asin, asinh, atan, atanh, asec, asech, asin,
+            asinh, atan, atanh, lag1, bin, cb, cbrt, chisq, chisq_P, chisq_Pinv,
+            chisq_Q, chisq_Qinv, chisq_pdf, Cholesky, choose, gauss_Q, choose,
+            cos, cosh, cot, coth, csc, csch, cubic, cubicc, deg, deriv, det,
+            dfact, diff, Eig, Eig, exp, exp2, exponential_P, exponential_Pinv,
+            exponential_Q, exponential_Qinv, expm1, exponential, exponential_P,
+            exponential_Pinv, exponential_Q, exponential_Qinv, exponential_pdf,
+            fact, fcmp, fft, frexp, gamma, gamma_inc, gamma_inc_P, gamma_inc_Q,
+            gamma_inc, gamma_inc_P, gamma_inc_Q, gammainv, gammastar, gauss_P,
+            gauss_Pinv, gauss_Q, gauss_Qinv, gauss_pdf, randn, gcd, hex, hypot,
+            ifft, integral, kurtosis, kurtosis, lag1, lcm, ldexp, ln, ln1p, ln2,
+            lnBeta, lnchoose, lnchoose, lndet, lndfact, lnfact, lngamma,
+            lnpermute, lnpermute, lnpoch, log, log, ln1p, log1pm, ln2, logabs,
+            logn, max, argmax, mean, median, min, argmin, neg, gauss_P,
+            gauss_Pinv, gauss_Qinv, num, permute, permute, poch, pochrel, quad,
+            quadc, rad, rand, randn, rand, sd, sec, sech, sigmoid, sin, sinh,
+            skew, LUsolve, sqr, sqrt, sd, sd, tan, tanh, taylorcoeff, tss, var,
+            var
+            // end sourcegen
+        };
+    }
 
-	bool functionIsOperator[Functions::numFunctions] = {
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 1
-	};
+    expression function(const std::string& name) {
+        int index = indexOf(name.c_str());
+        if (index == -1) { THROW_ERROR("Invalid Function: " << name); }
 
-	bool isOperator(const char* name){
-		return functionIsOperator[Functions::indexOf(name)];
-	}
-	bool isOperator(const int functionIndex){
-		if (functionIndex < 0){
-			throw Exception("Invalid Function Index: ", functionIndex);
-		}
-		return functionIsOperator[functionIndex];
-	}
-}
+        return functions::functionExprs[index];
+    }
+}  // namespace calcpp

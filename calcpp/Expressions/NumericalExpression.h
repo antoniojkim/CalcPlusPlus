@@ -6,61 +6,59 @@
 
 #include "Expression.h"
 
-struct NumericalExpression: public Expression {
+namespace calcpp {
 
-    NumericalExpression(Scanner::Type kind);
+    struct NumericalExpression: public Expression {
+        expression derivative(const std::string& var) override;
+        expression integrate(const std::string& var) override;
+    };
 
-    expression derivative(const std::string& var) override;
-    expression integrate(const std::string& var) override;
-};
+    class NumExpression: public NumericalExpression {
+        const Double val;
 
-class NumExpression: public NumericalExpression {
-    double real, imag;
+        NumExpression(const Double val);
 
-    NumExpression(double real, double imag);
-    NumExpression(const std::string&);
+      public:
+        static expression construct(Double val);
+        // static expression construct(const gsl_complex& z);
 
-    public:
-        static expression construct(double real, double imag = 0);
+        EXPRESSION_OVERRIDES
+    };
+
+    class ComplexExpression: public NumericalExpression {
+        const Double real, imag;
+
+        ComplexExpression(const Double real, const Double imag);
+
+      public:
+        static expression construct(const Double real, const Double imag);
         static expression construct(const gsl_complex& z);
-        static expression construct(const std::string&);
 
-        bool isNumber() const override { return true; }
-
-        gsl_complex complex(const Variables& vars = emptyVars) const override;
+        Double get(const int index) override;
 
         EXPRESSION_OVERRIDES
+    };
 
-};
+    class HexExpression: public NumericalExpression {
+        unsigned long long num;
 
-class HexExpression: public NumericalExpression {
-    unsigned long long num;
+        HexExpression(unsigned long long num);
 
-    HexExpression(unsigned long long num);
-    HexExpression(const std::string&);
-
-    public:
+      public:
         static expression construct(unsigned long long num);
-        static expression construct(const std::string&);
-
-        bool isNumber() const override { return true; }
 
         EXPRESSION_OVERRIDES
+    };
 
-};
+    class BinExpression: public NumericalExpression {
+        unsigned long long num;
 
-class BinExpression: public NumericalExpression {
-    unsigned long long num;
+        BinExpression(unsigned long long num);
 
-    BinExpression(unsigned long long num);
-    BinExpression(const std::string&);
-
-    public:
+      public:
         static expression construct(unsigned long long num);
-        static expression construct(const std::string&);
-
-        bool isNumber() const override { return true; }
 
         EXPRESSION_OVERRIDES
+    };
 
-};
+}  // namespace calcpp

@@ -17,6 +17,7 @@ types = [
     "STRING",
     "CALLABLE",
     "EVALUABLE",
+    "ASSIGNMENT",
 ]
 
 if __name__ == "__main__":

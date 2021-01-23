@@ -2,10 +2,16 @@
 
 #include <gsl/gsl_complex.h>
 
-namespace calcpp {
-    int compare(double n1, double n2, double precision = 1e-15);
+#include "../Expressions/Types.h"
 
-    int compare(const gsl_complex& c1, const gsl_complex& c2, double precision = 1e-15);
+namespace calcpp {
+
+#define IS_NAN(n) gsl_isnan((const double) n)
+
+    int compare(const Double n1, const Double n2, const double precision = 1e-15);
+
+    int compare(
+        const gsl_complex& c1, const gsl_complex& c2, const double precision = 1e-15);
     bool operator==(const gsl_complex& c1, const gsl_complex& c2);
     bool operator!=(const gsl_complex& c1, const gsl_complex& c2);
 

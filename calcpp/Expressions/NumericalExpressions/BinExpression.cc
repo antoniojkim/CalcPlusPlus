@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <sstream>
 
-#include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
 #include "../ExpressionOperations.h"
 #include "../InvalidExpression.h"
@@ -11,52 +10,43 @@
 #include "../VariableExpression.h"
 
 using namespace std;
-using namespace Scanner;
 
-BinExpression::BinExpression(unsigned long long num): NumericalExpression{BIN}, num{num} {}
-BinExpression::BinExpression(const std::string& num): NumericalExpression{BIN} {
-    char* endptr;
-    this->num = strtoull(num.c_str()+2, &endptr, 2);
-}
+namespace calcpp {
 
-expression BinExpression::construct(unsigned long long num){
-    return shared_ptr<BinExpression>(new BinExpression(num));
-}
-expression BinExpression::construct(const std::string& num){
-    return shared_ptr<BinExpression>(new BinExpression(num));
-}
+    BinExpression::BinExpression(unsigned long long num) : num{num} {}
 
-
-bool BinExpression::isComplex() const { return false; }
-bool BinExpression::isEvaluable(const Variables& vars) const { return true; }
-
-expression BinExpression::eval(const Variables& vars) { return copy(); }
-double BinExpression::value(const Variables& vars) const { return double(num); }
-
-bool BinExpression::equals(expression e, double precision) const {
-    if (e == BIN){
-        return num == e->value();
+    expression BinExpression::construct(unsigned long long num) {
+        return shared_ptr<BinExpression>(new BinExpression(num));
     }
-    return false;
-}
 
-std::ostream& BinExpression::print(std::ostream& out, const bool pretty) const {
-    unsigned long long n = num;
-    char buffer[128];
-    int i = 0;
-    while (n > 0){
-        if (i >= 128){
-            throw Exception("Buffer too short.");
+    expression BinExpression::eval(const Environment& env) { return copy(); }
+    double BinExpression::value(const Environment& env) const { return double(num); }
+
+    constexpr const FType BinType = Type::BIN | Type::EVALUABLE;
+
+    bool BinExpression::is(const Type type, const Environment& env) const {
+        return (type & BinType) != 0;
+    }
+    bool BinExpression::equals(expression e, double precision) const {
+        if (e == Type::BIN) { return num == e->value(); }
+        return false;
+    }
+
+    std::ostream& BinExpression::repr(std::ostream& out) const {
+        return out << "Bin(" << num << ")";
+    }
+    std::ostream& BinExpression::print(std::ostream& out) const {
+        unsigned long long n = num;
+        char buffer[129];
+        int i = 0;
+        while (n > 0) {
+            if (i >= 128) { throw Exception("Buffer too short."); }
+            buffer[i++] = ((n & 0b1) == 1) ? '1' : '0';
+            n >>= 1;
         }
-        buffer[i++] = ((n & 0b1) == 1) ? '1' : '0';
-        n >>= 1;
+        buffer[i] = '\0';
+        return out << "0b" << buffer;
     }
-    out << "0b";
-    while(i > 0){
-        out << buffer[--i];
-    }
-    return out;
-}
-std::ostream& BinExpression::postfix(std::ostream& out) const {
-    return print(out, false);
-}
+    std::ostream& BinExpression::postfix(std::ostream& out) const { return print(out); }
+
+}  // namespace calcpp

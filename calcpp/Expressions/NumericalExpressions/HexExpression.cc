@@ -1,7 +1,7 @@
 
 #include <cstdlib>
-#include <sstream>
 #include <ios>
+#include <sstream>
 
 #include "../../Scanner/scanner.h"
 #include "../../Utils/Exception.h"
@@ -10,39 +10,32 @@
 #include "../NumericalExpression.h"
 
 using namespace std;
-using namespace Scanner;
 
-HexExpression::HexExpression(unsigned long long num): NumericalExpression{HEX}, num{num} {}
-HexExpression::HexExpression(const std::string& num): NumericalExpression{HEX} {
-    char* endptr;
-    this->num = strtoull(num.c_str()+2, &endptr, 16);
-}
+namespace calcpp {
 
-expression HexExpression::construct(unsigned long long num){
-    return shared_ptr<HexExpression>(new HexExpression(num));
-}
-expression HexExpression::construct(const std::string& num){
-    return shared_ptr<HexExpression>(new HexExpression(num));
-}
+    HexExpression::HexExpression(unsigned long long num) : num{num} {}
 
-
-bool HexExpression::isComplex() const { return false; }
-bool HexExpression::isEvaluable(const Variables& vars) const { return true; }
-
-expression HexExpression::eval(const Variables&) { return copy(); }
-double HexExpression::value(const Variables& vars) const  { return double(num); }
-
-bool HexExpression::equals(expression e, double precision) const {
-    if (e == HEX){
-        return num == e->value();
+    expression HexExpression::construct(unsigned long long num) {
+        return shared_ptr<HexExpression>(new HexExpression(num));
     }
-    return false;
-}
 
-std::ostream& HexExpression::print(std::ostream& out, const bool pretty) const {
-    out << "0x" << std::hex << num;
-    return out;
-}
-std::ostream& HexExpression::postfix(std::ostream& out) const {
-    return print(out, false);
-}
+    constexpr const FType HexType = Type::HEX | Type::EVALUABLE;
+
+    bool HexExpression::is(const Type type, const Environment& env) {
+        return (HexType & type) != 0;
+    }
+    bool HexExpression::equals(expression e, double precision) const {
+        if (e == Type::HEX) { return num == (unsigned long long) e->value(); }
+        return false;
+    }
+
+    expression HexExpression::eval(const Environment& env) { return copy(); }
+    double HexExpression::value(const Environment& env) const { return double(num); }
+
+    std::ostream& HexExpression::repr(std::ostream& out) const { return print(out); }
+    std::ostream& HexExpression::print(std::ostream& out) const {
+        return out << "0x" << std::hex << num;
+    }
+    std::ostream& HexExpression::postfix(std::ostream& out) const { return print(out); }
+
+}  // namespace calcpp

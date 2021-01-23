@@ -6,13 +6,14 @@
 #include "../VariableExpression.h"
 
 using namespace std;
-using namespace Scanner;
 
-NumericalExpression::NumericalExpression(Scanner::Type kind): Expression(kind) {}
+namespace calcpp {
 
-expression NumericalExpression::derivative(const std::string& var) {
-    return NumExpression::construct(0);
-}
-expression NumericalExpression::integrate(const std::string& var) {
-    return copy() * VariableExpression::construct(var);
-}
+    expression NumericalExpression::derivative(const std::string& var) {
+        return NumExpression::construct(0);
+    }
+    expression NumericalExpression::integrate(const std::string& var) {
+        return copy() * VariableExpression::construct(var);
+    }
+
+}  // namespace calcpp

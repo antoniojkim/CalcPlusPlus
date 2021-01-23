@@ -87,7 +87,7 @@ namespace calcpp {
 
         Class::Class(const char* c_str, size_t size, Kind kind) :
             data{.str = {c_str, size}}, kind{kind} {}
-        Class::Class(long double value, Kind kind) : data{.value = value}, kind{kind} {}
+        Class::Class(Double value, Kind kind) : data{.value = value}, kind{kind} {}
         Class::Class(unsigned long long ull, Kind kind) :
             data{.ull = ull}, kind{kind} {}
 
@@ -113,7 +113,7 @@ namespace calcpp {
                     return data.str.c_str;
             }
         }
-        long double Class::value() const {
+        Double Class::value() const {
             switch (kind) {
                 case NUM:
                 case COMPLEX:
@@ -360,7 +360,7 @@ namespace {
         const char c1 = c[1];
         if (*c == '0') {
             if (size == 1) {
-                tokens.emplace_back(TokenClass{(long double) 0, NUM});
+                tokens.emplace_back(TokenClass{(Double) 0, NUM});
                 return Status::OK();
             }
 
@@ -385,7 +385,7 @@ namespace {
         }
         if (isalpha(c1)) { return DFA_id(tokens, c, size, 1); }
 
-        long double value = strtold(c, &end);
+        Double value = strtold(c, &end);
         s = end - c;
         if (s < size) {
             const char cs = c[s];
