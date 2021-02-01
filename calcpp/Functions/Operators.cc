@@ -50,4 +50,6 @@ namespace calcpp {
         return (int(kind) - operators::offset) >= 0;
     }
 
+    expression getOperator(const Token::Kind kind) { return None; }
+
 }  // namespace calcpp

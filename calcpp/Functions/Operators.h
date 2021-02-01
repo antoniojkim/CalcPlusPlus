@@ -17,4 +17,6 @@ namespace calcpp {
 
     bool isOperator(const Token::Kind kind);
 
+    expression getOperator(const Token::Kind kind);
+
 }  // namespace calcpp

@@ -18,8 +18,12 @@ math_functions = {
     "arcsec",
     "arccsc",
     "arccot",
+    "exp",
+    "exp2",
+    "expm1",
     "ln",
     "log",
+    "sigmoid",
     "sqrt",
     "cbrt",
     "cb",
@@ -48,8 +52,38 @@ decorators = {
 }
 
 
-def extract_functions():
-    function_files = (
+def extract_functions(filepath):
+    functions = {dectype: [] for dectype in decorators.keys()}
+
+    with open(filepath) as file:
+        contents = file.read()
+        for dectype, decorator in decorators.items():
+            index = 0
+            while True:
+                match = decorator.search(contents, index)
+                if not match:
+                    break
+
+                function = {
+                    "name": match.group("name").strip(),
+                    "aliases": match.group("aliases"),
+                }
+                if function["aliases"] is not None:
+                    function["aliases"] = function["aliases"].split()
+                else:
+                    del function["aliases"]
+
+                functions[dectype].append(function)
+
+                index = match.end()
+
+    return functions
+
+
+template = "const expression {0} = std::shared_ptr<fexpr::{0}>(new fexpr::{0}());"
+
+if __name__ == "__main__":
+    function_files = sorted(
         os.path.join(subdir, file)
         for subdir in ("Functions", "Operators")
         for file in os.listdir(subdir)
@@ -59,33 +93,18 @@ def extract_functions():
     functions = {dectype: [] for dectype in decorators.keys()}
 
     for filepath in function_files:
-        with open(filepath) as file:
-            contents = file.read()
-            for dectype, decorator in decorators.items():
-                index = 0
-                while True:
-                    match = decorator.search(contents, index)
-                    if not match:
-                        break
+        fs = extract_functions(filepath)
 
-                    function = {
-                        "name": match.group("name").strip(),
-                        "aliases": match.group("aliases"),
-                    }
-                    if function["aliases"] is not None:
-                        function["aliases"] = function["aliases"].split()
-                    else:
-                        del function["aliases"]
+        if len(fs["function"]) > 0:
+            for dectype in decorators.keys():
+                functions[dectype].extend(fs[dectype])
 
-                    functions[dectype].append(function)
-
-                    index = match.end()
-
-    return functions
-
-
-if __name__ == "__main__":
-    functions = extract_functions()
+            with SourceGenerator(filepath) as source:
+                print(filepath)
+                source["functions"].set_text(
+                    map(template.format, sorted(f["name"] for f in fs["function"]),),
+                    delimiter="\n",
+                )
 
     with SourceGenerator("../Expressions/ExpressionFunctions.h") as source:
         source["functions"].set_text(

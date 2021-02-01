@@ -7,6 +7,7 @@
 namespace calcpp {
 
 #define IS_NAN(n) gsl_isnan((const double) n)
+#define IS_INT(n) (std::trunc(n) == n)
 
     int compare(const Double n1, const Double n2, const double precision = 1e-15);
 

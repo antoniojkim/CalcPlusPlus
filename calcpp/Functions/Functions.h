@@ -13,7 +13,6 @@ namespace calcpp {
         // begin sourcegen functions
         extern const expression Beta;
         extern const expression Betainc;
-        extern const expression Cholesky;
         extern const expression Eig;
         extern const expression LU;
         extern const expression LUsolve;

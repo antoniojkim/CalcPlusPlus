@@ -51,7 +51,7 @@ expression postfix_to_expression(MultiStack<TokenClass*>& outputStack) {
     for (auto* token : outputStack) {
         switch (token->kind) {
             case NUM:
-                expressionStack.push(NumExpression::construct(token->lexeme));
+                expressionStack.push(NumExpression::construct(token->value()));
                 continue;
             case HEX:
                 expressionStack.push(HexExpression::construct(token->lexeme));

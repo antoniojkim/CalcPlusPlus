@@ -9,136 +9,113 @@
 #include "../../Expressions/NumericalExpression.h"
 #include "../Functions.h"
 
-namespace Function {
-    // @Function exp
-    struct exp: public ValueFunctionExpression {
-        exp(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, std::exp, arg) {}
-        expression derivative(const std::string& var) {
-            using ExpressionMath::exp;
-            auto x = arg->at(0);
-            return exp(x) * x->derivative(var);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(exp)
+namespace calcpp {
 
-    // @Function exp2
-    struct exp2: public ValueFunctionExpression {
-        exp2(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, std::exp2, arg) {}
-        expression derivative(const std::string& var) {
-            using ExpressionMath::exp2;
-            auto x = arg->at(0);
-            return exp2(x) * M_LN2 * x->derivative(var);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(exp2)
-
-    // @Function expm1
-    struct expm1: public ValueFunctionExpression {
-        expm1(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, std::expm1, arg) {}
-        expression derivative(const std::string& var) {
-            using ExpressionMath::expm1;
-            auto x = arg->at(0);
-            return expm1(x) * x->derivative(var);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(expm1)
-
-    // @Function ln
-    struct ln: public ValueFunctionExpression {
-        ln(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, std::log, arg) {}
-        expression derivative(const std::string& var) {
-            auto x = arg->at(0);
-            return x->derivative(var) / x;
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(ln)
-
-    // @Function ln2: log2
-    struct ln2: public ValueFunctionExpression {
-        ln2(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, std::log2, arg) {}
-        expression derivative(const std::string& var) {
-            auto x = arg->at(0);
-            return x->derivative(var) / (x * M_LN2);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(ln2)
-
-    // @Function ln1p: log1p
-    struct ln1p: public ValueFunctionExpression {
-        ln1p(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, std::log1p, arg) {}
-        expression derivative(const std::string& var) {
-            auto x = arg->at(0);
-            return x->derivative(var) / (x + 1);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(ln1p)
-
-    // @Function log: log10
-    struct log: public ValueFunctionExpression {
-        log(int functionIndex, expression arg):
-            ValueFunctionExpression(functionIndex, std::log10, arg) {}
-        expression derivative(const std::string& var) {
-            auto x = arg->at(0);
-            return x->derivative(var) / (x * M_LN10);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(log)
-
-    // @Function log1pm
-    MAKE_VALUEFUNCTION_EXPRESSION(log1pm, gsl_sf_log_1plusx_mx)
-
-    // @Function logabs
-    MAKE_VALUEFUNCTION_EXPRESSION(logabs, gsl_sf_log_abs)
-
-    // @Function logn
-    struct logn: public FunctionExpression {
-        logn(int functionIndex, expression arg):
-            FunctionExpression(functionIndex, arg, {{"a", Empty}, {"b", Empty}}) {}  // Signature: (a, b)
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double b = arg->at(1)->value(vars);
-            return std::log(a) / std::log(b);
-        }
-        expression derivative(const std::string& var) {
-            using ExpressionMath::ln;
-            auto a = arg->at(0);
-            auto b = arg->at(1);
-            return a->derivative(var) / (a * ln(b));
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(logn)
-
-    // @Function sigmoid
-    struct sigmoid: public FunctionExpression {
-        sigmoid(int functionIndex, expression arg):
-            FunctionExpression(functionIndex, arg, {{"x", Empty}}) {}  // Signature: (x,)
-        double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(0)->value(vars);
-            return 1 / (1 + std::exp(-x));
-        }
-        expression derivative(const std::string& var) {
-            using ExpressionMath::exp;
-            using ExpressionMath::sigmoid;
-            auto x = arg->at(0);
-            auto s = sigmoid(x);
-            return s * (1 - s) * x->derivative(var);
-        }
-        std::ostream& print(std::ostream& out, const bool pretty) const override {
-            auto x = arg->at(0);
-            if (pretty){
-                out << "σ(";
+    namespace fexpr {
+        // @Function exp
+        struct exp: public ValueFunctionExpression {
+            exp() : ValueFunctionExpression("expr", std::exp) {}
+            expression derivative(const expression x) {
+                using namespace calcpp::math;
+                return exp(x);
             }
-            else{
-               out << "sigmoid(";
+        };
+
+        // @Function exp2
+        struct exp2: public ValueFunctionExpression {
+            exp2() : ValueFunctionExpression("exp2", std::exp2) {}
+            expression derivative(const expression x) {
+                using namespace calcpp::math;
+                return exp2(x) * M_LN2;
             }
-            return x->print(out, pretty) << ")";
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(sigmoid)
-}
+        };
+
+        // @Function expm1
+        struct expm1: public ValueFunctionExpression {
+            expm1() : ValueFunctionExpression("expm1", std::expm1) {}
+            expression derivative(const expression x) {
+                using namespace calcpp::math;
+                return expm1(x);
+            }
+        };
+
+        // @Function ln
+        struct ln: public ValueFunctionExpression {
+            ln() : ValueFunctionExpression("ln", std::log) {}
+            expression derivative(const expression x) { return 1 / x; }
+        };
+
+        // @Function ln2: log2
+        struct ln2: public ValueFunctionExpression {
+            ln2() : ValueFunctionExpression("ln2", std::log2) {}
+            expression derivative(const expression x) { return 1 / (x * M_LN2); }
+        };
+
+        // @Function ln1p: log1p
+        struct ln1p: public ValueFunctionExpression {
+            ln1p() : ValueFunctionExpression("ln1p", std::log1p) {}
+            expression derivative(const expression var) { return 1 / (x + 1); }
+        };
+
+        // @Function log: log10
+        struct log: public ValueFunctionExpression {
+            log() : ValueFunctionExpression("log", std::log10) {}
+            expression derivative(const expression x) { return 1 / (x * M_LN10); }
+        };
+
+        // @Function log1pm
+        struct log1pm: public ValueFunctionExpression {
+            log1pm() : ValueFunctionExpression("log1pm", gsl_sf_log_1plusx_mx) {}
+        };
+
+        // @Function logabs
+        struct logabs: public ValueFunctionExpression {
+            logabs() : ValueFunctionExpression("logabs", gsl_sf_log_abs) {}
+        };
+
+        // @Function logn
+        struct logn: public FunctionExpression {
+            logn() : FunctionExpression("logn", {arg("x"), arg("b")}) {}
+            expression call(expression args) const override {
+                double x = (double) args->get(0);
+                double b = (double) args->get(1);
+                return std::log(x) / std::log(b);
+            }
+        };
+
+        // @Function sigmoid
+        struct sigmoid: public FunctionExpression {
+            sigmoid() : FunctionExpression("sigmoid", {arg("x")}) {}
+            expression call(expression args) const override {
+                double x = (double) arg->get(0);
+                return 1 / (1 + std::exp(-x));
+            }
+            expression derivative(const std::string& var) {
+                using namespace calpp::math;
+                auto s = sigmoid(x);
+                return s * (1 - s);
+            }
+            std::ostream& repr(std::ostream& out) const override {
+                return out << "sigmoid";
+            }
+            std::ostream& print(std::ostream& out) const override { return out << "σ"; }
+        };
+
+    }  // namespace fexpr
+
+    namespace functions {
+        // begin sourcegen functions
+        const expression exp = std::shared_ptr<fexpr::exp>(new fexpr::exp());
+        const expression exp2 = std::shared_ptr<fexpr::exp2>(new fexpr::exp2());
+        const expression expm1 = std::shared_ptr<fexpr::expm1>(new fexpr::expm1());
+        const expression ln = std::shared_ptr<fexpr::ln>(new fexpr::ln());
+        const expression ln1p = std::shared_ptr<fexpr::ln1p>(new fexpr::ln1p());
+        const expression ln2 = std::shared_ptr<fexpr::ln2>(new fexpr::ln2());
+        const expression log = std::shared_ptr<fexpr::log>(new fexpr::log());
+        const expression log1pm = std::shared_ptr<fexpr::log1pm>(new fexpr::log1pm());
+        const expression logabs = std::shared_ptr<fexpr::logabs>(new fexpr::logabs());
+        const expression logn = std::shared_ptr<fexpr::logn>(new fexpr::logn());
+        const expression sigmoid = std::shared_ptr<fexpr::sigmoid>(new fexpr::sigmoid());
+        // end sourcegen
+    }  // namespace functions
+}  // namespace calcpp

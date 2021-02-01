@@ -10,13 +10,11 @@ using namespace std;
 
 namespace calcpp {
 
-    const Environment defaultEnv;
-
     expression Expression::simplify() { return copy(); }
-    expression Expression::derivative(const std::string& var) {
+    expression Expression::derivative(const expression var) {
         THROW_ERROR("Invalid differentiation: " << copy());
     }
-    expression Expression::integrate(const std::string& var) {
+    expression Expression::integrate(const expression var) {
         THROW_ERROR("Invalid Integration: " << copy());
     }
 

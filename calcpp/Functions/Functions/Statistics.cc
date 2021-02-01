@@ -11,149 +11,132 @@
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
 
-namespace Function {
+namespace calcpp {
 
-    struct StatisticsExpression: public FunctionExpression {
-        typedef double (*StatsFunction)(const double* array, size_t stride, size_t n);
-        StatsFunction f;
+    namespace fexpr {
 
-        StatisticsExpression(int functionIndex, expression arg, StatsFunction f):
-            FunctionExpression(functionIndex, arg, {{"a", EmptyVarArgs}}), f{f} {}
+        struct StatisticsExpression: public FunctionExpression {
+            typedef double (*StatsFunction)(
+                const double* array, size_t stride, size_t n);
+            StatsFunction f;
 
+            StatisticsExpression(const std::string& name, StatsFunction f) :
+                FunctionExpression(name, {vararg("a")}), f{f} {}
 
-        expression eval(const Variables& vars = emptyVars) override {
-            return NumExpression::construct(value(vars));
-        }
-
-        double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(0)->eval(vars)->array();
-            return f(array.data(), 1, array.size());
-        }
-    };
-
-    #define MAKE_STATS_EXPRESSION(name, f)                                              \
-        expression make_fe_##name(int functionIndex, expression arg){                   \
-            return std::make_shared<StatisticsExpression>(functionIndex, arg, f);       \
-        }
-
-    // @Function mean
-    MAKE_STATS_EXPRESSION(mean, gsl_stats_mean)
-
-    // @Function var: variance
-    struct var: public FunctionExpression {
-        var(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a..., ddof=1)
-            {"a", EmptyVarArgs}, {"ddof", NumExpression::construct(1)}
-        }) {}
-        expression eval(const Variables& vars = emptyVars) override {
-            return NumExpression::construct(value(vars));
-        }
-        double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(0)->eval(vars)->array();
-            double ddof = arg->at(1)->value(vars);
-            if (ddof < 1 || trunc(ddof) != ddof){
-                throw Exception("Variance expected an integer ddof >= 1. Got: ", ddof);
+            expression call(expression args) const override {
+                auto array = args->at(0)->array();
+                return num(f(array.data(), 1, array.size()));
             }
-            size_t N = array.size();
-            if (trunc(ddof) == 1){
-                return gsl_stats_variance(array.data(), 1, N);
+        };
+
+#define MAKE_STATS_EXPRESSION(name, f)                                                 \
+    struct name: public StatisticsExpression {                                         \
+        name() : StatisticsExpression("name", f) {}                                    \
+    }
+
+        // @Function mean
+        MAKE_STATS_EXPRESSION(mean, gsl_stats_mean);
+
+        // @Function var: variance
+        struct var: public FunctionExpression {
+            var() : FunctionExpression("var", {vararg("a"), kwarg("ddof", 1)}) {}
+            expression call(expression args) const override {
+                auto array = args->at(0)->array();
+                double ddof = (double) args->get(1);
+                if (ddof < 1 || !IS_INT(ddof)) {
+                    THROW_ERROR(
+                        "Variance expected an integer ddof >= 1. Got: " << ddof);
+                }
+                size_t N = array.size();
+                if (trunc(ddof) == 1) {
+                    return num(gsl_stats_variance(array.data(), 1, N));
+                }
+                return num(gsl_stats_tss(array.data(), 1, N) / (N - ddof));
             }
-            return gsl_stats_tss(array.data(), 1, N) / (N - ddof);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(var)
+        };
 
-    // @Function sd: std stdev
-    struct sd: public FunctionExpression {
-        sd(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a..., ddof=1)
-            {"a", EmptyVarArgs}, {"ddof", NumExpression::construct(1)}
-        }) {}
-        expression eval(const Variables& vars = emptyVars) override {
-            return NumExpression::construct(value(vars));
-        }
-        double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(0)->eval(vars)->array();
-            double ddof = arg->at(1)->value(vars);
+        // @Function sd: std stdev
+        struct sd: public FunctionExpression {
+            sd() : FunctionExpression("sd", {vararg("a"), kwarg("ddof", 1)}) {}
+            expression call(expression args) const override {
+                auto array = args->at(0)->array();
+                double ddof = (double) args->get(1);
 
-            if (ddof < 1 || trunc(ddof) != ddof){
-                throw Exception("Standard Deviation expected an integer ddof >= 1. Got: ", ddof);
+                if (ddof < 1 || !IS_INT(ddof)) {
+                    THROW_ERROR(
+                        "Standard Deviation expected an integer ddof >= 1. Got: "
+                        << ddof);
+                }
+                size_t N = array.size();
+                if (trunc(ddof) == 1) { return num(gsl_stats_sd(array.data(), 1, N)); }
+                return num(std::sqrt(gsl_stats_tss(array.data(), 1, N) / (N - ddof)));
             }
-            size_t N = array.size();
-            if (trunc(ddof) == 1){
-                return gsl_stats_sd(array.data(), 1, N);
+        };
+
+        // @Function tss
+        MAKE_STATS_EXPRESSION(tss, gsl_stats_tss)
+
+        // @Function absdev
+        MAKE_STATS_EXPRESSION(absdev, gsl_stats_absdev)
+
+        // @Function skew
+        MAKE_STATS_EXPRESSION(skew, gsl_stats_skew)
+
+        // @Function kurtosis: kurt
+        MAKE_STATS_EXPRESSION(kurtosis, gsl_stats_kurtosis)
+
+        // @Function lag1: autocorr
+        MAKE_STATS_EXPRESSION(lag1, gsl_stats_lag1_autocorrelation)
+
+        // @Function max
+        MAKE_STATS_EXPRESSION(max, gsl_stats_max)
+
+        // @Function min
+        MAKE_STATS_EXPRESSION(min, gsl_stats_min)
+
+        // @Function argmax: max_index
+        struct argmax: public FunctionExpression {
+            argmax() : FunctionExpression("argmax", {vararg("a")}) {}
+            expression call(expression args) const override {
+                auto array = args->at(0)->array();
+                return num(gsl_stats_max_index(array.data(), 1, array.size()));
             }
-            return std::sqrt(gsl_stats_tss(array.data(), 1, N) / (N - ddof));
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(sd)
+        };
 
-    // @Function tss
-    MAKE_STATS_EXPRESSION(tss, gsl_stats_tss)
+        // @Function argmin: min_index
+        struct argmin: public FunctionExpression {
+            argmin() : FunctionExpression("argmin", {vararg("a")}) {}
+            expression call(expression args) const override {
+                auto array = args->at(0)->array();
+                return num(gsl_stats_min_index(array.data(), 1, array.size()));
+            }
+        };
 
-    // @Function absdev
-    MAKE_STATS_EXPRESSION(absdev, gsl_stats_absdev)
+        // @Function median
+        struct median: public FunctionExpression {
+            median() : FunctionExpression("median", {vararg("a")}) {}
+            expression call(expression args) const override {
+                auto array = args->at(0)->array();
+                return num(gsl_stats_median(array.data(), 1, array.size()));
+            }
+        };
+    }  // namespace fexpr
 
-    // @Function skew
-    MAKE_STATS_EXPRESSION(skew, gsl_stats_skew)
-
-    // @Function kurtosis: kurt
-    MAKE_STATS_EXPRESSION(kurtosis, gsl_stats_kurtosis)
-
-    // @Function lag1: autocorr
-    MAKE_STATS_EXPRESSION(lag1, gsl_stats_lag1_autocorrelation)
-
-    // @Function max
-    MAKE_STATS_EXPRESSION(max, gsl_stats_max)
-
-    // @Function min
-    MAKE_STATS_EXPRESSION(min, gsl_stats_min)
-
-    // @Function argmax: max_index
-    struct argmax: public FunctionExpression {
-        argmax(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a...)
-            {"a", EmptyVarArgs}
-        }) {}
-        expression eval(const Variables& vars = emptyVars) override {
-            return NumExpression::construct(value(vars));
-        }
-        double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(0)->eval(vars)->array();
-            return gsl_stats_max_index(array.data(), 1, array.size());
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(argmax)
-
-    // @Function argmin: min_index
-    struct argmin: public FunctionExpression {
-        argmin(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a...)
-            {"a", EmptyVarArgs}
-        }) {}
-        expression eval(const Variables& vars = emptyVars) override {
-            return NumExpression::construct(value(vars));
-        }
-        double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(0)->eval(vars)->array();
-            return gsl_stats_min_index(array.data(), 1, array.size());
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(argmin)
-
-    // @Function median
-    struct median: public FunctionExpression {
-        median(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a...)
-            {"a", EmptyVarArgs}
-        }) {}
-        expression eval(const Variables& vars = emptyVars) override {
-            return NumExpression::construct(value(vars));
-        }
-        double value(const Variables& vars = emptyVars) const override {
-            auto array = arg->at(0)->eval(vars)->array();
-            return gsl_stats_median(array.data(), 1, array.size());
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(median)
-}
+    namespace functions {
+        // begin sourcegen functions
+        const expression absdev = std::shared_ptr<fexpr::absdev>(new fexpr::absdev());
+        const expression argmax = std::shared_ptr<fexpr::argmax>(new fexpr::argmax());
+        const expression argmin = std::shared_ptr<fexpr::argmin>(new fexpr::argmin());
+        const expression kurtosis = std::shared_ptr<fexpr::kurtosis>(new fexpr::kurtosis());
+        const expression lag1 = std::shared_ptr<fexpr::lag1>(new fexpr::lag1());
+        const expression max = std::shared_ptr<fexpr::max>(new fexpr::max());
+        const expression mean = std::shared_ptr<fexpr::mean>(new fexpr::mean());
+        const expression median = std::shared_ptr<fexpr::median>(new fexpr::median());
+        const expression min = std::shared_ptr<fexpr::min>(new fexpr::min());
+        const expression sd = std::shared_ptr<fexpr::sd>(new fexpr::sd());
+        const expression skew = std::shared_ptr<fexpr::skew>(new fexpr::skew());
+        const expression tss = std::shared_ptr<fexpr::tss>(new fexpr::tss());
+        const expression var = std::shared_ptr<fexpr::var>(new fexpr::var());
+        // end sourcegen
+    }  // namespace functions
+}  // namespace calcpp

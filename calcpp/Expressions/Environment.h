@@ -8,13 +8,21 @@ namespace calcpp {
 
     class Environment {
         std::unordered_map<std::string, expression> map;
+        const Environment const* parentEnv;
+
+      protected:
+        Environment();
 
       public:
-        Environment();
+        Environment(const Environment const* parentEnv = nullptr);
+        Environment(const Environment& parentEnv);
 
         expression operator[](const std::string& name) const;
 
-        void set(const std::string& name, expression e);
+        void set(const std::string& name, const expression e);
+        void set(const expression var, const expression e);
+        void set(const std::string& name, const Double val);
+        void set(const expression var, const Double val);
         void remove(const std::string& name);
     };
 

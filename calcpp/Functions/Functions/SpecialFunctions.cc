@@ -11,305 +11,287 @@
 #include "../../Utils/Exception.h"
 #include "../Functions.h"
 
-namespace Function {
-    // @Function gamma
-    MAKE_VALUEFUNCTION_EXPRESSION(gamma, gsl_sf_gamma)
+namespace calcpp {
 
-    // @Function lngamma
-    MAKE_VALUEFUNCTION_EXPRESSION(lngamma, gsl_sf_lngamma)
+    namespace fexpr {
 
-    // @Function gammastar
-    MAKE_VALUEFUNCTION_EXPRESSION(gammastar, gsl_sf_gammastar)
+        // @Function gamma
+        struct gamma: public ValueFunctionExpression {
+            gamma() : ValueFunctionExpression("gamma", gsl_sf_gamma) {}
+        };
 
-    // @Function gammainv(x)
-    MAKE_VALUEFUNCTION_EXPRESSION(gammainv, gsl_sf_gammainv)
+        // @Function lngamma
+        struct lngamma: public ValueFunctionExpression {
+            lngamma() : ValueFunctionExpression("lngamma", gsl_sf_lngamma) {}
+        };
 
-    // @Function fact
-    struct fact: public ValueFunctionExpression {
-        fact(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(0)->value(vars);
-            if (x > GSL_SF_FACT_NMAX){
-                return GSL_POSINF;
+        // @Function gammastar
+        struct gammastar: public ValueFunctionExpression {
+            gammastar() : ValueFunctionExpression("gammastar", gsl_sf_gammastar) {}
+        };
+
+        // @Function gammainv(x)
+        struct gammainv: public ValueFunctionExpression {
+            gammainv() : ValueFunctionExpression("gammainv", gsl_sf_gammainv) {}
+        };
+
+        // @Function fact
+        struct fact: public FunctionExpression {
+            fact() : FunctionExpression("fact", {arg("x")}) {}
+            expression call(expression args) const override {
+                double x = (double) args->get(0);
+                if (x > GSL_SF_FACT_NMAX) { return num(GSL_POSINF); }
+                if (x < 0 || !IS_INT(x)) { return num(gsl_sf_gamma(x + 1)); }
+                return num(gsl_sf_fact((unsigned int) x));
             }
-            if (x < 0 || (std::trunc(x) != x)) {
-                return gsl_sf_gamma(x + 1);
+        };
+
+        // @Function dfact
+        struct dfact: public ValueFunctionExpression {
+            dfact() : FunctionExpression("dfact", {arg("x")}) {}
+            expression call(expression args) const override {
+                double x = (double) args->get(0);
+                if (x > GSL_SF_DOUBLEFACT_NMAX) { return num(GSL_POSINF); }
+                if (x >= 0 && IS_INT(x)) {
+                    return num(gsl_sf_doublefact((unsigned int) x));
+                }
+                return num(GSL_NAN);
             }
-            return gsl_sf_fact((unsigned int) x);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(fact)
+        };
 
-    // @Function dfact
-    struct dfact: public ValueFunctionExpression {
-        dfact(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(0)->value(vars);
-            if (x > GSL_SF_DOUBLEFACT_NMAX){
-                return GSL_POSINF;
+        // @Function lnfact
+        struct lnfact: public ValueFunctionExpression {
+            lnfact() : FunctionExpression("lnfact", {arg("x")}) {}
+            expression call(expression args) const override {
+                double x = (double) args->get(0);
+                if (x >= 0 && IS_INT(x)) {
+                    return num(gsl_sf_lnfact((unsigned int) x));
+                }
+                return num(GSL_NAN);
             }
-            if (x >= 0 && std::trunc(x) == x) {
-                return gsl_sf_doublefact((unsigned int) x);
+        };
+
+        // @Function lndfact
+        struct lndfact: public ValueFunctionExpression {
+            lndfact() : FunctionExpression("lndfact", {arg("x")}) {}
+            expression call(expression args) const override {
+                double x = (double) args->get(0);
+                if (x >= 0 && IS_INT(x)) {
+                    return num(gsl_sf_lndoublefact((unsigned int) x));
+                }
+                return num(GSL_NAN);
             }
-            return GSL_NAN;
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(dfact)
+        };
 
-    // @Function lnfact
-    struct lnfact: public ValueFunctionExpression {
-        lnfact(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(0)->value(vars);
-            if (x >= 0 && std::trunc(x) == x) {
-                return gsl_sf_lnfact((unsigned int) x);
+        // @Function choose: comb C
+        struct choose: public FunctionExpression {
+            choose() : FunctionExpression("choose", {arg("n"), arg("r")}) {}
+            expression call(expression args) const override {
+                double n = (double) args->get(0);
+                double r = (double) args->get(1);
+                if (r >= 0 && n >= r && IS_INT(n) && IS_INT(r)) {
+                    return num(gsl_sf_choose((unsigned int) n, (unsigned int) r));
+                }
+                THROW_ERROR("nCr expects integers n >= r. Got: n=" << n << ", r=" << r);
             }
-            return GSL_NAN;
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(lnfact)
+            std::ostream& print(std::ostream& out) override { return out << "C"; }
+        };
 
-    // @Function lndfact
-    struct lndfact: public ValueFunctionExpression {
-        lndfact(int functionIndex, expression arg): ValueFunctionExpression(functionIndex, nullptr, arg) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double x = arg->at(0)->value(vars);
-            if (x >= 0 && std::trunc(x) == x) {
-                return gsl_sf_lndoublefact((unsigned int) x);
+        // @Function lnchoose: lncomb
+        struct lnchoose: public FunctionExpression {
+            lnchoose() : FunctionExpression("lnchoose", {arg("n"), arg("r")}) {}
+            expression call(expression args) const override {
+                double n = (double) args->get(0);
+                double r = (double) args->get(1);
+                if (r >= 0 && n >= r && IS_INT(n) && IS_INT(r)) {
+                    return num(gsl_sf_lnchoose((unsigned int) n, (unsigned int) r));
+                }
+                THROW_ERROR(
+                    "lnchoose expects integers n >= r. Got: n=" << n << ", r=" << r);
             }
-            return GSL_NAN;
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(lndfact)
+        };
 
-    // @Function choose: comb C
-    struct choose: public FunctionExpression {
-        choose(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (n, r)
-            {"n", Empty}, {"r", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(0)->value(vars);
-            double r = arg->at(1)->value(vars);
-            if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
-                return gsl_sf_choose((unsigned int) n, (unsigned int) r);
+        // @Function permute: perm P
+        struct permute: public FunctionExpression {
+            permute() : FunctionExpression("permute", {arg("n"), arg("r")}) {}
+            expression call(expression args) const override {
+                double n = (double) args->get(0);
+                double r = (double) args->get(1);
+                if (r >= 0 && n >= r && IS_INT(n) && IS_INT(r)) {
+                    return num(
+                        gsl_sf_choose((unsigned int) n, (unsigned int) r) *
+                        gsl_sf_fact((unsigned int) r));
+                }
+                THROW_ERROR("nPr expects integers n >= r. Got: n=" << n << ", r=" << r);
             }
-            throw Exception("nCr expects integers n >= r. Got: ", arg);
-        }
-        std::ostream& print(std::ostream& out, const bool pretty) {
-            auto n = arg->at(0);
-            auto r = arg->at(1);
-            return out << "C("; n->print(out, pretty) << ", "; r->print(out, pretty) << ")";
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(choose)
-
-    // @Function lnchoose: lncomb
-    struct lnchoose: public FunctionExpression {
-        lnchoose(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (n, r)
-            {"n", Empty}, {"r", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(0)->value(vars);
-            double r = arg->at(1)->value(vars);
-            if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
-                return gsl_sf_lnchoose((unsigned int) n, (unsigned int) r);
+            std::ostream& print(std::ostream& out, const bool pretty) {
+                return out << "P";
             }
-            throw Exception("lnchoose expects integers n >= r. Got: ", arg);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(lnchoose)
+        };
 
-    // @Function permute: perm P
-    struct permute: public FunctionExpression {
-        permute(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (n, r)
-            {"n", Empty}, {"r", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(0)->value(vars);
-            double r = arg->at(1)->value(vars);
-            if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
-                return gsl_sf_choose((unsigned int) n, (unsigned int) r) * gsl_sf_fact((unsigned int) r);
+        // @Function lnpermute: lnperm
+        struct lnpermute: public FunctionExpression {
+            lnpermute() : FunctionExpression("lnpermute", {arg("n"), arg("r")}) {}
+            expression call(expression args) const override {
+                double n = (double) args->get(0);
+                double r = (double) args->get(1);
+                if (r >= 0 && n >= r && IS_INT(n) && IS_INT(r)) {
+                    return num(
+                        gsl_sf_lnchoose((unsigned int) n, (unsigned int) r) +
+                        gsl_sf_lnfact((unsigned int) r));
+                }
+                THROW_ERROR(
+                    "lnpermute expects integers n >= r. Got: " << n << ", r=" << r);
             }
-            throw Exception("nPr expects integers n >= r. Got: ", arg);
-        }
-        std::ostream& print(std::ostream& out, const bool pretty) {
-            auto n = arg->at(0);
-            auto r = arg->at(1);
-            return out << "P("; n->print(out, pretty) << ", "; r->print(out, pretty) << ")";
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(permute)
+        };
 
-    // @Function lnpermute: lnperm
-    struct lnpermute: public FunctionExpression {
-        lnpermute(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (n, r)
-            {"n", Empty}, {"r", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(0)->value(vars);
-            double r = arg->at(1)->value(vars);
-            if (r >= 0 && n >= r && std::trunc(n) == n && std::trunc(r) == r){
-                return gsl_sf_lnchoose((unsigned int) n, (unsigned int) r) + gsl_sf_lnfact((unsigned int) r);
+        // @Function taylorcoeff
+        struct taylorcoeff: public FunctionExpression {
+            taylorcoeff() : FunctionExpression("taylorcoeff", {arg("n"), arg("x")}) {}
+            expression call(expression args) const override {
+                double n = (double) args->get(0);
+                double x = (double) args->get(1);
+                if (x >= 0 && n >= 0 && IS_INT(n)) {
+                    return num(gsl_sf_taylorcoeff((int) n, x));
+                }
+                THROW_ERROR(
+                    "taylorcoeff expects an integer n and double x. Got "
+                    << n << ", x=" << x);
             }
-            throw Exception("lnpermute expects integers n >= r. Got: ", arg);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(lnpermute)
+        };
 
-    // @Function taylorcoeff
-    struct taylorcoeff: public FunctionExpression {
-        taylorcoeff(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (n, x)
-            {"n", Empty}, {"x", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double n = arg->at(0)->value(vars);
-            double x = arg->at(1)->value(vars);
-            if (x >= 0 && n >= 0 && std::trunc(n) == n){
-                return gsl_sf_taylorcoeff((int) n, x);
+        // @Function poch
+        struct poch: public FunctionExpression {
+            poch() : FunctionExpression("poch", {arg("a"), arg("x")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double x = (double) args->get(1);
+                return num(gsl_sf_poch(a, x));
             }
-            throw Exception("taylorcoeff expects an integer n and double x. Got ", arg);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(taylorcoeff)
+        };
 
-    // @Function poch
-    struct poch: public FunctionExpression {
-        poch(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, x)
-            {"a", Empty}, {"x", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double x = arg->at(1)->value(vars);
-            return gsl_sf_poch(a, x);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(poch)
-
-    // @Function lnpoch
-    struct lnpoch: public FunctionExpression {
-        lnpoch(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, x)
-            {"a", Empty}, {"x", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double x = arg->at(1)->value(vars);
-            return gsl_sf_lnpoch(a, x);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(lnpoch)
-
-    // @Function pochrel
-    struct pochrel: public FunctionExpression {
-        pochrel(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, x)
-            {"a", Empty}, {"x", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double x = arg->at(1)->value(vars);
-            return gsl_sf_pochrel(a, x);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(pochrel)
-
-    // @Function gamma_inc: gammainc
-    struct gamma_inc: public FunctionExpression {
-        gamma_inc(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, x)
-            {"a", Empty}, {"x", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double x = arg->at(1)->value(vars);
-            return gsl_sf_gamma_inc(a, x);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(gamma_inc)
-
-    // @Function gamma_inc_Q: gammaincq
-    struct gamma_inc_Q: public FunctionExpression {
-        gamma_inc_Q(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, x)
-            {"a", Empty}, {"x", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double x = arg->at(1)->value(vars);
-            return gsl_sf_gamma_inc_Q(a, x);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(gamma_inc_Q)
-
-    // @Function gamma_inc_P: gammaincp
-    struct gamma_inc_P: public FunctionExpression {
-        gamma_inc_P(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, x)
-            {"a", Empty}, {"x", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double x = arg->at(1)->value(vars);
-            return gsl_sf_gamma_inc_P(a, x);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(gamma_inc_P)
-
-    // @Function Beta(a, b)
-    struct Beta: public FunctionExpression {
-        Beta(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, b)
-            {"a", Empty}, {"b", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double b = arg->at(1)->value(vars);
-            if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
-                return gsl_sf_beta(a, b);
+        // @Function lnpoch
+        struct lnpoch: public FunctionExpression {
+            lnpoch() : FunctionExpression("lnpoch", {arg("a"), arg("x")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double x = (double) args->get(1);
+                return num(gsl_sf_lnpoch(a, x));
             }
-            throw Exception("Beta function expected positive integers a and b. Got ", arg);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(Beta)
+        };
 
-    // @Function lnBeta(a, b)
-    struct lnBeta: public FunctionExpression {
-        lnBeta(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, b)
-            {"a", Empty}, {"b", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double b = arg->at(1)->value(vars);
-            if ((a > 0 || std::trunc(a) != a) && (b > 0 || std::trunc(b) != b)){
-                return gsl_sf_lnbeta(a, b);
+        // @Function pochrel
+        struct pochrel: public FunctionExpression {
+            pochrel() : FunctionExpression("pochrel", {arg("a"), arg("x")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double x = (double) args->get(1);
+                return num(gsl_sf_pochrel(a, x));
             }
-            throw Exception("lnBeta function expected positive integers a and b. Got ", arg);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(lnBeta)
+        };
 
-    // @Function Betainc(a, b, x)
-    struct Betainc: public FunctionExpression {
-        Betainc(int functionIndex, expression arg): FunctionExpression(functionIndex, arg, {
-            // Signature: (a, b, x)
-            {"a", Empty}, {"b", Empty}, {"x", Empty}
-        }) {}
-        double value(const Variables& vars = emptyVars) const override {
-            double a = arg->at(0)->value(vars);
-            double b = arg->at(1)->value(vars);
-            double x = arg->at(2)->value(vars);
-            if (x >= 0 && x <= 1){
-                return gsl_sf_beta_inc(a, b, x);
+        // @Function gamma_inc: gammainc
+        struct gamma_inc: public FunctionExpression {
+            gamma_inc() : FunctionExpression("gamma_inc", {arg("a"), arg("x")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double x = (double) args->get(1);
+                return num(gsl_sf_gamma_inc(a, x));
             }
-            throw Exception("Betainc expected doubles a, b, and x between 0 and 1. Got ", arg);
-        }
-    };
-    MAKE_FUNCTION_EXPRESSION(Betainc)
-}
+        };
+        MAKE_FUNCTION_EXPRESSION(gamma_inc)
+
+        // @Function gamma_inc_Q: gammaincq
+        struct gamma_inc_Q: public FunctionExpression {
+            gamma_inc_Q() : FunctionExpression("gamma_inc_Q", {arg("a"), arg("x")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double x = (double) args->get(1);
+                return num(gsl_sf_gamma_inc_Q(a, x));
+            }
+        };
+
+        // @Function gamma_inc_P: gammaincp
+        struct gamma_inc_P: public FunctionExpression {
+            gamma_inc_P() : FunctionExpression("gamma_inc_P", {arg("a"), arg("x")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double x = (double) args->get(1);
+                return num(gsl_sf_gamma_inc_P(a, x));
+            }
+        };
+
+        // @Function Beta(a, b)
+        struct Beta: public FunctionExpression {
+            Beta() : FunctionExpression("Beta", {arg("a"), arg("b")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double b = (double) args->get(1);
+                if ((a > 0 || !IS_INT(a)) && (b > 0 || !IS_INT(b))) {
+                    return num(gsl_sf_beta(a, b));
+                }
+                THROW_ERROR(
+                    "Beta function expected positive integers a and b. Got a="
+                    << a << ", b=" << b);
+            }
+        };
+
+        // @Function lnBeta(a, b)
+        struct lnBeta: public FunctionExpression {
+            lnBeta() : FunctionExpression("lnBeta", {arg("a"), arg("b")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double b = (double) args->get(1);
+                if ((a > 0 || !IS_INT(a)) && (b > 0 || !IS_INT(b))) {
+                    return num(gsl_sf_lnbeta(a, b));
+                }
+                THROW_ERROR(
+                    "lnBeta function expected positive integers a and b. Got "
+                    << a << ", b=" << b);
+            }
+        };
+
+        // @Function Betainc(a, b, x)
+        struct Betainc: public FunctionExpression {
+            Betainc() : FunctionExpression("Betainc", {arg("a"), arg("b"), arg("x")}) {}
+            expression call(expression args) const override {
+                double a = (double) args->get(0);
+                double b = (double) args->get(1);
+                double x = (double) args->get(2);
+                if (x >= 0 && x <= 1) { return num(gsl_sf_beta_inc(a, b, x)); }
+                THROW_ERROR(
+                    "Betainc expected doubles a, b, and x between 0 and 1. Got "
+                    << a << ", b=" << b << ", x=" << x);
+            }
+        };
+
+    }  // namespace fexpr
+
+    namespace functions {
+        // begin sourcegen functions
+        const expression Beta = std::shared_ptr<fexpr::Beta>(new fexpr::Beta());
+        const expression Betainc = std::shared_ptr<fexpr::Betainc>(new fexpr::Betainc());
+        const expression choose = std::shared_ptr<fexpr::choose>(new fexpr::choose());
+        const expression dfact = std::shared_ptr<fexpr::dfact>(new fexpr::dfact());
+        const expression fact = std::shared_ptr<fexpr::fact>(new fexpr::fact());
+        const expression gamma = std::shared_ptr<fexpr::gamma>(new fexpr::gamma());
+        const expression gamma_inc = std::shared_ptr<fexpr::gamma_inc>(new fexpr::gamma_inc());
+        const expression gamma_inc_P = std::shared_ptr<fexpr::gamma_inc_P>(new fexpr::gamma_inc_P());
+        const expression gamma_inc_Q = std::shared_ptr<fexpr::gamma_inc_Q>(new fexpr::gamma_inc_Q());
+        const expression gammainv = std::shared_ptr<fexpr::gammainv>(new fexpr::gammainv());
+        const expression gammastar = std::shared_ptr<fexpr::gammastar>(new fexpr::gammastar());
+        const expression lnBeta = std::shared_ptr<fexpr::lnBeta>(new fexpr::lnBeta());
+        const expression lnchoose = std::shared_ptr<fexpr::lnchoose>(new fexpr::lnchoose());
+        const expression lndfact = std::shared_ptr<fexpr::lndfact>(new fexpr::lndfact());
+        const expression lnfact = std::shared_ptr<fexpr::lnfact>(new fexpr::lnfact());
+        const expression lngamma = std::shared_ptr<fexpr::lngamma>(new fexpr::lngamma());
+        const expression lnpermute = std::shared_ptr<fexpr::lnpermute>(new fexpr::lnpermute());
+        const expression lnpoch = std::shared_ptr<fexpr::lnpoch>(new fexpr::lnpoch());
+        const expression permute = std::shared_ptr<fexpr::permute>(new fexpr::permute());
+        const expression poch = std::shared_ptr<fexpr::poch>(new fexpr::poch());
+        const expression pochrel = std::shared_ptr<fexpr::pochrel>(new fexpr::pochrel());
+        const expression taylorcoeff = std::shared_ptr<fexpr::taylorcoeff>(new fexpr::taylorcoeff());
+        // end sourcegen
+    }  // namespace functions
+
+}  // namespace calcpp

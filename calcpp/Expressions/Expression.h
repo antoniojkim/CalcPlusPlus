@@ -22,8 +22,8 @@ namespace calcpp {
     class Expression: public std::enable_shared_from_this<Expression> {
       public:
         virtual expression simplify();
-        virtual expression derivative(const std::string& var);
-        virtual expression integrate(const std::string& var);
+        virtual expression derivative(const expression var);
+        virtual expression integrate(const expression var);
 
         virtual expression eval(const Environment& env = defaultEnv);
         virtual Double value(const Environment& env = defaultEnv) const = 0;
