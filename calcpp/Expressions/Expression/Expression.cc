@@ -51,7 +51,14 @@ namespace calcpp {
     size_t Expression::size() const { return 1; }
 
     expression Expression::call(expression e) {
-        THROW_ERROR("Expression is not callable: " << copy());
+        Environment env;
+        if (e == Type::ASSIGNMENT) {
+            // set environment variable according to assignment
+        } else {
+            // set to x by default
+            env.set("x", e);
+        }
+        return eval(env);
     }
     expression Expression::apply(TransformerFunction f) {
         THROW_ERROR("Cannot apply function to Expression: " << copy());
@@ -71,7 +78,7 @@ namespace calcpp {
         return obj.e->name(out);                                                       \
     }                                                                                  \
     Expression::expression_##name Expression::name() {                                 \
-        return Expression::expression_ #name{copy()};                                  \
+        return Expression::expression_##name{copy()};                                  \
     }
 
     OSTREAM_WRAPPER_IMPL(repr);

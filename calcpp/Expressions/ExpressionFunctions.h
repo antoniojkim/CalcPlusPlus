@@ -18,11 +18,14 @@ namespace calcpp {
     inline expression complex(const gsl_complex& z) {
         return ComplexExpression::construct(z);
     }
+    inline expression complex(const Double real, const Double imag) {
+        return ComplexExpression::construct(real, imag);
+    }
     inline expression hex(const unsigned long long num) {
         return HexExpression::construct(num);
     }
 
-    expression call(const expression f, const expression arg);
+    expression call(const expression f, const expression arg) { return arg; }
     expression call(const std::string& name, const expression arg);
 
     expression var(const std::string& name);

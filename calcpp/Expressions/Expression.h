@@ -49,10 +49,13 @@ namespace calcpp {
         expression copy();
 
 #define OSTREAM_WRAPPER(name)                                                          \
+  private:                                                                             \
     struct expression_##name {                                                         \
         expression e;                                                                  \
         friend std::ostream& operator<<(std::ostream&, const expression_##name&);      \
     };                                                                                 \
+                                                                                       \
+  public:                                                                              \
     expression_##name name() const;                                                    \
     virtual std::ostream& name(std::ostream&) const = 0;
 

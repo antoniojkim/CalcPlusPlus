@@ -1,3 +1,4 @@
+#include <unordered_map>
 
 #include "../CallableExpression.h"
 
@@ -7,9 +8,95 @@ namespace calcpp {
 
     CallableExpression::CallableExpression(expression f, expression arg) :
         f{f}, arg{arg} {
-        // if (f != Type::FUNCTION && f != Type::OPERATOR) {
-        //     THROW_ERROR("Expected callable expression. Got: " << f);
-        // }
+        if (f == Type::FUNCTION) {
+            const size_t signatureSize = f->size();
+            if (arg != Type::TUPLE) {
+                if (signatureSize > 1) {
+                    THROW_ERROR(
+                        "Function expected " << signatureSize << " arguments. Got 1");
+                }
+                arg = tuple(arg);
+            } else {
+                const size_t numArgs = arg->size();
+                if (numArgs > signatureSize) {
+                    THROW_ERROR(
+                        "Function expected " << signatureSize << "arguments. Got "
+                                             << numArgs);
+                }
+
+                std::vector<expression> pos;
+                pos.reserve(numArgs);
+                std::map<std::string, expression> kwargs;
+                kwargs.reserve(numArgs);
+
+                size_t i = 0;
+                // Positional Args
+                while (i < numArgs && arg->at(i) != Type::ASSIGNMENT) {
+                    pos.emplace_back(arg->at(i++));
+                }
+                // kwargs Args
+                while (i < numArgs) {
+                    if (arg->at(i) != Type::ASSIGNMENT) {
+                        THROW_ERROR("Positional arg provided after keyward argument");
+                    }
+                    std::ostringstream name;
+                    arg->at(i)->at(0)->repr(name);
+                    kwargs[name.str()] = arg->at(i)->at(1);
+                    ++i;
+                }
+
+                std::vector<expression> args;
+                args.reserve(signatureSize);
+
+                i = 0;
+                for (expression s : f) {
+                    if (s == Type::VAR) {
+                        if (i < pos.size()) {
+                            args.emplace_back(pos[i++]);
+                        } else {
+                            std::ostringstream oss;
+                            s->repr(oss);
+                            const std::string name = oss.str();
+                            if (kwargs.count(name) > 0) {
+                                args.emplace_back(kwargs[name]);
+                                kwargs.erase(name);
+                            } else {
+                                THROW_ERROR("Not enough positional arguments provided");
+                            }
+                        }
+                    } else if (s == Type::VARARG) {
+                        std::vector<expression> vararg(pos.begin() + i, pos.end());
+                        args.emplace_back(tuple(std::move(varargs)));
+                        i = pos.size();
+                    } else if (s == Type::ASSIGNMENT) {
+                        std::ostringstream oss;
+                        s->at(0)->repr(oss);
+                        const std::string name = oss.str();
+                        if (kwargs.count(name) > 0) {
+                            if (i < pos.size()) {
+                                THROW_ERROR("Multiple values provided for " << name);
+                            }
+                            args.emplace_back(kwargs[name]);
+                            kwargs.erase(name);
+                        } else if (i < pos.size()) {
+                            args.emplace_back(pos[i++]);
+                        } else {
+                            args.emplace_back(s->at(1));
+                        }
+                    }
+                }
+                if (i < pos.size()) {
+                    THROW_ERROR(
+                        "Too many positional arguments supplied. "
+                        << (pos.size() - i) << " unused positional arguments");
+                } else if (kwargs.size() > 0) {
+                    THROW_ERROR(
+                        "Function got an unexpected keyword argument: "
+                        << kwargs.begin()->first);
+                }
+                arg = tuple(std::move(args));
+            }
+        }
     }
 
     expression CallableExpression::construct(expression f, expression arg) {
@@ -28,11 +115,10 @@ namespace calcpp {
     }
 
     expression CallableExpression::eval(const Environment& env) {
-        std::vector<expression> args;
-        return f(tuple(args));
+        return f->call(arg->eval(env));
     }
     long double CallableExpression::value(const Environment& env) const {
-        return eval()->value();
+        return eval(env)->value();
     }
 
     bool CallableExpression::equals(expression e, double precision) const {

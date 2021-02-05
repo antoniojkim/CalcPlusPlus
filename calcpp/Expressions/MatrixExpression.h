@@ -75,7 +75,7 @@ namespace calcpp {
     };
 
     template<typename... Args>
-    expression matrix(Args&&... args) {
+    inline expression matrix(Args&&... args) {
         return std::shared_ptr<MatrixExpression>(
             new MatrixExpression(std::forward<Args>(args)...));
     }
