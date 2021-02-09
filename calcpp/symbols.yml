@@ -47,7 +47,7 @@ operators:
           rightAssociative:
       GT_GT_EQUALS:
           rightAssociative:
-    - ELLIPSES:
+    - ELLIPSIS:
       DOT:
       DOT_DOT:
       DOLLAR:

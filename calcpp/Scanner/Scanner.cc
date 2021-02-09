@@ -47,7 +47,7 @@ namespace calcpp {
             "DOLLAR",
             "DOT",
             "DOT_DOT",
-            "ELLIPSES",
+            "ELLIPSIS",
             "EQUALS",
             "EQUALS_EQUALS",
             "EXCL",
@@ -323,7 +323,7 @@ namespace {
                 APPEND_SYMBOL(1, EXCL);
             case '.':
                 if (c1 == '.') {
-                    if (c2 == '.') { APPEND_SYMBOL(3, ELLIPSES); }
+                    if (c2 == '.') { APPEND_SYMBOL(3, ELLIPSIS); }
                     APPEND_SYMBOL(2, DOT_DOT);
                 }
                 APPEND_SYMBOL(1, DOT);

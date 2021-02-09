@@ -3,16 +3,12 @@
 #include <list>
 #include <memory>
 
+#include "../Expressions/ExpressionFunctions.h"
 #include "../Expressions/ExpressionOperations.h"
 #include "../Expressions/FunctionExpression.h"
-#include "../Expressions/MatrixExpression.h"
-#include "../Expressions/NullExpression.h"
-#include "../Expressions/NumericalExpression.h"
-#include "../Expressions/TupleExpression.h"
-#include "../Expressions/VariableExpression.h"
 #include "../Functions/Functions.h"
 #include "../Functions/Operators.h"
-#include "../Scanner/scanner.h"
+#include "../Scanner/Scanner.h"
 #include "../Utils/Exception.h"
 #include "../Utils/FixedStack.h"
 #include "../Utils/MultiStack.h"
@@ -26,23 +22,23 @@ using namespace calcpp::operators;
 
 ModifiedShuntingYard::ModifiedShuntingYard() {}
 
-ostream& operator<<(ostream& out, FixedStack<expression>& fs) {
-    for (auto expr : fs) {
-        cout << "    ";
-        expr->print(cout) << endl;
-    }
-    return out;
-}
-ostream& operator<<(ostream& out, list<FixedStack<expression>>& fs) {
-    for (auto& stack : fs) {
-        cout << "---------------------------" << endl;
-        for (auto expr : stack) {
-            cout << "    ";
-            expr->print(cout) << endl;
-        }
-    }
-    return out;
-}
+// ostream& operator<<(ostream& out, FixedStack<expression>& fs) {
+//     for (auto expr : fs) {
+//         cout << "    ";
+//         expr->print(cout) << endl;
+//     }
+//     return out;
+// }
+// ostream& operator<<(ostream& out, list<FixedStack<expression>>& fs) {
+//     for (auto& stack : fs) {
+//         cout << "---------------------------" << endl;
+//         for (auto expr : stack) {
+//             cout << "    ";
+//             expr->print(cout) << endl;
+//         }
+//     }
+//     return out;
+// }
 
 expression postfix_to_expression(MultiStack<TokenClass*>& outputStack) {
     MultiStack<expression> expressionStack(outputStack.size());
@@ -50,39 +46,37 @@ expression postfix_to_expression(MultiStack<TokenClass*>& outputStack) {
 
     for (auto* token : outputStack) {
         switch (token->kind) {
-            case NUM:
-                expressionStack.push(NumExpression::construct(token->value()));
+            case Token::Kind::NUM:
+                expressionStack.push(num(token->value()));
                 continue;
-            case HEX:
-                expressionStack.push(HexExpression::construct(token->lexeme));
+            case Token::Kind::HEX:
+                expressionStack.push(hex(token->ull()));
                 continue;
-            case INF:
-                expressionStack.push(NumExpression::construct(GSL_POSINF));
+            case Token::Kind::INF:
+                expressionStack.push(calcpp::PosInf);
                 continue;
-            case BIN:
-                expressionStack.push(BinExpression::construct(token->lexeme));
+            case Token::Kind::BIN:
+                expressionStack.push(bin(token->ull()));
                 continue;
-            case NONE:
-                expressionStack.push(NullExpression::construct());
+            case Token::Kind::NONE:
+                expressionStack.push(calcpp::None);
                 continue;
-            case ID:
-            case SPECIALID:
-                expressionStack.push(VariableExpression::construct(token->lexeme));
+            case Token::Kind::ID:
+                expressionStack.push(var(token->str()));
                 continue;
-            case FUNCTION:
+            case Token::Kind::FUNCTION:
                 if (expressionStack.emptyStack()) {
-                    THROW_ERROR("Function '" << token->lexeme << "' found no argument");
+                    THROW_ERROR("Function '" << token->view() << "' found no argument");
                 }
-                expressionStack.push(FunctionExpression::construct(
-                    token->lexeme, expressionStack.pop()));
+                expressionStack.push(call(token->str(), expressionStack.pop()));
                 continue;
-            case LPAREN:
-            case LBRACE:
+            case Token::Kind::LPAREN:
+            case Token::Kind::LBRACE:
                 // case LSQUARE:
                 expressionStack.pushStack();
                 expressionList.pushStack();
                 continue;
-            case COMMA:
+            case Token::Kind::COMMA:
                 if (expressionList.empty()) {
                     THROW_ERROR(
                         "Cannot construct Tuple from empty list of expressions");
@@ -97,7 +91,7 @@ expression postfix_to_expression(MultiStack<TokenClass*>& outputStack) {
                         "Top Expression Stack left with more than one expression: ','");
                 }
                 continue;
-            case RPAREN:
+            case Token::Kind::RPAREN:
                 if (expressionList.empty()) {
                     THROW_ERROR(
                         "Cannot construct Tuple from empty list of expressions");
@@ -110,11 +104,10 @@ expression postfix_to_expression(MultiStack<TokenClass*>& outputStack) {
                     }
                 }
                 expressionStack.popStack();
-                expressionStack.push(
-                    TupleExpression::construct(expressionLists.back()));
-                expressionLists.popStack();
+                expressionStack.push(calcpp::tuple(expressionList.back()));
+                expressionList.popStack(false);  // pop stack without merging
                 continue;
-            case RBRACE: {
+            case Token::Kind::RBRACE: {
                 if (!expressionStack.emptyStack()) {
                     expressionList.push(expressionStack.pop());
                     if (!expressionStack.emptyStack()) {
@@ -128,8 +121,8 @@ expression postfix_to_expression(MultiStack<TokenClass*>& outputStack) {
                 matrixElements.reserve(expressionList.stackSize());
                 size_t numRows = 0;
                 size_t numCols = expressionList.stackSize();
-                for (auto matrix : expressionLists.back()) {
-                    if (matrix == MATRIX) {
+                for (auto matrix : expressionList.back()) {
+                    if (matrix == Type::MATRIX) {
                         if (matrix->shape(0) != 1) {
                             THROW_ERROR("Matrix must be two dimensional");
                         } else if (numRows == 0) {
@@ -152,9 +145,9 @@ expression postfix_to_expression(MultiStack<TokenClass*>& outputStack) {
                         matrixElements.emplace_back(matrix);
                     }
                 }
-                expressionStack.push(MatrixExpression::construct(
-                    std::move(matrixElements), numRows, numCols));
-                expressionLists.popStack();
+                expressionStack.push(
+                    matrix(std::move(matrixElements), numRows, numCols));
+                expressionList.popStack(false);
                 continue;
             }
             default:
@@ -165,67 +158,63 @@ expression postfix_to_expression(MultiStack<TokenClass*>& outputStack) {
             if (expressionStack.emptyStack()) {
                 THROW_ERROR(
                     "Insufficient Number of Arguments for Unary Operator: "
-                    << token->lexeme);
+                    << token->view());
             }
-            if (isSingleOperator(token->type)) {
-                switch (token->type) {
-                    case EXCL:
-                        expressionStack.push(FunctionExpression::construct(
-                            "fact", expressionStack.pop()));
+            if (isSingleOperator(token->kind)) {
+                switch (token->kind) {
+                    case Token::Kind::EXCL:
+                        expressionStack.push(call("fact", expressionStack.pop()));
                         break;
-                    case EXCL_EXCL:
-                        expressionStack.push(FunctionExpression::construct(
-                            "dfact", expressionStack.pop()));
+                    case Token::Kind::EXCL_EXCL:
+                        expressionStack.push(call("dfact", expressionStack.pop()));
                         break;
-                    case APOSTROPHE:
-                        expressionStack.push(FunctionExpression::construct(
-                            "diff", expressionStack.pop()));
+                    case Token::Kind::APOSTROPHE:
+                        expressionStack.push(call("diff", expressionStack.pop()));
                         break;
-                    case ELLIPSIS:
+                    case Token::Kind::ELLIPSIS:
                         expressionStack.push(
                             VarArgsExpression::construct(expressionStack.pop()));
                         break;
                     default:
-                        THROW_ERROR("Unsupported Unary Operator: " << token->lexeme);
+                        THROW_ERROR("Unsupported Unary Operator: " << token->view());
                 }
             } else {
                 if (expressionStacks.back().size() < 2) {
                     THROW_ERROR(
                         "Insufficient Number of Arguments for Binary Operator: "
-                        << token->lexeme);
+                        << token->view());
                 }
 
                 expression rhs = expressionStack.pop();
                 expression lhs = expressionStack.pop();
                 // switch(token->type){
-                //     case PLUS:
+                //     case Token::Kind::PLUS:
                 //         expressionStack.push(lhs + rhs);
                 //         break;
-                //     case MINUS:
+                //     case Token::Kind::MINUS:
                 //         expressionStack.push(lhs - rhs);
                 //         break;
-                //     case STAR:
+                //     case Token::Kind::STAR:
                 //         expressionStack.push(lhs * rhs);
                 //         break;
-                //     case SLASH:
+                //     case Token::Kind::SLASH:
                 //         expressionStack.push(lhs / rhs);
                 //         break;
-                //     case CARET:
-                //     case STAR_STAR:
+                //     case Token::Kind::CARET:
+                //     case Token::Kind::STAR_STAR:
                 //         expressionStack.push(lhs ^ rhs);
                 //         break;
                 //     default:
-                expressionStack.push(
-                    FunctionExpression::construct(token->lexeme, {lhs, rhs}));
+                expressionStack.push(call(token->str(), calcpp::tuple(lhs, rhs)));
                 // break;
                 // }
             }
         } else {
-            THROW_ERROR("Unsupported Token type found: " << typeStrings[token->type]);
+            THROW_ERROR("Unsupported Token type found: " << token->kind);
         }
     }
 
-    if (expressionStacks.size() == 1 && expressionStacks.back().size() == 1) {
+    if (expressionStack.numStack() == 1 && expressionStack.stackSize() == 1) {
         return expressionStack.pop();
     }
 
@@ -243,15 +232,15 @@ expression ModifiedShuntingYard::parse(TokenCollection& tokens) const {
     for (; current != end; ++current) {
         auto& token = *current;
         switch (token.kind) {
-            case NUM:
-            case HEX:
-            case BIN:
-            case INF:
-            case NONE:
+            case Token::Kind::NUM:
+            case Token::Kind::HEX:
+            case Token::Kind::BIN:
+            case Token::Kind::INF:
+            case Token::Kind::NONE:
                 outputStack.push(&token);
                 continue;
-            case ID:
-            case GREEK:
+            case Token::Kind::ID:
+            case Token::Kind::GREEK:
                 if (std::next(current) != end &&
                     isPostImplicit(std::next(current)->type)) {  // Implies that the ID
                                                                  // is a function call
@@ -261,14 +250,13 @@ expression ModifiedShuntingYard::parse(TokenCollection& tokens) const {
                     outputStack.push(&token);
                 }
                 continue;
-            case LPAREN:
-            case LBRACE:
+            case Token::Kind::LBRACE:
                 // case LSQUARE:
                 // Create a new stack to handle the new context
                 outputStack.pushStack();
                 operatorStack.push(&token);
                 continue;
-            case COMMA: {
+            case Token::Kind::COMMA: {
                 while (true) {
                     if (operatorStack.empty()) { THROW_ERROR("Mismatched Comma."); }
                     if (operatorStack.peek()->type == LPAREN ||
@@ -284,7 +272,7 @@ expression ModifiedShuntingYard::parse(TokenCollection& tokens) const {
                 outputStack.pushStack();
                 continue;
             }
-            case RPAREN: {
+            case Token::Kind::RPAREN: {
                 while (true) {
                     if (operatorStack.size() == 0) {
                         THROW_ERROR("Mismatched Parentheses: ')'");
@@ -309,7 +297,7 @@ expression ModifiedShuntingYard::parse(TokenCollection& tokens) const {
                 }
                 continue;
             }
-            case RBRACE: {
+            case Token::Kind::RBRACE: {
                 while (true) {
                     if (operatorStack.size() == 0) {
                         THROW_ERROR("Mismatched Parentheses: '}'");

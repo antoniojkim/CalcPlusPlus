@@ -28,6 +28,19 @@ namespace {
         stack.push(2, 1);
         CHECK(stack.stackSize() == 1);
         CHECK(stack.size() == 3);
+
+        stack.push(4);
+        stack.push(5);
+        CHECK(stack.size() == 5);
+        CHECK(stack.stackSize() == 3);
+
+        auto back = stack.back();
+        CHECK(back.size() == 3);
+        CHECK((back[0] == 3 && back[1] == 4 && back[2] == 5));
+        CHECK(stack.size() == 5);
+
+        stack.popStack(false);
+        CHECK(stack.size() == 2);
     }
 
 }  // namespace

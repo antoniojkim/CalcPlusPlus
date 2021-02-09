@@ -45,7 +45,7 @@ namespace calcpp {
             DOLLAR,
             DOT,
             DOT_DOT,
-            ELLIPSES,
+            ELLIPSIS,
             EQUALS,
             EQUALS_EQUALS,
             EXCL,
@@ -100,6 +100,7 @@ namespace calcpp {
             Class(unsigned long long ull, Kind kind);
 
             std::string_view view() const;
+            std::string str() const { return std::string(view()); }
             const char* c_str() const;
             Double value() const;
             unsigned long long ull() const;

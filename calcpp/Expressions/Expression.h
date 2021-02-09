@@ -38,7 +38,7 @@ namespace calcpp {
         virtual size_t shape(const int axis) const;
         virtual size_t size() const;
 
-        virtual expression call(expression e);
+        virtual expression call(expression e) const;
         inline expression operator()(expression e) { return call(e); }
 
         virtual expression apply(TransformerFunction f);
@@ -107,7 +107,7 @@ namespace calcpp {
 
 }  // namespace calcpp
 
-std::ostream& operator<<(std::ostream&, const expression);
+std::ostream& operator<<(std::ostream&, const calcpp::expression);
 
 #define EXPRESSION_PARTIAL_OVERRIDES                                                   \
     bool equals(expression, double precision) const override;                          \
@@ -120,3 +120,25 @@ std::ostream& operator<<(std::ostream&, const expression);
     EXPRESSION_PARTIAL_OVERRIDES                                                       \
     expression eval(const Environment& env = defaultEnv) override;                     \
     Double value(const Environment& env = defaultEnv) const override;
+
+#define DECLARE_TEMPLATE_CONSTRUCTOR(name)                                             \
+    template<typename... Args>                                                         \
+    friend expression name(Args&&... args);
+
+#define DECLARE_INITIALIZER_LIST_CONSTRUCTOR(name)                                     \
+    template<typename T>                                                               \
+    friend expression name(std::initializer_list<T> args);
+
+#define DEFINE_TEMPLATE_CONSTRUCTOR(ExprName, name)                                    \
+    template<typename... Args>                                                         \
+    inline expression name(Args&&... args) {                                           \
+        return std::shared_ptr<ExprName##Expression>(                                  \
+            new ExprName##Expression(std::forward<Args>(args)...));                    \
+    }
+
+#define DEFINE_INITIALIZER_LIST_CONSTRUCTOR(ExprName, name)                            \
+    template<typename T>                                                               \
+    inline expression name(std::initializer_list<T> args) {                            \
+        return std::shared_ptr<ExprName##Expression>(                                  \
+            new ExprName##Expression(std::forward<std::initializer_list<T>>(args)));   \
+    }

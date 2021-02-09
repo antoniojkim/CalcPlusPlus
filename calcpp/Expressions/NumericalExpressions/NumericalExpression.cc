@@ -1,19 +1,17 @@
 
 #include <string>
 
+#include "../ExpressionFunctions.h"
 #include "../ExpressionOperations.h"
 #include "../NumericalExpression.h"
-#include "../VariableExpression.h"
 
 using namespace std;
 
 namespace calcpp {
 
-    expression NumericalExpression::derivative(const std::string& var) {
-        return NumExpression::construct(0);
-    }
-    expression NumericalExpression::integrate(const std::string& var) {
-        return copy() * VariableExpression::construct(var);
+    expression NumericalExpression::derivative(const expression var) { return num(0); }
+    expression NumericalExpression::integrate(const expression var) {
+        return copy() * var;
     }
 
 }  // namespace calcpp

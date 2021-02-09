@@ -6,7 +6,8 @@ cd $DIR/Scanner/
 python Scanner.py
 python GreekLetters.py
 
-cs $DIR/Functions/Operators
+cd $DIR/Functions/
+python Functions.py
 python Operators.py
 
 cd $DIR/Expressions/VariableExpressions/

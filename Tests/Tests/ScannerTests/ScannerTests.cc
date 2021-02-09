@@ -85,7 +85,7 @@ namespace {
         {"\"string\"", {Token::Kind::STRING}},
         {"'test whitespace'", {Token::Kind::STRING}},
         {"..", {Token::Kind::DOT_DOT}},
-        {"...", {Token::Kind::ELLIPSES}},
+        {"...", {Token::Kind::ELLIPSIS}},
         {"∞", {Token::Kind::INF}},
         {"λ", {Token::Kind::GREEK}},
         {"α φ", {Token::Kind::GREEK, Token::Kind::GREEK}}};

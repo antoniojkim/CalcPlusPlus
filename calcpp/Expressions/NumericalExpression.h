@@ -9,8 +9,8 @@
 namespace calcpp {
 
     struct NumericalExpression: public Expression {
-        expression derivative(const std::string& var) override;
-        expression integrate(const std::string& var) override;
+        expression derivative(const expression var) override;
+        expression integrate(const expression var) override;
     };
 
     class NumExpression: public NumericalExpression {
@@ -19,8 +19,7 @@ namespace calcpp {
         NumExpression(const Double val);
 
       public:
-        static expression construct(Double val);
-        // static expression construct(const gsl_complex& z);
+        DECLARE_TEMPLATE_CONSTRUCTOR(num);
 
         EXPRESSION_OVERRIDES
     };
@@ -29,10 +28,10 @@ namespace calcpp {
         const Double real, imag;
 
         ComplexExpression(const Double real, const Double imag);
+        ComplexExpression(const gsl_complex& z);
 
       public:
-        static expression construct(const Double real, const Double imag);
-        static expression construct(const gsl_complex& z);
+        DECLARE_TEMPLATE_CONSTRUCTOR(complex);
 
         Double get(const int index) override;
 
@@ -45,7 +44,7 @@ namespace calcpp {
         HexExpression(unsigned long long num);
 
       public:
-        static expression construct(unsigned long long num);
+        DECLARE_TEMPLATE_CONSTRUCTOR(hex);
 
         EXPRESSION_OVERRIDES
     };
@@ -56,9 +55,18 @@ namespace calcpp {
         BinExpression(unsigned long long num);
 
       public:
-        static expression construct(unsigned long long num);
+        DECLARE_TEMPLATE_CONSTRUCTOR(bin);
 
         EXPRESSION_OVERRIDES
     };
+
+    /*********************************************************************
+     ******************* Templated Constructor Accessors *****************
+     *********************************************************************/
+
+    DEFINE_TEMPLATE_CONSTRUCTOR(Num, num);
+    DEFINE_TEMPLATE_CONSTRUCTOR(Complex, complex);
+    DEFINE_TEMPLATE_CONSTRUCTOR(Hex, hex);
+    DEFINE_TEMPLATE_CONSTRUCTOR(Bin, bin);
 
 }  // namespace calcpp

@@ -1,11 +1,11 @@
 
-build: generate
+compile: generate
 	.utils/build calcpp $(name)
 
 generate:
 	cd calcpp/ && ./sourcegen.sh
 
-test: build
+test: compile
 	.utils/build Tests
 	.utils/test $(name)
 
@@ -30,13 +30,13 @@ pydep:
 	cp `readlink .libs/libgsl.so.25` calcpp/libgsl.so.25
 	cp `readlink .libs/libgslcblas.so.0` calcpp/libgslcblas.so.0
 
-repl: build pydep
+repl: compile pydep
 	cd calcpp && python main.py -m repl
 
-pyui: build pydep
+pyui: compile pydep
 	cd calcpp && python main.py -m ui
 
-pypkg: build pydep
+pypkg: compile pydep
 	cd calcpp && pyinstaller calcpp.spec
 
 run: ui
@@ -47,7 +47,7 @@ run: ui
 buildwin:
 	powershell.exe -noprofile -executionpolicy bypass -file .utils/build.ps1
 
-buildmac: build ui
+buildmac: compile ui
 	.utils/pkg_mac
 
 

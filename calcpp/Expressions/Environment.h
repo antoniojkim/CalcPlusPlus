@@ -2,19 +2,21 @@
 #include <memory>
 #include <unordered_map>
 
+#include "Types.h"
+
 namespace calcpp {
     class Expression;
     typedef std::shared_ptr<Expression> expression;
 
     class Environment {
         std::unordered_map<std::string, expression> map;
-        const Environment const* parentEnv;
+        const Environment* parentEnv;
 
       protected:
         Environment();
 
       public:
-        Environment(const Environment const* parentEnv = nullptr);
+        Environment(const Environment* parentEnv = nullptr);
         Environment(const Environment& parentEnv);
 
         expression operator[](const std::string& name) const;

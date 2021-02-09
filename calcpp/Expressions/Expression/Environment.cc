@@ -8,8 +8,8 @@ using namespace std;
 namespace calcpp {
 
     Environment::Environment() {}
-    Environment::Environment(const Environment const* parentEnv) :
-        parentEnv{parentEnv ? parentEnv : defaultEnv} {}
+    Environment::Environment(const Environment* parentEnv) :
+        parentEnv{parentEnv ? parentEnv : &defaultEnv} {}
     Environment::Environment(const Environment& parentEnv) : parentEnv{&parentEnv} {}
 
     expression Environment::operator[](const string& name) const {

@@ -100,7 +100,6 @@ if __name__ == "__main__":
                 functions[dectype].extend(fs[dectype])
 
             with SourceGenerator(filepath) as source:
-                print(filepath)
                 source["functions"].set_text(
                     map(template.format, sorted(f["name"] for f in fs["function"]),),
                     delimiter="\n",

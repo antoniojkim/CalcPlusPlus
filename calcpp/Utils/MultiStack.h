@@ -48,9 +48,15 @@ namespace calcpp {
         void pushStack() { splits.emplace_back(stack.size()); }
         void popStack(bool merge = true) {
             if (!merge && stackSize() > 0) {
-                THROW_ERROR("Cannot pop an non-empty stack");
+                if (!splits.empty()) {
+                    stack.erase(stack.begin() + splits.back(), stack.end());
+                }
             }
             if (!splits.empty()) { splits.pop_back(); }
+        }
+
+        std::vector<T> back() {
+            return std::vector<T>(stack.begin() + splits.back(), stack.end());
         }
 
         auto begin() { return stack.begin(); }

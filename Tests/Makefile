@@ -11,6 +11,7 @@ CPPFLAGS = -DDEBUG
 EXEC = tests
 
 SCANNER_TESTS = ../calcpp/Scanner/Scanner.cc Tests/ScannerTests/ScannerTests.cc
+# SCANNER_TESTS = ../calcpp/Parser/modifiedShuntingYard.cc Tests/ParserTests/ParserTests.cc
 UTILS_TESTS = $(wildcard Tests/UtilsTests/*.cc)
 
 TESTS = ${SCANNER_TESTS} ${UTILS_TESTS}

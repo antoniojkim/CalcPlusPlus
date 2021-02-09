@@ -59,8 +59,8 @@ namespace calcpp {
 
       public:
         expression simplify() override;
-        expression derivative(const std::string& var) override;
-        expression integrate(const std::string& var) override;
+        expression derivative(const expression var) override;
+        expression integrate(const expression var) override;
 
         expression at(const int index) override;
         size_t shape(const int axis) const override;
