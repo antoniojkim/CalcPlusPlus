@@ -18,6 +18,7 @@ namespace calcpp {
             HEX,
             BIN,
             ID,
+            CALL,
             INF,
             GREEK,
             LPAREN,
@@ -93,7 +94,7 @@ namespace calcpp {
                 unsigned long long ull;
             } data;
 
-            const Kind kind;
+            Kind kind;
 
             Class(const char* c_str, size_t size, Kind kind);
             Class(Double value, Kind kind);
@@ -116,6 +117,10 @@ namespace calcpp {
     typedef std::vector<TokenClass> TokenCollection;
 
     TokenCollection scan(const std::string& equation);
+
+    class TokenIterator {
+      public:
+    };
 
     bool isPreImplicit(const Token::Kind kind);
     bool isPostImplicit(const Token::Kind kind);

@@ -20,6 +20,7 @@ namespace calcpp {
             "HEX",
             "BIN",
             "ID",
+            "CALL",
             "INF",
             "GREEK",
             "LPAREN",
