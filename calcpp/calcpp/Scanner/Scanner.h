@@ -4,13 +4,12 @@
 #include <string_view>
 #include <vector>
 
-#include "../Expressions/Types.h"
-
 namespace calcpp {
 
     namespace Token {
         enum Kind {
             // begin sourcegen kinds
+            __EOF__,
             NONE,
             EMPTY,
             NUM,
@@ -90,20 +89,20 @@ namespace calcpp {
                     const char* c_str;
                     const size_t size;
                 } str;
-                Double value;
+                double value;
                 unsigned long long ull;
             } data;
 
             Kind kind;
 
             Class(const char* c_str, size_t size, Kind kind);
-            Class(Double value, Kind kind);
+            Class(double value, Kind kind);
             Class(unsigned long long ull, Kind kind);
 
             std::string_view view() const;
             std::string str() const { return std::string(view()); }
             const char* c_str() const;
-            Double value() const;
+            double value() const;
             unsigned long long ull() const;
 
             friend bool operator==(const Class& token, const Kind kind);
@@ -117,10 +116,6 @@ namespace calcpp {
     typedef std::vector<TokenClass> TokenCollection;
 
     TokenCollection scan(const std::string& equation);
-
-    class TokenIterator {
-      public:
-    };
 
     bool isPreImplicit(const Token::Kind kind);
     bool isPostImplicit(const Token::Kind kind);

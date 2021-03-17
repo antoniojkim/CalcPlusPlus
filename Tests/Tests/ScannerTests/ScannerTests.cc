@@ -135,7 +135,7 @@ namespace {
 
     const vector<string> benchmark_inputs = {
         "(1 + 2, sin(3), 3 // 4 ** 5) >> sdfguh534523 + \"test string\" .457i "
-        "0x2353abf34c 0b0101010001"};
+        "0x2353abf34c 0b0101010001 λ ∞"};
 
     TEST_CASE("Benchmark Scanner", "[.][benchmark]") {
         BENCHMARK("Scanner Benchmark 1") { return calcpp::scan(benchmark_inputs[0]); };

@@ -1,33 +1,17 @@
-#include <cassert>
-#include <charconv>
-#include <exception>
-#include <iomanip>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <system_error>
-#include <tuple>
-#include <vector>
-
-// #include "../Expressions/ExpressionTypes/Types.h"
-#include "../Functions/Operators.h"
-#include "../Scanner/Scanner.h"
-#include "../Utils/Exception.h"
-// #include "../Utils/MultiStack.h"
-
+#include "RecursiveDescent.h"
 #include "../AST/AST.h"
 #include "../AST/BinaryOperator.h"
 #include "../AST/Call.h"
 #include "../AST/Function.h"
 #include "../AST/Num.h"
 #include "../AST/Var.h"
+#include "../Operators/Operators.h"
+#include "../Scanner/Scanner.h"
+#include "../Utils/Exception.h"
 
-using namespace std;
-using namespace calcpp;
-
-namespace Parser {
+namespace calcpp {
+    RecursiveDescent::RecursiveDescent() {}
+    RecursiveDescent::~RecursiveDescent() {}
 
     typedef TokenCollection::iterator TokenIterator;
 
@@ -111,24 +95,10 @@ namespace Parser {
         }
     }
 
-    bool isSupportedOperator(const Token::Kind kind) {
-        switch (kind) {
-            case Token::Kind::PLUS:
-            case Token::Kind::MINUS:
-            case Token::Kind::STAR:
-            case Token::Kind::SLASH:
-                return true;
-            default:
-                return false;
-        }
-    }
-
     //  binoprhs := ('op' primary)*
     AST ParseBinOpRHS(int exprPrecedence, AST lhs, TokenIterator& token) {
         while (true) {
-            if (!calcpp::isOperator(token->kind) || !isSupportedOperator(token->kind)) {
-                return lhs;
-            }
+            if (!isSupportedOperator(token->kind)) { return lhs; }
 
             auto binOp = *token;
             int precedence = calcpp::operators::precedence(binOp.kind);
@@ -213,13 +183,14 @@ namespace Parser {
         return calcpp::function(proto, expr);
     }
 
-    std::vector<AST> parse(TokenCollection& tokens) {
+    std::vector<AST> RecursiveDescent::parse(TokenCollection& tokens) const {
         TokenIterator token = tokens.begin();
         TokenIterator end = tokens.end();
 
         std::vector<AST> statements;
         while (token != end) {
             switch (token->kind) {
+                case Token::Kind::__EOF__:
                 case Token::Kind::SEMICOLON:
                     next(token);
                     break;
@@ -237,17 +208,4 @@ namespace Parser {
         return statements;
     }
 
-}  // namespace Parser
-
-int main() {
-    const std::string input = "3*(2+4); 4 + 5 * 6; sin(3)";
-    auto tokens = calcpp::scan(input);
-    try {
-        auto statements = Parser::parse(tokens);
-        cout << "Parsed " << statements.size() << " statements" << endl;
-        for (auto ast : statements) {
-            cout << "    ";
-            ast->repr(cout) << endl;
-        }
-    } catch (std::exception& e) { cout << e.what() << endl; }
-}
+}  // namespace calcpp

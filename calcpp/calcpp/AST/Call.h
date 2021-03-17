@@ -20,15 +20,7 @@ namespace calcpp {
 
         std::ostream& repr(std::ostream& out) const override {
             out << "call(" << callee << ", (";
-            bool first = true;
-            for (auto& arg : args) {
-                if (!first) {
-                    out << ", ";
-                } else {
-                    first = false;
-                }
-                arg->repr(out);
-            }
+            for (auto& arg : args) { arg->repr(out) << ", "; }
             return out << "))";
         }
     };

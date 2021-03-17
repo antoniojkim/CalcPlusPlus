@@ -13,82 +13,36 @@ namespace calcpp {
     namespace Token {
         static const char* const KindStrings[] = {
             // begin sourcegen kindStrings
-            "NONE",
-            "EMPTY",
-            "NUM",
-            "COMPLEX",
-            "HEX",
-            "BIN",
-            "ID",
-            "CALL",
-            "INF",
-            "GREEK",
-            "LPAREN",
-            "RPAREN",
-            "LBRACE",
-            "RBRACE",
-            "LCURLY",
-            "RCURLY",
-            "QUOTE",
-            "STRING",
-            "BACKTICK",
-            "HASH",
-            "BACKSLASH",
-            "AMP",
-            "AMP_AMP",
-            "APOSTROPHE",
-            "AT",
-            "CARET",
-            "CARET_EQUALS",
-            "CARET_PIPE",
-            "COLON",
-            "COLON_COLON",
-            "COLON_EQUALS",
-            "COMMA",
-            "DOLLAR",
-            "DOT",
-            "DOT_DOT",
-            "ELLIPSIS",
-            "EQUALS",
-            "EQUALS_EQUALS",
-            "EXCL",
-            "EXCL_EQUALS",
-            "EXCL_EXCL",
-            "GT",
-            "GT_EQUALS",
-            "GT_GT",
-            "GT_GT_EQUALS",
-            "LT",
-            "LT_EQUALS",
-            "LT_LT",
-            "LT_LT_EQUALS",
-            "L_ARROW",
-            "MINUS",
-            "MINUS_EQUALS",
-            "PCT",
-            "PCT_EQUALS",
-            "PIPE",
-            "PIPE_PIPE",
-            "PLUS",
-            "PLUS_EQUALS",
-            "QUESTION",
-            "R_ARROW",
-            "SEMICOLON",
-            "SEMICOLON_SEMICOLON",
-            "SLASH",
-            "SLASH_EQUALS",
-            "SLASH_SLASH",
-            "STAR",
-            "STAR_EQUALS",
-            "STAR_STAR",
-            "TILDE",
-            "TILDE_EQUALS"
+            "EOF",          "NONE",         "EMPTY",
+            "NUM",          "COMPLEX",      "HEX",
+            "BIN",          "ID",           "CALL",
+            "INF",          "GREEK",        "LPAREN",
+            "RPAREN",       "LBRACE",       "RBRACE",
+            "LCURLY",       "RCURLY",       "QUOTE",
+            "STRING",       "BACKTICK",     "HASH",
+            "BACKSLASH",    "AMP",          "AMP_AMP",
+            "APOSTROPHE",   "AT",           "CARET",
+            "CARET_EQUALS", "CARET_PIPE",   "COLON",
+            "COLON_COLON",  "COLON_EQUALS", "COMMA",
+            "DOLLAR",       "DOT",          "DOT_DOT",
+            "ELLIPSIS",     "EQUALS",       "EQUALS_EQUALS",
+            "EXCL",         "EXCL_EQUALS",  "EXCL_EXCL",
+            "GT",           "GT_EQUALS",    "GT_GT",
+            "GT_GT_EQUALS", "LT",           "LT_EQUALS",
+            "LT_LT",        "LT_LT_EQUALS", "L_ARROW",
+            "MINUS",        "MINUS_EQUALS", "PCT",
+            "PCT_EQUALS",   "PIPE",         "PIPE_PIPE",
+            "PLUS",         "PLUS_EQUALS",  "QUESTION",
+            "R_ARROW",      "SEMICOLON",    "SEMICOLON_SEMICOLON",
+            "SLASH",        "SLASH_EQUALS", "SLASH_SLASH",
+            "STAR",         "STAR_EQUALS",  "STAR_STAR",
+            "TILDE",        "TILDE_EQUALS"
             // end sourcegen
         };
 
         Class::Class(const char* c_str, size_t size, Kind kind) :
             data{.str = {c_str, size}}, kind{kind} {}
-        Class::Class(Double value, Kind kind) : data{.value = value}, kind{kind} {}
+        Class::Class(double value, Kind kind) : data{.value = value}, kind{kind} {}
         Class::Class(unsigned long long ull, Kind kind) :
             data{.ull = ull}, kind{kind} {}
 
@@ -114,7 +68,7 @@ namespace calcpp {
                     return data.str.c_str;
             }
         }
-        Double Class::value() const {
+        double Class::value() const {
             switch (kind) {
                 case NUM:
                 case COMPLEX:
@@ -202,6 +156,8 @@ namespace {
                 ++numTokens;
             }
         }
+        // Add one to count for the EOF token
+        ++numTokens;
         return numTokens;
     }
 
@@ -361,7 +317,7 @@ namespace {
         const char c1 = c[1];
         if (*c == '0') {
             if (size == 1) {
-                tokens.emplace_back(TokenClass{(Double) 0, NUM});
+                tokens.emplace_back(TokenClass{(double) 0, NUM});
                 return Status::OK();
             }
 
@@ -386,7 +342,7 @@ namespace {
         }
         if (isalpha(c1)) { return DFA_id(tokens, c, size, 1); }
 
-        Double value = strtold(c, &end);
+        double value = strtod(c, &end);
         s = end - c;
         if (s < size) {
             const char cs = c[s];
@@ -422,7 +378,10 @@ namespace calcpp {
         tokens.reserve(estimateNumTokens(equation));
 
         Status status = DFA_start(tokens, equation.c_str(), equation.size());
-        if (status.ok()) { return tokens; }
+        if (status.ok()) {
+            tokens.emplace_back(TokenClass{0ULL, __EOF__});
+            return tokens;
+        }
 
         THROW_ERROR("Failed to scan: " << equation);
     }

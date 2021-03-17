@@ -19,15 +19,7 @@ namespace calcpp {
 
         std::ostream& repr(std::ostream& out) const override {
             out << "prototype(" << name << ", (";
-            bool first = true;
-            for (auto& arg : args) {
-                if (!first) {
-                    out << ", ";
-                } else {
-                    first = false;
-                }
-                out << arg;
-            }
+            for (auto& arg : args) { out << arg << ", "; }
             return out << "))";
         }
     };

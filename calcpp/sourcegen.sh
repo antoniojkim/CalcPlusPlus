@@ -10,7 +10,7 @@ cd $DIR/Functions/
 python Functions.py
 python Operators.py
 
-cd $DIR/Expressions/VariableExpressions/
+cd $DIR/Expressions/Constants/
 python Constants.py
 
 cd $DIR/Expressions/ExpressionTypes/

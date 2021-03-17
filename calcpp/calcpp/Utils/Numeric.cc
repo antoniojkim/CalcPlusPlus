@@ -9,7 +9,7 @@ using namespace std;
 
 namespace calcpp {
 
-    int compare(const Double n1, const Double n2, const double precision) {
+    int compare(const double n1, const double n2, const double precision) {
         if (IS_NAN(n1) || IS_NAN(n2)) { return (IS_NAN(n1) && IS_NAN(n2)) ? 0 : -1; }
         if (std::trunc(n1) == n1 && std::trunc(n2) == n2 &&
             std::trunc(n1) == std::trunc(n2)) {

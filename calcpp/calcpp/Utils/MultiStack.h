@@ -42,7 +42,7 @@ namespace calcpp {
             if (stackSize() == 0) { THROW_ERROR("Cannot pop off of empty stack"); }
             T item = std::move(stack.back());
             stack.pop_back();
-            return std::move(item);
+            return item;
         }
 
         void pushStack() { splits.emplace_back(stack.size()); }

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+make -j16 main
+export LD_LIBRARY_PATH=../.libs:.
+./main
