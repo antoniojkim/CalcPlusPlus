@@ -1,8 +1,11 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include "../Utils/Stream.h"
 
 namespace calcpp {
 
@@ -83,39 +86,53 @@ namespace calcpp {
             // end sourcegen
         };
 
-        struct Class {
-            union {
-                struct {
-                    const char* c_str;
-                    const size_t size;
-                } str;
-                double value;
-                unsigned long long ull;
-            } data;
+        class Iterator;
 
-            Kind kind;
+        class Generator {
+            struct Impl;
+            std::unique_ptr<Impl> impl;
 
-            Class(const char* c_str, size_t size, Kind kind);
-            Class(double value, Kind kind);
-            Class(unsigned long long ull, Kind kind);
+          public:
+            Generator(const std::string& input);
+            Generator(unique_istream&& input);
+            ~Generator();
 
+            // Get the next token
+            Generator& next();
+            Generator& operator++();
+
+            // True iff no more tokens to emit
+            bool finished() const;
+
+            // Accessor methods for current token
+            Token::Kind kind() const;
             std::string_view view() const;
-            std::string str() const { return std::string(view()); }
-            const char* c_str() const;
+            std::string str() const;
             double value() const;
             unsigned long long ull() const;
 
-            friend bool operator==(const Class& token, const Kind kind);
-            friend std::ostream& operator<<(std::ostream&, const Kind);
+            Token::Iterator begin();
+            Token::Iterator end();
+        };
+
+        class Iterator {
+            Token::Generator* generator;
+
+          public:
+            Iterator(Token::Generator*);
+
+            const Token::Generator* operator*() const;
+            bool operator!=(const Token::Iterator& other) const;
+            Iterator& operator++();
         };
 
     }  // namespace Token
 
-    typedef Token::Class TokenClass;
+    Token::Generator scan(const std::string& equation);
+    Token::Generator scan(unique_istream&& in);
 
-    typedef std::vector<TokenClass> TokenCollection;
-
-    TokenCollection scan(const std::string& equation);
+    std::ostream& operator<<(std::ostream&, const Token::Kind);
+    std::ostream& operator<<(std::ostream&, const Token::Generator&);
 
     bool isPreImplicit(const Token::Kind kind);
     bool isPostImplicit(const Token::Kind kind);

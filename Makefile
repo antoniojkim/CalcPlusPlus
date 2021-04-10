@@ -1,13 +1,14 @@
 
 compile: generate
-	.utils/build calcpp $(name)
+	cd calcpp/ && make -j16 main && ./run
+
 
 generate:
 	cd calcpp/ && ./sourcegen.sh
 
-test: compile
+test: #compile
 	.utils/build Tests
-	.utils/test $(name)
+	cd Tests && ./tests # .utils/test $(name)
 
 bp:  # breakpoints
 	vim Tests/.gdbinit

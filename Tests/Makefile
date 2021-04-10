@@ -1,17 +1,15 @@
 BUILD := linux
 
-CXX = g++
+CXX = clang-10
 
-includes.linux := -I../.includes/
 includes.win := -IC:\DEV\vcpkg\packages\gsl_x64-windows\include
-INCLUDES := ${includes.${BUILD}} -I../
+INCLUDES := ${includes.${BUILD}} -I../calcpp
 
 CXXFLAGS = -g -std=c++17 -MMD -Werror=vla -Wall ${INCLUDES}
 CPPFLAGS = -DDEBUG
 EXEC = tests
 
-SCANNER_TESTS = ../calcpp/Scanner/Scanner.cc Tests/ScannerTests/ScannerTests.cc
-# SCANNER_TESTS = ../calcpp/Parser/modifiedShuntingYard.cc Tests/ParserTests/ParserTests.cc
+SCANNER_TESTS = Tests/ScannerTests/ScannerTests.cc
 UTILS_TESTS = $(wildcard Tests/UtilsTests/*.cc)
 
 TESTS = ${SCANNER_TESTS} ${UTILS_TESTS}
@@ -23,10 +21,11 @@ DEPENDS = ${OBJECTS:.o=.d}
 ${EXEC}: ${OBJECTS}
 	${CXX} ${CXXFLAGS} ${OBJECTS} \
 		-lCatch2Main -lCatch2 \
+		-L../calcpp -lcalcpp \
+		-lgsl -lgslcblas -lm \
+		-lstdc++ \
 		-o ${EXEC}
 
-# -L../MathEngine -lMathEngine \
-# -L../.libs/ -lgsl -lgslcblas -lm \
 
 -include ${DEPENDS}
 

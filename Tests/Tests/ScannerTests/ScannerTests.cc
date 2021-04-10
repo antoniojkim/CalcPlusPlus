@@ -98,22 +98,27 @@ namespace {
             auto tokens = calcpp::scan(input);
 
             const auto& kinds = test.second;
-            CHECK(tokens.size() == kinds.size());
+            INFO("Num Kinds: " << kinds.size());
 
             size_t i = 0;
             size_t num_mismatches = 0;
-            for (const auto& token : tokens) {
-                if (token.kind != kinds[i]) {
+            for (const auto* token : tokens) {
+                if (i + 1 >= kinds.size()) break;
+                if (token->kind() != kinds[i]) {
                     ++num_mismatches;
-                    INFO(
-                        "Mismatch on " << token.view() << ": " << token.kind
-                                       << " != " << kinds[i]);
+                    INFO("Mismatch on: " << token->kind() << " != " << kinds[i]);
                 }
                 ++i;
             }
             CHECK(num_mismatches == 0);
+            CHECK(i + 1 == kinds.size());
         }
-    }  // namespace
+    }
+
+    void iterate_tokens(const std::string& input) {
+        auto tokens = calcpp::scan(input);
+        for (const auto* token : tokens) {}
+    }
 
     const vector<string> fail_tests = {"1.2.3",
                                        "1.2e3.4",
@@ -129,7 +134,7 @@ namespace {
     TEST_CASE("Unsuccessful Scan Tests", "[scanner][xfail]") {
         for (const auto& input : fail_tests) {
             INFO("input: " << input);
-            CHECK_THROWS(calcpp::scan(input));
+            CHECK_THROWS(iterate_tokens(input));
         }
     }
 
@@ -138,7 +143,10 @@ namespace {
         "0x2353abf34c 0b0101010001 λ ∞"};
 
     TEST_CASE("Benchmark Scanner", "[.][benchmark]") {
-        BENCHMARK("Scanner Benchmark 1") { return calcpp::scan(benchmark_inputs[0]); };
+        BENCHMARK("Scanner Benchmark 1") {
+            iterate_tokens(benchmark_inputs[0]);
+            return;
+        };
     }
 
 }  // namespace
